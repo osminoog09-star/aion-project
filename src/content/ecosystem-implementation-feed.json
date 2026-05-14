@@ -4,6 +4,35 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-14-parallel-roadmap-execution",
+      "occurredAt": "2026-05-14",
+      "title": "Parallel roadmap execution while EAS waits",
+      "summary": "SoT: architecturePrinciple + finishBeforeSwitchingRule exception для внешних wait; collaborationWorkflow шаг 2b; cursor bullet parallel-while-blocked; executionQueue focus → background-drive + nextImplementationTarget (P1 APK poll + параллельные подсистемы 2–9). ecosystem-status currentPriority обновлён.",
+      "subsystemIds": ["roadmap-system", "release-ops", "background-drive"],
+      "activeEpicLabel": "Always-on drive: background shift + live profit + two-phone Link relay",
+      "commitHash": null,
+      "repository": "aion-com",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": ["🟨 Политика не-freeze при EAS/deploy/review"],
+        "notStarted": ["⬜ Реализация overlay orb / production BG / Link relay в том же цикле без отдельных PR"],
+        "technicalDebt": []
+      },
+      "stillMissing": ["Код параллельных подсистем в driver после политики"],
+      "blocked": ["EAS b9d3c90a всё ещё не FINISHED на момент записи"],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "low",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      }
+    },
+    {
       "id": "evt-2026-05-14-release-automation-bg-foundation",
       "occurredAt": "2026-05-14",
       "title": "Release automation (EAS→manifest) + experimental Android location FGS path",

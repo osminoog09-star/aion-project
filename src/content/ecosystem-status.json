@@ -32,7 +32,7 @@
     ]
   },
   "execution": {
-    "currentPriority": "Continuous execution: стек (1) APK loop до device-verified → (2) Android background production → (3) floating orb overlay → (4) Link relay → (5) live profit; сейчас блокер — очередь EAS / manifest apkUrl.",
+    "currentPriority": "Continuous execution: P1 APK (EAS b9d3c90a ждёт FINISHED) + параллельно подсистемы 2–9 не замирают; честный SoT в blockedTasks/feed.",
     "nextPriority": "После FINISHED f71cec0a: подставить apkUrl, деплой манифеста, ручная приёмка; затем BackgroundTrackingAdapter spike (FGS) + profit refresh hooks после reconnect/OCR.",
     "blockedTasks": [
       "Полная схема release DB без согласования миграций и RLS",

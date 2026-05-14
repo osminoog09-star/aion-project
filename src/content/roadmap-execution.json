@@ -4,10 +4,11 @@
       "Ecosystem-first: shared types, one JSON SoT, optional Supabase overlay — never fork parallel roadmap trackers.",
       "Realtime-first where the product promises live state; degrade with explicit UX, not silent stubs.",
       "Cloud SoT for data that must be authoritative across devices; repository JSON for editorial readiness until CI writes snapshots.",
-      "Modular boundaries: AION Driver is one client module; portal and Core/Link stay decoupled from driver-only hacks."
+      "Modular boundaries: AION Driver is one client module; portal and Core/Link stay decoupled from driver-only hacks.",
+      "Parallel execution: внешние блокеры (EAS queue, deploy, review) не замораживают весь цикл — честно фиксировать в blockedTasks/feed и продолжать следующий actionable шаг по стеку (2–9) без fake done для APK."
     ],
     "noFakeDoneRule": "Never mark fully_done without releaseQualityBar + definitionOfDone in JSON and verified production paths.",
-    "finishBeforeSwitchingRule": "Complete the current subsystem or epic slice before switching unless the user explicitly rescopes.",
+    "finishBeforeSwitchingRule": "Complete the current subsystem or epic slice before switching unless the user explicitly rescopes — except when the slice is blocked only by an external wait (EAS, network, review): then document the blocker and continue parallel actionable work without claiming the blocked slice done.",
     "noPlaceholderUx": "No TODO shells in user-visible flows; ship disabled states with copy or hide behind feature flags.",
     "noDisconnectedSystems": "UI must call real modules/services; no orphan screens without data contract.",
     "noDuplicateLogic": "Extend existing helpers/repos; do not copy-paste second parsers or merge trees.",
@@ -26,6 +27,7 @@
         "Ecosystem review: challenge fake completeness and suggest consolidation."
       ],
       "cursor": [
+        "Parallel while blocked: если P1 APK ждёт FINISHED EAS — не idle: nextRecommendedStep по background-drive / floating-orb / Link / profit / sync; APK остаётся P1 до device-verified.",
         "Continuous execution: каждый цикл начинать с roadmap-execution + ecosystem-status (blockers, techDebt, validationMatrix) и брать верхний пункт глобального стека приоритетов: (1) APK release loop до device-verified, (2) Android background runtime production, (3) floating orb overlay, (4) Link relay, (5) live profit, (6) device registry+realtime, (7) cloud sync intelligence, (8–9) UX/visual polish.",
         "Implementation: code against roadmap-execution + ecosystem-status SoT.",
         "Integration: wire APIs, merge JSON, tests, and portal surfaces.",
@@ -43,6 +45,7 @@
       "0) При FINISHED Android preview: `aion-com` → `npm run release:apk-manifest:sync <buildId>` (или workflow apk-manifest-from-eas) → commit манифеста → деплой портала → device check.",
       "1) Cursor читает /api/aion/context и /api/roadmap/execution.",
       "2) Cursor выбирает задачу по executionQueue и nextRecommendedStep подсистемы.",
+      "2b) Внешний блокер только по ожиданию (EAS FINISHED, сеть, deploy, review): зафиксировать честно; не останавливать цикл — переключаться на следующий actionable пункт стека (2–9) без fake done для APK.",
       "3) При неясной архитектуре — запрос к ChatGPT с приложенными JSON срезами.",
       "4) После merge: npm run feed:append (или правка ecosystem-implementation-feed.json) + обновление lastUpdated в ecosystem-status при смене readiness.",
       "5) ChatGPT сверяет против trustedFullyDoneRequires перед тем как согласовать «done»."
@@ -50,8 +53,8 @@
   },
   "executionQueue": {
     "currentActiveEpic": "Always-on drive: background shift + live profit + two-phone Link relay",
-    "currentSubsystemFocus": "release-ops",
-    "nextImplementationTarget": "Закрыть APK release loop: FINISHED EAS для актуального versionCode → sync манифест (npm run release:apk-manifest:sync) → деплой портала → Update Center на устройстве; затем Android background production (не experimental-only).",
+    "currentSubsystemFocus": "background-drive",
+    "nextImplementationTarget": "P1 APK остаётся: ждать FINISHED b9d3c90a → sync манифест → deploy → device Update Center (лёгкий poll, не idle всего цикла). Параллельно: production Android background (не только experimental), затем overlay orb / Link relay / profit по nextRecommendedStep подсистем.",
     "blockedTasks": [
       "APK 1.0.4/6: активный preview EAS b9d3c90a-7566-425a-bdb9-53d68f59593a (commit 9baa6bb, vc6) — ждать FINISHED → `npm run release:apk-manifest:sync b9d3c90a-7566-425a-bdb9-53d68f59593a` → commit манифест → деплой портала → Update Center на устройстве; старые IN_QUEUE (f71cec0a/9fa827ce) можно отменить",
       "Полная схема release DB без согласования миграций и RLS",
