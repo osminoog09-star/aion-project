@@ -79,7 +79,8 @@ export type ValidationSignalId =
   | "ota_publish"
   | "realtime_tests"
   | "cloud_tests"
-  | "ocr_tests";
+  | "ocr_tests"
+  | "eas_apk_manifest_sync";
 
 export type ValidationSignalStatus = "passed" | "failed" | "skipped" | "pending" | "unknown";
 

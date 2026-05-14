@@ -1,0 +1,26 @@
+name: Sync APK manifest from EAS
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_id:
+        description: "EAS Android build UUID (FINISHED)"
+        required: true
+        type: string
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Pull EAS metadata and patch manifest
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: node scripts/sync-apk-manifest-from-eas.mjs "${{ inputs.build_id }}"
+      - name: Show diff
+        run: git diff -- public/apk-manifest.preview.json || true

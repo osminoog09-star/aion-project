@@ -39,6 +39,7 @@
       "Валидация: web_build passed для изменений портала; для client — согласованный gate в репо клиента"
     ],
     "collaborationWorkflow": [
+      "0) При FINISHED Android preview: `aion-com` → `npm run release:apk-manifest:sync <buildId>` (или workflow apk-manifest-from-eas) → commit манифеста → деплой портала → device check.",
       "1) Cursor читает /api/aion/context и /api/roadmap/execution.",
       "2) Cursor выбирает задачу по executionQueue и nextRecommendedStep подсистемы.",
       "3) При неясной архитектуре — запрос к ChatGPT с приложенными JSON срезами.",
@@ -51,7 +52,7 @@
     "currentSubsystemFocus": "background-drive",
     "nextImplementationTarget": "Заменить NoopBackgroundTracking реальным Android FGS/location path + не ломать батарею; параллельно MediaStore/очередь скриншотов на work phone и Supabase relay для OCR payload.",
     "blockedTasks": [
-      "APK 1.0.4: дождаться FINISHED у f71cec0a-a936-41e6-838d-476be202e789 → applicationArchiveUrl в манифест → деплой портала → физическая приёмка Update Center (release + EXPO_PUBLIC_APK_MANIFEST_URL); отменить/игнорировать зависший 9fa827ce при необходимости",
+      "APK 1.0.4/6: пересобрать preview после versionCode 6; FINISHED → `npm run release:apk-manifest:sync <id>` → commit манифест → деплой портала → физическая приёмка Update Center (EXPO_PUBLIC_APK_MANIFEST_URL); старые IN_QUEUE билды отменять при необходимости",
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
     ],

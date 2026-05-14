@@ -21,7 +21,7 @@
     "latestKnownVersion": "1.0.4",
     "policy": "Новый APK только при изменении нативного слоя, SDK или versionCode; JS/UI — через OTA.",
     "publicManifestUrl": "https://aion-com.vercel.app/apk-manifest.preview.json",
-    "note": "Манифест latest=1.0.4: apkUrl остаётся плейсхолдером до FINISHED билда 1.0.4. Очередь: f71cec0a-a936-41e6-838d-476be202e789 (1.0.4/5, commit 86a7681) — IN_QUEUE; старый 9fa827ce-fb30-4453-8183-2b8e6c493542 тоже IN_QUEUE. Последний FINISHED preview 1.0.3/4: build 4df2899b-7d27-46a2-b470-f3f4e5c6cc64 → https://expo.dev/artifacts/eas/aCgroFNDmLPXjVE8C3x6gj.apk (не подставлять в манифест как 1.0.4)."
+    "note": "Автосинк манифеста: aion-com `npm run release:apk-manifest:sync` + workflow `apk-manifest-from-eas.yml` (нужен secret EXPO_TOKEN). apkUrl — плейсхолдер до FINISHED билда с versionCode 6 (native bump: BG location + experimental path). Очередь f71cec0a (1.0.4/5) может быть устаревшей — пересобрать после driver bump. Последний FINISHED 1.0.3: 4df2899b → https://expo.dev/artifacts/eas/aCgroFNDmLPXjVE8C3x6gj.apk (не подставлять как 1.0.4)."
   },
   "history": [
     {

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "feed:append": "node scripts/append-implementation-feed.mjs"
+    "feed:append": "node scripts/append-implementation-feed.mjs",
+    "release:apk-manifest:sync": "node scripts/sync-apk-manifest-from-eas.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",

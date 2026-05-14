@@ -72,7 +72,7 @@
     "realtime": 32,
     "releaseOps": 42,
     "offline": 60,
-    "backgroundDrive": 12
+    "backgroundDrive": 18
   },
   "operations": [
     {
@@ -94,10 +94,10 @@
     {
       "id": "releases-json",
       "label": "Публичные релизы (портал)",
-      "percent": 35,
+      "percent": 40,
       "status": "partially_done",
-      "summary": "releases.json + опционально ecosystem_release_ota из Supabase.",
-      "lastSignal": "cloud-queries.ts"
+      "summary": "releases.json + sync-apk-manifest-from-eas.mjs + workflow apk-manifest-from-eas (EXPO_TOKEN); полный auto-deploy на Vercel — нет.",
+      "lastSignal": "scripts/sync-apk-manifest-from-eas.mjs"
     },
     {
       "id": "sync",
@@ -134,10 +134,10 @@
     {
       "id": "background-drive",
       "label": "Background drive + shift",
-      "percent": 12,
-      "status": "not_started",
-      "summary": "Фоновый трекинг смены в driver — noop-адаптер до FGS/location/task; влияет на live profit и taxi shift в фоне.",
-      "lastSignal": "aion-driver/services/backgroundTracking.ts"
+      "percent": 18,
+      "status": "partially_done",
+      "summary": "Noop по умолчанию; эксперимент TaskManager+location+FGS notification при EXPO_PUBLIC_EXPERIMENTAL_BG_LOCATION=1 (не production gate).",
+      "lastSignal": "tasks/shiftLocationTask.ts + experimentalTaskManagerLocationAdapter.ts"
     },
     {
       "id": "ocr",
