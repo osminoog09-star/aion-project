@@ -6,7 +6,7 @@ alwaysApply: false
 
 # Roadmap / operations (aion.com)
 
-- **Source of truth:** `src/content/ecosystem-status.json` + `roadmap-subsystem-extensions.json`; cloud overlay via Supabase `ecosystem_public_snapshots` kinds `portal_ecosystem` and `portal_roadmap_master` (see `src/lib/ecosystem/cloud-queries.ts`).
+- **Source of truth:** `src/content/ecosystem-status.json` + `roadmap-subsystem-extensions.json`; cloud overlay via Supabase `ecosystem_public_snapshots` kinds `portal_ecosystem` and `portal_roadmap_master` (see `src/lib/ecosystem/cloud-queries.ts`). **Operations Hub** composes APK manifest + releases + roadmap + rollout + Supabase probe in `getOperationsHubView` (`/control`).
 - **Do not** mark work `fully_done` unless it meets `releaseQualityBar` + `definitionOfDone` in JSON and real code paths exist.
 - **Finish before switching:** complete the current subsystem/task unless the user explicitly changes scope.
 - **No duplicate architecture:** extend existing roadmap types, Zod guards, and pages (`/ecosystem`, `/operations`, `/roadmap`, `/status`); do not add a second parallel tracker.

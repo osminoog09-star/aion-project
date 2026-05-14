@@ -251,6 +251,9 @@ export function ReleaseQualityPanel({ lines }: { lines: string[] }) {
 export function RoadmapHubLinks() {
   return (
     <p className="flex flex-wrap gap-3 text-xs text-slate-500">
+      <Link href={ecosystemRoutes.control} className="text-cyan-400 hover:underline">
+        /control
+      </Link>
       <Link href={ecosystemRoutes.ecosystem} className="text-cyan-400 hover:underline">
         /ecosystem
       </Link>

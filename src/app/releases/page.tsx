@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import type { ReleaseChannel, ReleasesPayload } from "@/lib/ecosystem-types";
 import { getReleasesPayload } from "@/lib/ecosystem-data";
 import { fetchPublishedApkManifest } from "@/lib/fetchApkManifest";
+import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export const metadata: Metadata = {
   title: "Релизы — OTA, APK, каналы",
@@ -18,6 +20,13 @@ export default async function ReleasesPage() {
       <h1 className="text-3xl font-bold text-white md:text-4xl">Release center</h1>
       <p className="mt-3 text-sm text-slate-500">
         Обновлено: <time dateTime={rel.lastUpdated}>{rel.lastUpdated}</time>
+      </p>
+      <p className="mt-2 text-xs text-slate-600">
+        Полный APK+OTA+rollout+cloud:{" "}
+        <Link href={ecosystemRoutes.control} className="text-cyan-400 hover:underline">
+          Operations Hub (/control)
+        </Link>
+        .
       </p>
 
       <section className="mt-10 rounded-2xl border border-emerald-500/25 bg-emerald-500/[0.06] p-6 md:p-8">

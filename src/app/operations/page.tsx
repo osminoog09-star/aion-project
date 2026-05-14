@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
+import { getOperationsHubView } from "@/lib/operations-hub-data";
+import { OperationsHub } from "@/components/operations/OperationsHub";
 import {
   CloudSoTPanel,
   CursorRulesPanel,
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function OperationsPage() {
-  const eco = await getEcosystemStatus();
+  const [eco, hub] = await Promise.all([getEcosystemStatus(), getOperationsHubView()]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
@@ -26,6 +28,10 @@ export default async function OperationsPage() {
       </p>
       <div className="mt-4">
         <RoadmapHubLinks />
+      </div>
+
+      <div className="mt-8">
+        <OperationsHub view={hub} variant="compact" />
       </div>
 
       {eco.execution ? (

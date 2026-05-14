@@ -9,7 +9,7 @@ const primaryNav = [
   { href: ecosystemRoutes.status, label: "Статус" },
   { href: ecosystemRoutes.roadmap, label: "Roadmap" },
   { href: ecosystemRoutes.releases, label: "Релизы" },
-  { href: ecosystemRoutes.control, label: "Control" },
+  { href: ecosystemRoutes.control, label: "Hub" },
 ] as const;
 
 const moduleNav = [

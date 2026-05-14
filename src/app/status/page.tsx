@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
+import { getOperationsHubView } from "@/lib/operations-hub-data";
+import { OperationsHub } from "@/components/operations/OperationsHub";
 import { averageReadiness, averageSubsystemPercent } from "@/lib/readiness";
+import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 import {
   DefinitionOfDoneCallout,
   EcosystemSummaryHeader,
@@ -19,7 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default async function EcosystemStatusPage() {
-  const eco = await getEcosystemStatus();
+  const [eco, hub] = await Promise.all([getEcosystemStatus(), getOperationsHubView()]);
   const pillarAvg = averageReadiness(eco.readiness);
   const subsystemAvg = averageSubsystemPercent(eco.subsystems);
   const operations = eco.operations ?? [];
@@ -43,10 +46,19 @@ export default async function EcosystemStatusPage() {
       </div>
 
       <p className="mt-4 text-xs text-slate-600">
-        Дорожная карта: <Link href="/roadmap" className="text-cyan-400 hover:underline">/roadmap</Link> · Control:{" "}
-        <Link href="/control" className="text-cyan-400 hover:underline">/control</Link>
+        Дорожная карта:{" "}
+        <Link href={ecosystemRoutes.roadmap} className="text-cyan-400 hover:underline">
+          /roadmap
+        </Link>{" "}
+        · Hub:{" "}
+        <Link href={ecosystemRoutes.control} className="text-cyan-400 hover:underline">
+          /control
+        </Link>
       </p>
 
+      <div className="mt-8">
+        <OperationsHub view={hub} variant="compact" />
+      </div>
       {eco.definitionOfDone?.length ? (
         <div className="mt-10">
           <DefinitionOfDoneCallout lines={eco.definitionOfDone} />
