@@ -11,6 +11,11 @@
       "subsystemIds": ["mobile-app", "release-ops"],
       "activeEpicLabel": "Update transparency completion",
       "commitHash": "577c337 (aion-com) + 86a7681 (aion-driver)",
+      "repository": "aion-com+aion-driver",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Версии и манифест в репо",
           "🟨 Документация URL и env EXPO_PUBLIC_APK_MANIFEST_URL"
         ],
         "notStarted": [
