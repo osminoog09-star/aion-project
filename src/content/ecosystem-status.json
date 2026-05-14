@@ -72,7 +72,7 @@
     "realtime": 32,
     "releaseOps": 42,
     "offline": 60,
-    "backgroundDrive": 18
+    "backgroundDrive": 22
   },
   "operations": [
     {
@@ -134,10 +134,10 @@
     {
       "id": "background-drive",
       "label": "Background drive + shift",
-      "percent": 18,
+      "percent": 22,
       "status": "partially_done",
-      "summary": "Noop по умолчанию; эксперимент TaskManager+location+FGS notification при EXPO_PUBLIC_EXPERIMENTAL_BG_LOCATION=1 (не production gate).",
-      "lastSignal": "tasks/shiftLocationTask.ts + experimentalTaskManagerLocationAdapter.ts"
+      "summary": "Android: FGS location task при активной смене + rebind после hydrate; дистанция в UI-watch, headless — heartbeat; production gate не пройден.",
+      "lastSignal": "androidShiftRuntimeBootstrap + ShiftContext FGS bind effect"
     },
     {
       "id": "floating-orb-runtime",
@@ -204,8 +204,8 @@
       "id": "td-bg-noop",
       "subsystemId": "mobile-app",
       "severity": "critical",
-      "title": "Фоновый трекинг смены не реализован (noop adapter)",
-      "evidence": "aion-driver/services/backgroundTracking.ts — NoopBackgroundTracking.enableForShift возвращает пустой handle; ShiftContext вызывает адаптер, но GPS/сессия в фоне не ведутся."
+      "title": "Фоновый трекинг смены не сертифицирован как production (OEM/батарея/merge дистанции)",
+      "evidence": "Android: FGS task + heartbeat в headless; основная дистанция — foreground watch в ShiftContext; BACKGROUND_TRACKING_PRODUCTION_READY=false; overlay SoT не реализован."
     },
     {
       "id": "td-link-screenshot-stub",
@@ -372,9 +372,9 @@
     {
       "id": "background-drive",
       "name": "Background drive & lifecycle",
-      "percent": 18,
-      "status": "not_started",
-      "note": "Трекинг смены при background/lock: по умолчанию noop; эксперимент TaskManager+location+FGS notification только при EXPO_PUBLIC_EXPERIMENTAL_BG_LOCATION=1 (не production).",
+      "percent": 22,
+      "status": "partially_done",
+      "note": "Android: FGS-backed location task при активной смене + rebind после cold start (ShiftContext); opt-out EXPO_PUBLIC_DISABLE_SHIFT_FG_LOCATION=1; iOS без фонового трека; production gate не пройден.",
       "percentBasis": "Сравнение с целевым always-on: services/backgroundTracking.ts + ShiftContext wiring.",
       "currentPhase": "Architecture + honesty gate",
       "nextMilestone": "Android foreground service + согласованный battery UX; затем интеграция с profit engine",
