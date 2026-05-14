@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteShell } from "@/components/SiteShell";
+import { getMetadataBase, getSiteUrl } from "@/lib/site-url";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,14 +14,34 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const site = getSiteUrl();
+
 export const metadata: Metadata = {
-  title: "AION — экосистема для профессионального водителя",
-  description:
-    "AION.COM: портал экосистемы, флагман AION Driver, roadmap и релизы. Управляемые данные из репозитория до облачной синхронизации.",
-  openGraph: {
-    title: "AION Ecosystem",
-    description: "AI operating system for drivers — portal, driver app, cloud roadmap.",
+  metadataBase: getMetadataBase(),
+  title: {
+    default: "AION — экосистема для профессионального водителя",
+    template: "%s · AION",
   },
+  description:
+    "AION.COM: публичный портал экосистемы — AION Driver, roadmap, релизы и control center. Данные из репозитория; облако подключается на следующих этапах.",
+  applicationName: "AION",
+  keywords: ["AION", "AION Driver", "roadmap", "releases", "OTA", "APK", "ecosystem"],
+  authors: [{ name: "AION" }],
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    url: site,
+    siteName: "AION",
+    title: "AION — ecosystem platform",
+    description:
+      "Public portal: flagship driver app, release center, roadmap, and operations foundation.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AION — ecosystem platform",
+    description: "Public ecosystem portal — driver, releases, roadmap, control.",
+  },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
