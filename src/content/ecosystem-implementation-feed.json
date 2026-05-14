@@ -10,12 +10,7 @@
       "summary": "aion-driver: version 1.0.4, versionCode 5, extra.apkUpdatePipelineVerification; aion-com: public/apk-manifest.preview.json (releaseType=test, apkUrl placeholder), releases.json publicManifestUrl; roadmap blockedTasks; PIPELINE.md. EAS build 9fa827ce-fb30-4453-8183-2b8e6c493542 оставался IN_QUEUE на 1.0.3/4 — нужен новый preview после merge.",
       "subsystemIds": ["mobile-app", "release-ops"],
       "activeEpicLabel": "Update transparency completion",
-      "commitHash": null,
-      "repository": "aion-com+aion-driver",
-      "rollup": {
-        "fullyDone": [],
-        "partiallyDone": [
-          "🟨 Версии и манифест в репо",
+      "commitHash": "577c337 (aion-com) + 86a7681 (aion-driver)",
           "🟨 Документация URL и env EXPO_PUBLIC_APK_MANIFEST_URL"
         ],
         "notStarted": [
