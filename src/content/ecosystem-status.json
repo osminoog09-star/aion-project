@@ -140,6 +140,14 @@
       "lastSignal": "tasks/shiftLocationTask.ts + experimentalTaskManagerLocationAdapter.ts"
     },
     {
+      "id": "floating-orb-runtime",
+      "label": "Floating orb / system overlay",
+      "percent": 4,
+      "status": "not_started",
+      "summary": "AionCoreOrb только внутри UI приложения; нет SYSTEM_ALERT_WINDOW / нативного bubble поверх других приложений; не индикатор живого фона.",
+      "lastSignal": "components/aion/AionCoreOrb.tsx (in-app only)"
+    },
+    {
       "id": "ocr",
       "label": "OCR pipeline",
       "percent": 70,
@@ -207,11 +215,11 @@
       "evidence": "aion-driver/features/aion-link/services/screenshotWatchStub.ts — startAionLinkScreenshotWatch no-op."
     },
     {
-      "id": "td-profit-not-live-bg",
-      "subsystemId": "dashboard",
+      "id": "td-floating-orb-overlay",
+      "subsystemId": "mobile-app",
       "severity": "high",
-      "title": "Прибыль/смена не обновляются надёжно при background без доработки трекинга и relay",
-      "evidence": "Нет production background location/session; OCR импорт вручную через ImportScreenshotScreen; profit tiles зависят от локальной смены и импортов."
+      "title": "Нет production floating orb поверх других приложений как runtime-индикатора",
+      "evidence": "Нет разрешения/модуля overlay; орб в AionHomeHubScreen не связан с фоновым FGS; DoD always-on (lock/minimize) не выполнен."
     }
   ],
   "releasePhases": [
@@ -349,11 +357,24 @@
       "priority": "P1"
     },
     {
+      "id": "floating-orb-runtime",
+      "name": "Floating orb & overlay runtime",
+      "percent": 4,
+      "status": "not_started",
+      "note": "AionCoreOrb только внутри приложения; нет Android overlay / bubble поверх других приложений; не индикатор живого фона.",
+      "percentBasis": "Отсутствие SYSTEM_ALERT_WINDOW + native bridge; сравнение с ТЗ always-on orb.",
+      "currentPhase": "Not started (honest)",
+      "nextMilestone": "RFC native overlay vs supported library + permission UX",
+      "blockers": ["Требуется production background session + FGS контракт до overlay"],
+      "releaseReadiness": "not_ready",
+      "priority": "P0"
+    },
+    {
       "id": "background-drive",
       "name": "Background drive & lifecycle",
-      "percent": 12,
+      "percent": 18,
       "status": "not_started",
-      "note": "Трекинг смены при background/lock: адаптер в driver — noop до FGS/location/task; влияет на taxi shift duration, profit live и timeline.",
+      "note": "Трекинг смены при background/lock: по умолчанию noop; эксперимент TaskManager+location+FGS notification только при EXPO_PUBLIC_EXPERIMENTAL_BG_LOCATION=1 (не production).",
       "percentBasis": "Сравнение с целевым always-on: services/backgroundTracking.ts + ShiftContext wiring.",
       "currentPhase": "Architecture + honesty gate",
       "nextMilestone": "Android foreground service + согласованный battery UX; затем интеграция с profit engine",
