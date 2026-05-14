@@ -1,12 +1,21 @@
 import Link from "next/link";
+import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
-const links = [
-  { href: "/", label: "Экосистема" },
-  { href: "/driver", label: "AION Driver" },
-  { href: "/status", label: "Статус" },
-  { href: "/roadmap", label: "Roadmap" },
-  { href: "/releases", label: "Релизы" },
-  { href: "/control", label: "Control" },
+const primaryNav = [
+  { href: ecosystemRoutes.home, label: "Экосистема" },
+  { href: ecosystemRoutes.aionProject, label: "Project" },
+  { href: ecosystemRoutes.status, label: "Статус" },
+  { href: ecosystemRoutes.roadmap, label: "Roadmap" },
+  { href: ecosystemRoutes.releases, label: "Релизы" },
+  { href: ecosystemRoutes.control, label: "Control" },
+] as const;
+
+const moduleNav = [
+  { href: ecosystemRoutes.downloads, label: "Downloads" },
+  { href: ecosystemRoutes.ai, label: "AI" },
+  { href: ecosystemRoutes.core, label: "Core" },
+  { href: ecosystemRoutes.studio, label: "Studio" },
+  { href: ecosystemRoutes.link, label: "Link" },
 ] as const;
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
@@ -18,7 +27,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             AION
           </Link>
           <nav className="flex flex-wrap items-center justify-end gap-1 text-sm md:gap-3">
-            {links.map((l) => (
+            {primaryNav.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
@@ -31,8 +40,19 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main className="flex-1">{children}</main>
-      <footer className="border-t border-white/5 bg-slate-950/90 py-8 text-center text-xs text-slate-600">
-        Данные roadmap, статуса экосистемы и релизов: JSON в репозитории + публичные снимки Supabase (`ecosystem_public_snapshots`) при настроенных ключах.
+      <footer className="border-t border-white/5 bg-slate-950/90 px-4 py-8 text-center md:px-6">
+        <nav className="mx-auto flex max-w-6xl flex-wrap justify-center gap-x-4 gap-y-2 text-[11px] text-slate-500">
+          {moduleNav.map((l) => (
+            <Link key={l.href} href={l.href} className="transition hover:text-cyan-400/90">
+              {l.label}
+            </Link>
+          ))}
+        </nav>
+        <p className="mx-auto mt-4 max-w-2xl text-xs text-slate-600">
+          Платформа: <span className="font-mono text-slate-500">www.aion.com</span> · продукт Driver:{" "}
+          <span className="font-mono text-slate-500">{ecosystemRoutes.aionProject}</span> · roadmap/релизы: JSON +
+          публичные снимки Supabase.
+        </p>
       </footer>
     </div>
   );

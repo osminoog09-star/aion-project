@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: "%s · AION",
   },
   description:
-    "AION.COM: публичный портал экосистемы — AION Driver, roadmap, релизы и control center. Данные из репозитория; облако подключается на следующих этапах.",
+    "AION.COM (www.aion.com): публичная платформа экосистемы — операции, roadmap, релизы; продукт AION Driver описан в разделе /aionproject. Облако подключается опционально.",
   applicationName: "AION",
   keywords: ["AION", "AION Driver", "roadmap", "releases", "OTA", "APK", "ecosystem"],
   authors: [{ name: "AION" }],
@@ -35,12 +35,12 @@ export const metadata: Metadata = {
     siteName: "AION",
     title: "AION — ecosystem platform",
     description:
-      "Public portal: flagship driver app, release center, roadmap, and operations foundation.",
+      "Public ecosystem platform at www.aion.com — operations, roadmap, releases; flagship Driver product hub at /aionproject.",
   },
   twitter: {
     card: "summary_large_image",
     title: "AION — ecosystem platform",
-    description: "Public ecosystem portal — driver, releases, roadmap, control.",
+    description: "Public ecosystem portal — /aionproject, releases, roadmap, control.",
   },
   robots: { index: true, follow: true },
 };

@@ -1,14 +1,27 @@
 import type { MetadataRoute } from "next";
+import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 import { getSiteUrl } from "@/lib/site-url";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = getSiteUrl().replace(/\/$/, "");
-  const paths = ["", "/driver", "/status", "/roadmap", "/releases", "/control"] as const;
+  const paths = [
+    "",
+    ecosystemRoutes.aionProject,
+    ecosystemRoutes.status,
+    ecosystemRoutes.roadmap,
+    ecosystemRoutes.releases,
+    ecosystemRoutes.control,
+    ecosystemRoutes.downloads,
+    ecosystemRoutes.ai,
+    ecosystemRoutes.core,
+    ecosystemRoutes.studio,
+    ecosystemRoutes.link,
+  ] as const;
   const now = new Date();
   return paths.map((p) => ({
     url: p === "" ? `${base}/` : `${base}${p}`,
     lastModified: now,
     changeFrequency: "weekly",
-    priority: p === "" ? 1 : 0.8,
+    priority: p === "" ? 1 : p === ecosystemRoutes.aionProject ? 0.95 : 0.8,
   }));
 }

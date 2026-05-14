@@ -24,7 +24,7 @@ Copy `.env.example` → `.env.local` for local optional vars.
 
 | Name | Required | Notes |
 |------|----------|--------|
-| `NEXT_PUBLIC_SITE_URL` | Recommended for prod | `https://your-domain.com` — drives `metadataBase`, sitemap, robots. |
+| `NEXT_PUBLIC_SITE_URL` | Recommended for prod | **`https://www.aion.com`** (канонический хост платформы; см. DOMAIN.md). |
 | `NEXT_PUBLIC_APK_MANIFEST_URL` | Optional | Public HTTPS JSON; same contract as Driver `EXPO_PUBLIC_APK_MANIFEST_URL`. |
 | `NEXT_PUBLIC_SUPABASE_URL` | **Recommended** | Same project URL as Driver (`EXPO_PUBLIC_SUPABASE_URL`). |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | **Recommended** | Publishable or anon key from Supabase (never commit service role). |
@@ -34,7 +34,7 @@ Copy `.env.example` → `.env.local` for local optional vars.
 - Schema migrations live in **`aion-driver/supabase/migrations/`** (single project for Driver + portal).
 - Portal reads **public** rows: `ecosystem_public_snapshots` (`is_public`), published releases, `ecosystem_rollout_state` (`visible_public`). Devices/pairs/activity are **auth-only** (RLS).
 - Snapshot kinds: `portal_ecosystem` (roadmap JSON payload), `portal_releases` (optional releases JSON overlay).
-- Custom domain steps: **[DOMAIN.md](./DOMAIN.md)**.
+- Custom domain steps: **[DOMAIN.md](./DOMAIN.md)** (канон: **www.aion.com**, продукт: **`/aionproject`**).
 
 5. Deploy → note **`.vercel.app`** URL (initial public URL).
 
@@ -42,7 +42,11 @@ Copy `.env.example` → `.env.local` for local optional vars.
 
 1. Project → **Settings** → **Domains** → add `aion.com` and `www.aion.com`.
 2. Follow DNS records Vercel shows (usually A/CNAME).
-3. Set **`NEXT_PUBLIC_SITE_URL`** to `https://aion.com` (or canonical www) and redeploy.
+3. Set **`NEXT_PUBLIC_SITE_URL`** to **`https://www.aion.com`** (canonical platform origin) and redeploy.
+
+## Monorepo / root directory
+
+- If the Git repo root is **not** `aion-com`, set Vercel **Root Directory** to `aion-com` so this Next app owns **www.aion.com**; Driver stays a separate EAS deploy, linked from **`/aionproject`**.
 
 ## Updates
 
@@ -58,7 +62,8 @@ Copy `.env.example` → `.env.local` for local optional vars.
 ## Production checklist
 
 - [ ] `npm run build` green on CI or locally before merge
-- [ ] `NEXT_PUBLIC_SITE_URL` matches canonical domain
+- [ ] `NEXT_PUBLIC_SITE_URL` matches **https://www.aion.com** (or your chosen canonical)
 - [ ] `NEXT_PUBLIC_APK_MANIFEST_URL` set if live manifest desired
-- [ ] Spot-check `/`, `/driver`, `/roadmap`, `/releases`, `/control`
+- [ ] Spot-check `/`, **`/aionproject`**, `/roadmap`, `/releases`, `/control`, `/status`
+- [ ] Legacy `/driver` redirects to `/aionproject` (308/301)
 - [ ] Share preview URL before pointing DNS

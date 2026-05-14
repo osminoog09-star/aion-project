@@ -2,6 +2,7 @@ import Link from "next/link";
 import { AionWebEntity } from "@/components/AionWebEntity";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
 import { averageReadiness } from "@/lib/readiness";
+import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export default async function HomePage() {
   const eco = await getEcosystemStatus();
@@ -31,10 +32,10 @@ export default async function HomePage() {
           <p>{eco.methodology}</p>
           <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:justify-center md:justify-start">
             <Link
-              href="/driver"
+              href={ecosystemRoutes.aionProject}
               className="rounded-xl bg-cyan-500/15 px-5 py-3 text-center text-sm font-semibold text-cyan-200 ring-1 ring-cyan-400/35 transition hover:bg-cyan-500/25"
             >
-              AION Driver
+              AION Project
             </Link>
             <Link
               href="/status"
