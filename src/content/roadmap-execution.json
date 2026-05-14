@@ -53,7 +53,7 @@
     "currentSubsystemFocus": "release-ops",
     "nextImplementationTarget": "Закрыть APK release loop: FINISHED EAS для актуального versionCode → sync манифест (npm run release:apk-manifest:sync) → деплой портала → Update Center на устройстве; затем Android background production (не experimental-only).",
     "blockedTasks": [
-      "APK 1.0.4/6: пересобрать preview после versionCode 6; FINISHED → `npm run release:apk-manifest:sync <id>` → commit манифест → деплой портала → физическая приёмка Update Center (EXPO_PUBLIC_APK_MANIFEST_URL); старые IN_QUEUE билды отменять при необходимости",
+      "APK 1.0.4/6: активный preview EAS b9d3c90a-7566-425a-bdb9-53d68f59593a (commit 9baa6bb, vc6) — ждать FINISHED → `npm run release:apk-manifest:sync b9d3c90a-7566-425a-bdb9-53d68f59593a` → commit манифест → деплой портала → Update Center на устройстве; старые IN_QUEUE (f71cec0a/9fa827ce) можно отменить",
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
     ],

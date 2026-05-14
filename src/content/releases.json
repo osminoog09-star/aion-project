@@ -21,9 +21,15 @@
     "latestKnownVersion": "1.0.4",
     "policy": "Новый APK только при изменении нативного слоя, SDK или versionCode; JS/UI — через OTA.",
     "publicManifestUrl": "https://aion-com.vercel.app/apk-manifest.preview.json",
-    "note": "Автосинк манифеста: aion-com `npm run release:apk-manifest:sync` + workflow `apk-manifest-from-eas.yml` (нужен secret EXPO_TOKEN). apkUrl — плейсхолдер до FINISHED билда с versionCode 6 (native bump: BG location + experimental path). Очередь f71cec0a (1.0.4/5) может быть устаревшей — пересобрать после driver bump. Последний FINISHED 1.0.3: 4df2899b → https://expo.dev/artifacts/eas/aCgroFNDmLPXjVE8C3x6gj.apk (не подставлять как 1.0.4)."
+    "note": "Активный preview build b9d3c90a-7566-425a-bdb9-53d68f59593a (1.0.4 / versionCode 6, commit 9baa6bb) — после FINISHED: npm run release:apk-manifest:sync <id>. Скрипт/workflow: см. ранее. Старые очереди f71cec0a / 9fa827ce не блокируют, если отменены."
   },
   "history": [
+    {
+      "date": "2026-05-14",
+      "type": "apk",
+      "title": "EAS preview 1.0.4 / versionCode 6 (b9d3c90a)",
+      "detail": "eas build preview --no-wait с main 9baa6bb (experimental BG + manifest types). Ждать FINISHED → sync-apk-manifest-from-eas → deploy → device Update Center."
+    },
     {
       "date": "2026-05-14",
       "type": "apk",

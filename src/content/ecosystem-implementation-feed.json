@@ -74,7 +74,7 @@
       },
       "validation": {
         "web_build": "pending",
-        "apk_build": "in_queue:f71cec0a-a936-41e6-838d-476be202e789"
+        "apk_build": "new:b9d3c90a-7566-425a-bdb9-53d68f59593a (vc6, wait FINISHED)"
       }
     },
     {
