@@ -1,0 +1,34 @@
+{
+  "lastUpdated": "2026-05-14",
+  "maintainedInRepository": true,
+  "channels": [
+    {
+      "id": "preview",
+      "label": "Preview",
+      "description": "Тестовый канал OTA и preview APK из EAS.",
+      "appVersion": "1.0.3",
+      "notes": "Версия синхронизирована с репозиторием aion-driver (package.json). Runtime смотрите в приложении: OTA-debug / диагностика."
+    },
+    {
+      "id": "production",
+      "label": "Production",
+      "description": "Стабильный канал для водителей.",
+      "appVersion": "1.0.3",
+      "notes": "Те же цифры до выделения отдельного production bump в CI."
+    }
+  ],
+  "apk": {
+    "latestKnownVersion": "1.0.3",
+    "policy": "Новый APK только при изменении нативного слоя, SDK или versionCode; JS/UI — через OTA.",
+    "publicManifestUrl": null,
+    "note": "Публичный manifest URL будет добавлен после хостинга артефактов (S3/GitHub Releases/EAS)."
+  },
+  "history": [
+    {
+      "date": "2026-05-14",
+      "type": "web",
+      "title": "Запуск aion.com (фундамент)",
+      "detail": "Next.js: лендинг, Driver, Roadmap, Control, Releases на данных из репозитория."
+    }
+  ]
+}

@@ -1,65 +1,77 @@
-import Image from "next/image";
+import Link from "next/link";
+import { AionWebEntity } from "@/components/AionWebEntity";
+import { getEcosystemStatus } from "@/lib/ecosystem-data";
+import { averageReadiness } from "@/lib/readiness";
 
-export default function Home() {
+export default function HomePage() {
+  const eco = getEcosystemStatus();
+  const avg = averageReadiness(eco.readiness);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
+      <p className="text-center text-[11px] font-semibold uppercase tracking-[0.45em] text-cyan-400/90">
+        Ecosystem · Platform
+      </p>
+      <h1 className="mt-4 text-center text-3xl font-bold tracking-tight text-white md:text-5xl md:leading-tight">
+        AION — операционная система для водителя
+      </h1>
+      <p className="mx-auto mt-5 max-w-2xl text-center text-base leading-relaxed text-slate-400 md:text-lg">
+        Не один мобильный клиент: облако, desktop, OCR, AION Link и единый центр обновлений. Флагманский модуль —{" "}
+        <strong className="text-slate-200">AION Driver</strong>.
+      </p>
+
+      <div className="mt-12 flex flex-col items-center gap-10 md:mt-16 md:flex-row md:justify-center md:gap-16">
+        <AionWebEntity readinessAvg={avg} />
+        <div className="max-w-md space-y-4 text-sm leading-relaxed text-slate-400">
+          <p>
+            Средняя готовность подсистем (по данным репозитория, обновлено{" "}
+            <time dateTime={eco.lastUpdated}>{eco.lastUpdated}</time>):{" "}
+            <strong className="text-cyan-300">{avg}%</strong>
+          </p>
+          <p>{eco.methodology}</p>
+          <div className="flex flex-col gap-2 pt-2 sm:flex-row sm:justify-center md:justify-start">
+            <Link
+              href="/driver"
+              className="rounded-xl bg-cyan-500/15 px-5 py-3 text-center text-sm font-semibold text-cyan-200 ring-1 ring-cyan-400/35 transition hover:bg-cyan-500/25"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              AION Driver
+            </Link>
+            <Link
+              href="/roadmap"
+              className="rounded-xl bg-white/5 px-5 py-3 text-center text-sm font-semibold text-slate-200 ring-1 ring-white/10 transition hover:bg-white/10"
             >
-              Learning
-            </a>{" "}
-            center.
+              Roadmap
+            </Link>
+            <Link
+              href="/control"
+              className="rounded-xl bg-violet-500/10 px-5 py-3 text-center text-sm font-semibold text-violet-200 ring-1 ring-violet-400/30 transition hover:bg-violet-500/20"
+            >
+              Control center
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <section className="mt-20 grid gap-6 border-t border-white/10 pt-14 md:grid-cols-3">
+        <div className="rounded-2xl bg-white/[0.03] p-6 ring-1 ring-white/10">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">Driver</h2>
+          <p className="mt-3 text-sm text-slate-400">
+            Кокпит, OCR выплат, garage, карта, desktop workspace, AION Entity, синхронизация.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="rounded-2xl bg-white/[0.03] p-6 ring-1 ring-white/10">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-violet-400/90">Cloud</h2>
+          <p className="mt-3 text-sm text-slate-400">
+            Supabase, очереди, OTA; портал получит live-статусы после подключения API.
+          </p>
         </div>
-      </main>
+        <div className="rounded-2xl bg-white/[0.03] p-6 ring-1 ring-white/10">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-emerald-400/90">Релизы</h2>
+          <p className="mt-3 text-sm text-slate-400">
+            Каналы preview/production, политика OTA vs APK, история — на странице «Релизы».
+          </p>
+        </div>
+      </section>
     </div>
   );
 }

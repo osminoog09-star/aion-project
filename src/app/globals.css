@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #020617;
+  --foreground: #e2e8f0;
 }
 
 @theme inline {
@@ -12,15 +12,47 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  background: radial-gradient(1200px 600px at 50% -10%, rgba(34, 211, 238, 0.12), transparent),
+    radial-gradient(800px 400px at 90% 20%, rgba(139, 92, 246, 0.1), transparent),
+    #020617;
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.aion-entity-halo {
+  animation: aion-halo-breathe var(--aion-pulse, 2.8s) ease-in-out infinite;
+}
+
+.aion-entity-core {
+  animation: aion-core-breathe var(--aion-pulse, 2.8s) ease-in-out infinite;
+}
+
+@keyframes aion-halo-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.85;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes aion-core-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aion-entity-halo,
+  .aion-entity-core {
+    animation: none !important;
+  }
 }

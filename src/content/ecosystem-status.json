@@ -1,0 +1,82 @@
+{
+  "lastUpdated": "2026-05-14",
+  "maintainedInRepository": true,
+  "methodology": "Проценты и статусы выставляются вручную при релизах AION Driver и веб-платформы; до подключения Supabase это единственный источник правды на aion.com.",
+  "sprint": {
+    "label": "Ecosystem platform bootstrap",
+    "focus": "aion.com + Update transparency + Control center shell"
+  },
+  "readiness": {
+    "mobile": 68,
+    "desktop": 64,
+    "webPortal": 22,
+    "ocr": 72,
+    "cloud": 58,
+    "updates": 35,
+    "aionEntity": 55,
+    "aionLink": 40,
+    "performance": 50
+  },
+  "subsystems": [
+    {
+      "id": "driver-core",
+      "name": "AION Driver — cockpit & смены",
+      "percent": 74,
+      "status": "partial",
+      "note": "Production-поток смены, OTA, desktop route; полировка UX продолжается."
+    },
+    {
+      "id": "ocr",
+      "name": "OCR Intelligence",
+      "percent": 72,
+      "status": "partial",
+      "note": "Пайплайн и парсер в приложении; усиление фото/ночи — в работе."
+    },
+    {
+      "id": "aion-link",
+      "name": "AION Link",
+      "percent": 40,
+      "status": "partial",
+      "note": "Режим Link и очередь; облачный pairing и realtime — следующий этап."
+    },
+    {
+      "id": "aion-entity",
+      "name": "AION Entity",
+      "percent": 55,
+      "status": "partial",
+      "note": "Машина состояний и панель в приложении; связка со сменой/OTA — дальше."
+    },
+    {
+      "id": "updates",
+      "name": "Update Center & OTA/APK clarity",
+      "percent": 35,
+      "status": "partial",
+      "note": "OTA/EAS работают; единый центр обновлений и What’s New — не завершены."
+    },
+    {
+      "id": "aion-com",
+      "name": "AION.COM portal",
+      "percent": 22,
+      "status": "partial",
+      "note": "Фундамент Next.js, публичные данные roadmap/releases; auth и API — позже."
+    },
+    {
+      "id": "cloud-schema",
+      "name": "Cloud schema (devices, releases, OCR relay)",
+      "percent": 28,
+      "status": "partial",
+      "note": "Supabase в приложении; таблицы под портал и Link — в проектировании."
+    }
+  ],
+  "epics": {
+    "active": [
+      "AION.COM foundation",
+      "Update transparency",
+      "AION Link realtime"
+    ],
+    "completed": [
+      "AION Core diagnostics baseline",
+      "Expo/EAS OTA channels"
+    ]
+  }
+}
