@@ -1,11 +1,27 @@
 import { createPortalSupabase } from "@/lib/supabase/portal-client";
-import type { EcosystemStatus, ReleasesPayload } from "@/lib/ecosystem-types";
+import type { EcosystemStatus, ExecutionQueue, ReleasesPayload } from "@/lib/ecosystem-types";
 import { parseEcosystemStatusPayload, parseReleasesPayload } from "@/lib/ecosystem/payload-guards";
 
 export const SNAPSHOT_KIND_ECOSYSTEM = "portal_ecosystem";
 export const SNAPSHOT_KIND_RELEASES = "portal_releases";
 
+function mergeExecutionQueues(a?: ExecutionQueue, b?: ExecutionQueue): ExecutionQueue | undefined {
+  if (!a && !b) return undefined;
+  if (!a) return b;
+  if (!b) return a;
+  return {
+    currentActiveEpic: b.currentActiveEpic ?? a.currentActiveEpic,
+    currentSubsystemFocus: b.currentSubsystemFocus ?? a.currentSubsystemFocus,
+    nextImplementationTarget: b.nextImplementationTarget ?? a.nextImplementationTarget,
+    blockedTasks: b.blockedTasks.length ? b.blockedTasks : a.blockedTasks,
+    releaseBlockers: b.releaseBlockers.length ? b.releaseBlockers : a.releaseBlockers,
+    uxBlockers: b.uxBlockers.length ? b.uxBlockers : a.uxBlockers,
+    backendBlockers: b.backendBlockers.length ? b.backendBlockers : a.backendBlockers,
+  };
+}
+
 function mergeEcosystem(cloud: EcosystemStatus, local: EcosystemStatus): EcosystemStatus {
+  const executionQueue = mergeExecutionQueues(local.executionQueue, cloud.executionQueue);
   return {
     ...local,
     ...cloud,
@@ -15,6 +31,8 @@ function mergeEcosystem(cloud: EcosystemStatus, local: EcosystemStatus): Ecosyst
     definitionOfDone: cloud.definitionOfDone?.length ? cloud.definitionOfDone : local.definitionOfDone,
     releaseQualityBar: cloud.releaseQualityBar?.length ? cloud.releaseQualityBar : local.releaseQualityBar,
     cursorExecutionRules: cloud.cursorExecutionRules?.length ? cloud.cursorExecutionRules : local.cursorExecutionRules,
+    aiExecutionNotes: cloud.aiExecutionNotes ?? local.aiExecutionNotes,
+    executionQueue,
     vision: cloud.vision ?? local.vision,
     execution: cloud.execution ? { ...local.execution, ...cloud.execution } : local.execution,
     cloudSoT: cloud.cloudSoT ?? local.cloudSoT,
@@ -41,6 +59,7 @@ function mergeSubsystemsById(local: EcosystemStatus["subsystems"], cloud: Ecosys
 
 /** Deep overlay: same shape as EcosystemStatus; subsystem rows merge by id so JSON extensions survive partial cloud. */
 function mergeRoadmapMasterOverlay(cloud: EcosystemStatus, base: EcosystemStatus): EcosystemStatus {
+  const executionQueue = mergeExecutionQueues(base.executionQueue, cloud.executionQueue);
   return {
     ...base,
     ...cloud,
@@ -50,6 +69,8 @@ function mergeRoadmapMasterOverlay(cloud: EcosystemStatus, base: EcosystemStatus
     definitionOfDone: cloud.definitionOfDone?.length ? cloud.definitionOfDone : base.definitionOfDone,
     releaseQualityBar: cloud.releaseQualityBar?.length ? cloud.releaseQualityBar : base.releaseQualityBar,
     cursorExecutionRules: cloud.cursorExecutionRules?.length ? cloud.cursorExecutionRules : base.cursorExecutionRules,
+    aiExecutionNotes: cloud.aiExecutionNotes ?? base.aiExecutionNotes,
+    executionQueue,
     vision: cloud.vision ?? base.vision,
     execution: cloud.execution ? { ...base.execution, ...cloud.execution } : base.execution,
     cloudSoT: cloud.cloudSoT ?? base.cloudSoT,

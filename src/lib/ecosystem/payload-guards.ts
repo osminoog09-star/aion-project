@@ -23,6 +23,15 @@ const subsystemProfileSchema = z.object({
   realtimeReadiness: z.number().optional(),
   backendReadiness: z.number().optional(),
   productionReadiness: z.number().optional(),
+  architectureState: z.string().optional(),
+  missingUx: z.array(z.string()).optional(),
+  missingBackend: z.array(z.string()).optional(),
+  missingRealtime: z.array(z.string()).optional(),
+  nextRecommendedStep: z.string().optional(),
+  biggestWeakness: z.string().optional(),
+  highestValueImprovement: z.string().optional(),
+  requiredDependencies: z.array(z.string()).optional(),
+  recommendedNextPhase: z.string().optional(),
 });
 
 const subsystemSchema = z

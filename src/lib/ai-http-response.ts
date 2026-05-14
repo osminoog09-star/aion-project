@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 
+import { AION_AI_SCHEMA_VERSION } from "@/lib/aion-ai-context";
+
 const AI_HEADERS: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "X-AION-AI-Schema": "1.1.0",
+  "X-AION-AI-Schema": AION_AI_SCHEMA_VERSION,
   "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
 };
 

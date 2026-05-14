@@ -35,6 +35,46 @@ export type SubsystemExecutionProfile = {
   realtimeReadiness?: number;
   backendReadiness?: number;
   productionReadiness?: number;
+  /** One-line architecture / layering note for agents. */
+  architectureState?: string;
+  missingUx?: string[];
+  missingBackend?: string[];
+  missingRealtime?: string[];
+  /** Single next implementation step (roadmap-driven). */
+  nextRecommendedStep?: string;
+  biggestWeakness?: string;
+  highestValueImprovement?: string;
+  requiredDependencies?: string[];
+  recommendedNextPhase?: string;
+};
+
+/** Philosophy + collaboration contract (merged from `roadmap-execution.json`). */
+export type AiExecutionNotes = {
+  architecturePrinciples: string[];
+  noFakeDoneRule: string;
+  finishBeforeSwitchingRule: string;
+  noPlaceholderUx: string;
+  noDisconnectedSystems: string;
+  noDuplicateLogic: string;
+  ecosystemFirstArchitecture: string;
+  cloudSourceOfTruthPolicy: string;
+  realtimeFirstDirection: string;
+  releaseQualityRequirements: string[];
+  collaborationModel: {
+    chatgpt: string[];
+    cursor: string[];
+  };
+};
+
+/** Prioritized execution queue — editorial; drives “what next”. */
+export type ExecutionQueue = {
+  currentActiveEpic: string;
+  currentSubsystemFocus: string;
+  nextImplementationTarget: string;
+  blockedTasks: string[];
+  releaseBlockers: string[];
+  uxBlockers: string[];
+  backendBlockers: string[];
 };
 
 export type EcosystemSubsystem = {
@@ -125,6 +165,10 @@ export type EcosystemStatus = {
   releaseQualityBar?: string[];
   /** Shown on /operations — agent + human execution contract. */
   cursorExecutionRules?: string[];
+  /** Agent philosophy + workflow; merged from roadmap-execution.json. */
+  aiExecutionNotes?: AiExecutionNotes;
+  /** Live prioritized queue for autonomous execution guidance. */
+  executionQueue?: ExecutionQueue;
   vision?: VisionSection;
   execution?: ExecutionPriorities;
   cloudSoT?: CloudSoTInfo;

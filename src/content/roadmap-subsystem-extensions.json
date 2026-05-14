@@ -11,7 +11,16 @@
     "realtimeReadiness": 35,
     "backendReadiness": 50,
     "productionReadiness": 62,
-    "subsystemDebt": ["Нет единого CI gate по покрытию"]
+    "subsystemDebt": ["Нет единого CI gate по покрытию"],
+    "architectureState": "Expo app: модуль Driver; слои UI / domain / sync; частичный Supabase.",
+    "missingUx": ["Полный набор error/empty для OCR и оплаты", "Согласованные loading между web/mobile"],
+    "missingBackend": ["Сквозная корреляция Entity с облаком для персональных состояний"],
+    "missingRealtime": ["Стабильные каналы для live сущностей без дрейфа локального SoT"],
+    "biggestWeakness": "Edge UX + облачная корреляция состояния не доведены до production bar.",
+    "highestValueImprovement": "Закрыть update/entity согласованность с порталом и облаком.",
+    "requiredDependencies": ["updates subsystem", "aion-entity", "Supabase RLS когда появится auth"],
+    "recommendedNextPhase": "Hard polish критичных потоков + единый диагностический слой.",
+    "nextRecommendedStep": "Выбрать один поток (например post-OCR confirm) и довести UX+errors до releaseQualityBar."
   },
   "updates": {
     "whatWorks": ["Update Center", "OTA check/apply", "APK manifest fetch", "Post-update flow частично"],
@@ -24,7 +33,16 @@
     "otaImpact": "high",
     "realtimeReadiness": 20,
     "backendReadiness": 35,
-    "productionReadiness": 48
+    "productionReadiness": 48,
+    "architectureState": "Клиентский update engine + портальный mirror; нет единой БД истории.",
+    "missingUx": ["История OTA на всех поверхностях", "Единый экран объяснения blocked update"],
+    "missingBackend": ["Персистентная история применений в облаке (после release DB)"],
+    "missingRealtime": ["Live канал статуса rollout на портал (опционально)"],
+    "biggestWeakness": "Рассинхрон: несколько entry points без одного контракта отображения.",
+    "highestValueImprovement": "Один модуль update state + прозрачность на com и в клиенте.",
+    "requiredDependencies": ["web-portal surfaces", "apk-channel manifest", "release-ops decision"],
+    "recommendedNextPhase": "Прозрачность end-to-end до merge в execution queue «done».",
+    "nextRecommendedStep": "Ввести единый хук/selector состояния обновления и подключить его к Update Center и порталу."
   },
   "ota-eas": {
     "whatWorks": ["Каналы preview/production", "reload apply", "embedded vs launch"],
@@ -32,7 +50,16 @@
     "otaImpact": "high",
     "realtimeReadiness": 25,
     "backendReadiness": 40,
-    "productionReadiness": 70
+    "productionReadiness": 70,
+    "architectureState": "EAS Update pipeline в клиенте; портал читает косвенно через manifest/релизы.",
+    "missingUx": ["Публичная витрина применённой ревизии на com"],
+    "missingBackend": ["Нет серверного hook для подписи канала без EAS dashboard"],
+    "missingRealtime": ["Push статуса применения на устройствах в портал (auth)"],
+    "biggestWeakness": "Наблюдаемость каналов снаружи клиента слабая.",
+    "highestValueImprovement": "Связать ota-eas метрики с operations-center health rows.",
+    "requiredDependencies": ["operations-center", "web-portal"],
+    "recommendedNextPhase": "Наблюдаемость + алерты при failed apply.",
+    "nextRecommendedStep": "Задокументировать и отобразить на /control канал→runtime→последняя известная ревизия из клиента/манифеста."
   },
   "apk-channel": {
     "whatWorks": ["Манифест JSON", "force/minRuntime в типах", "com/driver fetch"],
@@ -40,7 +67,16 @@
     "requiresApk": ["Всегда для native bump"],
     "otaImpact": "medium",
     "backendReadiness": 30,
-    "productionReadiness": 52
+    "productionReadiness": 52,
+    "architectureState": "HTTPS JSON manifest; типы согласованы с клиентом.",
+    "missingUx": ["Явный UX force-update на портале при critical"],
+    "missingBackend": ["Подписанный CDN + проверка целостности"],
+    "missingRealtime": [],
+    "biggestWeakness": "Нет централизованного доверенного хостинга артефактов.",
+    "highestValueImprovement": "Подключить публичный manifest URL и проверку minRuntime на портале.",
+    "requiredDependencies": ["deploy", "releases-json"],
+    "recommendedNextPhase": "Signed artifacts + политика кэша.",
+    "nextRecommendedStep": "Зафиксировать NEXT_PUBLIC_APK_MANIFEST_URL в проде и проверить паритет полей с клиентом."
   },
   "web-portal": {
     "whatWorks": ["Next.js страницы", "Roadmap/status/control", "Supabase merge"],
@@ -50,7 +86,16 @@
     "otaImpact": "none",
     "realtimeReadiness": 30,
     "backendReadiness": 42,
-    "productionReadiness": 28
+    "productionReadiness": 28,
+    "architectureState": "Next.js App Router; JSON SoT + aiJsonResponse API slices.",
+    "missingUx": ["Auth flows", "Device registry UI", "Signed-in operations"],
+    "missingBackend": ["Server actions / RLS для приватных срезов"],
+    "missingRealtime": ["Подписки Supabase для live health (после политики доступа)"],
+    "biggestWeakness": "Только публичные срезы — нет полноценного account center.",
+    "highestValueImprovement": "Минимальный auth + read-only device list для ops.",
+    "requiredDependencies": ["cloud-auth", "Supabase RLS шаблоны", "release-db план"],
+    "recommendedNextPhase": "Auth + приватные dashboardы без дублирования driver-логики.",
+    "nextRecommendedStep": "Расширить /api/roadmap/execution и страницы execution без ломки публичного контракта; затем спека auth."
   },
   "roadmap-system": {
     "whatWorks": ["Типы", "Zod", "Страницы /ecosystem /operations", "portal_roadmap_master merge"],
@@ -58,21 +103,48 @@
     "cloudReady": ["Чтение snapshot при наличии строки"],
     "otaImpact": "none",
     "backendReadiness": 55,
-    "productionReadiness": 55
+    "productionReadiness": 55,
+    "architectureState": "Репозиторный JSON + Zod parse + merge в ecosystem-data.",
+    "missingUx": ["/roadmap/execution как живой вход для агентов — поддерживать"],
+    "missingBackend": ["CI writer в ecosystem_public_snapshots"],
+    "missingRealtime": [],
+    "biggestWeakness": "Ручное обновление JSON при отсутствии CI writer.",
+    "highestValueImprovement": "Скрипт публикации snapshot из CI с валидацией Zod.",
+    "requiredDependencies": ["repositories", "Supabase credentials в CI"],
+    "recommendedNextPhase": "Автоматическая запись portal_roadmap_master.",
+    "nextRecommendedStep": "Добавить npm script `roadmap:validate` в CI и блокировать merge при parse null."
   },
   "realtime": {
     "whatWorks": ["EcosystemRealtimeBridge задел"],
     "whatDoesNotWork": ["SLA, персистентные каналы для всех модулей"],
     "otaImpact": "low",
     "realtimeReadiness": 32,
-    "productionReadiness": 30
+    "productionReadiness": 30,
+    "architectureState": "Клиентский bridge; нет единой матрицы каналов по модулям.",
+    "missingUx": ["Диагностика соединения в portal ops (после auth)"],
+    "missingBackend": ["Канонические topics/rooms в Supabase realtime"],
+    "missingRealtime": ["Backpressure, reconnect стратегия, метрики"],
+    "biggestWeakness": "Нет контракта realtime на уровне экосистемы.",
+    "highestValueImprovement": "Один health-контракт realtime для портала и Driver.",
+    "requiredDependencies": ["Supabase realtime включён", "RLS на каналы"],
+    "recommendedNextPhase": "Пилотный канал с наблюдаемостью.",
+    "nextRecommendedStep": "Описать в JSON список каналов по подсистеме и пробросить в cloud health API."
   },
   "sync-engine": {
     "whatWorks": ["Offline queue", "flush метаданные"],
     "whatDoesNotWork": ["Полная админка конфликтов"],
     "otaImpact": "low",
     "backendReadiness": 55,
-    "productionReadiness": 64
+    "productionReadiness": 64,
+    "architectureState": "Очередь в клиенте; серверная согласованность частично.",
+    "missingUx": ["UX разрешения конфликтов", "Прозрачность застрявших jobs"],
+    "missingBackend": ["Серверные версии сущностей и merge policy"],
+    "missingRealtime": ["Уведомления о flush errors"],
+    "biggestWeakness": "Конфликты и retry policy не унифицированы.",
+    "highestValueImprovement": "Единая таблица событий sync + UI для power users.",
+    "requiredDependencies": ["cloud schema", "auth"],
+    "recommendedNextPhase": "Серверный merge + метрики.",
+    "nextRecommendedStep": "Инвентаризировать очереди по модулям и свести к одному интерфейсу flush/status."
   },
   "aion-link": {
     "whatWorks": ["Локальный режим/очередь в клиенте"],
@@ -80,13 +152,31 @@
     "cloudReady": [],
     "otaImpact": "low",
     "realtimeReadiness": 28,
-    "productionReadiness": 38
+    "productionReadiness": 38,
+    "architectureState": "Локальный Link; облако не является SoT для пары устройств.",
+    "missingUx": ["Статус пары и ошибок на обоих устройствах"],
+    "missingBackend": ["Pairing tokens, TTL, revoke"],
+    "missingRealtime": ["Надёжный duplex после пары"],
+    "biggestWeakness": "Нет облачного доверенного pairing.",
+    "highestValueImprovement": "MVP pairing API + минимальный порталный статус.",
+    "requiredDependencies": ["Supabase", "realtime"],
+    "recommendedNextPhase": "Облачный pairing pilot.",
+    "nextRecommendedStep": "Зафиксировать threat model и минимальную схему таблиц для пары устройств."
   },
   "operations-center": {
     "whatWorks": ["/control", "/status", "/operations", "rollout read"],
     "whatDoesNotWork": ["Signed-in ops", "CI→snapshot writer"],
     "cloudReady": ["Чтение public таблиц"],
     "otaImpact": "none",
-    "productionReadiness": 42
+    "productionReadiness": 42,
+    "architectureState": "Композиция hub view из manifest + JSON + Supabase read.",
+    "missingUx": ["Приватные срезы устройств", "Инциденты/alerts"],
+    "missingBackend": ["Аутентифицированные queries", "Запись снимков из CI"],
+    "missingRealtime": ["Live rollout tick"],
+    "biggestWeakness": "Только публичные данные — ограниченный ops контур.",
+    "highestValueImprovement": "CI job пишет snapshot + ops UI read-only signed.",
+    "requiredDependencies": ["web-portal auth", "GitHub Actions / CI"],
+    "recommendedNextPhase": "Запись snapshots + уведомления.",
+    "nextRecommendedStep": "Добавить документированный формат snapshot writer и переменные CI."
   }
 }

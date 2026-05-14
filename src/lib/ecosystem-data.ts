@@ -1,6 +1,7 @@
 import type { EcosystemStatus, EcosystemSubsystem, ReleasesPayload } from "@/lib/ecosystem-types";
 import ecosystemStatus from "@/content/ecosystem-status.json";
 import roadmapSubsystemExtensions from "@/content/roadmap-subsystem-extensions.json";
+import roadmapExecution from "@/content/roadmap-execution.json";
 import releases from "@/content/releases.json";
 import { fetchCloudEcosystemStatus, fetchCloudReleasesPayload } from "@/lib/ecosystem/cloud-queries";
 
@@ -11,7 +12,9 @@ function applySubsystemExtensions(subsystems: EcosystemSubsystem[]): EcosystemSu
 
 export function getLocalEcosystemStatus(): EcosystemStatus {
   const base = ecosystemStatus as EcosystemStatus;
-  return { ...base, subsystems: applySubsystemExtensions(base.subsystems) };
+  const exec = roadmapExecution as Pick<EcosystemStatus, "aiExecutionNotes" | "executionQueue">;
+  const subsystems = applySubsystemExtensions(base.subsystems);
+  return { ...base, subsystems, ...exec };
 }
 
 export async function getEcosystemStatus(): Promise<EcosystemStatus> {

@@ -1,15 +1,42 @@
 ---
-description: AION ecosystem roadmap & operations — single source of truth and execution contract
-globs: aion-com/**/*
+description: AION roadmap as execution engine — SoT, agent contract, ChatGPT↔Cursor workflow
+globs: "src/**/*"
 alwaysApply: false
 ---
 
-# Roadmap / operations (aion.com)
+# Roadmap-driven execution (AION)
 
-- **Source of truth:** `src/content/ecosystem-status.json` + `roadmap-subsystem-extensions.json`; cloud overlay via Supabase `ecosystem_public_snapshots` kinds `portal_ecosystem` and `portal_roadmap_master` (see `src/lib/ecosystem/cloud-queries.ts`). **Operations Hub** composes APK manifest + releases + roadmap + rollout + Supabase probe in `getOperationsHubView` (`/control`).
-- **Do not** mark work `fully_done` unless it meets `releaseQualityBar` + `definitionOfDone` in JSON and real code paths exist.
-- **Finish before switching:** complete the current subsystem/task unless the user explicitly changes scope.
-- **No duplicate architecture:** extend existing roadmap types, Zod guards, and pages (`/ecosystem`, `/operations`, `/roadmap`, `/status`); do not add a second parallel tracker.
-- **No fake metrics:** percentages and readiness slices are editorial; do not invent automated scores.
+## Single source of truth (no parallel trackers)
 
-When changing roadmap data, update `lastUpdated` and keep `evidence` on technical-debt items observable (file/table/behavior).
+- **Repository JSON:** `src/content/ecosystem-status.json`, `src/content/roadmap-subsystem-extensions.json`, `src/content/roadmap-execution.json`, `src/content/releases.json`.
+- **Merge:** `getEcosystemStatus()` in `src/lib/ecosystem-data.ts` (extensions + execution bundle + optional Supabase).
+- **Cloud overlay:** `ecosystem_public_snapshots` kinds `portal_ecosystem`, `portal_roadmap_master` — see `src/lib/ecosystem/cloud-queries.ts`.
+- **Machine-readable:** `GET /api/aion/context` (includes `executionEngine`), `GET /api/roadmap/execution`, plus slice APIs listed on `/ai-context`.
+- **Human pages:** `/roadmap/execution`, `/operations/context`, `/control`, `/operations`, `/status`, `/roadmap`.
+
+## Cursor MUST NOT
+
+- Randomly switch subsystems or epics without an explicit user rescope (follow `executionQueue` + `execution.activeEpics`).
+- Mark `fully_done` without `definitionOfDone` + `releaseQualityBar` alignment and real code verification.
+- Add placeholder UX in user-visible flows (disabled + copy, or hide).
+- Create disconnected UI (screens without data contract / API).
+- Duplicate backend or merge logic (extend `ecosystem-data`, `payload-guards`, existing repos).
+- Invent readiness %, blockers, or debt without observable evidence.
+
+## Cursor SHOULD (within roadmap priorities)
+
+- Read `/api/roadmap/execution` or `executionEngine` in `/api/aion/context` before large changes.
+- Improve weak UX and consistency when it advances `executionQueue.nextImplementationTarget` or the focused subsystem.
+- Strengthen realtime/cloud/release paths when aligned with `aiExecutionNotes` and epics.
+- Ask the user to consult **ChatGPT** for architecture/spec when ambiguity remains after reading JSON SoT.
+
+## ChatGPT vs Cursor (collaboration)
+
+- **ChatGPT:** architecture, tradeoffs, ecosystem review, sequencing — use when design is unclear.
+- **Cursor:** implementation, integration, refactor — execute against the JSON queue and Zod-valid payloads.
+
+## When editing roadmap data
+
+- Bump `lastUpdated` in `ecosystem-status.json` when subsystem/execution meaningfully changes.
+- Keep `technicalDebt[].evidence` concrete (file, table, scenario).
+- Update `roadmap-execution.json` **executionQueue** when the true next target or blockers change.

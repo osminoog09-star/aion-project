@@ -6,7 +6,7 @@ import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 export const metadata: Metadata = {
   title: "AI context — машиночитаемая экосистема AION",
   description:
-    "Ссылки на JSON API экосистемы, roadmap, релизов и облака для ассистентов и CI. Schema X-AION-AI-Schema 1.1.0.",
+    "Ссылки на JSON API экосистемы, roadmap, execution, релизов и облака для ассистентов и CI. Schema X-AION-AI-Schema 1.2.0.",
   robots: { index: true, follow: true },
 };
 
@@ -14,6 +14,7 @@ export default function AiContextPage() {
   const base = getSiteUrl().replace(/\/$/, "");
   const apis = [
     { path: "/api/aion/context", note: "полный документ (рекомендуется для одного запроса)" },
+    { path: "/api/roadmap/execution", note: "execution queue, AI notes, nextBestActions" },
     { path: "/api/ecosystem-status", note: "подсистемы, readiness, техдолг, summary" },
     { path: "/api/roadmap", note: "vision, execution, epics, milestones, фазы" },
     { path: "/api/releases", note: "каналы, apk meta, история" },
@@ -29,7 +30,7 @@ export default function AiContextPage() {
       <p className="mt-4 text-sm leading-relaxed text-slate-400">
         Эта страница не дублирует данные — она указывает на стабильные JSON endpoints. Ответы содержат поле{" "}
         <span className="font-mono text-slate-500">meta.schemaVersion</span> и заголовок{" "}
-        <span className="font-mono text-slate-500">X-AION-AI-Schema: 1.1.0</span>. Источник правды тот же, что у
+        <span className="font-mono text-slate-500">X-AION-AI-Schema: 1.2.0</span>. Источник правды тот же, что у
         портала: репозиторный JSON + опционально Supabase <span className="font-mono">ecosystem_public_snapshots</span>.
       </p>
       <ul className="mt-8 space-y-3 text-sm">
@@ -51,6 +52,14 @@ export default function AiContextPage() {
         · статус:{" "}
         <Link href={ecosystemRoutes.status} className="text-cyan-500 hover:underline">
           /status
+        </Link>
+        {" · "}
+        <Link href={ecosystemRoutes.roadmapExecution} className="text-cyan-500 hover:underline">
+          /roadmap/execution
+        </Link>
+        {" · "}
+        <Link href={ecosystemRoutes.operationsContext} className="text-cyan-500 hover:underline">
+          /operations/context
         </Link>
       </p>
     </div>

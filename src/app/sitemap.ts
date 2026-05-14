@@ -19,6 +19,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ecosystemRoutes.studio,
     ecosystemRoutes.link,
     ecosystemRoutes.aiContext,
+    ecosystemRoutes.operationsContext,
+    ecosystemRoutes.roadmapExecution,
   ] as const;
   const now = new Date();
   return paths.map((p) => ({

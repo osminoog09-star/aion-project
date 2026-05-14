@@ -260,6 +260,12 @@ export function RoadmapHubLinks() {
       <Link href={ecosystemRoutes.operations} className="text-cyan-400 hover:underline">
         /operations
       </Link>
+      <Link href={ecosystemRoutes.operationsContext} className="text-cyan-400 hover:underline">
+        /operations/context
+      </Link>
+      <Link href={ecosystemRoutes.roadmapExecution} className="text-cyan-400 hover:underline">
+        /roadmap/execution
+      </Link>
       <Link href={ecosystemRoutes.status} className="text-cyan-400 hover:underline">
         /status
       </Link>

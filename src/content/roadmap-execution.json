@@ -1,0 +1,55 @@
+{
+  "aiExecutionNotes": {
+    "architecturePrinciples": [
+      "Ecosystem-first: shared types, one JSON SoT, optional Supabase overlay — never fork parallel roadmap trackers.",
+      "Realtime-first where the product promises live state; degrade with explicit UX, not silent stubs.",
+      "Cloud SoT for data that must be authoritative across devices; repository JSON for editorial readiness until CI writes snapshots.",
+      "Modular boundaries: AION Driver is one client module; portal and Core/Link stay decoupled from driver-only hacks."
+    ],
+    "noFakeDoneRule": "Never mark fully_done without releaseQualityBar + definitionOfDone in JSON and verified production paths.",
+    "finishBeforeSwitchingRule": "Complete the current subsystem or epic slice before switching unless the user explicitly rescopes.",
+    "noPlaceholderUx": "No TODO shells in user-visible flows; ship disabled states with copy or hide behind feature flags.",
+    "noDisconnectedSystems": "UI must call real modules/services; no orphan screens without data contract.",
+    "noDuplicateLogic": "Extend existing helpers/repos; do not copy-paste second parsers or merge trees.",
+    "ecosystemFirstArchitecture": "Prefer changes that improve cohesion: shared env, typed payloads, one merge path in ecosystem-data.",
+    "cloudSourceOfTruthPolicy": "When Supabase snapshots exist (portal_ecosystem, portal_roadmap_master), they overlay repo JSON; document conflicts instead of guessing.",
+    "realtimeFirstDirection": "Favor durable channels, backoff, and observable health for sync/realtime; measure before claiming readiness %.",
+    "releaseQualityRequirements": [
+      "Manual acceptance on primary flows before production channel bumps.",
+      "Known P0/P1 must have owner + date or remain blocked in execution queue.",
+      "OTA vs APK policy respected: native bumps only via APK when requiresApk applies."
+    ],
+    "collaborationModel": {
+      "chatgpt": [
+        "Architecture and tradeoffs: review subsystem boundaries, risk, and sequencing.",
+        "Strategy: reconcile epics with execution queue and cloud constraints.",
+        "Ecosystem review: challenge fake completeness and suggest consolidation."
+      ],
+      "cursor": [
+        "Implementation: code against roadmap-execution + ecosystem-status SoT.",
+        "Integration: wire APIs, merge JSON, tests, and portal surfaces.",
+        "Refactor: remove duplication while preserving behavior contracts."
+      ]
+    }
+  },
+  "executionQueue": {
+    "currentActiveEpic": "Update transparency completion",
+    "currentSubsystemFocus": "updates",
+    "nextImplementationTarget": "Ship end-to-end update transparency (OTA history + portal mirror + single engine entry points) before expanding auth UI.",
+    "blockedTasks": [
+      "Полная схема release DB без согласования миграций и RLS",
+      "Портальный auth для приватных feeds без UX входа"
+    ],
+    "releaseBlockers": [
+      "Release DB + RLS undecided — blocks device registry and signed rollout truth"
+    ],
+    "uxBlockers": [
+      "Incomplete edge states on primary Driver flows (see subsystem extensions)",
+      "Portal lacks authenticated account center — public-only ops"
+    ],
+    "backendBlockers": [
+      "Typed repos for roadmap write path from CI not landed",
+      "Link cloud pairing lacks stable realtime contract"
+    ]
+  }
+}
