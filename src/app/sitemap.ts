@@ -3,7 +3,7 @@ import { getSiteUrl } from "@/lib/site-url";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = getSiteUrl().replace(/\/$/, "");
-  const paths = ["", "/driver", "/roadmap", "/releases", "/control"] as const;
+  const paths = ["", "/driver", "/status", "/roadmap", "/releases", "/control"] as const;
   const now = new Date();
   return paths.map((p) => ({
     url: p === "" ? `${base}/` : `${base}${p}`,

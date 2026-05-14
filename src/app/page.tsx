@@ -24,7 +24,7 @@ export default async function HomePage() {
         <AionWebEntity readinessAvg={avg} />
         <div className="max-w-md space-y-4 text-sm leading-relaxed text-slate-400">
           <p>
-            Средняя готовность подсистем (по данным репозитория, обновлено{" "}
+            Средняя готовность по направлениям readiness (репозиторий,{" "}
             <time dateTime={eco.lastUpdated}>{eco.lastUpdated}</time>):{" "}
             <strong className="text-cyan-300">{avg}%</strong>
           </p>
@@ -35,6 +35,12 @@ export default async function HomePage() {
               className="rounded-xl bg-cyan-500/15 px-5 py-3 text-center text-sm font-semibold text-cyan-200 ring-1 ring-cyan-400/35 transition hover:bg-cyan-500/25"
             >
               AION Driver
+            </Link>
+            <Link
+              href="/status"
+              className="rounded-xl bg-white/5 px-5 py-3 text-center text-sm font-semibold text-slate-200 ring-1 ring-white/10 transition hover:bg-white/10"
+            >
+              Статус
             </Link>
             <Link
               href="/roadmap"

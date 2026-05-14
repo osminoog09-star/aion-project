@@ -12,6 +12,11 @@ function mergeEcosystem(cloud: EcosystemStatus, local: EcosystemStatus): Ecosyst
     sprint: { ...local.sprint, ...cloud.sprint },
     readiness: { ...local.readiness, ...cloud.readiness },
     subsystems: cloud.subsystems?.length ? cloud.subsystems : local.subsystems,
+    definitionOfDone: cloud.definitionOfDone?.length ? cloud.definitionOfDone : local.definitionOfDone,
+    operations: cloud.operations?.length ? cloud.operations : local.operations,
+    technicalDebt: cloud.technicalDebt?.length ? cloud.technicalDebt : local.technicalDebt,
+    releasePhases: cloud.releasePhases?.length ? cloud.releasePhases : local.releasePhases,
+    milestones: cloud.milestones?.length ? cloud.milestones : local.milestones,
     epics: {
       active: cloud.epics?.active?.length ? cloud.epics.active : local.epics.active,
       completed: cloud.epics?.completed?.length ? cloud.epics.completed : local.epics.completed,

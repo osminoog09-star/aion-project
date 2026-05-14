@@ -3,6 +3,7 @@ import Link from "next/link";
 const links = [
   { href: "/", label: "Экосистема" },
   { href: "/driver", label: "AION Driver" },
+  { href: "/status", label: "Статус" },
   { href: "/roadmap", label: "Roadmap" },
   { href: "/releases", label: "Релизы" },
   { href: "/control", label: "Control" },
@@ -31,7 +32,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       </header>
       <main className="flex-1">{children}</main>
       <footer className="border-t border-white/5 bg-slate-950/90 py-8 text-center text-xs text-slate-600">
-        Данные roadmap и релизов: JSON в репозитории + публичные снимки Supabase (`ecosystem_public_snapshots`) при настроенных ключах.
+        Данные roadmap, статуса экосистемы и релизов: JSON в репозитории + публичные снимки Supabase (`ecosystem_public_snapshots`) при настроенных ключах.
       </footer>
     </div>
   );

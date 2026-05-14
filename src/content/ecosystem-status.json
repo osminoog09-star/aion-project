@@ -1,82 +1,488 @@
 {
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-13",
   "maintainedInRepository": true,
-  "methodology": "Проценты и статусы выставляются вручную при релизах AION Driver и веб-платформы; до подключения Supabase это единственный источник правды на aion.com.",
+  "methodology": "Проценты — ручная оценка по коду и продукту на дату lastUpdated: UI/фичи, бэкенд, realtime, прод-UX, граничные случаи, паритет web/mobile, дизайн, тесты, релизная готовность. Автоматического сбора метрик нет; числа не нормируются к «красивым» значениям. Supabase snapshot при наличии может переопределить поля через ecosystem_public_snapshots.",
+  "definitionOfDone": [
+    "fully_done только при production-UX, покрытых основных состояниях, паритете mobile/web где применимо, отсутствии известных блокеров релиза и прохождении ручной проверки перед публикацией JSON.",
+    "Проценты подсистем не выводятся из одного среднего по направлениям — у каждой подсистемы свой percent и percentBasis.",
+    "Техдолг перечисляется только с наблюдаемым сигналом (файл, таблица, сценарий), без выдуманных KPI."
+  ],
   "sprint": {
-    "label": "Ecosystem platform bootstrap",
-    "focus": "aion.com + Update transparency + Control center shell"
+    "label": "Ecosystem audit + live roadmap",
+    "focus": "Единый JSON-источник правды, страница статуса, операционная сетка, честные проценты по подсистемам."
   },
   "readiness": {
     "mobile": 68,
-    "desktop": 64,
-    "webPortal": 22,
-    "ocr": 72,
-    "cloud": 58,
-    "updates": 35,
-    "aionEntity": 55,
-    "aionLink": 40,
-    "performance": 50
+    "desktop": 62,
+    "webPortal": 28,
+    "ocr": 70,
+    "cloud": 44,
+    "updates": 48,
+    "aionEntity": 58,
+    "aionLink": 38,
+    "performance": 46,
+    "sync": 64,
+    "realtime": 32,
+    "releaseOps": 40,
+    "offline": 60
   },
-  "subsystems": [
+  "operations": [
     {
-      "id": "driver-core",
-      "name": "AION Driver — cockpit & смены",
-      "percent": 74,
-      "status": "partial",
-      "note": "Production-поток смены, OTA, desktop route; полировка UX продолжается."
+      "id": "ota",
+      "label": "OTA (EAS Update)",
+      "percent": 72,
+      "status": "partially_done",
+      "summary": "Каналы и применение в Driver; прозрачность и история — в развитии.",
+      "lastSignal": "Expo Updates + Update Center в репозитории"
+    },
+    {
+      "id": "apk",
+      "label": "APK / manifest",
+      "percent": 52,
+      "status": "partially_done",
+      "summary": "Манифест и политика на клиенте и на aion.com; полный контур релиза — частично.",
+      "lastSignal": "fetchApkManifest + расширенные типы"
+    },
+    {
+      "id": "releases-json",
+      "label": "Публичные релизы (портал)",
+      "percent": 35,
+      "status": "partially_done",
+      "summary": "releases.json + опционально ecosystem_release_ota из Supabase.",
+      "lastSignal": "cloud-queries.ts"
+    },
+    {
+      "id": "sync",
+      "label": "Sync engine",
+      "percent": 64,
+      "status": "partially_done",
+      "summary": "Очередь офлайн в Driver; серверная согласованность и метрики — частично.",
+      "lastSignal": "offline queue в driver"
+    },
+    {
+      "id": "cloud",
+      "label": "Cloud / Supabase portal",
+      "percent": 42,
+      "status": "partially_done",
+      "summary": "Снимки ecosystem_public_snapshots, rollout; полный account center — нет.",
+      "lastSignal": "portal-client + snapshots"
+    },
+    {
+      "id": "realtime",
+      "label": "Realtime (web)",
+      "percent": 30,
+      "status": "experimental",
+      "summary": "Мост realtime для портала задуман/частично; не опора для SLA.",
+      "lastSignal": "EcosystemRealtimeBridge"
+    },
+    {
+      "id": "link",
+      "label": "AION Link",
+      "percent": 38,
+      "status": "partially_done",
+      "summary": "Локальный режим и очередь; облачный pairing и стабильный realtime — слабее.",
+      "lastSignal": "driver Link модуль"
     },
     {
       "id": "ocr",
-      "name": "OCR Intelligence",
-      "percent": 72,
-      "status": "partial",
-      "note": "Пайплайн и парсер в приложении; усиление фото/ночи — в работе."
+      "label": "OCR pipeline",
+      "percent": 70,
+      "status": "partially_done",
+      "summary": "Пайплайн в приложении; edge-кейсы съёмки и валидации — в долге.",
+      "lastSignal": "OCR в driver"
     },
     {
-      "id": "aion-link",
-      "name": "AION Link",
-      "percent": 40,
-      "status": "partial",
-      "note": "Режим Link и очередь; облачный pairing и realtime — следующий этап."
+      "id": "deploy",
+      "label": "Build / deploy",
+      "percent": 68,
+      "status": "partially_done",
+      "summary": "EAS/Expo и Next deploy; единый отчёт CI в портале — нет.",
+      "lastSignal": "EAS в репозитории driver"
+    }
+  ],
+  "technicalDebt": [
+    {
+      "id": "td-release-db",
+      "subsystemId": "release-db",
+      "severity": "high",
+      "title": "Нет завершённой схемы releases в Supabase как единого SoT",
+      "evidence": "Портал опирается на JSON + опциональные таблицы; миграции RLS под полный release DB не зафиксированы в этом репозитории."
+    },
+    {
+      "id": "td-tests",
+      "subsystemId": "quality",
+      "severity": "high",
+      "title": "Низкое доверие к автотестам экосистемы",
+      "evidence": "Нет опубликованного процента покрытия в CI для driver+com как единого gate."
+    },
+    {
+      "id": "td-web-parity",
+      "subsystemId": "web-portal",
+      "severity": "medium",
+      "title": "Паритет web vs mobile по операциям ограничен",
+      "evidence": "aion.com — маркетинг/статус; управление сменой и OCR только в клиентах."
+    },
+    {
+      "id": "td-entity-cloud",
+      "subsystemId": "aion-entity",
+      "severity": "medium",
+      "title": "Entity без полной облачной корреляции состояния",
+      "evidence": "Web Entity использует агрегаты roadmap; нет персонализированного потока из auth."
+    },
+    {
+      "id": "td-maps-offline",
+      "subsystemId": "maps",
+      "severity": "medium",
+      "title": "Карты и офлайн-кэш карт — неполный контур",
+      "evidence": "Зависимость от выбранного map SDK и сети; edge cases не сведены в отчёт."
+    }
+  ],
+  "releasePhases": [
+    {
+      "id": "ph-0",
+      "name": "Foundation",
+      "status": "past",
+      "window": "2025 — Q1 2026",
+      "description": "Driver кокпит, OTA базово, Supabase клиент, aion.com каркас."
+    },
+    {
+      "id": "ph-1",
+      "name": "Transparency + portal",
+      "status": "active",
+      "window": "Q2 2026",
+      "description": "Update center, roadmap JSON, control center, публичные снимки."
+    },
+    {
+      "id": "ph-2",
+      "name": "Cloud SoT + Link",
+      "status": "planned",
+      "window": "H2 2026",
+      "description": "Релизы и устройства в БД, RLS, realtime pairing."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "ms-audit",
+      "title": "Живая страница аудита экосистемы",
+      "target": "2026-05",
+      "status": "done",
+      "subsystemIds": ["web-portal"],
+      "note": "Маршрут /status и расширенный JSON."
+    },
+    {
+      "id": "ms-updates",
+      "title": "Полная прозрачность OTA/APK",
+      "target": "2026-Q2",
+      "status": "in_progress",
+      "subsystemIds": ["updates", "release-ops"],
+      "note": "Частично в driver; портал зеркалит ограниченно."
+    },
+    {
+      "id": "ms-release-db",
+      "title": "Release DB + typed repos",
+      "target": "2026-H2",
+      "status": "planned",
+      "subsystemIds": ["release-db", "cloud-schema"],
+      "note": "Заблокировано согласованием схемы и RLS."
+    }
+  ],
+  "subsystems": [
+    {
+      "id": "mobile-app",
+      "name": "Mobile app (AION Driver)",
+      "percent": 68,
+      "status": "partially_done",
+      "note": "Основной UX смены, garage, карта, desktop route; не все подсистемы на уровне production polish.",
+      "percentBasis": "Реализованные экраны и потоки vs заявленный полный кокпит.",
+      "currentPhase": "Hard polish + edge cases",
+      "nextMilestone": "Выравнивание update/entity с облаком",
+      "blockers": [],
+      "releaseReadiness": "preview",
+      "platforms": { "mobile": { "percent": 72 }, "web": { "percent": 0, "note": "PWA не целевой паритет" }, "backend": { "percent": 50, "note": "Частично через Supabase" } },
+      "priority": "P0"
+    },
+    {
+      "id": "desktop-app",
+      "name": "Desktop (Expo web / workspace)",
+      "percent": 62,
+      "status": "partially_done",
+      "note": "Shell и маршруты; не все driver-фичи выровнены под широкий layout.",
+      "percentBasis": "Наличие desktop shell и ключевых hub-экранов.",
+      "nextMilestone": "Паритет control/update с mobile",
+      "releaseReadiness": "preview",
+      "platforms": { "mobile": { "percent": 0 }, "web": { "percent": 62 }, "backend": { "percent": 45 } },
+      "priority": "P1"
+    },
+    {
+      "id": "web-portal",
+      "name": "Web portal (aion.com)",
+      "percent": 28,
+      "status": "partially_done",
+      "note": "Next.js, roadmap/releases/control/status; нет личного кабинета и полного API.",
+      "percentBasis": "Количество публичных разделов и интеграций vs целевой портал.",
+      "nextMilestone": "Auth + device registry UI",
+      "releaseReadiness": "not_ready",
+      "platforms": { "web": { "percent": 28 }, "backend": { "percent": 35, "note": "Опциональный Supabase" } },
+      "priority": "P1"
+    },
+    {
+      "id": "ocr",
+      "name": "OCR pipeline",
+      "percent": 70,
+      "status": "partially_done",
+      "note": "Поток импорта и парсер; слабее ночь/блик/повторная валидация.",
+      "percentBasis": "Рабочий путь happy-path vs стресс-сценарии.",
+      "nextMilestone": "Усиление качества съёмки и фидбека ошибок",
+      "releaseReadiness": "preview",
+      "platforms": { "mobile": { "percent": 75 }, "web": { "percent": 0 }, "backend": { "percent": 40 } },
+      "priority": "P0"
+    },
+    {
+      "id": "updates",
+      "name": "Update system (OTA + APK + state)",
+      "percent": 48,
+      "status": "partially_done",
+      "note": "EAS OTA, манифест APK, Update Center, часть state machine; не всё на всех поверхностях.",
+      "percentBasis": "Реализованные модули driver + зеркало типов на com.",
+      "nextMilestone": "Единый engine на всех entrypoints + история",
+      "releaseReadiness": "preview",
+      "platforms": { "mobile": { "percent": 52 }, "web": { "percent": 25 }, "backend": { "percent": 30 } },
+      "priority": "P0"
     },
     {
       "id": "aion-entity",
       "name": "AION Entity",
+      "percent": 58,
+      "status": "partially_done",
+      "note": "Состояния и реакции в driver/web; облачная персонализация слабая.",
+      "percentBasis": "Диагностика + derive state vs полный AI-ассистент.",
+      "nextMilestone": "Корреляция с OTA/APK и аккаунтом",
+      "releaseReadiness": "preview",
+      "priority": "P1"
+    },
+    {
+      "id": "aion-link",
+      "name": "AION Link",
+      "percent": 38,
+      "status": "partially_done",
+      "note": "Локальный link и очереди; стабильный облачный pairing в проде — нет.",
+      "percentBasis": "Реализованные режимы vs целевой realtime SoT.",
+      "blockers": ["Нужен согласованный серверный протокол и RLS"],
+      "releaseReadiness": "not_ready",
+      "priority": "P1"
+    },
+    {
+      "id": "cloud-auth",
+      "name": "Cloud / auth",
+      "percent": 44,
+      "status": "partially_done",
+      "note": "Supabase в driver; портальный login и политики — впереди.",
+      "percentBasis": "Guest/session пути vs полный account center.",
+      "nextMilestone": "Портальный auth и сессии",
+      "releaseReadiness": "not_ready",
+      "platforms": { "backend": { "percent": 44 } },
+      "priority": "P0"
+    },
+    {
+      "id": "realtime",
+      "name": "Realtime",
+      "percent": 32,
+      "status": "experimental",
+      "note": "Мост на сайте и задумки подписки; не production-critical path.",
+      "percentBasis": "Наличие компонентов vs отказоустойчивый прод.",
+      "releaseReadiness": "not_ready",
+      "priority": "P2"
+    },
+    {
+      "id": "sync-engine",
+      "name": "Sync engine",
+      "percent": 64,
+      "status": "partially_done",
+      "note": "Очередь и флаши; метрики конфликтов и админка — слабее.",
+      "percentBasis": "Offline queue + базовая диагностика.",
+      "releaseReadiness": "preview",
+      "priority": "P0"
+    },
+    {
+      "id": "garage",
+      "name": "Garage",
       "percent": 55,
-      "status": "partial",
-      "note": "Машина состояний и панель в приложении; связка со сменой/OTA — дальше."
+      "status": "partially_done",
+      "note": "Базовый модуль; глубина данных и синхронизация с облаком частичные.",
+      "releaseReadiness": "preview",
+      "priority": "P1"
     },
     {
-      "id": "updates",
-      "name": "Update Center & OTA/APK clarity",
-      "percent": 35,
-      "status": "partial",
-      "note": "OTA/EAS работают; единый центр обновлений и What’s New — не завершены."
+      "id": "maps",
+      "name": "Maps",
+      "percent": 50,
+      "status": "partially_done",
+      "note": "Интеграция и маршруты; офлайн и edge регионов не закрыты.",
+      "releaseReadiness": "preview",
+      "priority": "P1"
     },
     {
-      "id": "aion-com",
-      "name": "AION.COM portal",
+      "id": "dashboard",
+      "name": "Dashboard / аналитика",
+      "percent": 56,
+      "status": "partially_done",
+      "note": "Плитки и сводки; полный аналитический слой и экспорт — нет.",
+      "releaseReadiness": "preview",
+      "priority": "P2"
+    },
+    {
+      "id": "themes",
+      "name": "Themes (dark/light)",
+      "percent": 60,
+      "status": "partially_done",
+      "note": "Темы в приложении; строгий паритет всех экранов не гарантирован.",
+      "releaseReadiness": "preview",
+      "priority": "P2"
+    },
+    {
+      "id": "motion",
+      "name": "Motion system",
+      "percent": 52,
+      "status": "partially_done",
+      "note": "Анимации и reduced-motion частично; не везде единая система.",
+      "releaseReadiness": "preview",
+      "priority": "P2"
+    },
+    {
+      "id": "performance",
+      "name": "Performance",
+      "percent": 46,
+      "status": "partially_done",
+      "note": "Нет системного perf-бюджета и регрессионных отчётов в CI.",
+      "percentBasis": "Отсутствие публикуемых метрик = консервативная оценка.",
+      "releaseReadiness": "not_ready",
+      "priority": "P1"
+    },
+    {
+      "id": "release-ops",
+      "name": "Release operations",
+      "percent": 40,
+      "status": "partially_done",
+      "note": "EAS/JSON/снимки; единый ops-dashboard без ручного JSON — нет.",
+      "nextMilestone": "Запись снимков из CI/ops",
+      "releaseReadiness": "preview",
+      "priority": "P1"
+    },
+    {
+      "id": "release-db",
+      "name": "Release DB (central SoT)",
+      "percent": 15,
+      "status": "not_started",
+      "note": "Целевая схема releases/OTA/APK как единый SoT не завершена в репозитории.",
+      "percentBasis": "Только заделы и опциональные таблицы.",
+      "blockers": ["Схема, миграции, RLS, typed repos"],
+      "releaseReadiness": "not_ready",
+      "priority": "P0"
+    },
+    {
+      "id": "account-center",
+      "name": "Account center",
       "percent": 22,
-      "status": "partial",
-      "note": "Фундамент Next.js, публичные данные roadmap/releases; auth и API — позже."
+      "status": "not_started",
+      "note": "Нет полноценного кабинета на aion.com; сессии в основном в клиенте.",
+      "releaseReadiness": "not_ready",
+      "priority": "P1"
     },
     {
-      "id": "cloud-schema",
-      "name": "Cloud schema (devices, releases, OCR relay)",
+      "id": "device-registry",
+      "name": "Device registry",
+      "percent": 30,
+      "status": "partially_done",
+      "note": "Задел под облако; публичный реестр и UI ограничены.",
+      "releaseReadiness": "not_ready",
+      "priority": "P1"
+    },
+    {
+      "id": "repositories",
+      "name": "Repositories / data layer patterns",
+      "percent": 50,
+      "status": "partially_done",
+      "note": "Локальные сториджи и сервисы; единый слой репозиториев не везде.",
+      "releaseReadiness": "preview",
+      "priority": "P2"
+    },
+    {
+      "id": "apis",
+      "name": "Public / internal APIs",
+      "percent": 35,
+      "status": "partially_done",
+      "note": "Нет опубликованного версионированного API портала для всех клиентов.",
+      "releaseReadiness": "not_ready",
+      "priority": "P2"
+    },
+    {
+      "id": "supabase-structure",
+      "name": "Supabase structure",
+      "percent": 42,
+      "status": "partially_done",
+      "note": "Клиент и типы портала; полнота схемы под экосистему — частичная.",
+      "releaseReadiness": "preview",
+      "priority": "P0"
+    },
+    {
+      "id": "rls",
+      "name": "RLS coverage",
+      "percent": 38,
+      "status": "partially_done",
+      "note": "Упоминается для устройств; полный аудит RLS не закреплён здесь.",
+      "blockers": ["Нужен формальный security review"],
+      "releaseReadiness": "not_ready",
+      "priority": "P0"
+    },
+    {
+      "id": "offline",
+      "name": "Offline support",
+      "percent": 60,
+      "status": "partially_done",
+      "note": "Очереди и вход в offline; не все фичи деградируют предсказуемо.",
+      "releaseReadiness": "preview",
+      "priority": "P0"
+    },
+    {
+      "id": "error-handling",
+      "name": "Error handling",
+      "percent": 54,
+      "status": "partially_done",
+      "note": "Обработка ошибок разрозненна; не везде пользовательские recovery-пути.",
+      "releaseReadiness": "preview",
+      "priority": "P1"
+    },
+    {
+      "id": "build-deploy",
+      "name": "Build / deploy pipeline",
+      "percent": 68,
+      "status": "partially_done",
+      "note": "EAS и Next деплой работают; единый отчёт готовности релиза в портале — нет.",
+      "releaseReadiness": "production_candidate",
+      "priority": "P1"
+    },
+    {
+      "id": "quality",
+      "name": "Testing / QA discipline",
       "percent": 28,
-      "status": "partial",
-      "note": "Supabase в приложении; таблицы под портал и Link — в проектировании."
+      "status": "needs_refactor",
+      "note": "Недостаточно видимых автотестов как gate для экосистемы.",
+      "percentBasis": "Отсутствие опубликованного покрытия и единого QA pipeline.",
+      "releaseReadiness": "not_ready",
+      "priority": "P0"
     }
   ],
   "epics": {
     "active": [
-      "AION.COM foundation",
-      "Update transparency",
-      "AION Link realtime"
+      "Live ecosystem status (/status)",
+      "Update transparency completion",
+      "Release DB + RLS",
+      "AION Link cloud pairing"
     ],
     "completed": [
       "AION Core diagnostics baseline",
-      "Expo/EAS OTA channels"
+      "Expo/EAS OTA channels",
+      "aion.com public roadmap JSON"
     ]
   }
 }

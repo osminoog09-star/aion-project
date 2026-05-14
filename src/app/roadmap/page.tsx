@@ -1,32 +1,69 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
+import { averageReadiness, averageSubsystemPercent } from "@/lib/readiness";
+import {
+  EcosystemSummaryHeader,
+  MilestoneTimeline,
+  ReadinessBar,
+  ReadinessPillarGrid,
+  ReleasePhaseStrip,
+  StatusBadge,
+} from "@/components/ecosystem/EcosystemAuditViews";
+import type { EcosystemSubsystem } from "@/lib/ecosystem-types";
 
 export const metadata: Metadata = {
   title: "Roadmap — статус экосистемы AION",
-  description: "Официальная сводка готовности подсистем; данные ведутся в репозитории до API портала.",
+  description: "Живая дорожная карта: фазы, вехи, готовность; полный аудит на странице «Статус».",
 };
 
-function Bar({ value }: { value: number }) {
+function SubsystemRoadmapCard({ s }: { s: EcosystemSubsystem }) {
   return (
-    <div className="h-2 w-full overflow-hidden rounded-full bg-white/10">
-      <div
-        className="h-full rounded-full bg-gradient-to-r from-cyan-500 to-violet-500 transition-[width]"
-        style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
-      />
+    <div className="flex flex-col rounded-xl border border-white/10 bg-white/[0.02] p-4">
+      <div className="flex flex-wrap items-start justify-between gap-2">
+        <h3 className="text-sm font-semibold text-slate-100">{s.name}</h3>
+        <StatusBadge status={s.status} />
+      </div>
+      <p className="mt-2 text-2xl font-bold tabular-nums text-cyan-200">{s.percent}%</p>
+      <div className="mt-2">
+        <ReadinessBar value={s.percent} />
+      </div>
+      {s.nextMilestone ? <p className="mt-3 text-[11px] text-slate-500">Дальше: {s.nextMilestone}</p> : null}
+      <p className="mt-2 flex-1 text-xs leading-relaxed text-slate-500">{s.note}</p>
+      <Link href="/status" className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-cyan-500/90 hover:underline">
+        Детали в аудите →
+      </Link>
     </div>
   );
 }
 
 export default async function RoadmapPage() {
   const eco = await getEcosystemStatus();
+  const avgPillar = averageReadiness(eco.readiness);
+  const avgSub = averageSubsystemPercent(eco.subsystems);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
-      <h1 className="text-3xl font-bold text-white md:text-4xl">Roadmap</h1>
+      <EcosystemSummaryHeader eco={eco} />
+      <h1 className="mt-4 text-3xl font-bold text-white md:text-4xl">Roadmap</h1>
       <p className="mt-3 max-w-3xl text-slate-400">{eco.methodology}</p>
-      <p className="mt-2 text-xs text-slate-600">
-        Обновлено: <time dateTime={eco.lastUpdated}>{eco.lastUpdated}</time>
+      <p className="mt-4 text-sm text-slate-500">
+        Полный аудит и техдолг:{" "}
+        <Link href="/status" className="text-cyan-400 hover:underline">
+          /status
+        </Link>
       </p>
+
+      <section className="mt-10 flex flex-wrap gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Направления Ø</p>
+          <p className="text-2xl font-bold text-white">{avgPillar}%</p>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Подсистемы Ø</p>
+          <p className="text-2xl font-bold text-violet-200">{avgSub}%</p>
+        </div>
+      </section>
 
       <section className="mt-10 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-8">
         <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">Текущий фокус</h2>
@@ -34,46 +71,33 @@ export default async function RoadmapPage() {
         <p className="mt-1 text-slate-400">{eco.sprint.focus}</p>
       </section>
 
-      <section className="mt-10">
+      <section className="mt-12">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-violet-400/90">Фазы</h2>
+        <div className="mt-4">
+          <ReleasePhaseStrip phases={eco.releasePhases ?? []} />
+        </div>
+      </section>
+
+      <section className="mt-12">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Вехи</h2>
+        <div className="mt-4">
+          <MilestoneTimeline milestones={eco.milestones ?? []} />
+        </div>
+      </section>
+
+      <section className="mt-12">
         <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Готовность направлений</h2>
-        <div className="mt-6 grid gap-5 md:grid-cols-2">
-          {Object.entries(eco.readiness).map(([key, value]) => (
-            <div key={key} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-              <div className="flex items-center justify-between text-sm">
-                <span className="font-medium capitalize text-slate-300">{key.replace(/([A-Z])/g, " $1")}</span>
-                <span className="tabular-nums text-cyan-300">{value}%</span>
-              </div>
-              <div className="mt-3">
-                <Bar value={value} />
-              </div>
-            </div>
-          ))}
+        <div className="mt-6">
+          <ReadinessPillarGrid readiness={eco.readiness} />
         </div>
       </section>
 
       <section className="mt-14">
-        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Подсистемы</h2>
-        <div className="mt-4 overflow-x-auto rounded-2xl border border-white/10">
-          <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="border-b border-white/10 bg-white/[0.03] text-xs uppercase tracking-wider text-slate-500">
-              <tr>
-                <th className="px-4 py-3">Подсистема</th>
-                <th className="px-4 py-3">%</th>
-                <th className="px-4 py-3">Статус</th>
-                <th className="px-4 py-3">Комментарий</th>
-              </tr>
-            </thead>
-            <tbody>
-              {eco.subsystems.map((s) => (
-                <tr key={s.id} className="border-b border-white/5 hover:bg-white/[0.02]">
-                  <td className="px-4 py-3 font-medium text-slate-200">{s.name}</td>
-                  <td className="px-4 py-3 tabular-nums text-cyan-300">{s.percent}</td>
-                  <td className="px-4 py-3 text-slate-400">{s.status}</td>
-                  <td className="px-4 py-3 text-slate-500">{s.note}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Подсистемы (карточки)</h2>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {eco.subsystems.map((s) => (
+            <SubsystemRoadmapCard key={s.id} s={s} />
+          ))}
         </div>
       </section>
 

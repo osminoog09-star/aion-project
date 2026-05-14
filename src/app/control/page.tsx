@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AionWebEntity } from "@/components/AionWebEntity";
+import { OperationsDashboard, ReadinessPillarGrid } from "@/components/ecosystem/EcosystemAuditViews";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
 import { averageReadiness } from "@/lib/readiness";
 import { fetchPublishedRollouts } from "@/lib/ecosystem/cloud-queries";
@@ -43,19 +44,31 @@ export default async function ControlPage() {
             Пока используйте диагностику внутри AION Driver и раздел{" "}
             <Link href="/releases" className="text-cyan-400 hover:underline">
               Релизы
-            </Link>{" "}
-            здесь.
+            </Link>
+            . Живой аудит подсистем:{" "}
+            <Link href="/status" className="text-cyan-400 hover:underline">
+              Статус экосистемы
+            </Link>
+            .
           </p>
         </div>
       </div>
 
-      <section className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {Object.entries(eco.readiness).map(([k, v]) => (
-          <div key={k} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{k}</p>
-            <p className="mt-2 text-2xl font-bold tabular-nums text-white">{v}%</p>
-          </div>
-        ))}
+      <section className="mt-14">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">Операции (из roadmap JSON)</h2>
+        <p className="mt-2 max-w-3xl text-xs text-slate-500">
+          Те же строки, что на /status; при публичном snapshot в Supabase могут обновиться без деплоя фронта.
+        </p>
+        <div className="mt-6">
+          <OperationsDashboard rows={eco.operations ?? []} />
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Готовность направлений</h2>
+        <div className="mt-6">
+          <ReadinessPillarGrid readiness={eco.readiness} />
+        </div>
       </section>
 
       <section className="mt-14">
