@@ -26,6 +26,7 @@
         "Ecosystem review: challenge fake completeness and suggest consolidation."
       ],
       "cursor": [
+        "Continuous execution: каждый цикл начинать с roadmap-execution + ecosystem-status (blockers, techDebt, validationMatrix) и брать верхний пункт глобального стека приоритетов: (1) APK release loop до device-verified, (2) Android background runtime production, (3) floating orb overlay, (4) Link relay, (5) live profit, (6) device registry+realtime, (7) cloud sync intelligence, (8–9) UX/visual polish.",
         "Implementation: code against roadmap-execution + ecosystem-status SoT.",
         "Integration: wire APIs, merge JSON, tests, and portal surfaces.",
         "Refactor: remove duplication while preserving behavior contracts."
@@ -49,8 +50,8 @@
   },
   "executionQueue": {
     "currentActiveEpic": "Always-on drive: background shift + live profit + two-phone Link relay",
-    "currentSubsystemFocus": "background-drive",
-    "nextImplementationTarget": "Заменить NoopBackgroundTracking реальным Android FGS/location path + не ломать батарею; параллельно MediaStore/очередь скриншотов на work phone и Supabase relay для OCR payload.",
+    "currentSubsystemFocus": "release-ops",
+    "nextImplementationTarget": "Закрыть APK release loop: FINISHED EAS для актуального versionCode → sync манифест (npm run release:apk-manifest:sync) → деплой портала → Update Center на устройстве; затем Android background production (не experimental-only).",
     "blockedTasks": [
       "APK 1.0.4/6: пересобрать preview после versionCode 6; FINISHED → `npm run release:apk-manifest:sync <id>` → commit манифест → деплой портала → физическая приёмка Update Center (EXPO_PUBLIC_APK_MANIFEST_URL); старые IN_QUEUE билды отменять при необходимости",
       "Полная схема release DB без согласования миграций и RLS",

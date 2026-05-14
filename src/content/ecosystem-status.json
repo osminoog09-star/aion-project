@@ -32,7 +32,7 @@
     ]
   },
   "execution": {
-    "currentPriority": "Production infra phase: завершить EAS APK 1.0.4 + реальный apkUrl в манифесте + device Update Center; параллельно Android FGS/фоновый трекинг без noop-обмана.",
+    "currentPriority": "Continuous execution: стек (1) APK loop до device-verified → (2) Android background production → (3) floating orb overlay → (4) Link relay → (5) live profit; сейчас блокер — очередь EAS / manifest apkUrl.",
     "nextPriority": "После FINISHED f71cec0a: подставить apkUrl, деплой манифеста, ручная приёмка; затем BackgroundTrackingAdapter spike (FGS) + profit refresh hooks после reconnect/OCR.",
     "blockedTasks": [
       "Полная схема release DB без согласования миграций и RLS",
