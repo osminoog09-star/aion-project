@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReleaseChannel, ReleasesPayload } from "@/lib/ecosystem-types";
 import { getReleasesPayload } from "@/lib/ecosystem-data";
 import { fetchPublishedApkManifest } from "@/lib/fetchApkManifest";
 
@@ -51,7 +52,7 @@ export default async function ReleasesPage() {
       <section className="mt-10">
         <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">Каналы</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-2">
-          {rel.channels.map((c) => (
+          {rel.channels.map((c: ReleaseChannel) => (
             <div key={c.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
               <h3 className="text-lg font-semibold text-white">{c.label}</h3>
               <p className="mt-2 text-sm text-slate-400">{c.description}</p>
@@ -82,7 +83,7 @@ export default async function ReleasesPage() {
       <section className="mt-14">
         <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">История (факт)</h2>
         <ul className="mt-4 space-y-3">
-          {rel.history.map((h) => (
+          {rel.history.map((h: ReleasesPayload["history"][number]) => (
             <li key={h.title + h.date} className="rounded-xl border border-white/10 bg-white/[0.02] px-4 py-3">
               <p className="text-xs text-slate-500">
                 {h.date} · {h.type}

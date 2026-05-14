@@ -7,6 +7,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     "",
     ecosystemRoutes.aionProject,
+    ecosystemRoutes.ecosystem,
+    ecosystemRoutes.operations,
     ecosystemRoutes.status,
     ecosystemRoutes.roadmap,
     ecosystemRoutes.releases,

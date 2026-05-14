@@ -10,11 +10,13 @@ import {
   ReleasePhaseStrip,
   StatusBadge,
 } from "@/components/ecosystem/EcosystemAuditViews";
+import { RoadmapHubLinks } from "@/components/ecosystem/MasterRoadmapPanels";
 import type { EcosystemSubsystem } from "@/lib/ecosystem-types";
+import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export const metadata: Metadata = {
   title: "Roadmap — статус экосистемы AION",
-  description: "Живая дорожная карта: фазы, вехи, готовность; полный аудит на странице «Статус».",
+  description: "Живая дорожная карта: фазы, вехи, готовность; дашборды /ecosystem и /operations.",
 };
 
 function SubsystemRoadmapCard({ s }: { s: EcosystemSubsystem }) {
@@ -30,7 +32,7 @@ function SubsystemRoadmapCard({ s }: { s: EcosystemSubsystem }) {
       </div>
       {s.nextMilestone ? <p className="mt-3 text-[11px] text-slate-500">Дальше: {s.nextMilestone}</p> : null}
       <p className="mt-2 flex-1 text-xs leading-relaxed text-slate-500">{s.note}</p>
-      <Link href="/status" className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-cyan-500/90 hover:underline">
+      <Link href={ecosystemRoutes.status} className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-cyan-500/90 hover:underline">
         Детали в аудите →
       </Link>
     </div>
@@ -47,12 +49,9 @@ export default async function RoadmapPage() {
       <EcosystemSummaryHeader eco={eco} />
       <h1 className="mt-4 text-3xl font-bold text-white md:text-4xl">Roadmap</h1>
       <p className="mt-3 max-w-3xl text-slate-400">{eco.methodology}</p>
-      <p className="mt-4 text-sm text-slate-500">
-        Полный аудит и техдолг:{" "}
-        <Link href="/status" className="text-cyan-400 hover:underline">
-          /status
-        </Link>
-      </p>
+      <div className="mt-4">
+        <RoadmapHubLinks />
+      </div>
 
       <section className="mt-10 flex flex-wrap gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6">
         <div>

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "maintainedInRepository": true,
   "methodology": "Проценты — ручная оценка по коду и продукту на дату lastUpdated: UI/фичи, бэкенд, realtime, прод-UX, граничные случаи, паритет web/mobile, дизайн, тесты, релизная готовность. Автоматического сбора метрик нет; числа не нормируются к «красивым» значениям. Supabase snapshot при наличии может переопределить поля через ecosystem_public_snapshots.",
   "definitionOfDone": [
@@ -7,6 +7,52 @@
     "Проценты подсистем не выводятся из одного среднего по направлениям — у каждой подсистемы свой percent и percentBasis.",
     "Техдолг перечисляется только с наблюдаемым сигналом (файл, таблица, сценарий), без выдуманных KPI."
   ],
+  "releaseQualityBar": [
+    "Production UX завершён для основных пользовательских потоков.",
+    "Edge cases либо обработаны, либо явно задокументированы как ограничения.",
+    "Realtime-путь (если применим) проверен под нагрузкой сети и ошибок.",
+    "Паритет mobile/web там, где продукт обещает одинаковое поведение.",
+    "Релизный gate: ручная приёмка + отсутствие известных P0/P1 без плана.",
+    "Автотесты или иной измеримый контроль регрессий — без «всё зелёное в голове»."
+  ],
+  "cursorExecutionRules": [
+    "Заканчивать текущую подсистему до переключения на новую тему, если нет явного cancel от владельца.",
+    "Не помечать fully_done без проверки releaseQualityBar и реального кода.",
+    "Не вводить placeholder UX и не оставлять «TODO» в пользовательских потоках.",
+    "Не плодить второй источник правды: roadmap данные — JSON + Supabase snapshot kinds из cloud-queries.",
+    "Не добавлять фичи вне epics/execution.current без согласования в тексте roadmap."
+  ],
+  "vision": {
+    "title": "Кем становится AION",
+    "paragraphs": [
+      "AION — экосистемная платформа вокруг профессионального водителя: не один APK, а связка устройств, облака, realtime и операционного центра на aion.com.",
+      "AI и Entity — слой объяснимого ассистента поверх диагностики, смены и обновлений; без «магии», которую нельзя проверить.",
+      "Realtime и sync — скелет мультиустройства и Link; портал отражает состояние, а не подменяет клиент.",
+      "Операции и roadmap — единая витрина готовности: релизы, техдолг, блокеры и фазы инфраструктуры в одном контракте для команды и агентов."
+    ]
+  },
+  "execution": {
+    "currentPriority": "Supabase SoT для roadmap (`portal_roadmap_master` + `portal_ecosystem`) и завершение update transparency в Driver.",
+    "nextPriority": "Release DB + RLS + device registry UI; затем AION Link cloud pairing.",
+    "blockedTasks": [
+      "Полная схема release DB без согласования миграций и RLS",
+      "Портальный auth для приватных feeds без UX входа"
+    ],
+    "activeEpics": [
+      "Update transparency completion",
+      "Release DB + RLS",
+      "AION Link cloud pairing",
+      "Master roadmap UI (/ecosystem, /operations)"
+    ],
+    "infrastructurePhase": "Публичные snapshots + rollout таблицы; не хватает записи roadmap из CI/ops без ручного JSON.",
+    "frontendPhase": "Портал: статус, roadmap, operations, releases — live; auth и персонализация — позже.",
+    "cloudPhase": "Один проект Supabase с Driver; портал читает public rows; typed repos для roadmap — впереди."
+  },
+  "cloudSoT": {
+    "primary": "repository_json",
+    "note": "По умолчанию источник — файлы в src/content. При наличии строк в ecosystem_public_snapshots (is_public) виды portal_ecosystem и portal_roadmap_master переопределяют поля; запись ведётся ops/CI вручную до автоматизации.",
+    "snapshotKinds": ["portal_ecosystem", "portal_roadmap_master", "portal_releases"]
+  },
   "sprint": {
     "label": "Ecosystem audit + live roadmap",
     "focus": "Единый JSON-источник правды, страница статуса, операционная сетка, честные проценты по подсистемам."
@@ -470,10 +516,55 @@
       "percentBasis": "Отсутствие опубликованного покрытия и единого QA pipeline.",
       "releaseReadiness": "not_ready",
       "priority": "P0"
+    },
+    {
+      "id": "ota-eas",
+      "name": "OTA (EAS Update) — каналы и применение",
+      "percent": 72,
+      "status": "partially_done",
+      "note": "Каналы, reload, диагностика; прозрачность на всех экранах и cloud-синхронизация статуса — частично.",
+      "percentBasis": "Expo Updates в driver + портал без полного live feed OTA.",
+      "nextMilestone": "Единый update engine + публичный статус OTA в operations",
+      "releaseReadiness": "preview",
+      "priority": "P0"
+    },
+    {
+      "id": "apk-channel",
+      "name": "APK / манифест / store-внешний контур",
+      "percent": 52,
+      "status": "partially_done",
+      "note": "Манифест, политика force/min runtime, web mirror; загрузки и подпись — вне портала.",
+      "percentBasis": "Клиент + com типы + fetch; нет единого release DB.",
+      "nextMilestone": "Downloads на /downloads + запись релиза в Supabase",
+      "releaseReadiness": "preview",
+      "priority": "P0"
+    },
+    {
+      "id": "operations-center",
+      "name": "Operations center (aion.com)",
+      "percent": 42,
+      "status": "partially_done",
+      "note": "Control, status, roadmap, operations; нет signed-in ops dashboard и автоматического ingestion.",
+      "percentBasis": "Страницы и JSON; нет полного CI→snapshot pipeline.",
+      "nextMilestone": "Запись portal_roadmap_master из деплоя/скрипта",
+      "releaseReadiness": "preview",
+      "priority": "P1"
+    },
+    {
+      "id": "roadmap-system",
+      "name": "Roadmap / ecosystem data plane",
+      "percent": 55,
+      "status": "partially_done",
+      "note": "Типы, Zod, merge cloud, расширения подсистем, страницы /ecosystem и /operations.",
+      "percentBasis": "Реализованные страницы и контракт данных; автоматизация сбора — нет.",
+      "nextMilestone": "Только Supabase как SoT без ручного дрейфа JSON",
+      "releaseReadiness": "preview",
+      "priority": "P0"
     }
   ],
   "epics": {
     "active": [
+      "Master roadmap UI (/ecosystem, /operations)",
       "Live ecosystem status (/status)",
       "Update transparency completion",
       "Release DB + RLS",

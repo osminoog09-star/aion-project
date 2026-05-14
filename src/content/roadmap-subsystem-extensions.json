@@ -1,0 +1,92 @@
+{
+  "mobile-app": {
+    "whatWorks": ["Смена end-to-end", "Garage/карта/OCR happy path", "OTA каналы EAS", "Desktop shell"],
+    "whatDoesNotWork": ["Не все edge-состояния UI", "Паритет web/mobile не везде"],
+    "mocked": [],
+    "localOnly": ["Локальная timeline без облачного SoT"],
+    "cloudReady": ["Supabase auth path частично"],
+    "requiresApk": ["Новый native module / движок вне OTA"],
+    "otaSafe": ["JS/ресурсы через OTA по политике канала"],
+    "otaImpact": "high",
+    "realtimeReadiness": 35,
+    "backendReadiness": 50,
+    "productionReadiness": 62,
+    "subsystemDebt": ["Нет единого CI gate по покрытию"]
+  },
+  "updates": {
+    "whatWorks": ["Update Center", "OTA check/apply", "APK manifest fetch", "Post-update flow частично"],
+    "whatDoesNotWork": ["Полная история и единый engine на всех экранах"],
+    "mocked": [],
+    "localOnly": ["Локальная история OTA"],
+    "cloudReady": ["Манифест по HTTPS"],
+    "requiresApk": ["Смена runtime / security baseline вне OTA"],
+    "otaSafe": ["Контент OTA при соблюдении runtime"],
+    "otaImpact": "high",
+    "realtimeReadiness": 20,
+    "backendReadiness": 35,
+    "productionReadiness": 48
+  },
+  "ota-eas": {
+    "whatWorks": ["Каналы preview/production", "reload apply", "embedded vs launch"],
+    "whatDoesNotWork": ["Публичный live stream статуса на портале"],
+    "otaImpact": "high",
+    "realtimeReadiness": 25,
+    "backendReadiness": 40,
+    "productionReadiness": 70
+  },
+  "apk-channel": {
+    "whatWorks": ["Манифест JSON", "force/minRuntime в типах", "com/driver fetch"],
+    "whatDoesNotWork": ["Центральный signed download hub на com"],
+    "requiresApk": ["Всегда для native bump"],
+    "otaImpact": "medium",
+    "backendReadiness": 30,
+    "productionReadiness": 52
+  },
+  "web-portal": {
+    "whatWorks": ["Next.js страницы", "Roadmap/status/control", "Supabase merge"],
+    "whatDoesNotWork": ["Auth, account, private ops"],
+    "localOnly": ["JSON seed до snapshot"],
+    "cloudReady": ["Snapshots при ключах"],
+    "otaImpact": "none",
+    "realtimeReadiness": 30,
+    "backendReadiness": 42,
+    "productionReadiness": 28
+  },
+  "roadmap-system": {
+    "whatWorks": ["Типы", "Zod", "Страницы /ecosystem /operations", "portal_roadmap_master merge"],
+    "whatDoesNotWork": ["Автогенерация данных из CI без ручного шага"],
+    "cloudReady": ["Чтение snapshot при наличии строки"],
+    "otaImpact": "none",
+    "backendReadiness": 55,
+    "productionReadiness": 55
+  },
+  "realtime": {
+    "whatWorks": ["EcosystemRealtimeBridge задел"],
+    "whatDoesNotWork": ["SLA, персистентные каналы для всех модулей"],
+    "otaImpact": "low",
+    "realtimeReadiness": 32,
+    "productionReadiness": 30
+  },
+  "sync-engine": {
+    "whatWorks": ["Offline queue", "flush метаданные"],
+    "whatDoesNotWork": ["Полная админка конфликтов"],
+    "otaImpact": "low",
+    "backendReadiness": 55,
+    "productionReadiness": 64
+  },
+  "aion-link": {
+    "whatWorks": ["Локальный режим/очередь в клиенте"],
+    "whatDoesNotWork": ["Облачный pairing + стабильный realtime"],
+    "cloudReady": [],
+    "otaImpact": "low",
+    "realtimeReadiness": 28,
+    "productionReadiness": 38
+  },
+  "operations-center": {
+    "whatWorks": ["/control", "/status", "/operations", "rollout read"],
+    "whatDoesNotWork": ["Signed-in ops", "CI→snapshot writer"],
+    "cloudReady": ["Чтение public таблиц"],
+    "otaImpact": "none",
+    "productionReadiness": 42
+  }
+}

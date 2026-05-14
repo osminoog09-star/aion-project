@@ -13,6 +13,11 @@ function mergeEcosystem(cloud: EcosystemStatus, local: EcosystemStatus): Ecosyst
     readiness: { ...local.readiness, ...cloud.readiness },
     subsystems: cloud.subsystems?.length ? cloud.subsystems : local.subsystems,
     definitionOfDone: cloud.definitionOfDone?.length ? cloud.definitionOfDone : local.definitionOfDone,
+    releaseQualityBar: cloud.releaseQualityBar?.length ? cloud.releaseQualityBar : local.releaseQualityBar,
+    cursorExecutionRules: cloud.cursorExecutionRules?.length ? cloud.cursorExecutionRules : local.cursorExecutionRules,
+    vision: cloud.vision ?? local.vision,
+    execution: cloud.execution ? { ...local.execution, ...cloud.execution } : local.execution,
+    cloudSoT: cloud.cloudSoT ?? local.cloudSoT,
     operations: cloud.operations?.length ? cloud.operations : local.operations,
     technicalDebt: cloud.technicalDebt?.length ? cloud.technicalDebt : local.technicalDebt,
     releasePhases: cloud.releasePhases?.length ? cloud.releasePhases : local.releasePhases,
@@ -24,10 +29,47 @@ function mergeEcosystem(cloud: EcosystemStatus, local: EcosystemStatus): Ecosyst
   };
 }
 
+export const SNAPSHOT_KIND_ROADMAP_MASTER = "portal_roadmap_master";
+
+function mergeSubsystemsById(local: EcosystemStatus["subsystems"], cloud: EcosystemStatus["subsystems"]) {
+  const cmap = new Map(cloud.map((s) => [s.id, s]));
+  const mergedLocal = local.map((s) => ({ ...s, ...cmap.get(s.id) }));
+  const localIds = new Set(local.map((s) => s.id));
+  const extra = cloud.filter((s) => !localIds.has(s.id));
+  return [...mergedLocal, ...extra];
+}
+
+/** Deep overlay: same shape as EcosystemStatus; subsystem rows merge by id so JSON extensions survive partial cloud. */
+function mergeRoadmapMasterOverlay(cloud: EcosystemStatus, base: EcosystemStatus): EcosystemStatus {
+  return {
+    ...base,
+    ...cloud,
+    sprint: { ...base.sprint, ...cloud.sprint },
+    readiness: { ...base.readiness, ...cloud.readiness },
+    subsystems: cloud.subsystems?.length ? mergeSubsystemsById(base.subsystems, cloud.subsystems) : base.subsystems,
+    definitionOfDone: cloud.definitionOfDone?.length ? cloud.definitionOfDone : base.definitionOfDone,
+    releaseQualityBar: cloud.releaseQualityBar?.length ? cloud.releaseQualityBar : base.releaseQualityBar,
+    cursorExecutionRules: cloud.cursorExecutionRules?.length ? cloud.cursorExecutionRules : base.cursorExecutionRules,
+    vision: cloud.vision ?? base.vision,
+    execution: cloud.execution ? { ...base.execution, ...cloud.execution } : base.execution,
+    cloudSoT: cloud.cloudSoT ?? base.cloudSoT,
+    operations: cloud.operations?.length ? cloud.operations : base.operations,
+    technicalDebt: cloud.technicalDebt?.length ? cloud.technicalDebt : base.technicalDebt,
+    releasePhases: cloud.releasePhases?.length ? cloud.releasePhases : base.releasePhases,
+    milestones: cloud.milestones?.length ? cloud.milestones : base.milestones,
+    epics: {
+      active: cloud.epics?.active?.length ? cloud.epics.active : base.epics.active,
+      completed: cloud.epics?.completed?.length ? cloud.epics.completed : base.epics.completed,
+    },
+  };
+}
+
 export async function fetchCloudEcosystemStatus(local: EcosystemStatus): Promise<EcosystemStatus> {
   const supabase = createPortalSupabase();
   if (!supabase) return local;
-  const { data, error } = await supabase
+  let current = local;
+
+  const { data: eco, error: ecoErr } = await supabase
     .from("ecosystem_public_snapshots")
     .select("payload, updated_at")
     .eq("kind", SNAPSHOT_KIND_ECOSYSTEM)
@@ -35,10 +77,25 @@ export async function fetchCloudEcosystemStatus(local: EcosystemStatus): Promise
     .order("updated_at", { ascending: false })
     .limit(1)
     .maybeSingle();
-  if (error || !data?.payload) return local;
-  const parsed = parseEcosystemStatusPayload(data.payload);
-  if (!parsed) return local;
-  return mergeEcosystem(parsed, local);
+  if (!ecoErr && eco?.payload) {
+    const parsed = parseEcosystemStatusPayload(eco.payload);
+    if (parsed) current = mergeEcosystem(parsed, current);
+  }
+
+  const { data: rm, error: rmErr } = await supabase
+    .from("ecosystem_public_snapshots")
+    .select("payload, updated_at")
+    .eq("kind", SNAPSHOT_KIND_ROADMAP_MASTER)
+    .eq("is_public", true)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (!rmErr && rm?.payload) {
+    const parsed = parseEcosystemStatusPayload(rm.payload);
+    if (parsed) current = mergeRoadmapMasterOverlay(parsed, current);
+  }
+
+  return current;
 }
 
 function mergeReleases(cloud: ReleasesPayload, local: ReleasesPayload): ReleasesPayload {

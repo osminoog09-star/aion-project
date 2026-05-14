@@ -12,10 +12,29 @@ export type LegacySubsystemStatus = "partial" | "done" | "planned";
 
 export type SubsystemStatus = RoadmapSubsystemStatus | LegacySubsystemStatus;
 
+export type OtaImpactLevel = "none" | "low" | "medium" | "high";
+
 export type PlatformSlice = {
   /** 0–100; omit if not applicable. */
   percent?: number;
   note?: string;
+};
+
+/** Rich execution profile (merged from `roadmap-subsystem-extensions.json` + optional cloud). */
+export type SubsystemExecutionProfile = {
+  whatWorks?: string[];
+  whatDoesNotWork?: string[];
+  mocked?: string[];
+  localOnly?: string[];
+  cloudReady?: string[];
+  requiresApk?: string[];
+  otaSafe?: string[];
+  subsystemDebt?: string[];
+  otaImpact?: OtaImpactLevel;
+  /** 0–100 editorial slices; omit if unknown. */
+  realtimeReadiness?: number;
+  backendReadiness?: number;
+  productionReadiness?: number;
 };
 
 export type EcosystemSubsystem = {
@@ -37,7 +56,7 @@ export type EcosystemSubsystem = {
     backend?: PlatformSlice;
   };
   priority?: "P0" | "P1" | "P2" | "P3";
-};
+} & SubsystemExecutionProfile;
 
 export type TechnicalDebtItem = {
   id: string;
@@ -74,12 +93,41 @@ export type RoadmapMilestone = {
   note?: string;
 };
 
+export type VisionSection = {
+  title: string;
+  paragraphs: string[];
+};
+
+export type ExecutionPriorities = {
+  currentPriority: string;
+  nextPriority: string;
+  blockedTasks: string[];
+  activeEpics: string[];
+  infrastructurePhase: string;
+  frontendPhase: string;
+  cloudPhase: string;
+};
+
+export type CloudSoTInfo = {
+  /** Where the live merge reads from first when configured. */
+  primary: "repository_json" | "supabase_snapshots";
+  note: string;
+  snapshotKinds: string[];
+};
+
 export type EcosystemStatus = {
   lastUpdated: string;
   maintainedInRepository: boolean;
   methodology: string;
   /** How “fully_done” may be claimed; enforced by editorial process, not code. */
   definitionOfDone?: string[];
+  /** Explicit release / subsystem “really done” checklist. */
+  releaseQualityBar?: string[];
+  /** Shown on /operations — agent + human execution contract. */
+  cursorExecutionRules?: string[];
+  vision?: VisionSection;
+  execution?: ExecutionPriorities;
+  cloudSoT?: CloudSoTInfo;
   sprint: { label: string; focus: string };
   readiness: Record<string, number>;
   subsystems: EcosystemSubsystem[];

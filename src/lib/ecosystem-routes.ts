@@ -12,6 +12,8 @@ export const ecosystemRoutes = {
   roadmap: "/roadmap",
   releases: "/releases",
   control: "/control",
+  ecosystem: "/ecosystem",
+  operations: "/operations",
   downloads: "/downloads",
   ai: "/ai",
   core: "/core",

@@ -10,26 +10,43 @@ const roadmapStatus = z.enum([
   "blocked",
 ]);
 
-const subsystemSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  percent: z.number(),
-  status: z.union([roadmapStatus, z.enum(["partial", "done", "planned"])]),
-  note: z.string(),
-  percentBasis: z.string().optional(),
-  currentPhase: z.string().optional(),
-  nextMilestone: z.string().optional(),
-  blockers: z.array(z.string()).optional(),
-  releaseReadiness: z.enum(["not_ready", "preview", "production_candidate"]).optional(),
-  platforms: z
-    .object({
-      mobile: z.object({ percent: z.number().optional(), note: z.string().optional() }).optional(),
-      web: z.object({ percent: z.number().optional(), note: z.string().optional() }).optional(),
-      backend: z.object({ percent: z.number().optional(), note: z.string().optional() }).optional(),
-    })
-    .optional(),
-  priority: z.enum(["P0", "P1", "P2", "P3"]).optional(),
+const subsystemProfileSchema = z.object({
+  whatWorks: z.array(z.string()).optional(),
+  whatDoesNotWork: z.array(z.string()).optional(),
+  mocked: z.array(z.string()).optional(),
+  localOnly: z.array(z.string()).optional(),
+  cloudReady: z.array(z.string()).optional(),
+  requiresApk: z.array(z.string()).optional(),
+  otaSafe: z.array(z.string()).optional(),
+  subsystemDebt: z.array(z.string()).optional(),
+  otaImpact: z.enum(["none", "low", "medium", "high"]).optional(),
+  realtimeReadiness: z.number().optional(),
+  backendReadiness: z.number().optional(),
+  productionReadiness: z.number().optional(),
 });
+
+const subsystemSchema = z
+  .object({
+    id: z.string(),
+    name: z.string(),
+    percent: z.number(),
+    status: z.union([roadmapStatus, z.enum(["partial", "done", "planned"])]),
+    note: z.string(),
+    percentBasis: z.string().optional(),
+    currentPhase: z.string().optional(),
+    nextMilestone: z.string().optional(),
+    blockers: z.array(z.string()).optional(),
+    releaseReadiness: z.enum(["not_ready", "preview", "production_candidate"]).optional(),
+    platforms: z
+      .object({
+        mobile: z.object({ percent: z.number().optional(), note: z.string().optional() }).optional(),
+        web: z.object({ percent: z.number().optional(), note: z.string().optional() }).optional(),
+        backend: z.object({ percent: z.number().optional(), note: z.string().optional() }).optional(),
+      })
+      .optional(),
+    priority: z.enum(["P0", "P1", "P2", "P3"]).optional(),
+  })
+  .merge(subsystemProfileSchema);
 
 const operationsRowSchema = z.object({
   id: z.string(),
@@ -65,12 +82,38 @@ const milestoneSchema = z.object({
   note: z.string().optional(),
 });
 
+const visionSchema = z.object({
+  title: z.string(),
+  paragraphs: z.array(z.string()),
+});
+
+const executionSchema = z.object({
+  currentPriority: z.string(),
+  nextPriority: z.string(),
+  blockedTasks: z.array(z.string()),
+  activeEpics: z.array(z.string()),
+  infrastructurePhase: z.string(),
+  frontendPhase: z.string(),
+  cloudPhase: z.string(),
+});
+
+const cloudSoTSchema = z.object({
+  primary: z.enum(["repository_json", "supabase_snapshots"]),
+  note: z.string(),
+  snapshotKinds: z.array(z.string()),
+});
+
 export const ecosystemStatusPayloadSchema = z
   .object({
     lastUpdated: z.string(),
     maintainedInRepository: z.boolean().optional(),
     methodology: z.string(),
     definitionOfDone: z.array(z.string()).optional(),
+    releaseQualityBar: z.array(z.string()).optional(),
+    cursorExecutionRules: z.array(z.string()).optional(),
+    vision: visionSchema.optional(),
+    execution: executionSchema.optional(),
+    cloudSoT: cloudSoTSchema.optional(),
     sprint: z.object({ label: z.string(), focus: z.string() }),
     readiness: z.record(z.string(), z.number()),
     subsystems: z.array(subsystemSchema),

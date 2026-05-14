@@ -1,0 +1,15 @@
+---
+description: AION ecosystem roadmap & operations — single source of truth and execution contract
+globs: aion-com/**/*
+alwaysApply: false
+---
+
+# Roadmap / operations (aion.com)
+
+- **Source of truth:** `src/content/ecosystem-status.json` + `roadmap-subsystem-extensions.json`; cloud overlay via Supabase `ecosystem_public_snapshots` kinds `portal_ecosystem` and `portal_roadmap_master` (see `src/lib/ecosystem/cloud-queries.ts`).
+- **Do not** mark work `fully_done` unless it meets `releaseQualityBar` + `definitionOfDone` in JSON and real code paths exist.
+- **Finish before switching:** complete the current subsystem/task unless the user explicitly changes scope.
+- **No duplicate architecture:** extend existing roadmap types, Zod guards, and pages (`/ecosystem`, `/operations`, `/roadmap`, `/status`); do not add a second parallel tracker.
+- **No fake metrics:** percentages and readiness slices are editorial; do not invent automated scores.
+
+When changing roadmap data, update `lastUpdated` and keep `evidence` on technical-debt items observable (file/table/behavior).

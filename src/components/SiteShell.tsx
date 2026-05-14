@@ -3,6 +3,8 @@ import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 const primaryNav = [
   { href: ecosystemRoutes.home, label: "Экосистема" },
+  { href: ecosystemRoutes.ecosystem, label: "Live" },
+  { href: ecosystemRoutes.operations, label: "Ops" },
   { href: ecosystemRoutes.aionProject, label: "Project" },
   { href: ecosystemRoutes.status, label: "Статус" },
   { href: ecosystemRoutes.roadmap, label: "Roadmap" },
