@@ -7,7 +7,7 @@
       "id": "evt-2026-05-14-apk-pipeline-test",
       "occurredAt": "2026-05-14",
       "title": "APK update pipeline — bump 1.0.4, hosted manifest, EAS",
-      "summary": "aion-driver: version 1.0.4, versionCode 5, extra.apkUpdatePipelineVerification; aion-com: public/apk-manifest.preview.json (releaseType=test, apkUrl placeholder), releases.json publicManifestUrl; roadmap blockedTasks; PIPELINE.md. EAS build 9fa827ce-fb30-4453-8183-2b8e6c493542 оставался IN_QUEUE на 1.0.3/4 — нужен новый preview после merge.",
+      "summary": "aion-driver: 1.0.4/5 (86a7681). Новый EAS preview f71cec0a-a936-41e6-838d-476be202e789 — IN_QUEUE; apkUrl в манифесте ждёт FINISHED. В releases.json зафиксирован последний FINISHED 1.0.3 артефакт (4df2899b) для ops, не как 1.0.4. Фон/Link/profit — без изменения кода noop.",
       "subsystemIds": ["mobile-app", "release-ops"],
       "activeEpicLabel": "Update transparency completion",
       "commitHash": "577c337 (aion-com) + 86a7681 (aion-driver)",
@@ -36,7 +36,7 @@
       },
       "validation": {
         "web_build": "pending",
-        "apk_build": "in_queue_or_pending_rebuild"
+        "apk_build": "in_queue:f71cec0a-a936-41e6-838d-476be202e789"
       }
     },
     {

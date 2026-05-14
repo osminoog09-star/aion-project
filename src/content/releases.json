@@ -21,14 +21,20 @@
     "latestKnownVersion": "1.0.4",
     "policy": "Новый APK только при изменении нативного слоя, SDK или versionCode; JS/UI — через OTA.",
     "publicManifestUrl": "https://aion-com.vercel.app/apk-manifest.preview.json",
-    "note": "Статический JSON в репозитории (public/). После деплоя портала клиент: EXPO_PUBLIC_APK_MANIFEST_URL на этот URL. apkUrl внутри JSON — плейсхолдер до готового артефакта EAS (см. releases history / implementation feed)."
+    "note": "Манифест latest=1.0.4: apkUrl остаётся плейсхолдером до FINISHED билда 1.0.4. Очередь: f71cec0a-a936-41e6-838d-476be202e789 (1.0.4/5, commit 86a7681) — IN_QUEUE; старый 9fa827ce-fb30-4453-8183-2b8e6c493542 тоже IN_QUEUE. Последний FINISHED preview 1.0.3/4: build 4df2899b-7d27-46a2-b470-f3f4e5c6cc64 → https://expo.dev/artifacts/eas/aCgroFNDmLPXjVE8C3x6gj.apk (не подставлять в манифест как 1.0.4)."
   },
   "history": [
     {
       "date": "2026-05-14",
       "type": "apk",
+      "title": "EAS preview 1.0.4/5 поставлен в очередь (f71cec0a)",
+      "detail": "eas build --profile preview --no-wait после 86a7681; статус на момент записи — IN_QUEUE, артефакта нет. Device E2E и замена apkUrl в public/apk-manifest.preview.json — после FINISHED."
+    },
+    {
+      "date": "2026-05-14",
+      "type": "apk",
       "title": "APK update pipeline — тестовый манифест и bump 1.0.4",
-      "detail": "public/apk-manifest.preview.json (releaseType=test). EAS preview build 9fa827ce-fb30-4453-8183-2b8e6c493542 стартовал на коммите 1.0.3/4 — после merge 1.0.4 нужен новый eas build; приёмка Update Center на устройстве — вручную."
+      "detail": "public/apk-manifest.preview.json (releaseType=test). Ранний билд 9fa827ce-fb30-4453-8183-2b8e6c493542 оставался на 1.0.3/4 и в очереди; supersede — f71cec0a."
     },
     {
       "date": "2026-05-14",

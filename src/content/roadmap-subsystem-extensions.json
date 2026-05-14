@@ -175,7 +175,7 @@
     "backendReadiness": 10,
     "productionReadiness": 12,
     "subsystemDebt": ["Нет field-метрик батареи/OEM"],
-    "architectureState": "NoopBackgroundTracking; замена только после согласования Android policy.",
+    "architectureState": "NoopBackgroundTracking; Phase 1 foundation = FGS+location policy spike (task-manager vs native module), lifecycle/reconnect contract, lockscreen/minimize survival tests — без объявления production до gate.",
     "missingUx": ["Понятный UX когда фон запрещён OEM", "Индикатор «трекинг активен» без обмана"],
     "missingBackend": ["Серверные сессии смены при relay (если multi-device)"],
     "missingRealtime": ["Heartbeat смены для второго устройства"],
