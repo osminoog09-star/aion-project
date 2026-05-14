@@ -47,9 +47,9 @@
     ]
   },
   "executionQueue": {
-    "currentActiveEpic": "Update transparency completion",
-    "currentSubsystemFocus": "updates",
-    "nextImplementationTarget": "Ship end-to-end update transparency (OTA history + portal mirror + single engine entry points) before expanding auth UI.",
+    "currentActiveEpic": "Always-on drive: background shift + live profit + two-phone Link relay",
+    "currentSubsystemFocus": "background-drive",
+    "nextImplementationTarget": "Заменить NoopBackgroundTracking реальным Android FGS/location path + не ломать батарею; параллельно MediaStore/очередь скриншотов на work phone и Supabase relay для OCR payload.",
     "blockedTasks": [
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"

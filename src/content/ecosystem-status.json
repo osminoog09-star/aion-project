@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-13",
   "maintainedInRepository": true,
   "methodology": "Проценты — ручная оценка по коду и продукту на дату lastUpdated: UI/фичи, бэкенд, realtime, прод-UX, граничные случаи, паритет web/mobile, дизайн, тесты, релизная готовность. Автоматического сбора метрик нет; числа не нормируются к «красивым» значениям. Supabase snapshot при наличии может переопределить поля через ecosystem_public_snapshots.",
   "definitionOfDone": [
@@ -32,13 +32,14 @@
     ]
   },
   "execution": {
-    "currentPriority": "Supabase SoT для roadmap (`portal_roadmap_master` + `portal_ecosystem`) и завершение update transparency в Driver.",
-    "nextPriority": "Release DB + RLS + device registry UI; затем AION Link cloud pairing.",
+    "currentPriority": "Always-on Driver: production background tracking (FGS/location/task), live profit при lock/background, двухтелефонный AION Link (автоскриншот→OCR→relay) без постоянного foreground.",
+    "nextPriority": "Заменить NoopBackgroundTracking реальным адаптером + MediaStore/очередь скриншотов + Supabase relay/realtime; параллельно release DB и update transparency.",
     "blockedTasks": [
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
     ],
     "activeEpics": [
+      "Always-on drive: background shift + live profit + two-phone Link relay",
       "Update transparency completion",
       "Release DB + RLS",
       "AION Link cloud pairing",
@@ -70,7 +71,8 @@
     "sync": 64,
     "realtime": 32,
     "releaseOps": 40,
-    "offline": 60
+    "offline": 60,
+    "backgroundDrive": 12
   },
   "operations": [
     {
@@ -130,6 +132,14 @@
       "lastSignal": "driver Link модуль"
     },
     {
+      "id": "background-drive",
+      "label": "Background drive + shift",
+      "percent": 12,
+      "status": "not_started",
+      "summary": "Фоновый трекинг смены в driver — noop-адаптер до FGS/location/task; влияет на live profit и taxi shift в фоне.",
+      "lastSignal": "aion-driver/services/backgroundTracking.ts"
+    },
+    {
       "id": "ocr",
       "label": "OCR pipeline",
       "percent": 70,
@@ -181,6 +191,27 @@
       "severity": "medium",
       "title": "Карты и офлайн-кэш карт — неполный контур",
       "evidence": "Зависимость от выбранного map SDK и сети; edge cases не сведены в отчёт."
+    },
+    {
+      "id": "td-bg-noop",
+      "subsystemId": "mobile-app",
+      "severity": "critical",
+      "title": "Фоновый трекинг смены не реализован (noop adapter)",
+      "evidence": "aion-driver/services/backgroundTracking.ts — NoopBackgroundTracking.enableForShift возвращает пустой handle; ShiftContext вызывает адаптер, но GPS/сессия в фоне не ведутся."
+    },
+    {
+      "id": "td-link-screenshot-stub",
+      "subsystemId": "aion-link",
+      "severity": "high",
+      "title": "Автоматическое наблюдение за скриншотами Bolt/Uber — stub",
+      "evidence": "aion-driver/features/aion-link/services/screenshotWatchStub.ts — startAionLinkScreenshotWatch no-op."
+    },
+    {
+      "id": "td-profit-not-live-bg",
+      "subsystemId": "dashboard",
+      "severity": "high",
+      "title": "Прибыль/смена не обновляются надёжно при background без доработки трекинга и relay",
+      "evidence": "Нет production background location/session; OCR импорт вручную через ImportScreenshotScreen; profit tiles зависят от локальной смены и импортов."
     }
   ],
   "releasePhases": [
@@ -203,7 +234,7 @@
       "name": "Cloud SoT + Link",
       "status": "planned",
       "window": "H2 2026",
-      "description": "Релизы и устройства в БД, RLS, realtime pairing."
+      "description": "Релизы и устройства в БД, RLS, realtime pairing; APK/FGS для always-on Driver."
     }
   ],
   "milestones": [
@@ -238,7 +269,7 @@
       "name": "AION Driver (мобильный клиент)",
       "percent": 68,
       "status": "partially_done",
-      "note": "Основной UX модуля Driver: смена, garage, карта, desktop route; не все подсистемы на уровне production polish.",
+      "note": "Основной UX модуля Driver: смена, garage, карта, desktop route; фоновый трекинг смены пока no-op (см. background-drive / backgroundTracking.ts); не все подсистемы на уровне production polish.",
       "percentBasis": "Реализованные экраны и потоки модуля vs заявленный полный кокпит.",
       "currentPhase": "Hard polish + edge cases",
       "nextMilestone": "Выравнивание update/entity с облаком",
@@ -318,6 +349,23 @@
       "priority": "P1"
     },
     {
+      "id": "background-drive",
+      "name": "Background drive & lifecycle",
+      "percent": 12,
+      "status": "not_started",
+      "note": "Трекинг смены при background/lock: адаптер в driver — noop до FGS/location/task; влияет на taxi shift duration, profit live и timeline.",
+      "percentBasis": "Сравнение с целевым always-on: services/backgroundTracking.ts + ShiftContext wiring.",
+      "currentPhase": "Architecture + honesty gate",
+      "nextMilestone": "Android foreground service + согласованный battery UX; затем интеграция с profit engine",
+      "blockers": [
+        "Нет выбранного native/config-plugin пути для FGS в managed workflow",
+        "Требуются полевые тесты lifecycle (kill, low memory, OEM)"
+      ],
+      "releaseReadiness": "not_ready",
+      "priority": "P0",
+      "platforms": { "mobile": { "percent": 14 }, "web": { "percent": 0, "note": "N/A" }, "backend": { "percent": 8 } }
+    },
+    {
       "id": "cloud-auth",
       "name": "Cloud / auth",
       "percent": 44,
@@ -370,9 +418,9 @@
     {
       "id": "dashboard",
       "name": "Dashboard / аналитика",
-      "percent": 56,
+      "percent": 52,
       "status": "partially_done",
-      "note": "Плитки и сводки; полный аналитический слой и экспорт — нет.",
+      "note": "Плитки и сводки; live profit при lock/background зависит от фонового трекинга и relay — сейчас ограничено; полный аналитический слой и экспорт — нет.",
       "releaseReadiness": "preview",
       "priority": "P2"
     },

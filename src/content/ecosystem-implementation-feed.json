@@ -1,8 +1,45 @@
 {
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-13",
   "maintainedInRepository": true,
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
+    {
+      "id": "evt-2026-05-13-always-on-scope",
+      "occurredAt": "2026-05-13",
+      "title": "Always-on drive / Link / live profit — честный SoT",
+      "summary": "Портал: новая подсистема background-drive, техдолг по noop tracking и screenshot stub, очередь execution переключена; driver: флаги BACKGROUND_TRACKING_PRODUCTION_READY / AION_LINK_SCREENSHOT_AUTOMATION_READY (без фейкового фона).",
+      "subsystemIds": ["background-drive", "aion-link", "dashboard", "mobile-app"],
+      "activeEpicLabel": "Always-on drive: background shift + live profit + two-phone Link relay",
+      "commitHash": null,
+      "repository": "aion-com+aion-driver",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Ecosystem JSON + extensions отражают noop/stub",
+          "🟨 Явные константы в driver (не выдавать фон за готовый)"
+        ],
+        "notStarted": [
+          "⬜ FGS/location/task реализация",
+          "⬜ MediaStore screenshot pipeline",
+          "⬜ Supabase relay + realtime двух устройств"
+        ],
+        "technicalDebt": ["⚠ Критичный td-bg-noop зарегистрирован"]
+      },
+      "stillMissing": ["Реальный код фонового трекинга", "OCR relay E2E", "Device registry ролей work/personal"],
+      "blocked": ["Нужен выбор native vs managed для FGS", "RLS/release DB для доверенного relay"],
+      "impacts": {
+        "release": "high",
+        "otaApk": "high",
+        "backend": "medium",
+        "realtime": "high",
+        "ux": "medium",
+        "cloud": "medium"
+      },
+      "validation": {
+        "web_build": "passed",
+        "apk_build": "pending"
+      }
+    },
     {
       "id": "evt-2026-05-14-roadmap-exec",
       "occurredAt": "2026-05-14",
