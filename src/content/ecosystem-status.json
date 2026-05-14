@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "maintainedInRepository": true,
   "methodology": "Проценты — ручная оценка по коду и продукту на дату lastUpdated: UI/фичи, бэкенд, realtime, прод-UX, граничные случаи, паритет web/mobile, дизайн, тесты, релизная готовность. Автоматического сбора метрик нет; числа не нормируются к «красивым» значениям. Supabase snapshot при наличии может переопределить поля через ecosystem_public_snapshots.",
   "definitionOfDone": [
@@ -64,13 +64,13 @@
     "webPortal": 28,
     "ocr": 70,
     "cloud": 44,
-    "updates": 48,
+    "updates": 52,
     "aionEntity": 58,
     "aionLink": 38,
     "performance": 46,
     "sync": 64,
     "realtime": 32,
-    "releaseOps": 40,
+    "releaseOps": 42,
     "offline": 60,
     "backgroundDrive": 12
   },
@@ -88,8 +88,8 @@
       "label": "APK / manifest",
       "percent": 52,
       "status": "partially_done",
-      "summary": "Манифест и политика на клиенте и на aion.com; полный контур релиза — частично.",
-      "lastSignal": "fetchApkManifest + расширенные типы"
+      "summary": "Манифест preview в public/ портала + URL в releases.json; полный контур до реального apkUrl и device-приёмки — частично.",
+      "lastSignal": "apk-manifest.preview.json + EXPO_PUBLIC_APK_MANIFEST_URL в .env.example"
     },
     {
       "id": "releases-json",
@@ -455,9 +455,9 @@
     {
       "id": "release-ops",
       "name": "Release operations",
-      "percent": 40,
+      "percent": 42,
       "status": "partially_done",
-      "note": "EAS/JSON/снимки; единый ops-dashboard без ручного JSON — нет.",
+      "note": "EAS/JSON/снимки; hosted APK manifest (preview) в репо; приёмка Update Center на устройстве и CI→snapshot — впереди.",
       "nextMilestone": "Запись снимков из CI/ops",
       "releaseReadiness": "preview",
       "priority": "P1"

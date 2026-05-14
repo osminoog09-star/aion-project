@@ -1,8 +1,44 @@
 {
-  "lastUpdated": "2026-05-13",
+  "lastUpdated": "2026-05-14",
   "maintainedInRepository": true,
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
+    {
+      "id": "evt-2026-05-14-apk-pipeline-test",
+      "occurredAt": "2026-05-14",
+      "title": "APK update pipeline — bump 1.0.4, hosted manifest, EAS",
+      "summary": "aion-driver: version 1.0.4, versionCode 5, extra.apkUpdatePipelineVerification; aion-com: public/apk-manifest.preview.json (releaseType=test, apkUrl placeholder), releases.json publicManifestUrl; roadmap blockedTasks; PIPELINE.md. EAS build 9fa827ce-fb30-4453-8183-2b8e6c493542 оставался IN_QUEUE на 1.0.3/4 — нужен новый preview после merge.",
+      "subsystemIds": ["mobile-app", "release-ops"],
+      "activeEpicLabel": "Update transparency completion",
+      "commitHash": null,
+      "repository": "aion-com+aion-driver",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Версии и манифест в репо",
+          "🟨 Документация URL и env EXPO_PUBLIC_APK_MANIFEST_URL"
+        ],
+        "notStarted": [
+          "⬜ Приёмка Update Center на физическом устройстве (release build + env)",
+          "⬜ Подстановка реального apkUrl из FINISHED EAS для 1.0.4"
+        ],
+        "technicalDebt": ["⚠ example.com apkUrl — только до замены на артефакт"]
+      },
+      "stillMissing": ["Device verification", "Очередь EAS для commit с 1.0.4"],
+      "blocked": ["EAS build artifact URL", "Физическое устройство не доступно агенту"],
+      "impacts": {
+        "release": "high",
+        "otaApk": "high",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending",
+        "apk_build": "in_queue_or_pending_rebuild"
+      }
+    },
     {
       "id": "evt-2026-05-13-always-on-scope",
       "occurredAt": "2026-05-13",

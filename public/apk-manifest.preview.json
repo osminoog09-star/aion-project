@@ -1,0 +1,17 @@
+{
+  "latestVersion": "1.0.4",
+  "minimumSupported": "1.0.3",
+  "runtimeVersion": "1.0.4",
+  "buildNumber": "5",
+  "releaseDate": "2026-05-14T12:00:00.000Z",
+  "releaseType": "test",
+  "releaseNotes": "TEST — проверка цепочки APK/манифест (preview). apkUrl — плейсхолдер; после eas build FINISHED для 1.0.4 подставьте прямой URL артефакта (eas build:view --json → artifacts).",
+  "changelog": [
+    "Driver 1.0.4 / versionCode 5 — тест доставки и Update Center.",
+    "releaseType=test; не для production-канала.",
+    "OTA без смены runtime остаётся на канале preview; APK — при смене native/runtime."
+  ],
+  "apkUrl": "https://example.com/aion-driver-1.0.4-update-pipeline-placeholder.apk",
+  "critical": false,
+  "forceUpdate": false
+}

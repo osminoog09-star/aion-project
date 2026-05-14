@@ -6,24 +6,30 @@
       "id": "preview",
       "label": "Preview",
       "description": "Тестовый канал OTA и preview APK из EAS.",
-      "appVersion": "1.0.3",
-      "notes": "Версия синхронизирована с репозиторием aion-driver (package.json). Runtime смотрите в приложении: OTA-debug / диагностика."
+      "appVersion": "1.0.4",
+      "notes": "Тестовый bump проверки APK-контура (aion-driver package.json). Production-канал ниже остаётся на 1.0.3 до отдельного релиза."
     },
     {
       "id": "production",
       "label": "Production",
       "description": "Стабильный канал для production-модуля Driver и связанных OTA.",
       "appVersion": "1.0.3",
-      "notes": "Те же цифры до выделения отдельного production bump в CI."
+      "notes": "Не поднимали до завершения приёмки preview и подстановки реального apkUrl в манифесте."
     }
   ],
   "apk": {
-    "latestKnownVersion": "1.0.3",
+    "latestKnownVersion": "1.0.4",
     "policy": "Новый APK только при изменении нативного слоя, SDK или versionCode; JS/UI — через OTA.",
-    "publicManifestUrl": null,
-    "note": "Публичный manifest URL будет добавлен после хостинга артефактов (S3/GitHub Releases/EAS)."
+    "publicManifestUrl": "https://aion-com.vercel.app/apk-manifest.preview.json",
+    "note": "Статический JSON в репозитории (public/). После деплоя портала клиент: EXPO_PUBLIC_APK_MANIFEST_URL на этот URL. apkUrl внутри JSON — плейсхолдер до готового артефакта EAS (см. releases history / implementation feed)."
   },
   "history": [
+    {
+      "date": "2026-05-14",
+      "type": "apk",
+      "title": "APK update pipeline — тестовый манифест и bump 1.0.4",
+      "detail": "public/apk-manifest.preview.json (releaseType=test). EAS preview build 9fa827ce-fb30-4453-8183-2b8e6c493542 стартовал на коммите 1.0.3/4 — после merge 1.0.4 нужен новый eas build; приёмка Update Center на устройстве — вручную."
+    },
     {
       "date": "2026-05-14",
       "type": "web",

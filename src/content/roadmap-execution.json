@@ -51,6 +51,7 @@
     "currentSubsystemFocus": "background-drive",
     "nextImplementationTarget": "Заменить NoopBackgroundTracking реальным Android FGS/location path + не ломать батарею; параллельно MediaStore/очередь скриншотов на work phone и Supabase relay для OCR payload.",
     "blockedTasks": [
+      "APK pipeline test: очередь EAS 9fa827ce-fb30-4453-8183-2b8e6c493542 была на 1.0.3/4 — после bump 1.0.4 пересобрать preview, подставить реальный apkUrl в apk-manifest.preview.json, приёмка Update Center на устройстве",
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
     ],
