@@ -26,7 +26,15 @@ Copy `.env.example` → `.env.local` for local optional vars.
 |------|----------|--------|
 | `NEXT_PUBLIC_SITE_URL` | Recommended for prod | `https://your-domain.com` — drives `metadataBase`, sitemap, robots. |
 | `NEXT_PUBLIC_APK_MANIFEST_URL` | Optional | Public HTTPS JSON; same contract as Driver `EXPO_PUBLIC_APK_MANIFEST_URL`. |
-| Future Supabase / APIs | When wired | Add `NEXT_PUBLIC_*` keys; document in `.env.example`. |
+| `NEXT_PUBLIC_SUPABASE_URL` | **Recommended** | Same project URL as Driver (`EXPO_PUBLIC_SUPABASE_URL`). |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | **Recommended** | Publishable or anon key from Supabase (never commit service role). |
+
+## Supabase / shared cloud
+
+- Schema migrations live in **`aion-driver/supabase/migrations/`** (single project for Driver + portal).
+- Portal reads **public** rows: `ecosystem_public_snapshots` (`is_public`), published releases, `ecosystem_rollout_state` (`visible_public`). Devices/pairs/activity are **auth-only** (RLS).
+- Snapshot kinds: `portal_ecosystem` (roadmap JSON payload), `portal_releases` (optional releases JSON overlay).
+- Custom domain steps: **[DOMAIN.md](./DOMAIN.md)**.
 
 5. Deploy → note **`.vercel.app`** URL (initial public URL).
 

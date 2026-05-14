@@ -13,4 +13,4 @@ Env template: `.env.example` → `.env.local`.
 
 ## Production
 
-See **[DEPLOY.md](./DEPLOY.md)** (Vercel, env vars, domain, releases/manifest).
+See **[DEPLOY.md](./DEPLOY.md)** (Vercel, env vars, Supabase, releases/manifest) and **[DOMAIN.md](./DOMAIN.md)** (DNS, SSL, redirects).

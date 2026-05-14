@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { EcosystemRealtimeBridge } from "@/components/EcosystemRealtimeBridge";
 import { SiteShell } from "@/components/SiteShell";
 import { getMetadataBase, getSiteUrl } from "@/lib/site-url";
 
@@ -52,7 +53,10 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="min-h-full text-slate-100">
-        <SiteShell>{children}</SiteShell>
+        <SiteShell>
+          <EcosystemRealtimeBridge />
+          {children}
+        </SiteShell>
       </body>
     </html>
   );

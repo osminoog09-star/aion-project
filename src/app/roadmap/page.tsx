@@ -17,8 +17,8 @@ function Bar({ value }: { value: number }) {
   );
 }
 
-export default function RoadmapPage() {
-  const eco = getEcosystemStatus();
+export default async function RoadmapPage() {
+  const eco = await getEcosystemStatus();
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">

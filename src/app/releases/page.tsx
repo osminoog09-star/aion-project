@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ReleasesPage() {
-  const rel = getReleasesPayload();
+  const rel = await getReleasesPayload();
   const liveManifest = await fetchPublishedApkManifest();
   const manifestUrl = process.env.NEXT_PUBLIC_APK_MANIFEST_URL?.trim() ?? "";
 

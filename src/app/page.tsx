@@ -3,8 +3,8 @@ import { AionWebEntity } from "@/components/AionWebEntity";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
 import { averageReadiness } from "@/lib/readiness";
 
-export default function HomePage() {
-  const eco = getEcosystemStatus();
+export default async function HomePage() {
+  const eco = await getEcosystemStatus();
   const avg = averageReadiness(eco.readiness);
 
   return (
