@@ -3,7 +3,7 @@ import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 import { EcosystemModuleStub, ecosystemModuleMetadata } from "@/components/ecosystem/EcosystemModuleStub";
 
 const DESC =
-  "AION Link — связка устройств и очередей на www.aion.com/link; портальный слой дополняет клиент Driver.";
+  "AION Link — модуль мультиустройства и очередей на www.aion.com/link; портальный слой дополняет клиентские приложения экосистемы.";
 
 export const metadata: Metadata = ecosystemModuleMetadata({
   title: "Link",

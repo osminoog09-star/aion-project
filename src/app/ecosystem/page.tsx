@@ -5,8 +5,9 @@ import { MilestoneTimeline, ReadinessPillarGrid, ReleasePhaseStrip } from "@/com
 import { RoadmapHubLinks, SubsystemMasterCard, VisionPanel } from "@/components/ecosystem/MasterRoadmapPanels";
 
 export const metadata: Metadata = {
-  title: "Ecosystem — живой центр AION",
-  description: "Видение, подсистемы, готовность и фазы экосистемы AION на aion.com.",
+  title: "Экосистема — живой центр платформы AION",
+  description:
+    "Видение AI-платформы, подсистемы, готовность и фазы модульной realtime-экосистемы; публичные данные на aion.com.",
 };
 
 export default async function EcosystemPage() {
@@ -16,8 +17,8 @@ export default async function EcosystemPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-cyan-400/90">Live dashboard</p>
-      <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">Экосистема</h1>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-cyan-400/90">Live · platform state</p>
+      <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">Экосистема AION</h1>
       <p className="mt-3 max-w-3xl text-sm text-slate-400">{eco.methodology}</p>
       <div className="mt-4">
         <RoadmapHubLinks />

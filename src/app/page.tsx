@@ -11,14 +11,15 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
       <p className="text-center text-[11px] font-semibold uppercase tracking-[0.45em] text-cyan-400/90">
-        Ecosystem · Platform
+        AI infrastructure · Realtime ecosystem · Cloud-native
       </p>
       <h1 className="mt-4 text-center text-3xl font-bold tracking-tight text-white md:text-5xl md:leading-tight">
-        AION — операционная система для водителя
+        AION — экосистемная AI-платформа
       </h1>
       <p className="mx-auto mt-5 max-w-2xl text-center text-base leading-relaxed text-slate-400 md:text-lg">
-        Не один мобильный клиент: облако, desktop, OCR, AION Link и единый центр обновлений. Флагманский модуль —{" "}
-        <strong className="text-slate-200">AION Driver</strong>.
+        Модульная realtime-инфраструктура: облако, мультиустройство, операционный портал и интеллектуальные операции.
+        Первый активный модуль — <strong className="text-slate-200">AION Driver</strong> (профессиональный транспортный
+        кокпит; не определяет границы всей экосистемы).
       </p>
 
       <div className="mt-12 flex flex-col items-center gap-10 md:mt-16 md:flex-row md:justify-center md:gap-16">
@@ -35,7 +36,7 @@ export default async function HomePage() {
               href={ecosystemRoutes.aionProject}
               className="rounded-xl bg-cyan-500/15 px-5 py-3 text-center text-sm font-semibold text-cyan-200 ring-1 ring-cyan-400/35 transition hover:bg-cyan-500/25"
             >
-              AION Project
+              AION Driver
             </Link>
             <Link
               href="/status"
@@ -61,21 +62,23 @@ export default async function HomePage() {
 
       <section className="mt-20 grid gap-6 border-t border-white/10 pt-14 md:grid-cols-3">
         <div className="rounded-2xl bg-white/[0.03] p-6 ring-1 ring-white/10">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">Driver</h2>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-violet-400/90">Платформа</h2>
           <p className="mt-3 text-sm text-slate-400">
-            Кокпит, OCR выплат, garage, карта, desktop workspace, AION Entity, синхронизация.
+            Облако, realtime, синхронизация, очереди и операции — сквозная инфраструктура для всех модулей; портал
+            отражает состояние экосистемы.
           </p>
         </div>
         <div className="rounded-2xl bg-white/[0.03] p-6 ring-1 ring-white/10">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-violet-400/90">Cloud</h2>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">AI · модули</h2>
           <p className="mt-3 text-sm text-slate-400">
-            Supabase, очереди, OTA; портал получит live-статусы после подключения API.
+            AION Entity и AI-слой поверх диагностики и обновлений. Модули: Driver, Link, Core — расширяемая сетка
+            продуктов.
           </p>
         </div>
         <div className="rounded-2xl bg-white/[0.03] p-6 ring-1 ring-white/10">
           <h2 className="text-sm font-bold uppercase tracking-widest text-emerald-400/90">Релизы</h2>
           <p className="mt-3 text-sm text-slate-400">
-            Каналы preview/production, политика OTA vs APK, история — на странице «Релизы».
+            Каналы preview/production, OTA vs APK, артефакты модулей — единая политика на странице «Релизы».
           </p>
         </div>
       </section>

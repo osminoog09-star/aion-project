@@ -12,7 +12,8 @@ import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export const metadata: Metadata = {
   title: "AION Operations Hub — control",
-  description: "Единый центр: APK, OTA, релизы, roadmap, облако, rollout; публичные данные + Supabase.",
+  description:
+    "Единый экран облачных операций экосистемы: APK, OTA, релизы, roadmap, rollout; публичные данные + Supabase. Не только модуль Driver.",
 };
 
 export default async function ControlPage() {
@@ -27,9 +28,10 @@ export default async function ControlPage() {
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
       <h1 className="text-3xl font-bold text-white md:text-4xl">Operations Hub</h1>
       <p className="mt-4 max-w-3xl text-slate-400">
-        Один экран для APK, OTA, релизов, roadmap и здоровья инфраструктуры. Данные собираются из манифеста,{" "}
+        Операционный центр всей платформы AION: артефакты, каналы, roadmap и здоровье инфраструктуры для модулей
+        (Driver, Link, Core и далее). Данные — манифест,{" "}
         <span className="font-mono text-xs text-slate-500">releases.json</span>, roadmap JSON и (если настроено)
-        Supabase. Детальная таблица подсистем:{" "}
+        Supabase. Аудит подсистем:{" "}
         <Link href={ecosystemRoutes.status} className="text-cyan-400 hover:underline">
           /status
         </Link>

@@ -12,8 +12,9 @@ import {
 import { DefinitionOfDoneCallout, OperationsDashboard, ReadinessPillarGrid, TechnicalDebtBoard } from "@/components/ecosystem/EcosystemAuditViews";
 
 export const metadata: Metadata = {
-  title: "Operations — исполнение и риски",
-  description: "Приоритеты, блокеры, техдолг, операционное здоровье и правила исполнения экосистемы AION.",
+  title: "Operations — исполнение экосистемы",
+  description:
+    "Приоритеты, блокеры, техдолг и операционное здоровье модульной AI-платформы AION: облако, realtime, релизы.",
 };
 
 export default async function OperationsPage() {
@@ -24,7 +25,8 @@ export default async function OperationsPage() {
       <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-violet-400/90">Operations center</p>
       <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">Operations</h1>
       <p className="mt-3 max-w-3xl text-sm text-slate-400">
-        Единый слой исполнения: приоритеты, блокеры, планка качества, облачный SoT и операционные метрики.
+        Единый слой исполнения платформы: приоритеты, блокеры, планка качества, облачный SoT и метрики для всех
+        модулей.
       </p>
       <div className="mt-4">
         <RoadmapHubLinks />

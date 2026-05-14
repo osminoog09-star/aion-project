@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "AION — ecosystem platform";
+export const alt = "AION — AI ecosystem platform";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -26,10 +26,10 @@ export default function OpenGraphImage() {
           AION
         </div>
         <div style={{ marginTop: 24, fontSize: 56, fontWeight: 700, color: "#f8fafc", lineHeight: 1.1 }}>
-          Ecosystem platform
+          AI · realtime · cloud ops
         </div>
         <div style={{ marginTop: 20, fontSize: 24, color: "#94a3b8", maxWidth: 720, lineHeight: 1.4 }}>
-          Driver · releases · roadmap · control — public portal
+          Modular ecosystem portal — Driver module, releases, roadmap, control
         </div>
       </div>
     ),

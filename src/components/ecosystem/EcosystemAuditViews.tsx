@@ -297,7 +297,7 @@ export function DefinitionOfDoneCallout({ lines }: { lines: string[] }) {
 export function EcosystemSummaryHeader({ eco }: { eco: EcosystemStatus }) {
   return (
     <header className="space-y-2">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-cyan-400/90">Live roadmap · audit</p>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-cyan-400/90">Платформа · roadmap · аудит</p>
       <p className="text-xs text-slate-600">
         Обновлено: <time dateTime={eco.lastUpdated}>{eco.lastUpdated}</time>
         {eco.maintainedInRepository ? " · источник: репозиторий (+ опционально Supabase snapshot)" : null}

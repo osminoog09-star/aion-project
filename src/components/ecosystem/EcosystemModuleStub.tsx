@@ -33,7 +33,7 @@ export function EcosystemModuleStub({ title, path, body }: StubProps) {
         </Link>{" "}
         ·{" "}
         <Link href={ecosystemRoutes.aionProject} className="text-cyan-500/90 hover:underline">
-          AION Project
+          AION Driver
         </Link>
       </p>
     </div>

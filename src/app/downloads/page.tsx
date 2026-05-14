@@ -17,7 +17,7 @@ export default function DownloadsPage() {
       title="Downloads"
       description={DESC}
       path={ecosystemRoutes.downloads}
-      body="Здесь появятся официальные ссылки на APK/AAB, десктоп-бандлы и вспомогательные пакеты. Сейчас установка Driver идёт через ваши EAS-каналы и политику релизов."
+      body="Здесь появятся официальные ссылки на артефакты модулей (APK/AAB, десктоп-бандлы). Сейчас установка AION Driver идёт через ваши EAS-каналы и политику релизов."
     />
   );
 }

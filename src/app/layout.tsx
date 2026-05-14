@@ -20,27 +20,38 @@ const site = getSiteUrl();
 export const metadata: Metadata = {
   metadataBase: getMetadataBase(),
   title: {
-    default: "AION — экосистема для профессионального водителя",
+    default: "AION — экосистемная AI-платформа и realtime-инфраструктура",
     template: "%s · AION",
   },
   description:
-    "AION.COM (www.aion.com): публичная платформа экосистемы — операции, roadmap, релизы; продукт AION Driver описан в разделе /aionproject. Облако подключается опционально.",
+    "www.aion.com — публичный центр экосистемы AION: AI-слой, облачные операции, модульная архитектура, мультиустройство и realtime. Модуль AION Driver (транспортный кокпит) — в разделе /aionproject. Облако подключается опционально.",
   applicationName: "AION",
-  keywords: ["AION", "AION Driver", "roadmap", "releases", "OTA", "APK", "ecosystem"],
+  keywords: [
+    "AION",
+    "AI platform",
+    "realtime ecosystem",
+    "cloud operations",
+    "modular platform",
+    "AION Driver",
+    "roadmap",
+    "releases",
+    "OTA",
+    "APK",
+  ],
   authors: [{ name: "AION" }],
   openGraph: {
     type: "website",
     locale: "ru_RU",
     url: site,
     siteName: "AION",
-    title: "AION — ecosystem platform",
+    title: "AION — AI ecosystem platform",
     description:
-      "Public ecosystem platform at www.aion.com — operations, roadmap, releases; flagship Driver product hub at /aionproject.",
+      "Modular realtime ecosystem: cloud ops, multi-device architecture, public portal at www.aion.com. AION Driver is one active module — /aionproject.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AION — ecosystem platform",
-    description: "Public ecosystem portal — /aionproject, releases, roadmap, control.",
+    title: "AION — AI ecosystem platform",
+    description: "Ecosystem platform: operations, roadmap, releases; Driver module at /aionproject.",
   },
   robots: { index: true, follow: true },
 };

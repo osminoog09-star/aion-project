@@ -6,8 +6,9 @@ import { fetchPublishedApkManifest } from "@/lib/fetchApkManifest";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export const metadata: Metadata = {
-  title: "Релизы — OTA, APK, каналы",
-  description: "Политика обновлений и зафиксированные версии; manifest APK добавится после публикации артефактов.",
+  title: "Релизы — OTA, APK, каналы экосистемы",
+  description:
+    "Политика обновлений платформы AION и зафиксированные версии модулей; manifest APK после публикации артефактов.",
 };
 
 export default async function ReleasesPage() {

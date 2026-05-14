@@ -6,7 +6,7 @@ export const AION_PROJECT_PATH = "/aionproject" as const;
 
 export const ecosystemRoutes = {
   home: "/",
-  /** Flagship Driver product hub (site copy + links; app is separate deploy). */
+  /** First active product module (Driver cockpit); site copy + links; app is separate deploy. */
   aionProject: AION_PROJECT_PATH,
   status: "/status",
   roadmap: "/roadmap",

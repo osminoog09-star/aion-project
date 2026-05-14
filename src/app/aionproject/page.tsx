@@ -3,25 +3,25 @@ import Link from "next/link";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export const metadata: Metadata = {
-  title: "AION Project — AION Driver",
+  title: "AION Driver — модуль экосистемы",
   description:
-    "Флагманский продукт экосистемы AION: мобильный кокпит, OCR, desktop workspace, AION Link, OTA. Раздел портала www.aion.com/aionproject.",
+    "Первый активный модуль платформы AION: мобильный и desktop кокпит, OCR, AION Link, OTA. Раздел www.aion.com/aionproject — не вся экосистема.",
   alternates: { canonical: ecosystemRoutes.aionProject },
 };
 
 export default function AionProjectPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-cyan-400/90">www.aion.com · Product</p>
-      <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">AION Project</h1>
+      <p className="text-[11px] font-semibold uppercase tracking-[0.4em] text-cyan-400/90">www.aion.com · Module</p>
+      <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">AION Driver</h1>
       <p className="mt-2 text-sm text-slate-500">
-        Канонический путь продукта на портале экосистемы. Клиент — отдельный билд (Expo / EAS); здесь описание и связь с
-        релизами.
+        Каноническая страница модуля на портале экосистемы. Клиент — отдельный билд (Expo / EAS); здесь позиционирование
+        в общей архитектуре AION и связь с релизами.
       </p>
       <p className="mt-4 max-w-3xl text-slate-400">
-        Первый продукт семейства AION — <strong className="text-slate-200">AION Driver</strong>: смена, аналитика, OCR
-        импорт выплат, карта, гараж, режим второго телефона и AION Link. Desktop-маршрут внутри приложения для широкого
-        экрана.
+        <strong className="text-slate-200">AION Driver</strong> — первый активный продуктовый модуль платформы: смена,
+        аналитика, OCR импорт выплат, карта, гараж, режим второго телефона и AION Link. Desktop-маршрут внутри
+        приложения для широкого экрана. Транспортный контекст — домен модуля, а не определение всей экосистемы AION.
       </p>
       <ul className="mt-10 grid gap-4 md:grid-cols-2">
         {[

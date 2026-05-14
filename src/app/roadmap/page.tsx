@@ -15,8 +15,9 @@ import type { EcosystemSubsystem } from "@/lib/ecosystem-types";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export const metadata: Metadata = {
-  title: "Roadmap — статус экосистемы AION",
-  description: "Живая дорожная карта: фазы, вехи, готовность; дашборды /ecosystem и /operations.",
+  title: "Roadmap — модульная платформа AION",
+  description:
+    "Живая дорожная карта экосистемы: фазы, вехи, готовность инфраструктуры и модулей; дашборды /ecosystem и /operations.",
 };
 
 function SubsystemRoadmapCard({ s }: { s: EcosystemSubsystem }) {
@@ -47,7 +48,7 @@ export default async function RoadmapPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
       <EcosystemSummaryHeader eco={eco} />
-      <h1 className="mt-4 text-3xl font-bold text-white md:text-4xl">Roadmap</h1>
+      <h1 className="mt-4 text-3xl font-bold text-white md:text-4xl">Roadmap экосистемы</h1>
       <p className="mt-3 max-w-3xl text-slate-400">{eco.methodology}</p>
       <div className="mt-4">
         <RoadmapHubLinks />

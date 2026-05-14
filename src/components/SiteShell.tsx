@@ -2,23 +2,23 @@ import Link from "next/link";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 const primaryNav = [
-  { href: ecosystemRoutes.home, label: "Экосистема" },
-  { href: ecosystemRoutes.ecosystem, label: "Live" },
-  { href: ecosystemRoutes.operations, label: "Ops" },
-  { href: ecosystemRoutes.aionProject, label: "Project" },
-  { href: ecosystemRoutes.status, label: "Статус" },
+  { href: ecosystemRoutes.home, label: "Платформа" },
+  { href: ecosystemRoutes.ecosystem, label: "Экосистема" },
   { href: ecosystemRoutes.roadmap, label: "Roadmap" },
+  { href: ecosystemRoutes.operations, label: "Операции" },
+  { href: ecosystemRoutes.status, label: "Статус" },
   { href: ecosystemRoutes.releases, label: "Релизы" },
-  { href: ecosystemRoutes.control, label: "Hub" },
+  { href: ecosystemRoutes.control, label: "Control" },
 ] as const;
 
 const moduleNav = [
+  { href: ecosystemRoutes.aionProject, label: "Driver" },
+  { href: ecosystemRoutes.link, label: "Link" },
+  { href: ecosystemRoutes.core, label: "Core" },
   { href: ecosystemRoutes.downloads, label: "Downloads" },
   { href: ecosystemRoutes.ai, label: "AI" },
   { href: ecosystemRoutes.aiContext, label: "AI ctx" },
-  { href: ecosystemRoutes.core, label: "Core" },
   { href: ecosystemRoutes.studio, label: "Studio" },
-  { href: ecosystemRoutes.link, label: "Link" },
 ] as const;
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
@@ -52,7 +52,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <p className="mx-auto mt-4 max-w-2xl text-xs text-slate-600">
-          Платформа: <span className="font-mono text-slate-500">www.aion.com</span> · продукт Driver:{" "}
+          Экосистемная AI-платформа <span className="font-mono text-slate-500">www.aion.com</span> · модуль Driver:{" "}
           <span className="font-mono text-slate-500">{ecosystemRoutes.aionProject}</span> · roadmap/релизы: JSON +
           публичные снимки Supabase.
         </p>

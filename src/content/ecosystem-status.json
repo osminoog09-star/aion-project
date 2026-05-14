@@ -23,11 +23,11 @@
     "Не добавлять фичи вне epics/execution.current без согласования в тексте roadmap."
   ],
   "vision": {
-    "title": "Кем становится AION",
+    "title": "Что такое AION",
     "paragraphs": [
-      "AION — экосистемная платформа вокруг профессионального водителя: не один APK, а связка устройств, облака, realtime и операционного центра на aion.com.",
-      "AI и Entity — слой объяснимого ассистента поверх диагностики, смены и обновлений; без «магии», которую нельзя проверить.",
-      "Realtime и sync — скелет мультиустройства и Link; портал отражает состояние, а не подменяет клиент.",
+      "AION — экосистемная AI-платформа и realtime-инфраструктура: модульная система, облачные операции, мультиустройство и публичный центр состояния на aion.com.",
+      "AI и Entity — объяснимый слой над диагностикой, синхронизацией и обновлениями для всех модулей; без «магии», которую нельзя проверить.",
+      "Realtime и sync — скелет мультиустройства и Link; портал отражает состояние платформы, а не подменяет клиент.",
       "Операции и roadmap — единая витрина готовности: релизы, техдолг, блокеры и фазы инфраструктуры в одном контракте для команды и агентов."
     ]
   },
@@ -46,7 +46,7 @@
     ],
     "infrastructurePhase": "Публичные snapshots + rollout таблицы; не хватает записи roadmap из CI/ops без ручного JSON.",
     "frontendPhase": "Портал: статус, roadmap, operations, releases — live; auth и персонализация — позже.",
-    "cloudPhase": "Один проект Supabase с Driver; портал читает public rows; typed repos для roadmap — впереди."
+    "cloudPhase": "Общий проект Supabase для экосистемы (в т.ч. модуль Driver); портал читает public rows; typed repos для roadmap — впереди."
   },
   "cloudSoT": {
     "primary": "repository_json",
@@ -78,7 +78,7 @@
       "label": "OTA (EAS Update)",
       "percent": 72,
       "status": "partially_done",
-      "summary": "Каналы и применение в Driver; прозрачность и история — в развитии.",
+      "summary": "Каналы и применение в клиентах (в т.ч. Driver); прозрачность и история — в развитии.",
       "lastSignal": "Expo Updates + Update Center в репозитории"
     },
     {
@@ -102,7 +102,7 @@
       "label": "Sync engine",
       "percent": 64,
       "status": "partially_done",
-      "summary": "Очередь офлайн в Driver; серверная согласованность и метрики — частично.",
+      "summary": "Очередь офлайн в клиентах экосистемы; серверная согласованность и метрики — частично.",
       "lastSignal": "offline queue в driver"
     },
     {
@@ -189,7 +189,7 @@
       "name": "Foundation",
       "status": "past",
       "window": "2025 — Q1 2026",
-      "description": "Driver кокпит, OTA базово, Supabase клиент, aion.com каркас."
+      "description": "База экосистемы: первый модуль Driver (кокпит), OTA, Supabase-клиент, каркас aion.com."
     },
     {
       "id": "ph-1",
@@ -235,11 +235,11 @@
   "subsystems": [
     {
       "id": "mobile-app",
-      "name": "Mobile app (AION Driver)",
+      "name": "AION Driver (мобильный клиент)",
       "percent": 68,
       "status": "partially_done",
-      "note": "Основной UX смены, garage, карта, desktop route; не все подсистемы на уровне production polish.",
-      "percentBasis": "Реализованные экраны и потоки vs заявленный полный кокпит.",
+      "note": "Основной UX модуля Driver: смена, garage, карта, desktop route; не все подсистемы на уровне production polish.",
+      "percentBasis": "Реализованные экраны и потоки модуля vs заявленный полный кокпит.",
       "currentPhase": "Hard polish + edge cases",
       "nextMilestone": "Выравнивание update/entity с облаком",
       "blockers": [],
@@ -252,7 +252,7 @@
       "name": "Desktop (Expo web / workspace)",
       "percent": 62,
       "status": "partially_done",
-      "note": "Shell и маршруты; не все driver-фичи выровнены под широкий layout.",
+      "note": "Shell и маршруты; не все фичи первого модуля выровнены под широкий layout.",
       "percentBasis": "Наличие desktop shell и ключевых hub-экранов.",
       "nextMilestone": "Паритет control/update с mobile",
       "releaseReadiness": "preview",

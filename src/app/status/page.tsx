@@ -17,8 +17,9 @@ import {
 } from "@/components/ecosystem/EcosystemAuditViews";
 
 export const metadata: Metadata = {
-  title: "Статус экосистемы — аудит AION",
-  description: "Честная сводка подсистем, операций, техдолга и фаз релиза; данные из JSON репозитория и публичных снимков Supabase.",
+  title: "Статус платформы — аудит экосистемы AION",
+  description:
+    "Сводка подсистем, облака, realtime, AI-слоя и модулей; техдолг и фазы релиза из JSON репозитория и публичных снимков Supabase.",
 };
 
 export default async function EcosystemStatusPage() {
@@ -30,7 +31,7 @@ export default async function EcosystemStatusPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
       <EcosystemSummaryHeader eco={eco} />
-      <h1 className="mt-4 text-3xl font-bold text-white md:text-4xl">Статус экосистемы</h1>
+      <h1 className="mt-4 text-3xl font-bold text-white md:text-4xl">Статус платформы</h1>
       <p className="mt-4 max-w-3xl text-sm leading-relaxed text-slate-400">{eco.methodology}</p>
 
       <div className="mt-8 flex flex-wrap gap-4">
