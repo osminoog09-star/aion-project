@@ -1,7 +1,8 @@
-import type { EcosystemStatus, EcosystemSubsystem, ReleasesPayload } from "@/lib/ecosystem-types";
+import type { EcosystemStatus, EcosystemSubsystem, ImplementationFeedPayload, ReleasesPayload } from "@/lib/ecosystem-types";
 import ecosystemStatus from "@/content/ecosystem-status.json";
 import roadmapSubsystemExtensions from "@/content/roadmap-subsystem-extensions.json";
 import roadmapExecution from "@/content/roadmap-execution.json";
+import implementationFeed from "@/content/ecosystem-implementation-feed.json";
 import releases from "@/content/releases.json";
 import { fetchCloudEcosystemStatus, fetchCloudReleasesPayload } from "@/lib/ecosystem/cloud-queries";
 
@@ -27,4 +28,8 @@ export function getLocalReleasesPayload(): ReleasesPayload {
 
 export async function getReleasesPayload(): Promise<ReleasesPayload> {
   return fetchCloudReleasesPayload(getLocalReleasesPayload());
+}
+
+export function getLocalImplementationFeed(): ImplementationFeedPayload {
+  return implementationFeed as ImplementationFeedPayload;
 }

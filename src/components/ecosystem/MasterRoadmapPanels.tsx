@@ -266,6 +266,9 @@ export function RoadmapHubLinks() {
       <Link href={ecosystemRoutes.roadmapExecution} className="text-cyan-400 hover:underline">
         /roadmap/execution
       </Link>
+      <Link href={ecosystemRoutes.operationsTimeline} className="text-cyan-400 hover:underline">
+        /operations/timeline
+      </Link>
       <Link href={ecosystemRoutes.status} className="text-cyan-400 hover:underline">
         /status
       </Link>

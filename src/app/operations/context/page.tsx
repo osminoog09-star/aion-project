@@ -17,13 +17,13 @@ export default function OperationsContextPage() {
     { href: ecosystemRoutes.aiContext, label: "/ai-context", note: "индекс JSON API для агентов" },
     { href: ecosystemRoutes.control, label: "/control", note: "Operations Hub (человек)" },
     { href: ecosystemRoutes.operations, label: "/operations", note: "исполнение, риски, DoD" },
-    { href: ecosystemRoutes.status, label: "/status", note: "аудит подсистем и техдолг" },
+    { href: ecosystemRoutes.operationsTimeline, label: "/operations/timeline", note: "лента внедрений и матрица валидации" },
   ] as const;
 
   const apis = [
     { path: "/api/roadmap/execution", note: "executionEngine + summary очереди" },
     { path: "/api/aion/context", note: "полный документ включая executionEngine" },
-    { path: "/api/operations", note: "hub + health" },
+    { path: "/api/implementation-feed", note: "implementation items + validationMatrix" },
   ] as const;
 
   return (
@@ -35,7 +35,8 @@ export default function OperationsContextPage() {
         решений и Cursor для реализации — оба читают одни и те же JSON SoT (
         <span className="font-mono text-slate-500">ecosystem-status</span>,{" "}
         <span className="font-mono text-slate-500">roadmap-subsystem-extensions</span>,{" "}
-        <span className="font-mono text-slate-500">roadmap-execution</span>).
+        <span className="font-mono text-slate-500">roadmap-execution</span>,{" "}
+        <span className="font-mono text-slate-500">ecosystem-implementation-feed</span>).
       </p>
 
       <h2 className="mt-10 text-xs font-bold uppercase tracking-widest text-slate-500">Страницы</h2>

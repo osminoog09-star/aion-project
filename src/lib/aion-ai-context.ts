@@ -1,10 +1,10 @@
 import type { EcosystemSubsystem, SubsystemStatus, TechnicalDebtItem } from "@/lib/ecosystem-types";
-import { getEcosystemStatus, getReleasesPayload } from "@/lib/ecosystem-data";
+import { getEcosystemStatus, getLocalImplementationFeed, getReleasesPayload } from "@/lib/ecosystem-data";
 import { getOperationsHubView } from "@/lib/operations-hub-data";
 import { buildRoadmapExecutionPayload } from "@/lib/roadmap-execution";
 import { averageReadiness, averageSubsystemPercent } from "@/lib/readiness";
 
-export const AION_AI_SCHEMA_VERSION = "1.2.0";
+export const AION_AI_SCHEMA_VERSION = "1.3.0";
 
 function mobileWebParityNote(s: EcosystemSubsystem): string {
   const m = s.platforms?.mobile?.percent;
@@ -48,6 +48,11 @@ function subsystemToAiRow(s: EcosystemSubsystem) {
     highestValueImprovement: s.highestValueImprovement ?? null,
     requiredDependencies: s.requiredDependencies ?? [],
     recommendedNextPhase: s.recommendedNextPhase ?? null,
+    currentBlocker: s.blockers?.[0] ?? null,
+    dependencyChain: s.requiredDependencies?.length ? s.requiredDependencies : (s.blockers ?? []),
+    uxGaps: s.missingUx ?? [],
+    backendGaps: s.missingBackend ?? [],
+    realtimeGaps: s.missingRealtime ?? [],
     whatWorks: s.whatWorks ?? [],
     whatDoesNotWork: s.whatDoesNotWork ?? [],
     mocked: s.mocked ?? [],
@@ -85,6 +90,7 @@ export async function buildAionAiContextDocument() {
   const technicalDebt: TechnicalDebtItem[] = eco.technicalDebt ?? [];
   const subsystems = eco.subsystems.map(subsystemToAiRow);
   const executionEngine = buildRoadmapExecutionPayload(eco);
+  const feedPayload = getLocalImplementationFeed();
 
   const activeEpic =
     eco.execution?.activeEpics?.[0] ?? eco.epics.active[0] ?? null;
@@ -110,7 +116,7 @@ export async function buildAionAiContextDocument() {
       generatedAt: new Date().toISOString(),
       ecosystemLastUpdated: eco.lastUpdated,
       methodology: eco.methodology,
-      source: "aion.com — composed from ecosystem-status.json, roadmap-subsystem-extensions.json, roadmap-execution.json, releases.json, optional Supabase snapshots, optional APK manifest URL",
+      source: "aion.com — composed from ecosystem-status.json, roadmap-subsystem-extensions.json, roadmap-execution.json, ecosystem-implementation-feed.json, releases.json, optional Supabase snapshots, optional APK manifest URL",
     },
     summary,
     ecosystem: {
@@ -135,6 +141,7 @@ export async function buildAionAiContextDocument() {
       operationsRows: eco.operations ?? [],
     },
     executionEngine,
+    implementationFeed: feedPayload,
     releases: {
       lastUpdated: rel.lastUpdated,
       channels: rel.channels,

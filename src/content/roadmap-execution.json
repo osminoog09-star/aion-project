@@ -30,7 +30,21 @@
         "Integration: wire APIs, merge JSON, tests, and portal surfaces.",
         "Refactor: remove duplication while preserving behavior contracts."
       ]
-    }
+    },
+    "trustedFullyDoneRequires": [
+      "Реализовано в коде и проверено вручную на основных потоках",
+      "Проходит releaseQualityBar + definitionOfDone в ecosystem-status.json",
+      "Отражено в ecosystem-implementation-feed.json (событие) или явно отмечено почему нет",
+      "Нет открытых P0/P1 по подсистеме без плана в executionQueue",
+      "Валидация: web_build passed для изменений портала; для client — согласованный gate в репо клиента"
+    ],
+    "collaborationWorkflow": [
+      "1) Cursor читает /api/aion/context и /api/roadmap/execution.",
+      "2) Cursor выбирает задачу по executionQueue и nextRecommendedStep подсистемы.",
+      "3) При неясной архитектуре — запрос к ChatGPT с приложенными JSON срезами.",
+      "4) После merge: npm run feed:append (или правка ecosystem-implementation-feed.json) + обновление lastUpdated в ecosystem-status при смене readiness.",
+      "5) ChatGPT сверяет против trustedFullyDoneRequires перед тем как согласовать «done»."
+    ]
   },
   "executionQueue": {
     "currentActiveEpic": "Update transparency completion",

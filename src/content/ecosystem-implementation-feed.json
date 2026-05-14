@@ -1,0 +1,121 @@
+{
+  "lastUpdated": "2026-05-14",
+  "maintainedInRepository": true,
+  "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
+  "items": [
+    {
+      "id": "evt-2026-05-14-roadmap-exec",
+      "occurredAt": "2026-05-14",
+      "title": "Roadmap execution engine + agent rules",
+      "summary": "roadmap-execution.json, /api/roadmap/execution, /roadmap/execution, /operations/context, расширения подсистем, schema 1.2.0.",
+      "subsystemIds": ["roadmap-system", "web-portal", "operations-center"],
+      "activeEpicLabel": "Master roadmap UI",
+      "commitHash": "96e2120",
+      "repository": "aion-com",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Execution queue + next-best-action в JSON/API",
+          "🟨 Cursor rule aion-roadmap-execution расширен"
+        ],
+        "notStarted": ["⬜ CI append feed на каждый push"],
+        "technicalDebt": []
+      },
+      "stillMissing": ["Автоматическая запись событий из CI", "Связь commit → subsystem без ручного subsystemIds"],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "typecheck": "passed",
+        "lint": "pending",
+        "web_build": "passed"
+      }
+    },
+    {
+      "id": "evt-2026-05-14-brand",
+      "occurredAt": "2026-05-14",
+      "title": "Brand positioning — platform-first",
+      "summary": "Hero, metadata, nav, ecosystem JSON vision; Driver как модуль.",
+      "subsystemIds": ["web-portal"],
+      "commitHash": "0032b55",
+      "repository": "aion-com",
+      "rollup": {
+        "fullyDone": ["✅ Копирайт и SEO основных маршрутов"],
+        "partiallyDone": ["🟨 Подсистемные описания — по мере появления новых модулей"],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": ["Проверка внешних каналов (stores/соцсети) вне репо"],
+      "blocked": [],
+      "impacts": {
+        "release": "none",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "low",
+        "cloud": "none"
+      },
+      "validation": {
+        "web_build": "passed"
+      }
+    }
+  ],
+  "validationMatrix": [
+    {
+      "id": "typecheck",
+      "label": "TypeScript (tsc via next build)",
+      "lastKnown": "passed",
+      "lastSignalAt": "2026-05-14",
+      "evidence": "next build"
+    },
+    {
+      "id": "lint",
+      "label": "ESLint",
+      "lastKnown": "pending",
+      "evidence": "npm run lint не в обязательном gate"
+    },
+    {
+      "id": "web_build",
+      "label": "Next.js production build",
+      "lastKnown": "passed",
+      "lastSignalAt": "2026-05-14",
+      "evidence": "npm run build"
+    },
+    {
+      "id": "apk_build",
+      "label": "APK / native pipeline",
+      "lastKnown": "unknown",
+      "evidence": "Вне aion-com (aion-driver / EAS)"
+    },
+    {
+      "id": "ota_publish",
+      "label": "OTA publish channel",
+      "lastKnown": "unknown",
+      "evidence": "EAS Update — вне портала"
+    },
+    {
+      "id": "realtime_tests",
+      "label": "Realtime integration tests",
+      "lastKnown": "pending",
+      "evidence": "Нет выделенного пакета тестов портала"
+    },
+    {
+      "id": "cloud_tests",
+      "label": "Supabase / RLS checks",
+      "lastKnown": "pending",
+      "evidence": "Ручная проверка при изменении схемы"
+    },
+    {
+      "id": "ocr_tests",
+      "label": "OCR pipeline",
+      "lastKnown": "unknown",
+      "evidence": "Модуль Driver"
+    }
+  ]
+}

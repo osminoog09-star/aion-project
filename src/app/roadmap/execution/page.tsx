@@ -174,6 +174,10 @@ export default async function RoadmapExecutionPage() {
           Operations context
         </Link>
         {" · "}
+        <Link href={ecosystemRoutes.operationsTimeline} className="text-cyan-500 hover:underline">
+          Timeline
+        </Link>
+        {" · "}
         <Link href={ecosystemRoutes.operations} className="text-cyan-500 hover:underline">
           /operations
         </Link>

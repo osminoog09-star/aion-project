@@ -15,6 +15,7 @@ const moduleNav = [
   { href: ecosystemRoutes.aionProject, label: "Driver" },
   { href: ecosystemRoutes.roadmapExecution, label: "Execute" },
   { href: ecosystemRoutes.operationsContext, label: "Ops ctx" },
+  { href: ecosystemRoutes.operationsTimeline, label: "Timeline" },
   { href: ecosystemRoutes.link, label: "Link" },
   { href: ecosystemRoutes.core, label: "Core" },
   { href: ecosystemRoutes.downloads, label: "Downloads" },

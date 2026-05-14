@@ -1,5 +1,5 @@
 import { createPortalSupabase } from "@/lib/supabase/portal-client";
-import type { EcosystemStatus, ExecutionQueue, ReleasesPayload } from "@/lib/ecosystem-types";
+import type { AiExecutionNotes, EcosystemStatus, ExecutionQueue, ReleasesPayload } from "@/lib/ecosystem-types";
 import { parseEcosystemStatusPayload, parseReleasesPayload } from "@/lib/ecosystem/payload-guards";
 
 export const SNAPSHOT_KIND_ECOSYSTEM = "portal_ecosystem";
@@ -31,7 +31,10 @@ function mergeEcosystem(cloud: EcosystemStatus, local: EcosystemStatus): Ecosyst
     definitionOfDone: cloud.definitionOfDone?.length ? cloud.definitionOfDone : local.definitionOfDone,
     releaseQualityBar: cloud.releaseQualityBar?.length ? cloud.releaseQualityBar : local.releaseQualityBar,
     cursorExecutionRules: cloud.cursorExecutionRules?.length ? cloud.cursorExecutionRules : local.cursorExecutionRules,
-    aiExecutionNotes: cloud.aiExecutionNotes ?? local.aiExecutionNotes,
+    aiExecutionNotes:
+      local.aiExecutionNotes || cloud.aiExecutionNotes
+        ? ({ ...(local.aiExecutionNotes ?? {}), ...(cloud.aiExecutionNotes ?? {}) } as AiExecutionNotes)
+        : undefined,
     executionQueue,
     vision: cloud.vision ?? local.vision,
     execution: cloud.execution ? { ...local.execution, ...cloud.execution } : local.execution,
@@ -69,7 +72,10 @@ function mergeRoadmapMasterOverlay(cloud: EcosystemStatus, base: EcosystemStatus
     definitionOfDone: cloud.definitionOfDone?.length ? cloud.definitionOfDone : base.definitionOfDone,
     releaseQualityBar: cloud.releaseQualityBar?.length ? cloud.releaseQualityBar : base.releaseQualityBar,
     cursorExecutionRules: cloud.cursorExecutionRules?.length ? cloud.cursorExecutionRules : base.cursorExecutionRules,
-    aiExecutionNotes: cloud.aiExecutionNotes ?? base.aiExecutionNotes,
+    aiExecutionNotes:
+      base.aiExecutionNotes || cloud.aiExecutionNotes
+        ? ({ ...(base.aiExecutionNotes ?? {}), ...(cloud.aiExecutionNotes ?? {}) } as AiExecutionNotes)
+        : undefined,
     executionQueue,
     vision: cloud.vision ?? base.vision,
     execution: cloud.execution ? { ...base.execution, ...cloud.execution } : base.execution,

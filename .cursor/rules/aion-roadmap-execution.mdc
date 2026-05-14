@@ -8,11 +8,11 @@ alwaysApply: false
 
 ## Single source of truth (no parallel trackers)
 
-- **Repository JSON:** `src/content/ecosystem-status.json`, `src/content/roadmap-subsystem-extensions.json`, `src/content/roadmap-execution.json`, `src/content/releases.json`.
+- **Repository JSON:** `src/content/ecosystem-status.json`, `src/content/roadmap-subsystem-extensions.json`, `src/content/roadmap-execution.json`, `src/content/ecosystem-implementation-feed.json`, `src/content/releases.json`.
 - **Merge:** `getEcosystemStatus()` in `src/lib/ecosystem-data.ts` (extensions + execution bundle + optional Supabase).
 - **Cloud overlay:** `ecosystem_public_snapshots` kinds `portal_ecosystem`, `portal_roadmap_master` — see `src/lib/ecosystem/cloud-queries.ts`.
-- **Machine-readable:** `GET /api/aion/context` (includes `executionEngine`), `GET /api/roadmap/execution`, plus slice APIs listed on `/ai-context`.
-- **Human pages:** `/roadmap/execution`, `/operations/context`, `/control`, `/operations`, `/status`, `/roadmap`.
+- **Machine-readable:** `GET /api/aion/context` (includes `executionEngine` + `implementationFeed`), `GET /api/roadmap/execution`, `GET /api/implementation-feed`, plus slices on `/ai-context`.
+- **Human pages:** `/roadmap/execution`, `/operations/context`, `/operations/timeline`, `/control`, `/operations`, `/status`, `/roadmap`.
 
 ## Cursor MUST NOT
 
@@ -22,6 +22,13 @@ alwaysApply: false
 - Create disconnected UI (screens without data contract / API).
 - Duplicate backend or merge logic (extend `ecosystem-data`, `payload-guards`, existing repos).
 - Invent readiness %, blockers, or debt without observable evidence.
+- Claim **fully_done** for a subsystem without satisfying `aiExecutionNotes.trustedFullyDoneRequires` in `roadmap-execution.json` (code + validation + feed or documented exception).
+
+## Live implementation reporting
+
+- After a **meaningful** portal change, append an event: `npm run feed:append -- --title "…" --summary "…" [--commit HASH] [--subsystems id1,id2]` then tighten `rollup` / `validation` in `ecosystem-implementation-feed.json`.
+- Keep `validationMatrix` honest: unknown/pending is better than fake **passed**.
+- Human timeline: `/operations/timeline`; AI: `GET /api/implementation-feed`.
 
 ## Cursor SHOULD (within roadmap priorities)
 

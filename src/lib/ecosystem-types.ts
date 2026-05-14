@@ -64,9 +64,74 @@ export type AiExecutionNotes = {
     chatgpt: string[];
     cursor: string[];
   };
+  /** All must be satisfied before claiming subsystem `fully_done` in JSON. */
+  trustedFullyDoneRequires?: string[];
+  /** How ChatGPT ↔ Cursor ↔ roadmap stay aligned after shipping work. */
+  collaborationWorkflow?: string[];
 };
 
-/** Prioritized execution queue — editorial; drives “what next”. */
+/** Validation hooks tracked in implementation feed + matrix. */
+export type ValidationSignalId =
+  | "typecheck"
+  | "lint"
+  | "web_build"
+  | "apk_build"
+  | "ota_publish"
+  | "realtime_tests"
+  | "cloud_tests"
+  | "ocr_tests";
+
+export type ValidationSignalStatus = "passed" | "failed" | "skipped" | "pending" | "unknown";
+
+/** Rollup lines for agent/report consumers (emoji + short fact). */
+export type ImplementationRollup = {
+  fullyDone: string[];
+  partiallyDone: string[];
+  notStarted: string[];
+  technicalDebt: string[];
+};
+
+export type ImplementationFeedImpacts = {
+  release?: "none" | "low" | "medium" | "high";
+  otaApk?: "none" | "low" | "medium" | "high";
+  backend?: "none" | "low" | "medium" | "high";
+  realtime?: "none" | "low" | "medium" | "high";
+  ux?: "none" | "low" | "medium" | "high";
+  cloud?: "none" | "low" | "medium" | "high";
+};
+
+export type ImplementationFeedItem = {
+  id: string;
+  occurredAt: string;
+  title: string;
+  summary: string;
+  subsystemIds: string[];
+  activeEpicLabel?: string;
+  commitHash?: string | null;
+  repository?: string;
+  rollup: ImplementationRollup;
+  stillMissing: string[];
+  blocked: string[];
+  impacts: ImplementationFeedImpacts;
+  validation: Partial<Record<ValidationSignalId, ValidationSignalStatus>>;
+};
+
+export type ValidationMatrixRow = {
+  id: ValidationSignalId;
+  label: string;
+  lastKnown: ValidationSignalStatus;
+  lastSignalAt?: string;
+  evidence?: string;
+};
+
+export type ImplementationFeedPayload = {
+  lastUpdated: string;
+  maintainedInRepository: boolean;
+  policy: string;
+  items: ImplementationFeedItem[];
+  validationMatrix: ValidationMatrixRow[];
+};
+
 export type ExecutionQueue = {
   currentActiveEpic: string;
   currentSubsystemFocus: string;

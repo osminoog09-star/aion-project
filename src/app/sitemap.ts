@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ecosystemRoutes.link,
     ecosystemRoutes.aiContext,
     ecosystemRoutes.operationsContext,
+    ecosystemRoutes.operationsTimeline,
     ecosystemRoutes.roadmapExecution,
   ] as const;
   const now = new Date();
