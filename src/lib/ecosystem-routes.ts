@@ -16,6 +16,7 @@ export const ecosystemRoutes = {
   operations: "/operations",
   downloads: "/downloads",
   ai: "/ai",
+  aiContext: "/ai-context",
   core: "/core",
   studio: "/studio",
   link: "/link",

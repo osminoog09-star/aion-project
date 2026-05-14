@@ -1,3 +1,4 @@
+import type { EcosystemStatus, ReleasesPayload } from "@/lib/ecosystem-types";
 import type { OperationsHubView, RolloutPublicRow } from "@/lib/operations-hub-types";
 import { fetchPublishedApkManifest } from "@/lib/fetchApkManifest";
 import { getEcosystemStatus, getReleasesPayload } from "@/lib/ecosystem-data";
@@ -27,11 +28,18 @@ async function probeSnapshotKinds(): Promise<{ ok: boolean; kinds: string[]; err
   return { ok: true, kinds };
 }
 
-/** Single composed view for Operations Hub (web); same inputs mobile/desktop should mirror locally where offline. */
-export async function getOperationsHubView(): Promise<OperationsHubView> {
-  const [eco, rel, manifest, rolloutsRaw, probe] = await Promise.all([
-    getEcosystemStatus(),
-    getReleasesPayload(),
+export type OperationsHubPreload = {
+  eco?: EcosystemStatus;
+  rel?: ReleasesPayload;
+};
+
+/** Single composed view for Operations Hub (web); pass `eco`/`rel` to avoid duplicate fetches when composing AI context. */
+export async function getOperationsHubView(preload?: OperationsHubPreload): Promise<OperationsHubView> {
+  const [eco, rel] = await Promise.all([
+    preload?.eco ?? getEcosystemStatus(),
+    preload?.rel ?? getReleasesPayload(),
+  ]);
+  const [manifest, rolloutsRaw, probe] = await Promise.all([
     fetchPublishedApkManifest(),
     fetchPublishedRollouts(),
     probeSnapshotKinds(),

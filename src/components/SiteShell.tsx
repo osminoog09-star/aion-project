@@ -15,6 +15,7 @@ const primaryNav = [
 const moduleNav = [
   { href: ecosystemRoutes.downloads, label: "Downloads" },
   { href: ecosystemRoutes.ai, label: "AI" },
+  { href: ecosystemRoutes.aiContext, label: "AI ctx" },
   { href: ecosystemRoutes.core, label: "Core" },
   { href: ecosystemRoutes.studio, label: "Studio" },
   { href: ecosystemRoutes.link, label: "Link" },
