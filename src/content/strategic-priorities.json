@@ -4,7 +4,7 @@
   "autonomousOrchestration": "Cursor executes roadmap/priorities/deps; owner controls via /operations/priorities and observes execution/reviews/deployment — no manual ChatGPT relay.",
   "ownerDirective": "PRIMARY: Driver Intelligence Core (real profit, rental, GPS history, OCR queue). P1 APK poll parallel — не freeze на EAS.",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
-  "nextImplementationTarget": "Route timeline intelligence UI; field validation of backfill + zone insights on device",
+  "nextImplementationTarget": "Field validation of analytics backfill + stop zone insights on physical device",
   "executionNotes": "Analytics backfill from GPS+shift history (24h cooldown). Route efficiency median on dashboard. Repo safety gates active. Heatmaps blocked.",
   "priorities": [
     {
@@ -14,7 +14,7 @@
       "subsystemIds": ["mobile-app", "ocr", "background-drive"],
       "status": "in_progress",
       "rationale": "MASTER §11–12: модуль Driver должен быть полезен в реальной жизни до расширения экосистемы.",
-      "nextAction": "Route intelligence UX + device validation of backfill/zone insights",
+      "nextAction": "Device validation: backfill coverage counts + stop zone insights on real GPS shifts",
       "setAt": "2026-05-15",
       "setBy": "product-owner"
     },

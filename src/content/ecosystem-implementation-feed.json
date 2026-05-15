@@ -4,6 +4,42 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-route-timeline-intelligence-ux",
+      "occurredAt": "2026-05-15",
+      "title": "Route timeline intelligence UX (header + rollups + dashboard)",
+      "summary": "aion-driver: RouteTimelineIntelligenceHeader (coverage, medians, zone insight); historical rollups + backfill on pull-to-refresh; group section stats; dashboard CTA. Portal: /operations/live 200 after runtime v2 deploy.",
+      "subsystemIds": ["mobile-app", "driver-intelligence"],
+      "eventType": "route_intelligence_changed",
+      "task": "Route timeline intelligence UX",
+      "reasoning": "Unifies snapshot rollups/stop zones with grouped route list; field validation via coverage X/Y without fake recommendations.",
+      "confidence": "high",
+      "runtimeImpact": "Route timeline refresh runs backfill then rollups; dashboard links to grouped GPS shifts",
+      "apkImpact": "ota-safe",
+      "repository": "aion-driver+aion-project",
+      "changedFiles": [
+        "components/route/RouteTimelineIntelligenceHeader.tsx",
+        "features/route/computeRouteTimelineSummary.ts",
+        "screens/RouteTimelineScreen.tsx",
+        "screens/DashboardScreen.tsx"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ Route timeline intelligence header",
+          "✅ Historical rollups + backfill on route refresh",
+          "✅ Group subtitles (avg idle/€/ч)",
+          "✅ Dashboard → /driver/route-timeline",
+          "✅ /operations/live production 200"
+        ],
+        "partiallyDone": [],
+        "notStarted": ["⬜ Historical heatmaps"],
+        "technicalDebt": ["Driver git remote must not target portal repo"]
+      },
+      "stillMissing": ["Device field validation of backfill counts on physical device"],
+      "blocked": [],
+      "impacts": { "release": "medium", "otaApk": "low", "backend": "none", "realtime": "none", "ux": "high", "cloud": "none" },
+      "validation": { "driver_typecheck": "passed", "portal_deploy_validate": "passed" }
+    },
+    {
       "id": "evt-2026-05-15-ai-orchestration-bridge",
       "occurredAt": "2026-05-15",
       "title": "AI orchestration bridge — architecture review queue",
@@ -121,7 +157,7 @@
           "✅ median route km/h on strip",
           "✅ Orchestration constitution v2 in priorities"
         ],
-        "partiallyDone": ["🟨 Route timeline intelligence UX"],
+        "partiallyDone": [],
         "notStarted": ["⬜ Historical heatmaps"],
         "technicalDebt": ["Driver git remote must not target portal repo"]
       },
