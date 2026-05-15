@@ -20,6 +20,7 @@
     "execution:autonomous-next": "node scripts/execution-autonomous-next.mjs",
     "execution:runtime-loop": "node scripts/execution-runtime-loop.mjs",
     "execution:stream": "node scripts/execution-runtime.mjs --banner",
+    "execution:action": "node scripts/execution-action.mjs",
     "verify:routes": "node scripts/verify-app-routes.mjs",
     "deploy:vercel": "npx vercel@54 deploy --prod",
     "deploy:hook": "node scripts/trigger-deploy-hook.mjs",

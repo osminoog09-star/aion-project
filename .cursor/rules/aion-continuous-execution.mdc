@@ -20,6 +20,7 @@ alwaysApply: true
 4. `execution:heartbeat` / loop во время длинной работы
 5. `execution:heal` при deploy/validation/route fail
 6. Feed на русском при milestones
+7. `npm run execution:action -- CODE "…" --file …` после каждой пачки правок — owner видит поток в терминале и на live
 
 ## Разрешённые фазы
 

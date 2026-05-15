@@ -22,6 +22,7 @@ import {
   selfHealOwnerCard,
   validationHuman,
 } from "@/lib/operations/execution-owner-ru";
+import { LiveActionStream } from "./LiveActionStream";
 
 type LiveApiResponse = {
   meta: { health: string; heartbeatAgeMs: number; persistedVia: string };
@@ -61,6 +62,7 @@ type LiveApiResponse = {
     lastAction?: string | null;
     runtimeGraph?: OrchestrationRuntimeGraph;
     orchestrationMode?: OrchestrationMode;
+    recentActions?: { at: string; tag: string; message: string; file?: string; repo?: string }[];
   };
   document: {
     timeline: {
@@ -256,6 +258,8 @@ export function LiveExecutionPanel() {
           </p>
         </div>
       </section>
+
+      <LiveActionStream actions={r.recentActions ?? []} />
 
       {/* Self-heal card */}
       {heal ? (

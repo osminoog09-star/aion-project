@@ -19,6 +19,24 @@ npm run execution:heartbeat
 npm run execution:daemon
 ```
 
+## Поток действий в терминале (при каждом значимом шаге кода)
+
+После правок файлов — **обязательно** (owner видит то же в Cursor и на `/operations/live`):
+
+```bash
+npm run execution:action -- CODE "кратко на русском что сделано" --file src/path/to/file.tsx
+npm run execution:action -- VALIDATE "typecheck / build"
+npm run execution:action -- DEPLOY "production validate"
+```
+
+Driver repo:
+
+```bash
+npm run execution:action -- CODE "описание" --file features/foo.ts --repo aion-driver
+```
+
+Печатает `[AION ACTION]` + `[CODE] [HH:MM] …` и обновляет `recentActions` в runtime JSON.
+
 Script prints:
 
 ```

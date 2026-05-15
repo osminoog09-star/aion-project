@@ -75,6 +75,15 @@ export type ExecutionRuntimeCore = {
   lastAction?: string | null;
   runtimeGraph?: OrchestrationRuntimeGraph;
   orchestrationMode?: OrchestrationMode;
+  recentActions?: ExecutionRecentAction[];
+};
+
+export type ExecutionRecentAction = {
+  at: string;
+  tag: string;
+  message: string;
+  file?: string;
+  repo?: string;
 };
 
 export type ExecutionRuntimeTimelineEvent = {
