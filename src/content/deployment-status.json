@@ -8,14 +8,14 @@
   "gitLinkage": {
     "remoteConfigured": true,
     "remoteUrl": "https://github.com/osminoog09-star/aion-project.git",
-    "defaultBranch": "master",
+    "defaultBranch": "main",
     "githubRepoExists": true,
     "lastPushAttempt": "2026-05-15T12:00:00Z",
     "lastPushError": null
   },
   "vercelLinkage": {
     "projectLinkedLocally": true,
-    "productionBranch": "master",
+    "productionBranch": "main",
     "autoDeployOnPush": true,
     "notes": "Git connected: osminoog09-star/aion-project. Vercel GitHub App granted aion-project repo."
   },
@@ -32,7 +32,7 @@
     "notes": "All operations routes validated."
   },
   "routeValidation": {
-    "checkedAt": "2026-05-15T10:51:38.529Z",
+    "checkedAt": "2026-05-15T11:12:55.758Z",
     "baseUrl": "https://aion-com.vercel.app",
     "routes": {
       "/operations": {
@@ -84,6 +84,24 @@
     "allPassed": true
   },
   "deploymentTimeline": [
+    {
+      "at": "2026-05-15T11:12:55.759Z",
+      "kind": "validation_passed",
+      "summary": "All 9 routes passed (5839ms)",
+      "durationMs": 5839
+    },
+    {
+      "at": "2026-05-15T11:11:41.922Z",
+      "kind": "validation_failed",
+      "summary": "Production validation failed — stale or broken deploy",
+      "durationMs": 10354
+    },
+    {
+      "at": "2026-05-15T11:06:27.682Z",
+      "kind": "validation_failed",
+      "summary": "Production validation failed — stale or broken deploy",
+      "durationMs": 8237
+    },
     {
       "at": "2026-05-15T10:51:38.529Z",
       "kind": "validation_passed",

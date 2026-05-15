@@ -41,26 +41,28 @@ const HYDRATION_MARKERS = [
   "Панель валидации",
 ];
 
+function fetchHtmlPowerShell(url) {
+  const out = execFileSync(
+    "powershell",
+    [
+      "-NoProfile",
+      "-Command",
+      `[Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8; $r = Invoke-WebRequest -Uri '${url.replace(/'/g, "''")}' -UseBasicParsing; Write-Output $r.StatusCode; Write-Output '---'; Write-Output $r.Content`,
+    ],
+    { encoding: "utf8", maxBuffer: 12 * 1024 * 1024 },
+  );
+  const sep = out.indexOf("---");
+  const status = Number.parseInt(out.slice(0, sep).trim(), 10);
+  const html = out.slice(sep + 3).replace(/^\r?\n/, "");
+  return { status: Number.isFinite(status) ? status : 0, html };
+}
+
 async function fetchHtml(url) {
-  try {
-    const res = await fetch(url, { method: "GET", redirect: "follow" });
-    return { status: res.status, html: await res.text() };
-  } catch (err) {
-    if (process.platform !== "win32") throw err;
-    const out = execFileSync(
-      "powershell",
-      [
-        "-NoProfile",
-        "-Command",
-        `$r = Invoke-WebRequest -Uri '${url.replace(/'/g, "''")}' -UseBasicParsing; Write-Output $r.StatusCode; Write-Output '---'; Write-Output $r.Content`,
-      ],
-      { encoding: "utf8", maxBuffer: 12 * 1024 * 1024 },
-    );
-    const sep = out.indexOf("---");
-    const status = Number.parseInt(out.slice(0, sep).trim(), 10);
-    const html = out.slice(sep + 3).replace(/^\r?\n/, "");
-    return { status: Number.isFinite(status) ? status : 0, html };
+  if (process.platform === "win32") {
+    return fetchHtmlPowerShell(url);
   }
+  const res = await fetch(url, { method: "GET", redirect: "follow" });
+  return { status: res.status, html: await res.text() };
 }
 
 async function checkRoute(route) {

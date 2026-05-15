@@ -31,6 +31,34 @@
       "validation": { "web_build": "passed" }
     },
     {
+      "id": "evt-2026-05-15-historical-driver-rollups",
+      "occurredAt": "2026-05-15",
+      "title": "Historical driver rollups from shift analytics snapshots",
+      "summary": "aion-driver: computeHistoricalDriverRollups aggregates persisted ShiftAnalyticsSnapshot (30d median profit/idle, weekday patterns, hour-of-day windows); useHistoricalDriverRollups + DriverIntelligenceStrip dashboard lines. No heatmaps, no duplicate math in UI.",
+      "subsystemIds": ["mobile-app", "driver-intelligence"],
+      "eventType": "analytics_engine_changed",
+      "task": "Driver Intelligence Core — multi-shift historical rollups",
+      "reasoning": "Single SoT: post-shift snapshots; cross-shift patterns without fake recommendations or parallel heuristic engines.",
+      "confidence": "high",
+      "runtimeImpact": "Dashboard intelligence strip reads snapshot rollups after ≥2 ended shifts",
+      "apkImpact": "ota-safe",
+      "repository": "aion-driver",
+      "rollup": {
+        "fullyDone": [
+          "✅ computeHistoricalDriverRollups (weekday + hour-of-day)",
+          "✅ useHistoricalDriverRollups hook",
+          "✅ DriverIntelligenceStrip historical lines"
+        ],
+        "partiallyDone": ["🟨 GPS stop zone labels (text-only)"],
+        "notStarted": ["⬜ Historical heatmaps"],
+        "technicalDebt": ["Snapshot backfill for pre-analytics shifts"]
+      },
+      "stillMissing": ["Zone stop patterns from GPS clusters", "Snapshot backfill helper"],
+      "blocked": [],
+      "impacts": { "release": "medium", "otaApk": "low", "backend": "none", "realtime": "none", "ux": "high", "cloud": "none" },
+      "validation": { "driver_typecheck": "passed" }
+    },
+    {
       "id": "evt-2026-05-15-post-shift-analytics",
       "occurredAt": "2026-05-15",
       "title": "Post-shift analytics engine + idle/time intelligence",
@@ -54,7 +82,7 @@
         "notStarted": ["⬜ Heatmaps", "⬜ Zone/wait intelligence", "⬜ Historical rollups UI"],
         "technicalDebt": ["Backfill analytics for old shifts optional"]
       },
-      "stillMissing": ["Multi-shift historical dashboard"],
+      "stillMissing": ["GPS zone stop patterns (text-only)"],
       "blocked": ["heatmap-analytics"],
       "impacts": { "release": "high", "otaApk": "low", "backend": "none", "realtime": "none", "ux": "high", "cloud": "none" },
       "validation": { "driver_typecheck": "passed" }
