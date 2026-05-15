@@ -4,6 +4,46 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-exec-n6l0up",
+      "occurredAt": "2026-05-15",
+      "title": "Runtime stabilization Driver",
+      "summary": "shiftDisplayEconomics (HUD/dashboard/orb), FGS heartbeat+merge field checks, location constants shared.",
+      "subsystemIds": [
+        "operations-center",
+        "web-portal"
+      ],
+      "eventType": "execution_resumed",
+      "reasoning": "Roadmap unified-shift-runtime + background gate",
+      "confidence": "high",
+      "repository": "aion-driver",
+      "changedFiles": [
+        "shiftDisplayEconomics.ts",
+        "readShiftLocationHeartbeat.ts",
+        "computeRouteFieldValidation.ts"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ Runtime stabilization Driver"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "none",
+        "backend": "low",
+        "realtime": "high",
+        "ux": "high",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      }
+    },
+    {
       "id": "evt-2026-05-15-exec-wwveo4",
       "occurredAt": "2026-05-15",
       "title": "AI пишет и улучшает код",

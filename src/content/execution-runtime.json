@@ -6,13 +6,13 @@
   "runtime": {
     "status": "coding",
     "phase": "coding",
-    "currentTask": "OTA smoke test: field validation на устройстве",
+    "currentTask": "Runtime stabilization: unified profit display + FGS field checks",
     "subsystem": "driver-intelligence",
-    "reasoning": "Чеклист на /route-timeline готов — владелец проверяет 6 gates на телефоне",
+    "reasoning": "shiftDisplayEconomics, heartbeat diagnostics, FGS constants aligned",
     "confidence": 0.9,
     "startedAt": "2026-05-15T12:21:34.440Z",
-    "updatedAt": "2026-05-15T12:57:00.523Z",
-    "heartbeatAt": "2026-05-15T12:57:00.523Z",
+    "updatedAt": "2026-05-15T13:02:12.691Z",
+    "heartbeatAt": "2026-05-15T13:02:12.691Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -20,7 +20,7 @@
     ],
     "commitCandidate": "pending",
     "blocker": null,
-    "nextStep": "Runtime stabilization",
+    "nextStep": "Headless merge tests on device",
     "branch": "main",
     "dependencyTarget": "Live execution observability + self-healing",
     "pendingReviewCount": 0,
@@ -34,7 +34,7 @@
     "lastCompletedAction": "AI проверяет качество: Field validation Driver — typecheck",
     "retryCount": 0,
     "validationProgress": "Field validation of analytics backfill + stop zone insights on physical device",
-    "progressPercent": 75,
+    "progressPercent": 82,
     "etaMinutes": 60,
     "autonomousDepth": 1,
     "runtimeGraph": "ACTIVE",
@@ -43,6 +43,28 @@
     "currentFile": null
   },
   "timeline": [
+    {
+      "at": "2026-05-15T13:01:53.667Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Runtime stabilization: unified profit display + FGS field checks",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "shiftDisplayEconomics, heartbeat diagnostics, FGS constants aligned",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.9
+    },
+    {
+      "at": "2026-05-15T12:58:12.001Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: OTA smoke test: field validation на устройстве",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Чеклист на /route-timeline готов — владелец проверяет 6 gates на телефоне",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.9
+    },
     {
       "at": "2026-05-15T12:21:34.440Z",
       "phase": "coding",
@@ -232,6 +254,87 @@
   ],
   "heartbeats": [
     {
+      "at": "2026-05-15T13:02:12.691Z"
+    },
+    {
+      "at": "2026-05-15T13:02:02.688Z"
+    },
+    {
+      "at": "2026-05-15T13:01:53.667Z"
+    },
+    {
+      "at": "2026-05-15T13:01:52.681Z"
+    },
+    {
+      "at": "2026-05-15T13:01:42.658Z"
+    },
+    {
+      "at": "2026-05-15T13:01:32.672Z"
+    },
+    {
+      "at": "2026-05-15T13:01:22.763Z"
+    },
+    {
+      "at": "2026-05-15T13:01:12.610Z"
+    },
+    {
+      "at": "2026-05-15T13:01:02.606Z"
+    },
+    {
+      "at": "2026-05-15T13:00:52.599Z"
+    },
+    {
+      "at": "2026-05-15T13:00:42.593Z"
+    },
+    {
+      "at": "2026-05-15T13:00:32.583Z"
+    },
+    {
+      "at": "2026-05-15T13:00:22.649Z"
+    },
+    {
+      "at": "2026-05-15T13:00:12.608Z"
+    },
+    {
+      "at": "2026-05-15T13:00:02.621Z"
+    },
+    {
+      "at": "2026-05-15T12:59:52.608Z"
+    },
+    {
+      "at": "2026-05-15T12:59:42.556Z"
+    },
+    {
+      "at": "2026-05-15T12:59:32.574Z"
+    },
+    {
+      "at": "2026-05-15T12:59:22.572Z"
+    },
+    {
+      "at": "2026-05-15T12:59:12.522Z"
+    },
+    {
+      "at": "2026-05-15T12:59:02.531Z"
+    },
+    {
+      "at": "2026-05-15T12:58:52.515Z"
+    },
+    {
+      "at": "2026-05-15T12:58:42.491Z"
+    },
+    {
+      "at": "2026-05-15T12:58:32.522Z"
+    },
+    {
+      "at": "2026-05-15T12:58:22.479Z"
+    },
+    {
+      "at": "2026-05-15T12:58:12.244Z"
+    },
+    {
+      "at": "2026-05-15T12:58:12.001Z"
+    },
+    {
       "at": "2026-05-15T12:57:00.523Z"
     },
     {
@@ -293,87 +396,6 @@
     },
     {
       "at": "2026-05-15T12:16:48.852Z"
-    },
-    {
-      "at": "2026-05-15T12:16:44.569Z"
-    },
-    {
-      "at": "2026-05-15T12:16:44.236Z"
-    },
-    {
-      "at": "2026-05-15T12:16:38.798Z"
-    },
-    {
-      "at": "2026-05-15T12:16:28.792Z"
-    },
-    {
-      "at": "2026-05-15T12:16:18.779Z"
-    },
-    {
-      "at": "2026-05-15T12:16:08.776Z"
-    },
-    {
-      "at": "2026-05-15T12:15:58.787Z"
-    },
-    {
-      "at": "2026-05-15T12:15:48.763Z"
-    },
-    {
-      "at": "2026-05-15T12:15:38.735Z"
-    },
-    {
-      "at": "2026-05-15T12:15:28.781Z"
-    },
-    {
-      "at": "2026-05-15T12:15:18.536Z"
-    },
-    {
-      "at": "2026-05-15T12:15:18.325Z"
-    },
-    {
-      "at": "2026-05-15T12:15:18.044Z"
-    },
-    {
-      "at": "2026-05-15T12:03:35.443Z"
-    },
-    {
-      "at": "2026-05-15T12:03:32.245Z"
-    },
-    {
-      "at": "2026-05-15T11:57:53.867Z"
-    },
-    {
-      "at": "2026-05-15T11:57:53.603Z"
-    },
-    {
-      "at": "2026-05-15T11:51:21.016Z"
-    },
-    {
-      "at": "2026-05-15T11:51:13.667Z"
-    },
-    {
-      "at": "2026-05-15T11:44:10.330Z"
-    },
-    {
-      "at": "2026-05-15T11:43:34.711Z"
-    },
-    {
-      "at": "2026-05-15T11:43:23.275Z"
-    },
-    {
-      "at": "2026-05-15T11:43:12.059Z"
-    },
-    {
-      "at": "2026-05-15T11:40:09.817Z"
-    },
-    {
-      "at": "2026-05-15T11:38:39.901Z"
-    },
-    {
-      "at": "2026-05-15T11:38:39.168Z"
-    },
-    {
-      "at": "2026-05-15T11:36:26.702Z"
     }
   ]
 }
