@@ -4,6 +4,35 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-route-timeline-headless-gps",
+      "occurredAt": "2026-05-15",
+      "title": "Route timeline UI + headless GPS → ingestion gateway",
+      "summary": "aion-driver: headless FGS batches flow through gpsIngestionGateway.ingestHeadlessRecords after mergeHeadlessGpsLocationsIntoStore; dedupe/waterline in gpsTripStorage; RouteSessionSummary on finalize; RouteTimelineScreen at /driver/route-timeline.",
+      "subsystemIds": ["mobile-app", "background-drive"],
+      "eventType": "route_intelligence_changed",
+      "task": "P2 route timeline + headless consistency",
+      "reasoning": "Single write path for trip store; headless uses same waterline rules as distance merge; UI lists real sessions without heatmap.",
+      "confidence": "high",
+      "runtimeImpact": "Headless GPS points append to ShiftGpsSession; route summary at shift end",
+      "apkImpact": "ota-safe",
+      "repository": "aion-driver",
+      "rollup": {
+        "fullyDone": [
+          "✅ headless→gateway trip records",
+          "✅ dedupeMergeGpsPoints + ingestion meta",
+          "✅ RouteSessionSummary on finalize",
+          "✅ RouteTimelineScreen + history link"
+        ],
+        "partiallyDone": ["🟨 Active shift without gateway resume on cold start"],
+        "notStarted": ["⬜ Heatmaps", "⬜ Post-shift analytics engine"],
+        "technicalDebt": ["SQLite adapter for GPS sessions"]
+      },
+      "stillMissing": ["Field validation headless vs foreground point counts"],
+      "blocked": ["heatmap-analytics"],
+      "impacts": { "release": "medium", "otaApk": "low", "backend": "none", "realtime": "none", "ux": "high", "cloud": "none" },
+      "validation": { "driver_typecheck": "passed" }
+    },
+    {
       "id": "evt-2026-05-15-ocr-queue-primary",
       "occurredAt": "2026-05-15",
       "title": "OCR queue hardening — primary execution path",
@@ -22,11 +51,11 @@
           "✅ Serialized RMW storage + backoff",
           "✅ Processor reconnect drain"
         ],
-        "partiallyDone": ["🟨 Headless GPS→trip store merge"],
-        "notStarted": ["⬜ Route timeline UI"],
+        "partiallyDone": [],
+        "notStarted": ["⬜ Idle/time analytics UI"],
         "technicalDebt": []
       },
-      "stillMissing": ["Headless FGS points in trip store"],
+      "stillMissing": [],
       "blocked": [],
       "impacts": { "release": "medium", "otaApk": "low", "backend": "none", "realtime": "none", "ux": "high", "cloud": "none" },
       "validation": { "driver_typecheck": "passed" }
