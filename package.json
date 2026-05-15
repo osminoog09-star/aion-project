@@ -17,6 +17,7 @@
     "execution:daemon": "node scripts/execution-heartbeat-daemon.mjs",
     "execution:stale-recover": "node scripts/execution-stale-recover.mjs",
     "execution:finalize-live": "node scripts/execution-finalize-live.mjs",
+    "execution:autonomous-next": "node scripts/execution-autonomous-next.mjs",
     "verify:routes": "node scripts/verify-app-routes.mjs",
     "deploy:vercel": "npx vercel@54 deploy --prod",
     "deploy:hook": "node scripts/trigger-deploy-hook.mjs",

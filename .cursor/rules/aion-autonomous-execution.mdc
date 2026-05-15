@@ -1,0 +1,38 @@
+---
+description: Full autonomous execution after Owner Command Center — no owner relay
+globs: "**/*"
+alwaysApply: true
+---
+
+# Autonomous execution mode
+
+## Owner role
+
+Owner supervises strategy via `/operations/command` and `/operations/priorities` — NOT execution coordinator.
+
+## Autonomous loop (every cycle)
+
+1. `npm run execution:autonomous-next` — pick next dependency-safe task
+2. Implement without asking "what next?"
+3. `npm run execution:heartbeat` or `execution:daemon` during long work
+4. `npm run execution:heal` on failures
+5. `npm run feed:append` at milestones (Russian titles)
+6. Continue to next queue item
+
+## ChatGPT escalation
+
+Architecture uncertainty → `npm run review:request` — continue parallel safe work.
+
+## Post-Apply
+
+Immediately `execution:phase --phase coding` and continue queue.
+
+## Priority order
+
+1. strategic-priorities.json + dependencyGraph
+2. execution-runtime.json blockers
+3. Post-rebuild: route intelligence → stop-zone validation → runtime → overlay → APK
+
+## Russian owner UX
+
+All owner-facing strings human-readable Russian. Code/logs internal English OK.

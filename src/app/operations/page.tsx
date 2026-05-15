@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { t } from "@/i18n";
+import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
 import { getOperationsHubView } from "@/lib/operations-hub-data";
 import { OperationsHub } from "@/components/operations/OperationsHub";
@@ -32,6 +34,19 @@ export default async function OperationsPage() {
         <RoadmapHubLinks />
       </div>
       <OperationsSubNav />
+
+      <Link
+        href={ecosystemRoutes.operationsCommand}
+        className="mt-6 flex items-center justify-between rounded-2xl border border-cyan-500/30 bg-gradient-to-r from-cyan-500/10 to-violet-500/10 px-5 py-4 transition hover:border-cyan-400/50"
+      >
+        <div>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-cyan-300/90">
+            Центр управления AI
+          </p>
+          <p className="mt-1 text-sm text-white">Roadmap блоками · очередь · здоровье проекта</p>
+        </div>
+        <span className="text-cyan-400">→</span>
+      </Link>
 
       <div className="mt-8">
         <OperationsHub view={hub} variant="compact" />

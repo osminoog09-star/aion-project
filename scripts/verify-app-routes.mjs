@@ -16,6 +16,7 @@ const REQUIRED_PAGES = [
   "operations/review-queue/page.tsx",
   "operations/priorities/page.tsx",
   "operations/live/page.tsx",
+  "operations/command/page.tsx",
 ];
 
 const REQUIRED_STATIC_PRERENDER = [
@@ -24,6 +25,7 @@ const REQUIRED_STATIC_PRERENDER = [
   "/operations/reviews",
   "/operations/review-queue",
   "/operations/live",
+  "/operations/command",
 ];
 
 const appDir = path.join(root, "src", "app");

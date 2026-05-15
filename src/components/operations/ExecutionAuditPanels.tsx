@@ -11,6 +11,7 @@ import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export function OperationsSubNav() {
   const links = [
+    { href: ecosystemRoutes.operationsCommand, label: "Центр AI" },
     { href: ecosystemRoutes.operations, label: t("operations.subNav.overview") },
     { href: ecosystemRoutes.operationsExecution, label: t("operations.subNav.execution") },
     { href: ecosystemRoutes.operationsLive, label: t("operations.subNav.live") },

@@ -27,6 +27,7 @@ const ROUTES = [
   "/operations/validation",
   "/operations/deployment",
   "/operations/live",
+  "/operations/command",
 ];
 
 const HYDRATION_MARKERS = [
@@ -41,6 +42,8 @@ const HYDRATION_MARKERS = [
   "Стратегические приоритеты",
   "Панель валидации",
   "Живое исполнение",
+  "Центр управления AI",
+  "AION · Центр управления",
 ];
 
 function fetchHtmlPowerShell(url) {
