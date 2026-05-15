@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DriverFieldValidationOwnerGuide } from "@/components/operations/DriverFieldValidationOwnerGuide";
 import {
   loadExecutionAuditView,
   OperationsSubNav,
@@ -22,6 +23,9 @@ export default async function OperationsValidationPage() {
       <h1 className="mt-3 text-3xl font-bold text-white">{t("operations.pages.validation.title")}</h1>
       <p className="mt-3 text-sm text-slate-400">{view.feed.policy}</p>
       <OperationsSubNav />
+      <div className="mt-8">
+        <DriverFieldValidationOwnerGuide />
+      </div>
       <ValidationDashboard view={view} />
     </div>
   );

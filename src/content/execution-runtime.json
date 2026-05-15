@@ -6,13 +6,13 @@
   "runtime": {
     "status": "coding",
     "phase": "coding",
-    "currentTask": "OTA report + BG production gate",
+    "currentTask": "Owner device 8/8 — чеклист на портале",
     "subsystem": "driver-intelligence",
     "reasoning": "Финиш мандата",
     "confidence": 0.88,
     "startedAt": "2026-05-15T13:22:56.670Z",
-    "updatedAt": "2026-05-15T15:31:17.407Z",
-    "heartbeatAt": "2026-05-15T15:31:17.407Z",
+    "updatedAt": "2026-05-15T15:33:07.506Z",
+    "heartbeatAt": "2026-05-15T15:33:07.506Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -20,7 +20,7 @@
     ],
     "commitCandidate": "pending",
     "blocker": null,
-    "nextStep": "Owner device 8/8",
+    "nextStep": "Устройство: Маршруты → 8/8 → OTA smoke",
     "branch": "main",
     "dependencyTarget": "Live execution observability + self-healing",
     "pendingReviewCount": 0,
@@ -33,15 +33,22 @@
     "lastFailure": null,
     "lastCompletedAction": "AI анализирует систему: Background runtime field matrix",
     "retryCount": 0,
-    "validationProgress": "работа в процессе",
+    "validationProgress": "Чеклист 8/8 на /operations/live и /operations/validation",
     "progressPercent": 99,
     "etaMinutes": 60,
     "autonomousDepth": 1,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "src/components/operations/LiveExecutionPanel.tsx",
+    "currentFile": "src/components/operations/DriverFieldValidationOwnerGuide.tsx",
     "recentActions": [
+      {
+        "at": "2026-05-15T15:32:56.795Z",
+        "tag": "CODE",
+        "message": "Чеклист 8/8 на /operations/live и /operations/validation",
+        "file": "src/components/operations/DriverFieldValidationOwnerGuide.tsx",
+        "repo": "aion-com"
+      },
       {
         "at": "2026-05-15T15:30:58.142Z",
         "tag": "CODE",
@@ -225,6 +232,17 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-05-15T15:32:57.602Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Owner device 8/8 — чеклист на портале",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Финиш мандата",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-05-15T14:45:55.991Z",
       "phase": "coding",
@@ -568,6 +586,45 @@
   ],
   "heartbeats": [
     {
+      "at": "2026-05-15T15:33:07.506Z"
+    },
+    {
+      "at": "2026-05-15T15:32:57.602Z"
+    },
+    {
+      "at": "2026-05-15T15:32:57.512Z"
+    },
+    {
+      "at": "2026-05-15T15:32:56.795Z"
+    },
+    {
+      "at": "2026-05-15T15:32:47.474Z"
+    },
+    {
+      "at": "2026-05-15T15:32:37.493Z"
+    },
+    {
+      "at": "2026-05-15T15:32:27.486Z"
+    },
+    {
+      "at": "2026-05-15T15:32:17.503Z"
+    },
+    {
+      "at": "2026-05-15T15:32:07.464Z"
+    },
+    {
+      "at": "2026-05-15T15:31:57.493Z"
+    },
+    {
+      "at": "2026-05-15T15:31:47.406Z"
+    },
+    {
+      "at": "2026-05-15T15:31:37.442Z"
+    },
+    {
+      "at": "2026-05-15T15:31:27.409Z"
+    },
+    {
       "at": "2026-05-15T15:31:17.407Z"
     },
     {
@@ -671,45 +728,6 @@
     },
     {
       "at": "2026-05-15T15:26:07.171Z"
-    },
-    {
-      "at": "2026-05-15T15:25:57.237Z"
-    },
-    {
-      "at": "2026-05-15T15:25:47.463Z"
-    },
-    {
-      "at": "2026-05-15T15:25:37.217Z"
-    },
-    {
-      "at": "2026-05-15T15:25:27.177Z"
-    },
-    {
-      "at": "2026-05-15T15:25:17.175Z"
-    },
-    {
-      "at": "2026-05-15T15:25:07.151Z"
-    },
-    {
-      "at": "2026-05-15T15:24:57.196Z"
-    },
-    {
-      "at": "2026-05-15T15:24:47.178Z"
-    },
-    {
-      "at": "2026-05-15T15:24:37.210Z"
-    },
-    {
-      "at": "2026-05-15T15:24:27.205Z"
-    },
-    {
-      "at": "2026-05-15T15:24:17.137Z"
-    },
-    {
-      "at": "2026-05-15T15:24:07.106Z"
-    },
-    {
-      "at": "2026-05-15T15:23:57.119Z"
     }
   ]
 }
