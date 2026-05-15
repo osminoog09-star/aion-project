@@ -50,8 +50,22 @@ Copy `.env.example` → `.env.local` for local optional vars.
 
 ## Updates
 
-- Push to default branch → Production deploy.
+- Push to default branch → Production deploy (Vercel Git integration).
 - PRs → Preview deployments (env: copy from Production or set Preview-specific values).
+
+### If new routes return 404 on production (e.g. `/operations/reviews`)
+
+1. **Root cause is almost always a stale production deployment**, not missing code. Verify locally:
+   ```bash
+   npm run build && npm run verify:routes
+   ```
+2. **Redeploy** latest `master`/`main`:
+   - Vercel Dashboard → Project `aion-com` → Deployments → **Redeploy** latest commit, or
+   - `npx vercel login && npm run deploy:vercel` from this directory (`.vercel/project.json` must match), or
+   - GitHub Actions workflow `vercel-production.yml` (set secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`).
+3. Confirm production includes `/operations` (not only subpaths): if `/operations` is 404, the whole Operations section was never deployed.
+
+Project IDs (from linked `.vercel/project.json`): `VERCEL_ORG_ID=team_4I1qT09taD3cqaGmhpCpoCxC`, `VERCEL_PROJECT_ID=prj_ep8i1CoHfHdZKwto8gkF5XStzonK`.
 
 ## Releases / manifest
 
