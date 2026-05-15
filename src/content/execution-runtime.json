@@ -1,0 +1,70 @@
+{
+  "version": "2.0",
+  "orchestrationVersion": "2.0",
+  "agentId": "cursor-autonomous",
+  "lastUpdated": "2026-05-15",
+  "runtime": {
+    "status": "deploying",
+    "phase": "deploying",
+    "currentTask": "Push runtime v2 + self-healing",
+    "subsystem": "operations-center",
+    "reasoning": "Build OK locally; deploy /operations/live to production",
+    "confidence": 0.9,
+    "startedAt": "2026-05-15T11:36:26.702Z",
+    "updatedAt": "2026-05-15T11:36:26.702Z",
+    "heartbeatAt": "2026-05-15T11:36:26.702Z",
+    "files": [
+      "src/content/execution-runtime.json",
+      "src/contracts/execution-runtime.ts",
+      "src/app/operations/live/page.tsx",
+      "scripts/execution-self-heal.mjs"
+    ],
+    "commitCandidate": "pending",
+    "blocker": null,
+    "nextStep": "npm run build && npm run execution:heal",
+    "branch": "main",
+    "dependencyTarget": "Live execution observability + self-healing",
+    "pendingReviewCount": 0,
+    "lastValidation": {
+      "typecheck": "passed",
+      "build": "passed",
+      "deploy": "running",
+      "routes": "failed"
+    },
+    "lastFailure": {
+      "kind": "route_validation",
+      "message": "/operations/live returned 404 on production",
+      "at": "2026-05-15T12:30:00.000Z"
+    }
+  },
+  "timeline": [
+    {
+      "at": "2026-05-15T11:36:26.702Z",
+      "phase": "deploying",
+      "summary": "deploying: Push runtime v2 + self-healing"
+    },
+    {
+      "at": "2026-05-15T12:45:00.000Z",
+      "phase": "recovering",
+      "summary": "Self-healing: runtime v2 + contracts + heal script"
+    },
+    {
+      "at": "2026-05-15T12:30:00.000Z",
+      "phase": "blocked",
+      "summary": "route_validation: /operations/live 404"
+    },
+    {
+      "at": "2026-05-15T12:28:00.000Z",
+      "phase": "validating",
+      "summary": "Live execution visibility — portal build"
+    }
+  ],
+  "heartbeats": [
+    {
+      "at": "2026-05-15T11:36:26.702Z"
+    },
+    {
+      "at": "2026-05-15T12:45:00.000Z"
+    }
+  ]
+}

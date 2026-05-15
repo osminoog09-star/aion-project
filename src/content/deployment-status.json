@@ -20,7 +20,7 @@
     "notes": "Git connected: osminoog09-star/aion-project. Vercel GitHub App granted aion-project repo."
   },
   "lastProductionDeploy": {
-    "status": "ok",
+    "status": "stale",
     "deployedAt": null,
     "commit": "d8a2146",
     "commitFull": "d8a2146",
@@ -29,10 +29,10 @@
     "trigger": "git push master",
     "durationMs": null,
     "rollbackTarget": "GsrxHVBiU",
-    "notes": "All operations routes validated."
+    "notes": "Route validation failed — redeploy required."
   },
   "routeValidation": {
-    "checkedAt": "2026-05-15T11:20:47.415Z",
+    "checkedAt": "2026-05-15T11:31:42.214Z",
     "baseUrl": "https://aion-com.vercel.app",
     "routes": {
       "/operations": {
@@ -79,11 +79,28 @@
         "status": "pass",
         "httpStatus": 200,
         "renderOk": true
+      },
+      "/operations/live": {
+        "status": "fail",
+        "httpStatus": 0,
+        "renderOk": false
       }
     },
-    "allPassed": true
+    "allPassed": false
   },
   "deploymentTimeline": [
+    {
+      "at": "2026-05-15T11:31:42.215Z",
+      "kind": "validation_failed",
+      "summary": "Production validation failed — stale or broken deploy",
+      "durationMs": 7316
+    },
+    {
+      "at": "2026-05-15T11:29:10.148Z",
+      "kind": "validation_failed",
+      "summary": "Production validation failed — stale or broken deploy",
+      "durationMs": 7762
+    },
     {
       "at": "2026-05-15T11:20:47.424Z",
       "kind": "validation_passed",

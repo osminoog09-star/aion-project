@@ -31,6 +31,39 @@
       "validation": { "web_build": "passed" }
     },
     {
+      "id": "evt-2026-05-15-live-runtime-v2-self-heal",
+      "occurredAt": "2026-05-15",
+      "title": "Live runtime v2 + self-healing execution layer",
+      "summary": "execution-runtime.json canonical SoT; src/contracts/*; recovering/blocked phases; lastValidation matrix; npm run execution:heal; /operations/live cockpit with deploy status + failure visibility.",
+      "subsystemIds": ["operations-center", "web-portal"],
+      "eventType": "implementation_finished",
+      "task": "Autonomous live runtime + self-healing",
+      "reasoning": "Owner must see active/blocked/recovering state; failures auto-detected via heal script without manual relay.",
+      "confidence": "high",
+      "repository": "aion-project",
+      "changedFiles": [
+        "src/content/execution-runtime.json",
+        "src/contracts/",
+        "scripts/execution-self-heal.mjs",
+        "src/components/operations/LiveExecutionPanel.tsx"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ execution-runtime.json v2",
+          "✅ contracts layer",
+          "✅ execution:heal self-healing loop",
+          "✅ Live panel: validation + deploy + failures"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": ["Sub-second prod runtime without push needs KV/Supabase"]
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": { "release": "high", "otaApk": "none", "backend": "low", "realtime": "high", "ux": "high", "cloud": "low" },
+      "validation": { "web_build": "passed" }
+    },
+    {
       "id": "evt-2026-05-15-live-execution-visibility",
       "occurredAt": "2026-05-15",
       "title": "Live autonomous execution visibility (/operations/live)",

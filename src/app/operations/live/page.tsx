@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 };
 
 export default function OperationsLivePage() {
-  const payload = getLocalExecutionRuntime();
-  const view = buildLiveExecutionView(payload);
+  const document = getLocalExecutionRuntime();
+  const view = buildLiveExecutionView(document);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">

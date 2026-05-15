@@ -12,6 +12,7 @@
     "execution:phase": "node scripts/execution-runtime.mjs",
     "execution:heartbeat": "node scripts/execution-runtime.mjs --heartbeat",
     "execution:waiting-review": "node scripts/execution-runtime.mjs --waiting-review",
+    "execution:heal": "node scripts/execution-self-heal.mjs",
     "verify:routes": "node scripts/verify-app-routes.mjs",
     "deploy:vercel": "npx vercel@54 deploy --prod",
     "deploy:hook": "node scripts/trigger-deploy-hook.mjs",

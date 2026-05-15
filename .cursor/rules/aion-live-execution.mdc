@@ -8,7 +8,8 @@ alwaysApply: true
 
 ## Portal SoT
 
-- `src/content/execution-runtime-state.json`
+- `src/content/execution-runtime.json` (canonical)
+- `src/contracts/` — shared schemas (no duplicate runtime types)
 - API: `GET/PATCH /api/execution-runtime`
 - UI: `/operations/live` (poll 8s)
 
@@ -18,6 +19,7 @@ alwaysApply: true
 npm run execution:phase -- --phase planning --task "..." --subsystem ... --reasoning "..." --confidence 0.85 --next "..."
 npm run execution:heartbeat   # every 5–15s during active work
 npm run execution:waiting-review -- --pending 5   # when diff awaits Apply
+npm run execution:heal        # self-healing: typecheck, build, deploy:validate
 ```
 
 Terminal must echo: `[PHASE] summary` (script does this).

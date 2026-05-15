@@ -34,7 +34,7 @@ function StatusBadge({ status }: { status: string }) {
 export default function OperationsDeploymentPage() {
   const d = getDeploymentStatus();
   const deploy = d.lastProductionDeploy;
-  const routes = Object.entries(d.routeValidation.routes);
+  const routes = Object.entries(d.routeValidation?.routes ?? {});
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
@@ -70,7 +70,7 @@ export default function OperationsDeploymentPage() {
         <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
           <p className="text-[10px] uppercase text-slate-500">{t("operations.pages.deployment.routes")}</p>
           <p className="mt-2 text-2xl font-bold text-white">
-            {routeCheckLabel(d.routeValidation.allPassed)}
+            {routeCheckLabel(d.routeValidation?.allPassed ?? false)}
           </p>
           {deploy.durationMs != null ? (
             <p className="text-xs text-slate-500">
@@ -112,7 +112,7 @@ export default function OperationsDeploymentPage() {
         </h2>
         <p className="mt-1 text-xs text-slate-500">
           {t("operations.pages.deployment.routeValidationHint")}{" "}
-          {d.routeValidation.checkedAt ?? t("common.never")}
+          {d.routeValidation?.checkedAt ?? t("common.never")}
         </p>
         <ul className="mt-4 space-y-2 font-mono text-xs">
           {routes.map(([route, v]) => (
@@ -146,20 +146,20 @@ export default function OperationsDeploymentPage() {
         </Link>
       </section>
 
-      {d.pipelineBlockers.length ? (
+      {(d.pipelineBlockers?.length ?? 0) > 0 ? (
         <section className="mt-6 rounded-2xl border border-rose-500/30 bg-rose-500/5 p-5">
           <h2 className="text-xs font-bold uppercase text-rose-300">
             {t("operations.pages.deployment.blockersSystem")}
           </h2>
           <ul className="mt-2 list-inside list-disc text-sm text-slate-300">
-            {d.pipelineBlockers.map((b) => (
+            {(d.pipelineBlockers ?? []).map((b) => (
               <li key={b}>{b}</li>
             ))}
           </ul>
-          {Object.keys(d.ownerUnblock).length ? (
+          {Object.keys(d.ownerUnblock ?? {}).length ? (
             <div className="mt-4 rounded-lg bg-black/30 p-3 font-mono text-[11px] text-amber-200/90">
               <p className="font-bold text-amber-300">{t("operations.pages.deployment.ownerUnblock")}</p>
-              {Object.entries(d.ownerUnblock).map(([k, v]) => (
+              {Object.entries(d.ownerUnblock ?? {}).map(([k, v]) => (
                 <p key={k} className="mt-2">
                   {v}
                 </p>

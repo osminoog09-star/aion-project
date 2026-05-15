@@ -2,24 +2,25 @@ import { NextResponse } from "next/server";
 import {
   buildLiveExecutionView,
   getLocalExecutionRuntime,
+  EXECUTION_RUNTIME_STATUSES,
 } from "@/lib/execution-runtime";
 import { patchExecutionRuntime } from "@/lib/operations/execution-runtime-persist";
 import { canWriteArchitectureReviews } from "@/lib/operations/review-agent-auth";
-import type { ExecutionRuntimeStatus } from "@/lib/execution-runtime";
-import { EXECUTION_RUNTIME_STATUSES } from "@/lib/execution-runtime";
+import type { ExecutionRuntimeStatus } from "@/contracts/execution-runtime";
+import type { ExecutionLastValidation } from "@/contracts/execution-runtime";
 
 export const runtime = "nodejs";
 
 export async function GET() {
-  const payload = getLocalExecutionRuntime();
-  const view = buildLiveExecutionView(payload);
+  const document = getLocalExecutionRuntime();
+  const view = buildLiveExecutionView(document);
   return NextResponse.json({
     meta: {
       kind: "execution_runtime",
-      version: payload.version,
-      orchestrationVersion: payload.orchestrationVersion,
-      agentId: payload.agentId,
-      lastUpdated: payload.lastUpdated,
+      version: document.version,
+      orchestrationVersion: document.orchestrationVersion,
+      agentId: document.agentId,
+      lastUpdated: document.lastUpdated,
       health: view.health.health,
       heartbeatAgeMs: view.health.heartbeatAgeMs,
       persistedVia: process.env.VERCEL ? "build_snapshot" : "filesystem",
@@ -28,23 +29,26 @@ export async function GET() {
   });
 }
 
-type PatchBody = {
-  status?: ExecutionRuntimeStatus;
-  currentTask?: string;
-  subsystem?: string;
-  reasoning?: string;
-  confidence?: number;
-  files?: string[];
-  commitCandidate?: string | null;
-  blocker?: string | null;
-  nextStep?: string;
-  branch?: string;
-  dependencyTarget?: string;
-  validationStatus?: "pending" | "running" | "passed" | "failed";
-  pendingReviewCount?: number;
-  timelineSummary?: string;
-  heartbeatOnly?: boolean;
-};
+type PatchBody = Partial<{
+  status: ExecutionRuntimeStatus;
+  phase: ExecutionRuntimeStatus;
+  currentTask: string;
+  subsystem: string;
+  reasoning: string;
+  confidence: number;
+  files: string[];
+  commitCandidate: string | null;
+  blocker: string | null;
+  nextStep: string;
+  branch: string;
+  dependencyTarget: string;
+  pendingReviewCount: number;
+  lastValidation: ExecutionLastValidation;
+  timelineSummary: string;
+  heartbeatOnly: boolean;
+  skipFeed: boolean;
+  feedEventType: string;
+}>;
 
 export async function PATCH(req: Request) {
   if (!(await canWriteArchitectureReviews(req))) {
@@ -66,8 +70,8 @@ export async function PATCH(req: Request) {
   }
 
   try {
-    const payload = await patchExecutionRuntime(body);
-    const view = buildLiveExecutionView(payload);
+    const document = await patchExecutionRuntime(body);
+    const view = buildLiveExecutionView(document);
     return NextResponse.json({ ok: true, ...view });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Patch failed";
