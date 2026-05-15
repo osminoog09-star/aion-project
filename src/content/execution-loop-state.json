@@ -12,9 +12,9 @@
   "autonomousDepth": 1,
   "ownerMandate": {
     "active": true,
-    "labelRu": "Автономная работа (продление +30 мин)",
-    "startedAt": "2026-05-15T14:46:45.827Z",
-    "endsAt": "2026-05-15T15:16:45.827Z",
+    "labelRu": "Автономная работа (продление)",
+    "startedAt": "2026-05-15T15:26:31.460Z",
+    "endsAt": "2026-05-15T15:56:31.460Z",
     "durationMs": 1800000
   }
 }
