@@ -8,8 +8,16 @@ import type {
 } from "@/lib/ecosystem-types";
 import { getLocalExecutionRuntime, getLocalDeploymentStatus } from "@/lib/execution-runtime";
 import { getLocalImplementationFeed } from "@/lib/ecosystem-data";
-import { getLocalStrategicPriorities, getActionableDependencies } from "@/lib/strategic-priorities";
-import { buildHumanTimelineCard, PHASE_OWNER } from "@/lib/operations/execution-owner-ru";
+import { getLocalStrategicPriorities } from "@/lib/strategic-priorities";
+import { buildHumanTimelineCard, PHASE_OWNER, validationHuman } from "@/lib/operations/execution-owner-ru";
+import {
+  AUTONOMOUS_QUEUE_RU,
+  humanizeNextStepRu,
+  humanizeTaskRu,
+  SUBSYSTEM_TITLES_RU,
+} from "@/lib/operations/owner-ru-constitution";
+import { getLocalEcosystemStatus } from "@/lib/ecosystem-data";
+import { averageReadiness, averageSubsystemPercent } from "@/lib/readiness";
 
 export type SubsystemGlow = "active" | "blocked" | "done" | "idle";
 
@@ -44,8 +52,35 @@ export type ProjectHealthSnapshot = {
   validationRu: string;
 };
 
+export type ProjectReadinessMetrics = {
+  mvpPercent: number;
+  productionPercent: number;
+  runtimeStabilityPercent: number;
+  driverIntelligencePercent: number;
+  ecosystemMaturityPercent: number;
+};
+
+export type DependencyGraphNodeView = {
+  id: string;
+  titleRu: string;
+  statusRu: string;
+  dependsOnRu: string[];
+  isBlocked: boolean;
+  isActive: boolean;
+};
+
+export type ValidationMatrixRu = {
+  typecheck: string;
+  build: string;
+  deploy: string;
+  routes: string;
+};
+
 export type OwnerCommandCenterView = {
   overallReadinessPercent: number;
+  readiness: ProjectReadinessMetrics;
+  currentPhaseRu: string;
+  lastCompletedRu: string | null;
   aiActivityRu: string;
   activeSubsystemRu: string;
   confidencePercent: number;
@@ -55,8 +90,10 @@ export type OwnerCommandCenterView = {
   primaryObjectiveRu: string;
   subsystems: OwnerSubsystemBlock[];
   taskQueue: TaskQueueItem[];
+  dependencyGraph: DependencyGraphNodeView[];
   narration: { icon: string; title: string; explanation: string; result: string; at: string }[];
   health: ProjectHealthSnapshot;
+  validationMatrix: ValidationMatrixRu;
   runtime: ExecutionRuntimeDocument["runtime"];
 };
 
@@ -70,7 +107,7 @@ const SUBSYSTEM_REGISTRY: {
 }[] = [
   {
     id: "driver-intelligence",
-    titleRu: "Driver Intelligence",
+    titleRu: SUBSYSTEM_TITLES_RU["driver-intelligence"],
     icon: "🧠",
     priorityIds: ["driver-intelligence-core", "unified-shift-runtime"],
     dependencyIds: ["post-shift-analytics", "time-intelligence"],
@@ -78,7 +115,7 @@ const SUBSYSTEM_REGISTRY: {
   },
   {
     id: "gps-route",
-    titleRu: "GPS / Маршруты",
+    titleRu: SUBSYSTEM_TITLES_RU["gps-route"],
     icon: "🛰",
     priorityIds: ["route-heatmap-future"],
     dependencyIds: ["route-gps-store", "time-intelligence", "heatmap-analytics"],
@@ -86,7 +123,7 @@ const SUBSYSTEM_REGISTRY: {
   },
   {
     id: "ocr",
-    titleRu: "OCR Runtime",
+    titleRu: SUBSYSTEM_TITLES_RU.ocr,
     icon: "📷",
     priorityIds: ["ocr-production-queue"],
     dependencyIds: [],
@@ -94,7 +131,7 @@ const SUBSYSTEM_REGISTRY: {
   },
   {
     id: "overlay-hud",
-    titleRu: "Overlay HUD",
+    titleRu: SUBSYSTEM_TITLES_RU["overlay-hud"],
     icon: "💠",
     priorityIds: ["overlay-hud-evolution"],
     dependencyIds: ["overlay-hud-full"],
@@ -102,7 +139,7 @@ const SUBSYSTEM_REGISTRY: {
   },
   {
     id: "runtime-apk",
-    titleRu: "Runtime / APK",
+    titleRu: SUBSYSTEM_TITLES_RU["runtime-apk"],
     icon: "📱",
     priorityIds: ["apk-release-loop", "background-runtime-production"],
     dependencyIds: ["route-gps-store"],
@@ -110,7 +147,7 @@ const SUBSYSTEM_REGISTRY: {
   },
   {
     id: "ecosystem-ai",
-    titleRu: "Экосистема / AI Control",
+    titleRu: SUBSYSTEM_TITLES_RU["ecosystem-ai"],
     icon: "🌐",
     priorityIds: ["ecosystem-control-portal"],
     dependencyIds: [],
@@ -118,7 +155,7 @@ const SUBSYSTEM_REGISTRY: {
   },
   {
     id: "deployment",
-    titleRu: "Deployment Pipeline",
+    titleRu: SUBSYSTEM_TITLES_RU.deployment,
     icon: "🚀",
     priorityIds: [],
     dependencyIds: [],
@@ -281,50 +318,66 @@ function buildTaskQueue(
   priorities: StrategicPrioritiesPayload,
   runtimeTask: string,
 ): TaskQueueItem[] {
-  const queue: TaskQueueItem[] = [
-    {
-      order: 1,
-      titleRu: "Route intelligence UX + field validation",
-      status: "active",
-      subsystemId: "gps-route",
-    },
-    {
-      order: 2,
-      titleRu: "Stop-zone validation на устройстве",
-      status: "next",
-      subsystemId: "driver-intelligence",
-    },
-    {
-      order: 3,
-      titleRu: "Runtime stabilization (FGS + shift)",
-      status: "queued",
-      subsystemId: "runtime-apk",
-    },
-    {
-      order: 4,
-      titleRu: "Overlay HUD v2",
-      status: "queued",
-      subsystemId: "overlay-hud",
-    },
-    {
-      order: 5,
-      titleRu: "APK / release loop device-verified",
-      status: "blocked",
-      subsystemId: "runtime-apk",
-    },
+  const statuses: TaskQueueItem["status"][] = [
+    "active",
+    "next",
+    "queued",
+    "queued",
+    "blocked",
+    "queued",
+    "queued",
   ];
+  const queue: TaskQueueItem[] = AUTONOMOUS_QUEUE_RU.map((q, i) => ({
+    order: q.order,
+    titleRu: q.titleRu,
+    status: statuses[i] ?? "queued",
+    subsystemId: q.subsystemId,
+  }));
 
-  const actionable = getActionableDependencies(priorities.dependencyGraph, priorities.priorities);
-  if (actionable[0]) {
-    queue[0] = {
-      ...queue[0],
-      titleRu: priorities.nextImplementationTarget || actionable[0].title,
-    };
-  }
-  if (runtimeTask) {
-    queue[0] = { ...queue[0], titleRu: runtimeTask, status: "active" };
-  }
+  const activeTitle = humanizeTaskRu(
+    runtimeTask || priorities.nextImplementationTarget || queue[0]!.titleRu,
+  );
+  queue[0] = { ...queue[0]!, titleRu: activeTitle, status: "active" };
   return queue;
+}
+
+function buildDependencyGraph(
+  graph: ExecutionDependencyNode[],
+  activePhase: string,
+): DependencyGraphNodeView[] {
+  return graph.map((node) => ({
+    id: node.id,
+    titleRu: humanizeTaskRu(node.title),
+    statusRu: statusRu(node.status),
+    dependsOnRu: node.dependsOn,
+    isBlocked: node.status === "blocked",
+    isActive: node.status === "in_progress" || activePhase.includes(node.id),
+  }));
+}
+
+function buildReadinessMetrics(
+  subsystems: OwnerSubsystemBlock[],
+  routesOk: boolean | undefined,
+): ProjectReadinessMetrics {
+  const byId = Object.fromEntries(subsystems.map((s) => [s.id, s]));
+  const eco = getLocalEcosystemStatus();
+  const pillarAvg = Math.round(averageReadiness(eco.readiness));
+  const subAvg = Math.round(averageSubsystemPercent(eco.subsystems));
+
+  return {
+    mvpPercent: Math.round(
+      ((byId["driver-intelligence"]?.progressPercent ?? 0) +
+        (byId["gps-route"]?.progressPercent ?? 0) +
+        (byId.ocr?.progressPercent ?? 0)) /
+        3,
+    ),
+    productionPercent: routesOk ? 94 : 48,
+    runtimeStabilityPercent: byId["runtime-apk"]?.progressPercent ?? 35,
+    driverIntelligencePercent: byId["driver-intelligence"]?.progressPercent ?? 0,
+    ecosystemMaturityPercent: Math.round(
+      (pillarAvg + subAvg + (byId["ecosystem-ai"]?.progressPercent ?? 0)) / 3,
+    ),
+  };
 }
 
 function mapRuntimeSubsystemToBlock(subsystem: string): string {
@@ -374,27 +427,52 @@ export function buildOwnerCommandCenterView(
 
   const routesOk = deployment.routeValidation?.allPassed;
 
+  const v = r.lastValidation;
+
   return {
     overallReadinessPercent,
+    readiness: buildReadinessMetrics(subsystems, routesOk),
+    currentPhaseRu: phaseMeta?.label ?? "AI работает",
+    lastCompletedRu: r.lastCompletedAction ? humanizeTaskRu(r.lastCompletedAction) : null,
     aiActivityRu: phaseMeta?.label ?? "AI работает",
-    activeSubsystemRu: subsystems.find((s) => s.id === activeBlockId)?.titleRu ?? "Экосистема",
+    activeSubsystemRu:
+      subsystems.find((s) => s.id === activeBlockId)?.titleRu ?? SUBSYSTEM_TITLES_RU["ecosystem-ai"],
     confidencePercent: Math.round((r.confidence ?? 0.5) * 100),
     blockers,
     retryCount: r.retryCount ?? 0,
-    nextActionRu: r.nextStep || priorities.nextImplementationTarget || "Продолжить roadmap",
-    primaryObjectiveRu: priorities.ownerDirective ?? priorities.nextImplementationTarget,
+    nextActionRu: humanizeNextStepRu(
+      r.nextStep || priorities.nextImplementationTarget || "Продолжить автоматически",
+    ),
+    primaryObjectiveRu: priorities.ownerDirective ?? priorities.nextImplementationTarget ?? "",
     subsystems,
     taskQueue: buildTaskQueue(priorities, r.currentTask),
+    dependencyGraph: buildDependencyGraph(priorities.dependencyGraph, r.currentTask),
     narration,
     health: {
-      productionRu: routesOk ? "Сайт доступен — все ключевые страницы отвечают" : "На production есть недоступные страницы",
+      productionRu: routesOk
+        ? "Сайт доступен — все ключевые страницы отвечают"
+        : "На production есть недоступные страницы",
       deploymentRu:
         deployment.lastProductionDeploy?.status === "ok"
-          ? "Последний деплой успешен"
-          : "Требуется обновление production",
-      runtimeRu: r.status === "blocked" ? "Исполнение приостановлено" : "AI-цикл активен",
+          ? "Последний выклад на сайт прошёл успешно"
+          : "Требуется обновление сайта на production",
+      runtimeRu:
+        r.status === "blocked"
+          ? "AI приостановлен — требуется внимание"
+          : r.status === "recovering"
+            ? "AI восстанавливает систему"
+            : "Цикл исполнения активен",
       aiExecutionRu: phaseMeta?.label ?? "—",
-      validationRu: r.lastValidation.build === "passed" ? "Сборка и проверки в норме" : "Есть проблемы валидации",
+      validationRu:
+        v.build === "passed" && v.deploy === "passed"
+          ? "Все проверки пройдены"
+          : "AI обнаружил проблему в проверках",
+    },
+    validationMatrix: {
+      typecheck: validationHuman("typecheck", v.typecheck),
+      build: validationHuman("build", v.build),
+      deploy: validationHuman("deploy", v.deploy),
+      routes: validationHuman("routes", v.routes ?? "idle"),
     },
     runtime: r,
   };

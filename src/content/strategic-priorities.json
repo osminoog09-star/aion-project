@@ -1,7 +1,8 @@
 {
   "lastUpdated": "2026-05-15",
   "constitutionVersion": "2.0",
-  "autonomousOrchestration": "Cursor executes roadmap/priorities/deps; owner controls via /operations/priorities and observes execution/reviews/deployment — no manual ChatGPT relay.",
+  "autonomousOrchestration": "Cursor executes roadmap/priorities/deps autonomously; owner observes /operations/command (Russian) and edits /operations/priorities — no ChatGPT relay.",
+  "ownerLanguageRule": "Владелец видит только русский интерфейс. Английский — код и технические детали (свёрнуто).",
   "ownerDirective": "PRIMARY: Driver Intelligence Core (real profit, rental, GPS history, OCR queue). P1 APK poll parallel — не freeze на EAS.",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
   "nextImplementationTarget": "Field validation of analytics backfill + stop zone insights on physical device",

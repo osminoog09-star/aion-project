@@ -1,9 +1,13 @@
 import Link from "next/link";
 import type { OwnerCommandCenterView } from "@/lib/operations/owner-command-center";
+import { selfHealOwnerCard } from "@/lib/operations/execution-owner-ru";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 import { ReadinessRing } from "./ReadinessRing";
 import { SubsystemBlockCard } from "./SubsystemBlockCard";
 import { LiveExecutionPanel } from "./LiveExecutionPanel";
+import { ReadinessMetricsGrid } from "./ReadinessMetricsGrid";
+import { DependencyGraphPanel } from "./DependencyGraphPanel";
+import { ValidationDeployCenter } from "./ValidationDeployCenter";
 
 function TaskQueue({ items }: { items: OwnerCommandCenterView["taskQueue"] }) {
   const statusStyle = {
@@ -40,39 +44,9 @@ function TaskQueue({ items }: { items: OwnerCommandCenterView["taskQueue"] }) {
   );
 }
 
-function HealthStrip({ health }: { health: OwnerCommandCenterView["health"] }) {
-  const rows = [
-    { icon: "🌐", label: "Production", value: health.productionRu },
-    { icon: "🚀", label: "Деплой", value: health.deploymentRu },
-    { icon: "⚙️", label: "Runtime", value: health.runtimeRu },
-    { icon: "🤖", label: "AI", value: health.aiExecutionRu },
-    { icon: "✅", label: "Валидация", value: health.validationRu },
-  ];
+function NarrationStream({ items }: { items: OwnerCommandCenterView["narration"] }) {
   return (
-    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
-      {rows.map((row) => (
-        <div
-          key={row.label}
-          className="rounded-xl border border-white/8 bg-white/[0.02] px-3 py-3"
-        >
-          <p className="text-lg">{row.icon}</p>
-          <p className="mt-1 text-[10px] font-bold uppercase tracking-wider text-slate-600">
-            {row.label}
-          </p>
-          <p className="mt-1 text-xs leading-snug text-slate-300">{row.value}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function NarrationStream({
-  items,
-}: {
-  items: OwnerCommandCenterView["narration"];
-}) {
-  return (
-    <ul className="max-h-64 space-y-2 overflow-y-auto pr-1">
+    <ul className="max-h-72 space-y-2 overflow-y-auto pr-1">
       {items.map((n) => (
         <li
           key={`${n.at}-${n.title}`}
@@ -81,8 +55,14 @@ function NarrationStream({
           <p className="text-sm font-medium text-white">
             {n.icon} {n.title}
           </p>
-          <p className="mt-1 text-xs text-slate-400">{n.explanation}</p>
-          <p className="mt-0.5 text-xs text-emerald-300/80">{n.result}</p>
+          <p className="mt-1 text-xs text-slate-400">
+            <span className="text-slate-600">Причина: </span>
+            {n.explanation}
+          </p>
+          <p className="mt-0.5 text-xs text-emerald-300/80">
+            <span className="text-slate-600">Результат: </span>
+            {n.result}
+          </p>
         </li>
       ))}
     </ul>
@@ -90,51 +70,76 @@ function NarrationStream({
 }
 
 export function OwnerCommandCenter({ view }: { view: OwnerCommandCenterView }) {
+  const heal = selfHealOwnerCard(view.runtime);
+
   return (
     <div className="space-y-12">
-      {/* Hero command strip */}
       <section className="rounded-3xl border border-cyan-500/20 bg-gradient-to-br from-cyan-950/40 via-slate-950 to-violet-950/30 p-6 md:p-10">
         <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-cyan-400/90">
           AION · Центр управления AI
         </p>
-        <div className="mt-6 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
-            <ReadinessRing percent={view.overallReadinessPercent} size={140} label="готовность" />
-            <div>
-              <p className="text-2xl font-bold text-white md:text-3xl">{view.aiActivityRu}</p>
-              <p className="mt-2 text-sm text-slate-300">
-                Подсистема: <span className="text-cyan-200">{view.activeSubsystemRu}</span>
-              </p>
-              <p className="mt-1 text-sm text-slate-400">
-                Уверенность AI: <span className="font-semibold text-violet-200">{view.confidencePercent}%</span>
-                {view.retryCount > 0 ? (
-                  <span className="ml-2 text-amber-300">· попыток: {view.retryCount}</span>
-                ) : null}
-              </p>
-              <p className="mt-3 text-sm text-cyan-100/90">
-                <span className="text-slate-500">Следующее: </span>
-                {view.nextActionRu}
-              </p>
-            </div>
+        <p className="mt-2 text-xs text-slate-500">
+          Автономная инженерная организация · вы наблюдаете и задаёте стратегию
+        </p>
+
+        <div className="mt-8 flex flex-col gap-8 xl:flex-row xl:items-center xl:justify-between">
+          <div className="flex flex-wrap items-center justify-center gap-8">
+            <ReadinessRing percent={view.readiness.mvpPercent} size={120} label="MVP" />
+            <ReadinessRing percent={view.readiness.productionPercent} size={120} label="сайт" />
+            <ReadinessRing percent={view.overallReadinessPercent} size={100} label="общая" />
           </div>
-          <div className="flex flex-wrap gap-2 lg:max-w-xs lg:flex-col">
+
+          <div className="min-w-0 flex-1">
+            <p className="text-2xl font-bold text-white md:text-3xl">{view.aiActivityRu}</p>
+            <p className="mt-2 text-sm text-slate-300">
+              Фаза: <span className="text-violet-200">{view.currentPhaseRu}</span>
+            </p>
+            <p className="mt-1 text-sm text-slate-300">
+              Подсистема: <span className="text-cyan-200">{view.activeSubsystemRu}</span>
+            </p>
+            <p className="mt-2 text-sm text-slate-400">
+              Уверенность: <span className="font-semibold text-violet-200">{view.confidencePercent}%</span>
+              {view.retryCount > 0 ? (
+                <span className="ml-2 text-amber-300">· попыток восстановления: {view.retryCount}</span>
+              ) : null}
+            </p>
+            {view.lastCompletedRu ? (
+              <p className="mt-2 text-xs text-slate-500">✓ Готово: {view.lastCompletedRu}</p>
+            ) : null}
+            <p className="mt-3 text-sm text-cyan-100/90">
+              <span className="text-slate-500">Следующее: </span>
+              {view.nextActionRu}
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-2 sm:flex-row xl:flex-col">
             <Link
               href={ecosystemRoutes.operationsLive}
-              className="rounded-xl border border-cyan-500/40 bg-cyan-500/15 px-4 py-2 text-center text-sm font-semibold text-cyan-100 hover:bg-cyan-500/25"
+              className="rounded-xl border border-cyan-500/40 bg-cyan-500/15 px-4 py-2.5 text-center text-sm font-semibold text-cyan-100 hover:bg-cyan-500/25"
             >
-              Живое исполнение →
+              Живой поток AI →
             </Link>
             <Link
               href={ecosystemRoutes.operationsPriorities}
-              className="rounded-xl border border-white/15 px-4 py-2 text-center text-sm text-slate-300 hover:border-violet-500/40"
+              className="rounded-xl border border-white/15 px-4 py-2.5 text-center text-sm text-slate-300 hover:border-violet-500/40"
             >
-              Приоритеты владельца
+              Стратегические приоритеты
             </Link>
           </div>
         </div>
+
+        {heal ? (
+          <div className="mt-6 rounded-xl border border-violet-500/35 bg-violet-500/8 px-4 py-4">
+            <p className="text-xs font-bold uppercase text-violet-300">🛠 AI восстанавливает систему</p>
+            <p className="mt-2 text-sm text-rose-200/90">Что сломалось: {heal.broken}</p>
+            <p className="mt-1 text-sm text-slate-200">Действие: {heal.action}</p>
+            <p className="mt-1 text-xs text-slate-400">{heal.attempts} · {heal.risk}</p>
+          </div>
+        ) : null}
+
         {view.blockers.length > 0 ? (
-          <div className="mt-6 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3">
-            <p className="text-xs font-bold uppercase text-rose-300">Блокировки</p>
+          <div className="mt-4 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3">
+            <p className="text-xs font-bold uppercase text-rose-300">⚠ Блокировки</p>
             <ul className="mt-2 space-y-1">
               {view.blockers.map((b) => (
                 <li key={b} className="text-sm text-rose-100/90">
@@ -144,22 +149,32 @@ export function OwnerCommandCenter({ view }: { view: OwnerCommandCenterView }) {
             </ul>
           </div>
         ) : null}
-        <p className="mt-4 text-xs text-slate-600">{view.primaryObjectiveRu}</p>
+
+        <p className="mt-4 text-xs leading-relaxed text-slate-600">{view.primaryObjectiveRu}</p>
       </section>
 
       <section>
         <h2 className="text-sm font-bold uppercase tracking-widest text-violet-400/90">
-          Здоровье проекта
+          Готовность проекта
         </h2>
         <div className="mt-4">
-          <HealthStrip health={view.health} />
+          <ReadinessMetricsGrid metrics={view.readiness} />
+        </div>
+      </section>
+
+      <section>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-amber-400/90">
+          Деплой и проверки
+        </h2>
+        <div className="mt-4">
+          <ValidationDeployCenter matrix={view.validationMatrix} health={view.health} />
         </div>
       </section>
 
       <section className="grid gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-1">
+        <div>
           <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">
-            Очередь исполнения
+            Очередь AI
           </h2>
           <div className="mt-4">
             <TaskQueue items={view.taskQueue} />
@@ -167,7 +182,7 @@ export function OwnerCommandCenter({ view }: { view: OwnerCommandCenterView }) {
         </div>
         <div className="lg:col-span-2">
           <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">
-            Поток AI (человеческий)
+            Поток исполнения AI
           </h2>
           <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.02] p-4">
             <NarrationStream items={view.narration} />
@@ -175,13 +190,33 @@ export function OwnerCommandCenter({ view }: { view: OwnerCommandCenterView }) {
         </div>
       </section>
 
+      <section className="grid gap-8 lg:grid-cols-2">
+        <div>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">
+            Граф зависимостей
+          </h2>
+          <p className="mt-1 text-xs text-slate-600">Что блокирует что — без технических терминов</p>
+          <div className="mt-4">
+            <DependencyGraphPanel nodes={view.dependencyGraph} />
+          </div>
+        </div>
+        <div>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">
+            Roadmap · блоки подсистем
+          </h2>
+          <p className="mt-1 text-xs text-slate-600">Прогресс и статус каждого направления</p>
+          <div className="mt-4 grid gap-4">
+            {view.subsystems.slice(0, 3).map((block) => (
+              <SubsystemBlockCard key={block.id} block={block} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section>
-        <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">
-          Roadmap · блоки подсистем
+        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">
+          Все подсистемы
         </h2>
-        <p className="mt-2 text-sm text-slate-500">
-          Прогресс, зависимости и статус без технического шума
-        </p>
         <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {view.subsystems.map((block) => (
             <SubsystemBlockCard key={block.id} block={block} />
@@ -190,12 +225,12 @@ export function OwnerCommandCenter({ view }: { view: OwnerCommandCenterView }) {
       </section>
 
       <section>
-        <h2 className="text-sm font-bold uppercase tracking-widest text-emerald-400/90">
-          Live AI · детали (свёрнуто по умолчанию на карточках выше)
+        <h2 className="text-sm font-bold uppercase tracking-widest text-slate-600">
+          Технические детали (по желанию)
         </h2>
         <details className="mt-4 rounded-2xl border border-white/10 bg-black/20">
-          <summary className="cursor-pointer px-5 py-4 text-sm font-medium text-slate-300 hover:text-white">
-            Технические детали исполнения (для углублённого просмотра)
+          <summary className="cursor-pointer px-5 py-4 text-sm text-slate-400 hover:text-white">
+            Показать пути файлов, API и сырой runtime
           </summary>
           <div className="border-t border-white/10 p-5">
             <LiveExecutionPanel />

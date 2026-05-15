@@ -1,0 +1,29 @@
+---
+description: CONSTITUTION — Russian-first owner UX (mandatory)
+globs: "**/*"
+alwaysApply: true
+---
+
+# Russian-first owner constitution
+
+**Owner does not speak English well. All owner-facing UI MUST be Russian.**
+
+English ONLY in collapsed secondary blocks:
+- file paths, API routes, git hashes, internal identifiers
+
+## Applies to
+
+Roadmap, execution, live runtime, priorities, reviews, deployment, blockers,
+validation, timeline, narration, cards, tooltips, errors, recovery, health labels.
+
+## Command center
+
+Primary surface: `/operations/command`
+
+## Cursor narration
+
+Always `[AION АКТИВЕН]` in Russian during work. Never appear silent — use `execution:heartbeat` or `execution:daemon`.
+
+## Autonomous mode
+
+No "what next?". Use `npm run execution:autonomous-next`. Escalate architecture via `review:request` only.
