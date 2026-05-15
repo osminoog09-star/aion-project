@@ -101,6 +101,35 @@ export type ImplementationFeedImpacts = {
   cloud?: "none" | "low" | "medium" | "high";
 };
 
+/** AI execution audit event kinds (portal + feed). */
+export type ExecutionEventType =
+  | "implementation_started"
+  | "implementation_finished"
+  | "architecture_change"
+  | "runtime_change"
+  | "apk_required"
+  | "ota_safe"
+  | "blocker_detected"
+  | "validation_failed"
+  | "validation_passed"
+  | "technical_debt_added"
+  | "technical_debt_removed"
+  | "roadmap_updated"
+  | "release_created"
+  | "overlay_changed"
+  | "ocr_pipeline_changed";
+
+export type AiConfidenceLevel = "high" | "medium" | "experimental" | "unstable" | "blocked";
+
+export type ArchitectureReviewRecord = {
+  requestedAt: string;
+  topic: string;
+  requestReason: string;
+  outcome?: "approved" | "warnings" | "rejected" | "pending";
+  summary?: string;
+  warnings?: string[];
+};
+
 export type ImplementationFeedItem = {
   id: string;
   occurredAt: string;
@@ -115,6 +144,16 @@ export type ImplementationFeedItem = {
   blocked: string[];
   impacts: ImplementationFeedImpacts;
   validation: Partial<Record<ValidationSignalId, ValidationSignalStatus>>;
+  /** AI execution audit (optional on legacy events). */
+  eventType?: ExecutionEventType;
+  task?: string;
+  reasoning?: string;
+  changedFiles?: string[];
+  runtimeImpact?: string;
+  apkImpact?: string;
+  technicalDebtIntroduced?: string[];
+  confidence?: AiConfidenceLevel;
+  architectureReview?: ArchitectureReviewRecord;
 };
 
 export type ValidationMatrixRow = {

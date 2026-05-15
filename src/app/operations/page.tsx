@@ -10,6 +10,7 @@ import {
   RoadmapHubLinks,
 } from "@/components/ecosystem/MasterRoadmapPanels";
 import { DefinitionOfDoneCallout, OperationsDashboard, ReadinessPillarGrid, TechnicalDebtBoard } from "@/components/ecosystem/EcosystemAuditViews";
+import { OperationsSubNav } from "@/components/operations/ExecutionAuditPanels";
 
 export const metadata: Metadata = {
   title: "Operations — исполнение экосистемы",
@@ -31,6 +32,7 @@ export default async function OperationsPage() {
       <div className="mt-4">
         <RoadmapHubLinks />
       </div>
+      <OperationsSubNav />
 
       <div className="mt-8">
         <OperationsHub view={hub} variant="compact" />

@@ -1,8 +1,11 @@
 /**
  * Append one event to src/content/ecosystem-implementation-feed.json
  * Usage:
- *   node scripts/append-implementation-feed.mjs --title "..." --summary "..." [--commit abc] [--repo aion-com] [--subsystems web-portal,updates]
- * Requires: Node 20+
+ *   node scripts/append-implementation-feed.mjs --title "..." --summary "..." \
+ *     [--commit abc] [--repo aion-com] [--subsystems web-portal,operations-center] \
+ *     [--event-type implementation_finished] [--reasoning "..."] [--task "..."] \
+ *     [--confidence high|medium|experimental|unstable|blocked] \
+ *     [--files "path/a,path/b"] [--runtime-impact "..."] [--apk-impact "..."]
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -28,7 +31,15 @@ if (!title || !summary) {
 const commitHash = arg("--commit");
 const repository = arg("--repo") ?? "aion-com";
 const subRaw = arg("--subsystems");
-const subsystemIds = subRaw ? subRaw.split(",").map((s) => s.trim()).filter(Boolean) : ["web-portal"];
+const subsystemIds = subRaw ? subRaw.split(",").map((s) => s.trim()).filter(Boolean) : ["operations-center"];
+const eventType = arg("--event-type") ?? "implementation_finished";
+const reasoning = arg("--reasoning");
+const task = arg("--task");
+const confidence = arg("--confidence");
+const filesRaw = arg("--files");
+const changedFiles = filesRaw ? filesRaw.split(",").map((s) => s.trim()).filter(Boolean) : undefined;
+const runtimeImpact = arg("--runtime-impact");
+const apkImpact = arg("--apk-impact");
 
 const raw = fs.readFileSync(target, "utf8");
 const data = JSON.parse(raw);
@@ -39,28 +50,36 @@ const item = {
   title,
   summary,
   subsystemIds,
+  eventType,
   commitHash: commitHash ?? null,
   repository,
   rollup: {
     fullyDone: [],
-    partiallyDone: ["🟨 Запись из feed:append — уточните rollup вручную"],
+    partiallyDone: reasoning ? ["🟨 См. reasoning в audit"] : ["🟨 Запись из feed:append — уточните rollup"],
     notStarted: [],
     technicalDebt: [],
   },
   stillMissing: ["Уточнить rollup и validation после CI"],
   blocked: [],
   impacts: {
-    release: "low",
-    otaApk: "none",
+    release: apkImpact ? "medium" : "low",
+    otaApk: apkImpact ? "medium" : "none",
     backend: "none",
-    realtime: "none",
-    ux: "low",
-    cloud: "none",
+    realtime: runtimeImpact ? "low" : "none",
+    ux: "medium",
+    cloud: "low",
   },
   validation: {
     web_build: "pending",
   },
 };
+
+if (reasoning) item.reasoning = reasoning;
+if (task) item.task = task;
+if (confidence) item.confidence = confidence;
+if (changedFiles?.length) item.changedFiles = changedFiles;
+if (runtimeImpact) item.runtimeImpact = runtimeImpact;
+if (apkImpact) item.apkImpact = apkImpact;
 
 data.items = [item, ...(data.items ?? [])];
 data.lastUpdated = item.occurredAt;

@@ -12,7 +12,7 @@ alwaysApply: false
 - **Merge:** `getEcosystemStatus()` in `src/lib/ecosystem-data.ts` (extensions + execution bundle + optional Supabase).
 - **Cloud overlay:** `ecosystem_public_snapshots` kinds `portal_ecosystem`, `portal_roadmap_master` — see `src/lib/ecosystem/cloud-queries.ts`.
 - **Machine-readable:** `GET /api/aion/context` (includes `executionEngine` + `implementationFeed`), `GET /api/roadmap/execution`, `GET /api/implementation-feed`, plus slices on `/ai-context`.
-- **Human pages:** `/roadmap/execution`, `/operations/context`, `/operations/timeline`, `/control`, `/operations`, `/status`, `/roadmap`.
+- **Human pages:** `/roadmap/execution`, `/operations`, `/operations/execution`, `/operations/timeline`, `/operations/blockers`, `/operations/runtime`, `/operations/validation`, `/operations/context`, `/control`, `/status`, `/roadmap`.
 
 ## Cursor MUST NOT
 
@@ -26,9 +26,9 @@ alwaysApply: false
 
 ## Live implementation reporting
 
-- After a **meaningful** portal change, append an event: `npm run feed:append -- --title "…" --summary "…" [--commit HASH] [--subsystems id1,id2]` then tighten `rollup` / `validation` in `ecosystem-implementation-feed.json`.
+- After a **meaningful** portal or cross-repo change, append an event: `npm run feed:append -- --title "…" --summary "…" [--commit HASH] [--repo aion-com|aion-driver] [--subsystems id1,id2] [--event-type implementation_finished] [--task "…"] [--reasoning "…"] [--confidence high|medium|experimental|unstable|blocked] [--files "path/a,path/b"] [--runtime-impact "…"] [--apk-impact "…"]` then tighten `rollup` / `validation` in `ecosystem-implementation-feed.json`.
 - Keep `validationMatrix` honest: unknown/pending is better than fake **passed**.
-- Human timeline: `/operations/timeline`; AI: `GET /api/implementation-feed`.
+- Human audit: `/operations/execution`, `/operations/blockers`, `/operations/runtime`, `/operations/validation`; timeline: `/operations/timeline`; AI: `GET /api/implementation-feed` + `buildExecutionAuditView` data on operations pages.
 
 ## Cursor SHOULD (within roadmap priorities)
 

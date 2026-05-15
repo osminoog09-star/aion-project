@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getEcosystemStatus, getLocalImplementationFeed } from "@/lib/ecosystem-data";
 import { getSiteUrl } from "@/lib/site-url";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
+import { AuditFeedCard, OperationsSubNav } from "@/components/operations/ExecutionAuditPanels";
 
 export const metadata: Metadata = {
   title: "Timeline — внедрения и валидация",
@@ -30,6 +31,7 @@ export default async function OperationsTimelinePage() {
           /ecosystem
         </Link>
       </p>
+      <OperationsSubNav />
 
       <section className="mt-10">
         <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">Матрица валидации</h2>
@@ -62,54 +64,7 @@ export default async function OperationsTimelinePage() {
         <p className="mt-2 text-xs text-slate-600">Обновлено в feed: {feed.lastUpdated} · ecosystem JSON: {eco.lastUpdated}</p>
         <ul className="mt-6 space-y-6">
           {feed.items.map((ev) => (
-            <li key={ev.id} className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <h3 className="text-lg font-semibold text-white">{ev.title}</h3>
-                <span className="font-mono text-xs text-slate-500">{ev.occurredAt}</span>
-              </div>
-              <p className="mt-2 text-sm text-slate-400">{ev.summary}</p>
-              <p className="mt-2 text-xs text-slate-500">
-                Подсистемы:{" "}
-                <span className="font-mono text-slate-400">{ev.subsystemIds.join(", ")}</span>
-                {ev.commitHash ? (
-                  <>
-                    {" "}
-                    · commit <span className="font-mono">{ev.commitHash}</span>
-                  </>
-                ) : null}
-                {ev.repository ? (
-                  <>
-                    {" "}
-                    · <span className="font-mono">{ev.repository}</span>
-                  </>
-                ) : null}
-              </p>
-              <div className="mt-4 grid gap-3 text-xs md:grid-cols-2">
-                <div>
-                  <p className="font-bold uppercase tracking-wider text-slate-500">Rollup</p>
-                  <ul className="mt-1 space-y-1 text-slate-400">
-                    {[...ev.rollup.fullyDone, ...ev.rollup.partiallyDone, ...ev.rollup.notStarted, ...ev.rollup.technicalDebt].map(
-                      (line) => (
-                        <li key={line}>{line}</li>
-                      ),
-                    )}
-                  </ul>
-                </div>
-                <div>
-                  <p className="font-bold uppercase tracking-wider text-slate-500">Пробелы / блок</p>
-                  <p className="mt-1 text-slate-400">{ev.stillMissing.join(" · ") || "—"}</p>
-                  <p className="mt-2 text-rose-200/80">{ev.blocked.join(" · ") || "—"}</p>
-                </div>
-              </div>
-              <p className="mt-3 text-[10px] uppercase tracking-wider text-slate-600">
-                validation:{" "}
-                <span className="font-mono normal-case text-slate-400">
-                  {Object.entries(ev.validation)
-                    .map(([k, v]) => `${k}=${v}`)
-                    .join(", ") || "—"}
-                </span>
-              </p>
-            </li>
+            <AuditFeedCard key={ev.id} ev={ev} />
           ))}
         </ul>
       </section>
