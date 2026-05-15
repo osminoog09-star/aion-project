@@ -11,31 +11,55 @@
     "commit": null,
     "deploymentUrl": null,
     "trigger": "unknown",
-    "notes": "Production missing /operations/** — local HEAD ahead of Vercel production."
+    "notes": "One or more operations routes failed validation — redeploy required."
   },
   "routeValidation": {
-    "checkedAt": null,
+    "checkedAt": "2026-05-15T08:41:01.966Z",
     "baseUrl": "https://aion-com.vercel.app",
     "routes": {
-      "/operations": { "status": "fail", "httpStatus": 404 },
-      "/operations/reviews": { "status": "fail", "httpStatus": 404 },
-      "/operations/review-queue": { "status": "fail", "httpStatus": 404 },
-      "/operations/priorities": { "status": "unknown", "httpStatus": null },
-      "/operations/execution": { "status": "fail", "httpStatus": 404 },
-      "/operations/blockers": { "status": "fail", "httpStatus": 404 },
-      "/operations/runtime": { "status": "fail", "httpStatus": 404 },
-      "/operations/validation": { "status": "fail", "httpStatus": 404 }
+      "/operations": {
+        "status": "fail",
+        "httpStatus": null
+      },
+      "/operations/reviews": {
+        "status": "fail",
+        "httpStatus": null
+      },
+      "/operations/review-queue": {
+        "status": "fail",
+        "httpStatus": null
+      },
+      "/operations/priorities": {
+        "status": "fail",
+        "httpStatus": null
+      },
+      "/operations/execution": {
+        "status": "fail",
+        "httpStatus": null
+      },
+      "/operations/blockers": {
+        "status": "fail",
+        "httpStatus": null
+      },
+      "/operations/runtime": {
+        "status": "fail",
+        "httpStatus": null
+      },
+      "/operations/validation": {
+        "status": "fail",
+        "httpStatus": null
+      }
     },
     "allPassed": false
   },
   "pipelineBlockers": [
-    "git remote origin not configured locally",
-    "VERCEL_TOKEN not available in CI environment",
-    "Production deploy requires push to GitHub or vercel deploy --prod"
+    "GitHub repo osminoog09-star/aion-com does not exist (push rejected)",
+    "VERCEL_TOKEN not in environment — vercel deploy --prod requires login or token",
+    "Vercel production still on pre-/operations deployment"
   ],
   "autonomousRecovery": [
-    "npm run deploy:pipeline (local, requires vercel login)",
-    "GitHub Actions vercel-production.yml after secrets configured",
-    "git push origin master after remote linked"
+    "One-time: create https://github.com/osminoog09-star/aion-com then git push -u origin master",
+    "One-time: GitHub secrets VERCEL_TOKEN + VERCEL_ORG_ID + VERCEL_PROJECT_ID → auto deploy on push",
+    "Or: npx vercel login && npm run deploy:pipeline (local CLI)"
   ]
 }
