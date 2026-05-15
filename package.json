@@ -14,6 +14,7 @@
     "deploy:pipeline": "node scripts/deploy-pipeline.mjs",
     "deploy:validate": "node scripts/post-deploy-validate.mjs",
     "git:remote": "node scripts/setup-git-remote.mjs",
+    "owner:unblock-check": "node scripts/owner-unblock-check.mjs",
     "release:apk-manifest:sync": "node scripts/sync-apk-manifest-from-eas.mjs"
   },
   "dependencies": {

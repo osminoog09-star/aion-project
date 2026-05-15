@@ -1,6 +1,5 @@
 /**
- * Validate production operations routes. Updates src/content/deployment-status.json
- * Usage: node scripts/post-deploy-validate.mjs [--base https://aion-com.vercel.app]
+ * Validate production operations routes. Updates deployment-status.json
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -25,29 +24,50 @@ const ROUTES = [
   "/operations/blockers",
   "/operations/runtime",
   "/operations/validation",
+  "/operations/deployment",
+];
+
+const HYDRATION_MARKERS = [
+  "Operations center",
+  "route intelligence",
+  "Review queue",
+  "deployment pipeline",
+  "AI execution audit",
+  "Architecture reviews",
 ];
 
 async function checkRoute(route) {
   const url = `${baseUrl}${route}`;
   try {
     const res = await fetch(url, { method: "GET", redirect: "follow" });
+    const html = await res.text();
     const ok = res.status >= 200 && res.status < 400;
-    return { status: ok ? "pass" : "fail", httpStatus: res.status };
+    const renderOk =
+      ok &&
+      html.length > 500 &&
+      (route.includes("deployment")
+        ? html.includes("deployment pipeline") || html.includes("Production deploy")
+        : HYDRATION_MARKERS.some((m) => html.includes(m)) || html.includes("operations"));
+    return { status: ok ? "pass" : "fail", httpStatus: res.status, renderOk };
   } catch {
-    return { status: "fail", httpStatus: null };
+    return { status: "fail", httpStatus: null, renderOk: false };
   }
 }
 
 const status = JSON.parse(fs.readFileSync(statusPath, "utf8"));
 const routes = {};
 let allPassed = true;
+const started = Date.now();
 
 for (const route of ROUTES) {
   const result = await checkRoute(route);
   routes[route] = result;
-  if (result.status !== "pass") allPassed = false;
-  console.log(`${result.status === "pass" ? "OK" : "FAIL"} ${route} → ${result.httpStatus ?? "err"}`);
+  if (result.status !== "pass" || !result.renderOk) allPassed = false;
+  const tag = result.status === "pass" && result.renderOk ? "OK" : "FAIL";
+  console.log(`${tag} ${route} → ${result.httpStatus ?? "err"} render=${result.renderOk}`);
 }
+
+const durationMs = Date.now() - started;
 
 status.routeValidation = {
   checkedAt: new Date().toISOString(),
@@ -56,18 +76,32 @@ status.routeValidation = {
   allPassed,
 };
 status.lastUpdated = new Date().toISOString().slice(0, 10);
+
+status.deploymentTimeline = [
+  {
+    at: new Date().toISOString(),
+    kind: allPassed ? "validation_passed" : "validation_failed",
+    summary: allPassed
+      ? `All ${ROUTES.length} routes passed (${durationMs}ms)`
+      : "Production validation failed — stale or broken deploy",
+    durationMs,
+  },
+  ...(status.deploymentTimeline ?? []).slice(0, 19),
+];
+
 if (allPassed) {
   status.lastProductionDeploy = {
     ...status.lastProductionDeploy,
     status: "ok",
-    notes: "All operations routes validated on production.",
+    notes: "All operations routes validated.",
   };
   status.pipelineBlockers = [];
+  status.gitLinkage = { ...status.gitLinkage, githubRepoExists: true };
 } else {
   status.lastProductionDeploy = {
     ...status.lastProductionDeploy,
     status: "stale",
-    notes: "One or more operations routes failed validation — redeploy required.",
+    notes: "Route validation failed — redeploy required.",
   };
 }
 
