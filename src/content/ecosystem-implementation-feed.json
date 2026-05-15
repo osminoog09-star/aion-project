@@ -4,6 +4,35 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-post-shift-analytics",
+      "occurredAt": "2026-05-15",
+      "title": "Post-shift analytics engine + idle/time intelligence",
+      "summary": "aion-driver: ShiftAnalyticsSnapshot (shift/route/idle/time/profit) persisted on endShift; hourly work buckets from real income+GPS; timeline grouped (idle-heavy/strong/weak); headless pending GPS by shiftId on disk + flush on resumeShift.",
+      "subsystemIds": ["mobile-app", "background-drive"],
+      "eventType": "analytics_engine_changed",
+      "task": "P3 post-shift + idle analytics",
+      "reasoning": "Precomputed snapshots avoid live recalc; no fake AI recommendations; cold-start orphan prevention via persisted pending headless queue.",
+      "confidence": "high",
+      "runtimeImpact": "Analytics read from storage; gateway resumeShift async flush",
+      "apkImpact": "ota-safe",
+      "repository": "aion-driver",
+      "rollup": {
+        "fullyDone": [
+          "✅ buildPostShiftAnalytics + persistShiftAnalytics",
+          "✅ Idle/time/profit/route snapshot model",
+          "✅ Timeline analytics grouping",
+          "✅ Pending headless GPS by shiftId (disk)"
+        ],
+        "partiallyDone": ["🟨 Shifts before this release lack backfilled snapshots"],
+        "notStarted": ["⬜ Heatmaps", "⬜ Zone/wait intelligence", "⬜ Historical rollups UI"],
+        "technicalDebt": ["Backfill analytics for old shifts optional"]
+      },
+      "stillMissing": ["Multi-shift historical dashboard"],
+      "blocked": ["heatmap-analytics"],
+      "impacts": { "release": "high", "otaApk": "low", "backend": "none", "realtime": "none", "ux": "high", "cloud": "none" },
+      "validation": { "driver_typecheck": "passed" }
+    },
+    {
       "id": "evt-2026-05-15-route-timeline-headless-gps",
       "occurredAt": "2026-05-15",
       "title": "Route timeline UI + headless GPS → ingestion gateway",
