@@ -36,7 +36,18 @@ function formatTime(iso: string) {
 }
 
 export function LiveActionStream({ actions }: { actions: ActionEntry[] }) {
-  if (!actions.length) return null;
+  if (!actions.length) {
+    return (
+      <section className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+          Поток действий AI
+        </p>
+        <p className="mt-2 text-sm text-slate-400">
+          Пока пусто — действия появятся при правках кода и `execution:action` в Cursor.
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="rounded-2xl border border-cyan-500/25 bg-cyan-500/5 px-4 py-4">

@@ -4,15 +4,15 @@
   "agentId": "cursor-autonomous",
   "lastUpdated": "2026-05-15",
   "runtime": {
-    "status": "analyzing",
-    "phase": "analyzing",
-    "currentTask": "Background runtime field matrix",
-    "subsystem": "background-drive",
-    "reasoning": "ChatGPT review ar-1778850154197: device gate before BACKGROUND_TRACKING_PRODUCTION_READY",
-    "confidence": 0.9,
-    "startedAt": "2026-05-15T13:02:40.383Z",
-    "updatedAt": "2026-05-15T13:13:43.331Z",
-    "heartbeatAt": "2026-05-15T13:13:43.331Z",
+    "status": "coding",
+    "phase": "coding",
+    "currentTask": "OTA report + BG production gate",
+    "subsystem": "driver-intelligence",
+    "reasoning": "Финиш мандата",
+    "confidence": 0.88,
+    "startedAt": "2026-05-15T13:22:56.670Z",
+    "updatedAt": "2026-05-15T14:50:45.298Z",
+    "heartbeatAt": "2026-05-15T14:50:45.298Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -20,7 +20,7 @@
     ],
     "commitCandidate": "pending",
     "blocker": null,
-    "nextStep": "Device: 10min background + resume",
+    "nextStep": "Owner device 8/8",
     "branch": "main",
     "dependencyTarget": "Live execution observability + self-healing",
     "pendingReviewCount": 0,
@@ -31,17 +31,163 @@
       "routes": "passed"
     },
     "lastFailure": null,
-    "lastCompletedAction": "AI пишет и улучшает код: Runtime stabilization: unified profit display + FGS field checks",
+    "lastCompletedAction": "AI анализирует систему: Background runtime field matrix",
     "retryCount": 0,
-    "validationProgress": "Поток действий в терминале и на live",
-    "progressPercent": 85,
+    "validationProgress": "OTA ← Маршруты (Href fix)",
+    "progressPercent": 99,
     "etaMinutes": 60,
     "autonomousDepth": 1,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "src/components/operations/LiveActionStream.tsx",
+    "currentFile": "aion-driver/screens/OtaTestScreen.tsx",
     "recentActions": [
+      {
+        "at": "2026-05-15T14:49:57.045Z",
+        "tag": "CODE",
+        "message": "OTA ← Маршруты (Href fix)",
+        "file": "aion-driver/screens/OtaTestScreen.tsx",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T14:48:49.940Z",
+        "tag": "CODE",
+        "message": "OTA экран: баннер после field validation 8/8",
+        "file": "aion-driver/screens/OtaTestScreen.tsx",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T14:48:14.778Z",
+        "tag": "CODE",
+        "message": "Alert после копирования + ссылка OTA smoke при 8/8",
+        "file": "aion-driver/components/route/RouteTimelineFieldValidationCard.tsx",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T14:46:55.688Z",
+        "tag": "CODE",
+        "message": "Кнопка Скопировать отчёт на Маршрутах + мандат +30мин",
+        "file": "aion-driver/components/route/RouteTimelineFieldValidationCard.tsx",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T14:45:56.307Z",
+        "tag": "CODE",
+        "message": "formatFieldValidationReportRu + backgroundTrackingProductionGate",
+        "file": "aion-driver/services/backgroundTracking.ts",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T14:43:04.537Z",
+        "tag": "CODE",
+        "message": "computeDriverIntelligence → pickProfitFromRouteRow",
+        "file": "aion-driver/features/driver/intelligence/computeDriverIntelligence.ts",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T14:42:34.889Z",
+        "tag": "CODE",
+        "message": "Чеклист stop-zone показывает progress 3/5",
+        "file": "aion-driver/features/route/computeRouteFieldValidation.ts",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T13:41:53.334Z",
+        "tag": "CODE",
+        "message": "stop-zone progress в intelligence header",
+        "file": "aion-driver/features/analytics/stopZoneProgressRu.ts",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T13:39:08.330Z",
+        "tag": "CODE",
+        "message": "Карточка 8/8 ready label + autonomous-next stop-zone",
+        "file": "aion-driver/components/route/RouteTimelineFieldValidationCard.tsx",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T13:37:13.910Z",
+        "tag": "CODE",
+        "message": "Чеклист: actionRu на каждый failed пункт + isFgsHeartbeatFresh",
+        "file": "aion-driver/features/route/computeRouteFieldValidation.ts",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T13:35:37.269Z",
+        "tag": "CODE",
+        "message": "Portal: live stream empty state + priorities notes",
+        "file": "src/components/operations/LiveActionStream.tsx",
+        "repo": "aion-project"
+      },
+      {
+        "at": "2026-05-15T13:33:57.185Z",
+        "tag": "CODE",
+        "message": "Route groups/summary/handoff: pickProfitFromRouteRow",
+        "file": "aion-driver/features/route/groupRouteAnalytics.ts",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T13:30:40.010Z",
+        "tag": "CODE",
+        "message": "Dashboard: pickProfitFromRuntime для блока смены",
+        "file": "aion-driver/screens/DashboardScreen.tsx",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T13:28:44.113Z",
+        "tag": "VALIDATE",
+        "message": "test:shift-economics ok (4 cases)",
+        "file": "aion-driver/scripts/ci/test-shift-display-economics.mjs",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T13:27:11.196Z",
+        "tag": "CODE",
+        "message": "Driver: единая прибыль на timeline через shiftDisplayEconomics",
+        "file": "aion-driver/utils/shiftDisplayEconomics.ts",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T13:25:51.122Z",
+        "tag": "CODE",
+        "message": "Правило: чат обязателен при автономе; подсказка в карточке validation",
+        "file": "aion-driver/components/route/RouteTimelineFieldValidationCard.tsx",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T13:24:23.844Z",
+        "tag": "VALIDATE",
+        "message": "driver: typecheck + test:field-validation ok",
+        "repo": "aion-project"
+      },
+      {
+        "at": "2026-05-15T13:23:34.667Z",
+        "tag": "CODE",
+        "message": "Driver: CI тест field validation + refresh FGS при фокусе экрана",
+        "file": "aion-driver/features/route/computeRouteFieldValidation.ts",
+        "repo": "aion-driver"
+      },
+      {
+        "at": "2026-05-15T13:20:53.736Z",
+        "tag": "CODE",
+        "message": "Правка: hooks.json",
+        "file": "c:/Users/osmin/Desktop/???????/aion-com/.cursor/hooks.json",
+        "repo": "aion-project"
+      },
+      {
+        "at": "2026-05-15T13:17:52.037Z",
+        "tag": "CODE",
+        "message": "Связка live-execution с owner-visible-work",
+        "file": ".cursor/rules/aion-live-execution.mdc",
+        "repo": "aion-project"
+      },
+      {
+        "at": "2026-05-15T13:17:43.549Z",
+        "tag": "CODE",
+        "message": "Правило owner-visible-work + hooks после save/shell",
+        "file": ".cursor/rules/aion-owner-visible-work.mdc",
+        "repo": "aion-project"
+      },
       {
         "at": "2026-05-15T13:13:31.857Z",
         "tag": "CODE",
@@ -52,6 +198,127 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-05-15T14:45:55.991Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: OTA report + BG production gate",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Финиш мандата",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-15T14:43:04.342Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Intelligence + stop-zone 8/8 path",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Автоном",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-15T13:41:53.107Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Stop-zone progress UI + device 8/8",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Автоном без вопросов",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-15T13:39:01.996Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Stop-zone validation на устройстве",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Подтвердить GPS cluster insights после 2+ смен",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-15T13:38:54.343Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Device checklist actions + FGS UI",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Автоном 1ч20м",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.9
+    },
+    {
+      "at": "2026-05-15T13:35:29.924Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: FGS device gate + live stream UX",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Мандат ~78 мин",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.9
+    },
+    {
+      "at": "2026-05-15T13:33:56.945Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Unified profit path: route groups + handoff",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Мандат 1ч20м",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.9
+    },
+    {
+      "at": "2026-05-15T13:30:17.680Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Device validation UX: blockers + FGS poll",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Автоном roadmap PRIMARY",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.9
+    },
+    {
+      "at": "2026-05-15T13:24:09.116Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Driver field validation 8/8 + CI",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Мандат 1.5ч",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.9
+    },
+    {
+      "at": "2026-05-15T13:23:00.694Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Driver field validation: unit tests + device checklist",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Мандат 1.5ч — PRIMARY roadmap",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.9
+    },
+    {
+      "at": "2026-05-15T13:22:56.670Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Driver field validation: unit tests + device checklist",
+      "feedEventId": "evt-2026-05-15-exec-0fdrl5",
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Мандат 1.5ч — PRIMARY roadmap",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.9
+    },
     {
       "at": "2026-05-15T13:02:40.383Z",
       "phase": "analyzing",
@@ -274,148 +541,148 @@
   ],
   "heartbeats": [
     {
-      "at": "2026-05-15T13:13:43.331Z"
+      "at": "2026-05-15T14:50:45.298Z"
     },
     {
-      "at": "2026-05-15T13:13:33.335Z"
+      "at": "2026-05-15T14:50:35.292Z"
     },
     {
-      "at": "2026-05-15T13:13:31.857Z"
+      "at": "2026-05-15T14:50:25.348Z"
     },
     {
-      "at": "2026-05-15T13:13:23.309Z"
+      "at": "2026-05-15T14:50:15.379Z"
     },
     {
-      "at": "2026-05-15T13:13:13.347Z"
+      "at": "2026-05-15T14:50:05.324Z"
     },
     {
-      "at": "2026-05-15T13:13:03.315Z"
+      "at": "2026-05-15T14:49:57.045Z"
     },
     {
-      "at": "2026-05-15T13:12:53.263Z"
+      "at": "2026-05-15T14:49:55.270Z"
     },
     {
-      "at": "2026-05-15T13:12:43.267Z"
+      "at": "2026-05-15T14:49:45.256Z"
     },
     {
-      "at": "2026-05-15T13:12:33.263Z"
+      "at": "2026-05-15T14:49:35.275Z"
     },
     {
-      "at": "2026-05-15T13:12:23.340Z"
+      "at": "2026-05-15T14:49:25.261Z"
     },
     {
-      "at": "2026-05-15T13:12:13.350Z"
+      "at": "2026-05-15T14:49:15.261Z"
     },
     {
-      "at": "2026-05-15T13:12:03.238Z"
+      "at": "2026-05-15T14:49:05.296Z"
     },
     {
-      "at": "2026-05-15T13:11:53.213Z"
+      "at": "2026-05-15T14:48:55.252Z"
     },
     {
-      "at": "2026-05-15T13:11:43.219Z"
+      "at": "2026-05-15T14:48:49.940Z"
     },
     {
-      "at": "2026-05-15T13:11:33.274Z"
+      "at": "2026-05-15T14:48:45.228Z"
     },
     {
-      "at": "2026-05-15T13:11:23.252Z"
+      "at": "2026-05-15T14:48:35.227Z"
     },
     {
-      "at": "2026-05-15T13:11:13.231Z"
+      "at": "2026-05-15T14:48:25.241Z"
     },
     {
-      "at": "2026-05-15T13:11:03.236Z"
+      "at": "2026-05-15T14:48:15.138Z"
     },
     {
-      "at": "2026-05-15T13:10:53.242Z"
+      "at": "2026-05-15T14:48:14.778Z"
     },
     {
-      "at": "2026-05-15T13:10:43.255Z"
+      "at": "2026-05-15T14:48:05.259Z"
     },
     {
-      "at": "2026-05-15T13:10:33.142Z"
+      "at": "2026-05-15T14:47:55.216Z"
     },
     {
-      "at": "2026-05-15T13:10:23.261Z"
+      "at": "2026-05-15T14:47:45.278Z"
     },
     {
-      "at": "2026-05-15T13:10:13.198Z"
+      "at": "2026-05-15T14:47:35.221Z"
     },
     {
-      "at": "2026-05-15T13:10:03.213Z"
+      "at": "2026-05-15T14:47:25.163Z"
     },
     {
-      "at": "2026-05-15T13:09:53.235Z"
+      "at": "2026-05-15T14:47:15.158Z"
     },
     {
-      "at": "2026-05-15T13:09:43.178Z"
+      "at": "2026-05-15T14:47:05.164Z"
     },
     {
-      "at": "2026-05-15T13:09:33.157Z"
+      "at": "2026-05-15T14:46:56.435Z"
     },
     {
-      "at": "2026-05-15T13:09:23.137Z"
+      "at": "2026-05-15T14:46:55.688Z"
     },
     {
-      "at": "2026-05-15T13:09:13.146Z"
+      "at": "2026-05-15T14:46:55.134Z"
     },
     {
-      "at": "2026-05-15T13:09:03.132Z"
+      "at": "2026-05-15T14:46:45.125Z"
     },
     {
-      "at": "2026-05-15T13:08:53.111Z"
+      "at": "2026-05-15T14:46:35.179Z"
     },
     {
-      "at": "2026-05-15T13:08:43.110Z"
+      "at": "2026-05-15T14:46:25.163Z"
     },
     {
-      "at": "2026-05-15T13:08:33.112Z"
+      "at": "2026-05-15T14:46:15.163Z"
     },
     {
-      "at": "2026-05-15T13:08:23.127Z"
+      "at": "2026-05-15T14:46:05.039Z"
     },
     {
-      "at": "2026-05-15T13:08:13.085Z"
+      "at": "2026-05-15T14:45:56.307Z"
     },
     {
-      "at": "2026-05-15T13:08:03.088Z"
+      "at": "2026-05-15T14:45:55.991Z"
     },
     {
-      "at": "2026-05-15T13:07:53.092Z"
+      "at": "2026-05-15T14:45:55.083Z"
     },
     {
-      "at": "2026-05-15T13:07:43.036Z"
+      "at": "2026-05-15T14:45:45.152Z"
     },
     {
-      "at": "2026-05-15T13:07:33.103Z"
+      "at": "2026-05-15T14:45:35.115Z"
     },
     {
-      "at": "2026-05-15T13:07:23.086Z"
+      "at": "2026-05-15T14:45:25.084Z"
     },
     {
-      "at": "2026-05-15T13:07:13.014Z"
+      "at": "2026-05-15T14:45:15.118Z"
     },
     {
-      "at": "2026-05-15T13:07:11.178Z"
+      "at": "2026-05-15T14:45:05.070Z"
     },
     {
-      "at": "2026-05-15T13:07:02.953Z"
+      "at": "2026-05-15T14:44:55.106Z"
     },
     {
-      "at": "2026-05-15T13:06:53.035Z"
+      "at": "2026-05-15T14:44:45.068Z"
     },
     {
-      "at": "2026-05-15T13:06:43.002Z"
+      "at": "2026-05-15T14:44:35.229Z"
     },
     {
-      "at": "2026-05-15T13:06:33.003Z"
+      "at": "2026-05-15T14:44:25.088Z"
     },
     {
-      "at": "2026-05-15T13:06:22.974Z"
+      "at": "2026-05-15T14:44:15.073Z"
     },
     {
-      "at": "2026-05-15T13:06:12.908Z"
+      "at": "2026-05-15T14:44:05.089Z"
     }
   ]
 }

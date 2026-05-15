@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": "node .cursor/hooks/execution-action-after-edit.mjs",
+        "timeout": 15
+      }
+    ],
+    "afterShellExecution": [
+      {
+        "command": "node .cursor/hooks/execution-action-after-shell.mjs",
+        "timeout": 20
+      }
+    ]
+  }
+}

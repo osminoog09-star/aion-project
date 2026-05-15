@@ -19,6 +19,12 @@ npm run execution:heartbeat
 npm run execution:daemon
 ```
 
+## Видимость как при ТЗ (чат Cursor)
+
+См. `aion-owner-visible-work.mdc`: перед правкой — фраза по-русски; diff в чате; после пачки — `execution:action`; каждые 2–3 шага — Сейчас / Сделано / Дальше.
+
+Хуки `.cursor/hooks.json` сами пишут в поток после save и shell (нужен перезапуск Cursor при первом включении).
+
 ## Поток действий в терминале (при каждом значимом шаге кода)
 
 После правок файлов — **обязательно** (owner видит то же в Cursor и на `/operations/live`):

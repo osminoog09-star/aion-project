@@ -6,7 +6,7 @@
   "ownerDirective": "PRIMARY: Driver Intelligence Core (real profit, rental, GPS history, OCR queue). P1 APK poll parallel — не freeze на EAS.",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
   "nextImplementationTarget": "Field validation of analytics backfill + stop zone insights on physical device",
-  "executionNotes": "Analytics backfill from GPS+shift history (24h cooldown). Route efficiency median on dashboard. Repo safety gates active. Heatmaps blocked.",
+  "executionNotes": "Field validation 8/8 + blockers UI + FGS poll 30s. Unified profit: timeline/dashboard/HUD/handoff/route groups. CI: test:field-validation + test:shift-economics. Device gate: owner completes checklist on phone.",
   "priorities": [
     {
       "id": "driver-intelligence-core",
