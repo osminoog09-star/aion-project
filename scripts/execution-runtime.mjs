@@ -1,29 +1,14 @@
 /**
- * Autonomous execution runtime SoT + Cursor [AION ACTIVE] visibility.
- * Canonical: src/content/execution-runtime.json
+ * Autonomous execution runtime + Russian owner narration [AION АКТИВЕН]
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { appendExecutionFeed } from "./execution-feed.mjs";
+import { buildTimelineRu, narrateAionActiveRu, PHASE_OWNER } from "./execution-owner-ru.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RUNTIME_FILE = path.join(__dirname, "../src/content/execution-runtime.json");
-
-const PHASE_LABELS = {
-  idle: "IDLE",
-  planning: "PLANNING",
-  analyzing: "ANALYZING",
-  coding: "CODING",
-  validating: "VALIDATING",
-  reviewing: "REVIEWING",
-  deploying: "DEPLOYING",
-  blocked: "BLOCKED",
-  recovering: "RECOVERING",
-  waiting_approval: "WAITING_APPROVAL",
-  waiting_review: "WAITING_REVIEW",
-  completed: "COMPLETED",
-};
 
 const PHASE_FEED_TYPES = {
   planning: "execution_started",
@@ -64,20 +49,9 @@ function writeDoc(doc) {
   fs.writeFileSync(RUNTIME_FILE, `${JSON.stringify(doc, null, 2)}\n`, "utf8");
 }
 
-function logPhase(phase, message) {
-  const label = PHASE_LABELS[phase] ?? String(phase).toUpperCase();
-  console.log(`[${label}] ${message}`);
-}
-
-function logAionActive({ phase, task, next, subsystem, progress }) {
-  console.log("");
-  console.log("[AION ACTIVE]");
-  console.log(`phase: ${phase}`);
-  console.log(`task: ${task || "—"}`);
-  if (subsystem) console.log(`subsystem: ${subsystem}`);
-  if (progress) console.log(`progress: ${progress}`);
-  console.log(`next: ${next || "—"}`);
-  console.log("");
+function logPhaseRu(phase, message) {
+  const meta = PHASE_OWNER[phase] ?? { label: phase };
+  console.log(`[${meta.icon} ${meta.label}] ${message}`);
 }
 
 const now = new Date().toISOString();
@@ -90,11 +64,12 @@ if (!doc.runtime && doc.state) {
 }
 
 if (hasFlag("--banner")) {
-  logAionActive({
+  narrateAionActiveRu({
     phase: prev.phase ?? prev.status ?? "idle",
     task: prev.currentTask,
+    reasoning: prev.reasoning,
     next: prev.nextStep,
-    subsystem: prev.subsystem,
+    confidence: prev.confidence,
     progress: prev.validationProgress,
   });
   process.exit(0);
@@ -104,12 +79,13 @@ if (hasFlag("--heartbeat")) {
   doc.heartbeats = [{ at: now }, ...(doc.heartbeats ?? [])].slice(0, 48);
   doc.runtime = { ...prev, updatedAt: now, heartbeatAt: now };
   writeDoc(doc);
-  logAionActive({
+  narrateAionActiveRu({
     phase: prev.phase ?? prev.status,
-    task: prev.currentTask,
-    next: prev.nextStep ?? "continue",
-    subsystem: prev.subsystem,
-    progress: prev.validationProgress,
+    task: prev.currentTask || "Продолжаю работу…",
+    reasoning: prev.reasoning,
+    next: prev.nextStep ?? "продолжить",
+    confidence: prev.confidence,
+    progress: prev.validationProgress ?? "работа в процессе",
   });
   process.exit(0);
 }
@@ -120,11 +96,15 @@ const phase = waitingReview
   : (arg("--phase") ?? arg("--status") ?? prev.phase ?? prev.status);
 
 const currentTask = arg("--task") ?? prev.currentTask;
+const reasoning = arg("--reasoning") ?? prev.reasoning;
+const nextStep = arg("--next") ?? prev.nextStep;
+const confidence = arg("--confidence") ? Number.parseFloat(arg("--confidence")) : prev.confidence;
+
 const summary =
   arg("--summary") ??
   (waitingReview
-    ? `Ожидание Apply/Review (${arg("--pending") ?? prev.pendingReviewCount ?? "?"} файлов)`
-    : `${phase}: ${currentTask}`);
+    ? `Ожидание Apply в Cursor (${arg("--pending") ?? prev.pendingReviewCount ?? "?"} изменений)`
+    : `${PHASE_OWNER[phase]?.label ?? phase}: ${currentTask}`);
 
 const prevPhase = prev.phase ?? prev.status;
 const phaseChanged = phase !== prevPhase;
@@ -137,7 +117,9 @@ if (arg("--routes")) lastValidation.routes = arg("--routes");
 
 const lastCompleted =
   arg("--last-completed") ??
-  (phaseChanged && prevPhase !== "idle" ? `${prevPhase}: ${prev.currentTask}` : prev.lastCompletedAction);
+  (phaseChanged && prevPhase !== "idle"
+    ? `${PHASE_OWNER[prevPhase]?.label ?? prevPhase}: ${prev.currentTask}`
+    : prev.lastCompletedAction);
 
 const retryCount = arg("--retry")
   ? Number.parseInt(arg("--retry"), 10)
@@ -147,23 +129,25 @@ const retryCount = arg("--retry")
       ? 0
       : (prev.retryCount ?? 0);
 
+const timelineRu = buildTimelineRu(phase, currentTask, reasoning);
+
 doc.runtime = {
   ...prev,
   status: phase,
   phase,
   currentTask,
   subsystem: arg("--subsystem") ?? prev.subsystem,
-  reasoning: arg("--reasoning") ?? prev.reasoning,
-  confidence: arg("--confidence") ? Number.parseFloat(arg("--confidence")) : prev.confidence,
+  reasoning,
+  confidence,
   files: arg("--files") ? arg("--files").split(",").map((s) => s.trim()) : prev.files,
   commitCandidate: arg("--commit") ?? prev.commitCandidate,
   blocker:
     arg("--blocker") === "null" || arg("--blocker") === ""
       ? null
       : (arg("--blocker") ??
-        (phase === "blocked" ? arg("--reasoning") ?? prev.reasoning : null) ??
+        (phase === "blocked" ? reasoning : null) ??
         (phase === "blocked" ? prev.blocker : null)),
-  nextStep: arg("--next") ?? prev.nextStep,
+  nextStep,
   lastCompletedAction: lastCompleted ?? prev.lastCompletedAction ?? null,
   retryCount,
   validationProgress:
@@ -197,29 +181,40 @@ if (phaseChanged && !hasFlag("--skip-feed")) {
   const feedType = PHASE_FEED_TYPES[phase];
   if (feedType) {
     feedEventId = appendExecutionFeed({
-      title: `Runtime → ${phase}`,
+      title: timelineRu.titleRu,
       summary,
       eventType: feedType,
-      reasoning: doc.runtime.reasoning,
+      reasoning,
       files: doc.runtime.files,
     });
   }
 }
 
-doc.timeline = [{ at: now, phase, summary, feedEventId }, ...(doc.timeline ?? [])].slice(0, 64);
+doc.timeline = [
+  {
+    at: now,
+    phase,
+    summary,
+    feedEventId,
+    ...timelineRu,
+    confidence: confidence ?? undefined,
+  },
+  ...(doc.timeline ?? []),
+].slice(0, 64);
 doc.heartbeats = [{ at: now }, ...(doc.heartbeats ?? [])].slice(0, 48);
 doc.lastUpdated = now.slice(0, 10);
 
 writeDoc(doc);
-logPhase(phase, summary);
-logAionActive({
+logPhaseRu(phase, summary);
+narrateAionActiveRu({
   phase,
   task: currentTask,
-  next: doc.runtime.nextStep,
-  subsystem: doc.runtime.subsystem,
+  reasoning,
+  next: nextStep,
+  confidence,
   progress: doc.runtime.validationProgress,
 });
 
 if (ACTIVE_PHASES.has(phase) && !hasFlag("--no-hint")) {
-  console.log("[AION] Tip: npm run execution:daemon — heartbeat every 12s during long work");
+  console.log("[AION] Подсказка: npm run execution:daemon — сигнал каждые 12 сек, чтобы AI не казался «замёрзшим»");
 }

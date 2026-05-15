@@ -12,6 +12,7 @@ import {
   HEARTBEAT_ACTIVE_MS,
   HEARTBEAT_IDLE_MS,
 } from "@/contracts/execution-runtime";
+import { CONTROL_MODE_RU, ownerControlMode } from "@/lib/operations/execution-owner-ru";
 import { getLocalStrategicPriorities } from "@/lib/strategic-priorities";
 import deploymentJson from "@/content/deployment-status.json";
 import type { DeploymentStatusPayload } from "@/contracts/deployment-status";
@@ -86,25 +87,25 @@ export function computeExecutionHealth(
     ? Math.max(0, nowMs - heartbeatMs)
     : HEARTBEAT_IDLE_MS + 1;
 
+  let health: ExecutionHealth;
   if (runtime.status === "blocked" || runtime.lastValidation.build === "failed") {
-    return { health: "blocked", heartbeatAgeMs, label: "blocked" };
+    health = "blocked";
+  } else if (runtime.status === "waiting_review" || runtime.status === "waiting_approval") {
+    health = "waiting_review";
+  } else if (runtime.status === "recovering") {
+    health = "active";
+  } else if (runtime.status === "completed" || runtime.status === "idle") {
+    health = "idle";
+  } else if (heartbeatAgeMs < HEARTBEAT_ACTIVE_MS) {
+    health = "active";
+  } else if (heartbeatAgeMs < HEARTBEAT_IDLE_MS) {
+    health = "idle";
+  } else {
+    health = "stale";
   }
-  if (runtime.status === "waiting_review" || runtime.status === "waiting_approval") {
-    return { health: "waiting_review", heartbeatAgeMs, label: "waiting_review" };
-  }
-  if (runtime.status === "recovering") {
-    return { health: "active", heartbeatAgeMs, label: "recovering" };
-  }
-  if (runtime.status === "completed" || runtime.status === "idle") {
-    return { health: "idle", heartbeatAgeMs, label: runtime.status };
-  }
-  if (heartbeatAgeMs < HEARTBEAT_ACTIVE_MS) {
-    return { health: "active", heartbeatAgeMs, label: "active" };
-  }
-  if (heartbeatAgeMs < HEARTBEAT_IDLE_MS) {
-    return { health: "idle", heartbeatAgeMs, label: "idle" };
-  }
-  return { health: "stale", heartbeatAgeMs, label: "stale" };
+
+  const mode = ownerControlMode(runtime, health);
+  return { health, heartbeatAgeMs, label: CONTROL_MODE_RU[mode] };
 }
 
 export function buildLiveExecutionView(doc: ExecutionRuntimeDocument) {

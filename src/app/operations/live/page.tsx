@@ -24,7 +24,7 @@ export default function OperationsLivePage() {
       <p className="mt-3 max-w-3xl text-sm text-slate-400">{t("operations.pages.live.intro")}</p>
       <OperationsSubNav />
       <p className="mt-6 text-xs text-slate-500">
-        SSR snapshot: {view.health.label} · обновление каждые 8с через API
+        Снимок: {view.health.label} · панель обновляется каждые 8 секунд
       </p>
       <div className="mt-8">
         <LiveExecutionPanel />

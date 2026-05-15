@@ -1,61 +1,50 @@
 ---
-description: Live autonomous execution visibility — portal + Cursor [AION ACTIVE] logs
+description: Live autonomous execution — Russian owner mode + [AION АКТИВЕН]
 globs: "**/*"
 alwaysApply: true
 ---
 
-# Live execution visibility (mandatory)
+# Live execution — Russian owner mode (mandatory)
 
-## Portal SoT
+## Owner UX = Russian only
 
-- `src/content/execution-runtime.json` (canonical)
-- `src/contracts/` — shared schemas
-- API: `GET/PATCH /api/execution-runtime`
-- UI: `/operations/live` (poll 8s)
+All owner-facing output: phases, validation, blockers, deploy, timeline, Cursor narration.
+Internal code/comments may stay English.
 
-## Cursor — NEVER silent during work
-
-Every phase change and every 12s during long tasks:
+## Cursor narration (every phase + heartbeat)
 
 ```bash
-npm run execution:phase -- --phase coding --task "..." --subsystem ... --reasoning "..." --confidence 0.85 --next "..." --progress "step"
-npm run execution:heartbeat   # or: npm run execution:daemon
-npm run execution:banner      # re-print [AION ACTIVE] block
-npm run execution:waiting-review -- --pending 5
-npm run execution:heal
-npm run execution:stale-recover
-npm run execution:finalize-live   # build + verify:routes + deploy:validate
+npm run execution:phase -- --phase coding --task "Человекочитаемая задача" --reasoning "Зачем" --next "Что дальше" --confidence 0.9 --progress "текущий шаг"
+npm run execution:heartbeat
+npm run execution:daemon
 ```
 
-Console format (script prints automatically):
+Script prints:
 
 ```
-[AION ACTIVE]
-phase: coding
-task: ...
-next: validate build
+[AION АКТИВЕН]
+Сейчас: ...
+Причина: ...
+Действие: ...
+Следующий шаг: ...
+Уверенность: N%
 ```
 
-## Phases (deterministic)
+## Diff abstraction for owner
 
-`idle | analyzing | planning | coding | validating | deploying | waiting_review | blocked | recovering | completed`
+In `--files` use real paths; portal shows human summaries ("Улучшена система heartbeat").
+Do not dump raw diffs as primary owner communication.
 
-Also allowed: `reviewing | waiting_approval`
+## After Apply
 
-## After owner Apply
+Resume automatically — `execution:phase --phase coding` — never ask "what next?"
 
-Resume with `execution:phase --phase coding` — **never ask "what next?"**
+## Portal
 
-## Self-healing
-
-On build/typecheck/deploy/route failure: `execution:heal` (retries deploy, escalates only if recovery confidence < 0.45).
-
-## Feed
-
-Phase transitions auto-append via `execution-runtime.mjs`. Milestones: `npm run feed:append`.
+`/operations/live` — owner control center (Russian cards, AI chronology, self-heal visibility).
 
 ## Do NOT
 
-- Fake heartbeat without work
-- Stream raw chain-of-thought
+- English-heavy owner messages (BLOCKED, build passed, etc.)
+- Fake heartbeat
 - Push aion-driver to portal repo

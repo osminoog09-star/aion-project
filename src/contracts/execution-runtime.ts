@@ -60,6 +60,12 @@ export type ExecutionRuntimeTimelineEvent = {
   phase: string;
   summary: string;
   feedEventId?: string | null;
+  /** Owner-facing Russian (human mode) */
+  titleRu?: string;
+  explanationRu?: string;
+  resultRu?: string;
+  icon?: string;
+  confidence?: number;
 };
 
 export type ExecutionRuntimeHeartbeat = { at: string };

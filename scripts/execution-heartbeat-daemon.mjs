@@ -29,7 +29,7 @@ function tick() {
   });
 }
 
-console.log(`[AION DAEMON] heartbeat every ${intervalMs / 1000}s (max ${maxMs / 1000}s)`);
+console.log(`[AION ПУЛЬС] сигнал каждые ${intervalMs / 1000} сек (макс ${maxMs / 1000} сек) — AI не «замирает»`);
 tick();
 
 const timer = setInterval(() => {
