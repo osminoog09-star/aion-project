@@ -1,6 +1,7 @@
 /**
  * Validate production operations routes. Updates deployment-status.json
  */
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -36,19 +37,40 @@ const HYDRATION_MARKERS = [
   "Architecture reviews",
 ];
 
+async function fetchHtml(url) {
+  try {
+    const res = await fetch(url, { method: "GET", redirect: "follow" });
+    return { status: res.status, html: await res.text() };
+  } catch (err) {
+    if (process.platform !== "win32") throw err;
+    const out = execFileSync(
+      "powershell",
+      [
+        "-NoProfile",
+        "-Command",
+        `$r = Invoke-WebRequest -Uri '${url.replace(/'/g, "''")}' -UseBasicParsing; Write-Output $r.StatusCode; Write-Output '---'; Write-Output $r.Content`,
+      ],
+      { encoding: "utf8", maxBuffer: 12 * 1024 * 1024 },
+    );
+    const sep = out.indexOf("---");
+    const status = Number.parseInt(out.slice(0, sep).trim(), 10);
+    const html = out.slice(sep + 3).replace(/^\r?\n/, "");
+    return { status: Number.isFinite(status) ? status : 0, html };
+  }
+}
+
 async function checkRoute(route) {
   const url = `${baseUrl}${route}`;
   try {
-    const res = await fetch(url, { method: "GET", redirect: "follow" });
-    const html = await res.text();
-    const ok = res.status >= 200 && res.status < 400;
+    const { status, html } = await fetchHtml(url);
+    const ok = status >= 200 && status < 400;
     const renderOk =
       ok &&
       html.length > 500 &&
       (route.includes("deployment")
         ? html.includes("deployment pipeline") || html.includes("Production deploy")
         : HYDRATION_MARKERS.some((m) => html.includes(m)) || html.includes("operations"));
-    return { status: ok ? "pass" : "fail", httpStatus: res.status, renderOk };
+    return { status: ok ? "pass" : "fail", httpStatus: status, renderOk };
   } catch {
     return { status: "fail", httpStatus: null, renderOk: false };
   }

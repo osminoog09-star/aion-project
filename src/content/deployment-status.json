@@ -20,7 +20,7 @@
     "notes": "Git connected: osminoog09-star/aion-project. Vercel GitHub App granted aion-project repo."
   },
   "lastProductionDeploy": {
-    "status": "in_progress",
+    "status": "ok",
     "deployedAt": null,
     "commit": "d8a2146",
     "commitFull": "d8a2146",
@@ -29,25 +29,91 @@
     "trigger": "git push master",
     "durationMs": null,
     "rollbackTarget": "GsrxHVBiU",
-    "notes": "Git linked; deploy triggered. Prior build failed TS check on deployment-status.json schema."
+    "notes": "All operations routes validated."
   },
   "routeValidation": {
-    "checkedAt": "2026-05-15T12:00:00Z",
+    "checkedAt": "2026-05-15T10:51:38.529Z",
     "baseUrl": "https://aion-com.vercel.app",
     "routes": {
-      "/operations": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/reviews": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/review-queue": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/priorities": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/execution": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/blockers": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/runtime": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/validation": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/deployment": { "status": "fail", "httpStatus": 404, "renderOk": false }
+      "/operations": {
+        "status": "pass",
+        "httpStatus": 200,
+        "renderOk": true
+      },
+      "/operations/reviews": {
+        "status": "pass",
+        "httpStatus": 200,
+        "renderOk": true
+      },
+      "/operations/review-queue": {
+        "status": "pass",
+        "httpStatus": 200,
+        "renderOk": true
+      },
+      "/operations/priorities": {
+        "status": "pass",
+        "httpStatus": 200,
+        "renderOk": true
+      },
+      "/operations/execution": {
+        "status": "pass",
+        "httpStatus": 200,
+        "renderOk": true
+      },
+      "/operations/blockers": {
+        "status": "pass",
+        "httpStatus": 200,
+        "renderOk": true
+      },
+      "/operations/runtime": {
+        "status": "pass",
+        "httpStatus": 200,
+        "renderOk": true
+      },
+      "/operations/validation": {
+        "status": "pass",
+        "httpStatus": 200,
+        "renderOk": true
+      },
+      "/operations/deployment": {
+        "status": "pass",
+        "httpStatus": 200,
+        "renderOk": true
+      }
     },
-    "allPassed": false
+    "allPassed": true
   },
   "deploymentTimeline": [
+    {
+      "at": "2026-05-15T10:51:38.529Z",
+      "kind": "validation_passed",
+      "summary": "All 9 routes passed (10039ms)",
+      "durationMs": 10039
+    },
+    {
+      "at": "2026-05-15T10:51:02.569Z",
+      "kind": "validation_failed",
+      "summary": "Production validation failed — stale or broken deploy",
+      "durationMs": 494
+    },
+    {
+      "at": "2026-05-15T10:50:50.580Z",
+      "kind": "validation_failed",
+      "summary": "Production validation failed — stale or broken deploy",
+      "durationMs": 546
+    },
+    {
+      "at": "2026-05-15T10:48:09.053Z",
+      "kind": "validation_failed",
+      "summary": "Production validation failed — stale or broken deploy",
+      "durationMs": 1680
+    },
+    {
+      "at": "2026-05-15T10:47:50.275Z",
+      "kind": "validation_failed",
+      "summary": "Production validation failed — stale or broken deploy",
+      "durationMs": 2343
+    },
     {
       "at": "2026-05-15T12:00:00Z",
       "kind": "git_connected",
@@ -61,9 +127,7 @@
       "commit": "94f96d0"
     }
   ],
-  "pipelineBlockers": [
-    "Vercel production build must pass (deployment-status.json schema aligned with TypeScript)"
-  ],
+  "pipelineBlockers": [],
   "ownerUnblock": {},
   "autonomousRecovery": [
     "npm run deploy:validate returns allPassed after successful Vercel production deploy"
