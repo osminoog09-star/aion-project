@@ -11,8 +11,9 @@
     "remoteUrl": "https://github.com/osminoog09-star/aion-project.git",
     "defaultBranch": "master",
     "githubRepoExists": true,
-    "lastPushAttempt": null,
-    "lastPushError": null
+    "lastPushAttempt": "2026-05-15T09:18:00Z",
+    "lastPushError": null,
+    "lastPushedCommit": "adb1208"
   },
   "vercelLinkage": {
     "projectLinkedLocally": true,
@@ -24,28 +25,74 @@
   "lastProductionDeploy": {
     "status": "stale",
     "deployedAt": null,
-    "commit": "485f899",
+    "commit": "adb1208",
     "commitFull": null,
     "deploymentUrl": null,
     "deploymentId": null,
     "trigger": "none",
     "durationMs": null,
     "rollbackTarget": null,
-    "notes": "Awaiting push to aion-project + Vercel production redeploy"
+    "notes": "Route validation failed — redeploy required."
   },
   "routeValidation": {
-    "checkedAt": null,
+    "checkedAt": "2026-05-15T09:19:09.915Z",
     "baseUrl": "https://aion-com.vercel.app",
     "routes": {
-      "/operations": { "status": "pending", "httpStatus": null, "renderOk": false },
-      "/operations/reviews": { "status": "pending", "httpStatus": null, "renderOk": false },
-      "/operations/review-queue": { "status": "pending", "httpStatus": null, "renderOk": false },
-      "/operations/priorities": { "status": "pending", "httpStatus": null, "renderOk": false },
-      "/operations/deployment": { "status": "pending", "httpStatus": null, "renderOk": false }
+      "/operations": {
+        "status": "fail",
+        "httpStatus": null,
+        "renderOk": false
+      },
+      "/operations/reviews": {
+        "status": "fail",
+        "httpStatus": null,
+        "renderOk": false
+      },
+      "/operations/review-queue": {
+        "status": "fail",
+        "httpStatus": null,
+        "renderOk": false
+      },
+      "/operations/priorities": {
+        "status": "fail",
+        "httpStatus": null,
+        "renderOk": false
+      },
+      "/operations/execution": {
+        "status": "fail",
+        "httpStatus": null,
+        "renderOk": false
+      },
+      "/operations/blockers": {
+        "status": "fail",
+        "httpStatus": null,
+        "renderOk": false
+      },
+      "/operations/runtime": {
+        "status": "fail",
+        "httpStatus": null,
+        "renderOk": false
+      },
+      "/operations/validation": {
+        "status": "fail",
+        "httpStatus": null,
+        "renderOk": false
+      },
+      "/operations/deployment": {
+        "status": "fail",
+        "httpStatus": null,
+        "renderOk": false
+      }
     },
     "allPassed": false
   },
   "deploymentTimeline": [
+    {
+      "at": "2026-05-15T09:19:09.915Z",
+      "kind": "validation_failed",
+      "summary": "Production validation failed — stale or broken deploy",
+      "durationMs": 613
+    },
     {
       "at": "2026-05-15",
       "kind": "infra_migration",
@@ -53,7 +100,9 @@
       "commit": null
     }
   ],
-  "pipelineBlockers": [],
+  "pipelineBlockers": [
+    "Production still stale: connect Vercel Git to osminoog09-star/aion-project and redeploy (or npm run deploy:pipeline with vercel login)"
+  ],
   "ownerUnblock": {
     "stepA_github": "Repo: https://github.com/osminoog09-star/aion-project (canonical)",
     "stepB_push": "cd aion-com && npm run git:remote && git push -u origin master",
