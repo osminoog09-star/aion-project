@@ -1,0 +1,150 @@
+{
+  "lastUpdated": "2026-05-15",
+  "constitutionVersion": "1.0",
+  "ownerDirective": "PRIMARY: Driver Intelligence Core (real profit, rental, GPS history, OCR queue). P1 APK poll parallel — не freeze на EAS.",
+  "editPolicy": "Product owner правит этот JSON (PR или прямой commit). Cursor читает перед каждым циклом и адаптирует execution order.",
+  "priorities": [
+    {
+      "id": "driver-intelligence-core",
+      "title": "Driver Intelligence Core",
+      "level": "critical",
+      "subsystemIds": ["mobile-app", "ocr", "background-drive"],
+      "status": "in_progress",
+      "rationale": "MASTER §11–12: модуль Driver должен быть полезен в реальной жизни до расширения экосистемы.",
+      "nextAction": "GPS trip store + stop points; OCR queue primary; post-shift analytics",
+      "setAt": "2026-05-15",
+      "setBy": "product-owner"
+    },
+    {
+      "id": "unified-shift-runtime",
+      "title": "Unified shift runtime + profit path",
+      "level": "critical",
+      "subsystemIds": ["mobile-app", "background-drive"],
+      "status": "in_progress",
+      "rationale": "MASTER §14–15: один runtime path, strict shift state machine.",
+      "nextAction": "Закрепить operationalCosts; без дублирующей математики в UI",
+      "setAt": "2026-05-15",
+      "setBy": "cursor"
+    },
+    {
+      "id": "ocr-production-queue",
+      "title": "OCR production queue",
+      "level": "high",
+      "subsystemIds": ["ocr"],
+      "status": "in_progress",
+      "rationale": "MASTER §18: retry, dedupe, offline, replay — без ручного ввода топлива.",
+      "nextAction": "Сделать queue primary path после fuel confirm modal",
+      "setAt": "2026-05-15",
+      "setBy": "product-owner"
+    },
+    {
+      "id": "apk-release-loop",
+      "title": "APK release loop (device-verified)",
+      "level": "high",
+      "subsystemIds": ["updates", "apk-channel", "release-ops"],
+      "status": "blocked",
+      "rationale": "MASTER §4: внешний wait EAS — poll, не idle всего цикла.",
+      "nextAction": "FINISHED b9d3c90a → manifest sync → deploy → Update Center",
+      "setAt": "2026-05-14",
+      "setBy": "product-owner"
+    },
+    {
+      "id": "background-runtime-production",
+      "title": "Android background runtime (production)",
+      "level": "high",
+      "subsystemIds": ["background-drive"],
+      "status": "experimental",
+      "rationale": "MASTER §26: FGS stability, reconnect, OEM — experimental path есть, production gate нет.",
+      "nextAction": "Field tests + BACKGROUND_TRACKING_PRODUCTION_READY gate",
+      "setAt": "2026-05-15",
+      "setBy": "cursor"
+    },
+    {
+      "id": "overlay-hud-evolution",
+      "title": "Overlay Driver HUD",
+      "level": "medium",
+      "subsystemIds": ["background-drive"],
+      "status": "in_progress",
+      "rationale": "MASTER §24: €/ч, rental profit, warnings — зависит от runtime.",
+      "nextAction": "Native HUD fields после unified runtime",
+      "setAt": "2026-05-15",
+      "setBy": "cursor"
+    },
+    {
+      "id": "ecosystem-control-portal",
+      "title": "Ecosystem control portal",
+      "level": "medium",
+      "subsystemIds": ["web-portal", "operations-center"],
+      "status": "in_progress",
+      "rationale": "MASTER §6–8: observability, audit, priorities, validation.",
+      "nextAction": "Priorities page + dependency graph visibility",
+      "setAt": "2026-05-15",
+      "setBy": "cursor"
+    },
+    {
+      "id": "route-heatmap-future",
+      "title": "Route + heatmap intelligence",
+      "level": "low",
+      "subsystemIds": ["mobile-app"],
+      "status": "not_started",
+      "rationale": "MASTER §19–21: только из real GPS — после trip store.",
+      "nextAction": "ChatGPT review geospatial storage schema",
+      "setAt": "2026-05-15",
+      "setBy": "product-owner"
+    },
+    {
+      "id": "link-cloud-relay",
+      "title": "AION Link cloud pairing",
+      "level": "low",
+      "subsystemIds": ["aion-link"],
+      "status": "blocked",
+      "rationale": "Backend RLS + protocol undecided.",
+      "nextAction": "Architecture review before implementation",
+      "setAt": "2026-05-14",
+      "setBy": "product-owner"
+    }
+  ],
+  "dependencyGraph": [
+    {
+      "id": "overlay-hud-full",
+      "title": "Overlay HUD advanced analytics",
+      "dependsOn": ["background-runtime-production", "unified-shift-runtime"],
+      "status": "blocked",
+      "reason": "MASTER §10: overlay before stable FGS/runtime — OEM risk"
+    },
+    {
+      "id": "heatmap-analytics",
+      "title": "Historical heatmaps",
+      "dependsOn": ["route-gps-store"],
+      "status": "blocked",
+      "reason": "MASTER §21: no fake heatmaps — requires trip history"
+    },
+    {
+      "id": "route-gps-store",
+      "title": "GPS trip history store",
+      "dependsOn": ["unified-shift-runtime", "background-runtime-production"],
+      "status": "in_progress",
+      "reason": "Geospatial phase §19–20"
+    },
+    {
+      "id": "post-shift-analytics",
+      "title": "Post-shift analytics engine",
+      "dependsOn": ["route-gps-store", "ocr-production-queue"],
+      "status": "blocked",
+      "reason": "MASTER §23: fuel + route + idle from real data"
+    },
+    {
+      "id": "time-intelligence",
+      "title": "Best hours / zones analytics",
+      "dependsOn": ["route-gps-store"],
+      "status": "blocked",
+      "reason": "MASTER §22: needs movement timeline"
+    }
+  ],
+  "cursorAdaptationRules": [
+    "Execute critical + high before medium/low unless blocked by dependencyGraph",
+    "blocked level or status=blocked → document in feed, pick next actionable node",
+    "experimental → no fully_done without validation evidence",
+    "User ownerDirective overrides default queue when explicit conflict"
+  ]
+}

@@ -8,11 +8,12 @@ alwaysApply: false
 
 ## Single source of truth (no parallel trackers)
 
-- **Repository JSON:** `src/content/ecosystem-status.json`, `src/content/roadmap-subsystem-extensions.json`, `src/content/roadmap-execution.json`, `src/content/ecosystem-implementation-feed.json`, `src/content/releases.json`.
+- **Repository JSON:** `src/content/ecosystem-status.json`, `src/content/roadmap-subsystem-extensions.json`, `src/content/roadmap-execution.json`, `src/content/strategic-priorities.json`, `src/content/ecosystem-implementation-feed.json`, `src/content/releases.json`.
+- **Constitution:** `.cursor/rules/aion-execution-constitution.mdc` (PRIMARY execution contract).
 - **Merge:** `getEcosystemStatus()` in `src/lib/ecosystem-data.ts` (extensions + execution bundle + optional Supabase).
 - **Cloud overlay:** `ecosystem_public_snapshots` kinds `portal_ecosystem`, `portal_roadmap_master` — see `src/lib/ecosystem/cloud-queries.ts`.
 - **Machine-readable:** `GET /api/aion/context` (includes `executionEngine` + `implementationFeed`), `GET /api/roadmap/execution`, `GET /api/implementation-feed`, plus slices on `/ai-context`.
-- **Human pages:** `/roadmap/execution`, `/operations`, `/operations/execution`, `/operations/timeline`, `/operations/blockers`, `/operations/runtime`, `/operations/validation`, `/operations/context`, `/control`, `/status`, `/roadmap`.
+- **Human pages:** `/roadmap/execution`, `/operations`, `/operations/priorities`, `/operations/execution`, `/operations/timeline`, `/operations/blockers`, `/operations/runtime`, `/operations/validation`, `/operations/context`, `/control`, `/status`, `/roadmap`.
 
 ## Cursor MUST NOT
 

@@ -16,6 +16,7 @@ export function OperationsSubNav() {
     { href: ecosystemRoutes.operationsBlockers, label: "Blockers" },
     { href: ecosystemRoutes.operationsRuntime, label: "Runtime" },
     { href: ecosystemRoutes.operationsValidation, label: "Validation" },
+    { href: ecosystemRoutes.operationsPriorities, label: "Priorities" },
     { href: ecosystemRoutes.operationsContext, label: "Context" },
     { href: ecosystemRoutes.roadmapExecution, label: "Queue" },
   ];

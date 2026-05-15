@@ -1,0 +1,51 @@
+---
+description: AION Master Execution Constitution — autonomous roadmap-first development
+globs: "**/*"
+alwaysApply: true
+---
+
+# AION Execution Constitution (PRIMARY)
+
+This rule supersedes fragmented micro-TZ workflows. All work aligns with roadmap SoT + production honesty.
+
+## SoT files (read every cycle)
+
+- `src/content/ecosystem-status.json`
+- `src/content/roadmap-execution.json`
+- `src/content/roadmap-subsystem-extensions.json`
+- `src/content/strategic-priorities.json` — **owner priorities + dependency graph**
+- `src/content/ecosystem-implementation-feed.json`
+- APIs: `/api/roadmap/execution`, `/api/strategic-priorities`, `/api/implementation-feed`
+
+## Autonomous loop (17 steps)
+
+Analyze roadmap → blockers → debt → status → feed → validation → runtime readiness → **strategic priorities** → pick target → plan → implement → validate → update roadmap/portal/feed → repeat.
+
+## MUST NOT
+
+- fake DONE / inflated readiness / fake AI metrics / placeholder analytics as real
+- duplicate runtime math / disconnected UI / hidden debt
+
+## Parallel execution
+
+EAS/deploy/APK/review waits **do not freeze** the ecosystem — continue next actionable priority.
+
+## ChatGPT review when
+
+architecture uncertain, Android lifecycle, geospatial store, OCR scaling, overlay/runtime, distributed sync.
+
+## PRIMARY product focus
+
+**Driver Intelligence Core** until genuinely useful: real profit, rental, OCR queue, GPS trip store, overlay HUD from unified runtime.
+
+## After meaningful work
+
+`npm run feed:append` with `--event-type`, `--reasoning`, `--confidence`, `--files`, `--runtime-impact`, `--apk-impact`.
+
+## Portal surfaces
+
+`/operations`, `/operations/priorities`, `/operations/execution`, `/operations/timeline`, `/operations/blockers`, `/operations/runtime`, `/operations/validation`
+
+## Owner priority control
+
+Edit `strategic-priorities.json` — Cursor adapts order; validate `dependencyGraph` before advanced overlay/heatmap work.

@@ -9,6 +9,7 @@ import type {
   ValidationMatrixRow,
 } from "@/lib/ecosystem-types";
 import { buildRoadmapExecutionPayload } from "@/lib/roadmap-execution";
+import { buildAutonomousNextTargets, getLocalStrategicPriorities } from "@/lib/strategic-priorities";
 
 export type SubsystemConfidenceRow = {
   id: string;
@@ -126,7 +127,8 @@ export function buildExecutionAuditView(
       eventType: ev.eventType,
     }));
 
-  const plannedNext: string[] = [];
+  const strategic = getLocalStrategicPriorities();
+  const plannedNext: string[] = buildAutonomousNextTargets(strategic);
   if (q?.nextImplementationTarget) plannedNext.push(q.nextImplementationTarget);
   if (eco.execution?.nextPriority) plannedNext.push(eco.execution.nextPriority);
   for (const s of eco.subsystems) {
@@ -136,7 +138,11 @@ export function buildExecutionAuditView(
   return {
     feed,
     eco,
-    nextTarget: q?.nextImplementationTarget ?? eco.execution?.currentPriority ?? "—",
+    nextTarget:
+      strategic.ownerDirective ||
+      q?.nextImplementationTarget ||
+      eco.execution?.currentPriority ||
+      "—",
     blockedTasks: [
       ...(q?.blockedTasks ?? []),
       ...(eco.execution?.blockedTasks ?? []),
@@ -145,7 +151,7 @@ export function buildExecutionAuditView(
     subsystemConfidence: buildSubsystemConfidenceRows(eco.subsystems),
     riskAreas: buildRiskAreas(eco),
     recentDecisions,
-    plannedNext: [...new Set(plannedNext)].slice(0, 8),
+    plannedNext: [...new Set(plannedNext)].slice(0, 12),
   };
 }
 

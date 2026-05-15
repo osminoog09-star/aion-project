@@ -23,6 +23,7 @@ export const ecosystemRoutes = {
   operationsBlockers: "/operations/blockers",
   operationsRuntime: "/operations/runtime",
   operationsValidation: "/operations/validation",
+  operationsPriorities: "/operations/priorities",
   roadmapExecution: "/roadmap/execution",
   core: "/core",
   studio: "/studio",

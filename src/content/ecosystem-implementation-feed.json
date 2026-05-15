@@ -4,6 +4,52 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-strategic-priorities",
+      "occurredAt": "2026-05-15",
+      "title": "Strategic priority control + dependency graph on portal",
+      "summary": "MASTER Constitution §8–10: strategic-priorities.json SoT, /operations/priorities, /api/strategic-priorities, dependency validation helpers, execution-audit merges owner directive; cursor constitution rule.",
+      "subsystemIds": ["operations-center", "web-portal", "roadmap-system"],
+      "eventType": "roadmap_updated",
+      "task": "Priority control system + dependency graph",
+      "reasoning": "Владелец управляет приоритетами через JSON без micro-TZ; Cursor адаптирует autonomous loop; overlay/heatmap blocked until deps satisfied.",
+      "changedFiles": [
+        "src/content/strategic-priorities.json",
+        "src/lib/strategic-priorities.ts",
+        "src/components/operations/PriorityControlPanels.tsx",
+        "src/app/operations/priorities/page.tsx",
+        "src/app/api/strategic-priorities/route.ts",
+        ".cursor/rules/aion-execution-constitution.mdc"
+      ],
+      "confidence": "high",
+      "runtimeImpact": "portal-only; guides driver execution order",
+      "apkImpact": "none",
+      "commitHash": null,
+      "repository": "aion-com",
+      "rollup": {
+        "fullyDone": [
+          "✅ /operations/priorities + API",
+          "✅ strategic-priorities.json + dependency graph",
+          "✅ aion-execution-constitution.mdc"
+        ],
+        "partiallyDone": ["🟨 Interactive priority editor (needs auth)"],
+        "notStarted": ["⬜ GPS trip store (dep node in_progress)"],
+        "technicalDebt": []
+      },
+      "stillMissing": ["Authenticated portal editor for priorities"],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "high",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      }
+    },
+    {
       "id": "evt-2026-05-15-driver-intelligence-rental",
       "occurredAt": "2026-05-15",
       "title": "Driver Intelligence Core: rental-adjusted profit + dashboard strip",

@@ -172,6 +172,51 @@ export type ImplementationFeedPayload = {
   validationMatrix: ValidationMatrixRow[];
 };
 
+/** Strategic priority control (MASTER §9). */
+export type StrategicPriorityLevel =
+  | "critical"
+  | "high"
+  | "medium"
+  | "low"
+  | "blocked"
+  | "experimental";
+
+export type StrategicPriorityStatus =
+  | "not_started"
+  | "in_progress"
+  | "done"
+  | "blocked";
+
+export type StrategicPriorityItem = {
+  id: string;
+  title: string;
+  level: StrategicPriorityLevel;
+  subsystemIds: string[];
+  status: StrategicPriorityStatus;
+  rationale: string;
+  nextAction: string;
+  setAt: string;
+  setBy: string;
+};
+
+export type ExecutionDependencyNode = {
+  id: string;
+  title: string;
+  dependsOn: string[];
+  status: StrategicPriorityStatus | "blocked";
+  reason: string;
+};
+
+export type StrategicPrioritiesPayload = {
+  lastUpdated: string;
+  constitutionVersion: string;
+  ownerDirective: string;
+  editPolicy: string;
+  priorities: StrategicPriorityItem[];
+  dependencyGraph: ExecutionDependencyNode[];
+  cursorAdaptationRules: string[];
+};
+
 export type ExecutionQueue = {
   currentActiveEpic: string;
   currentSubsystemFocus: string;
