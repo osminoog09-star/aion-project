@@ -1,10 +1,11 @@
 {
   "lastUpdated": "2026-05-15",
-  "constitutionVersion": "1.0",
+  "constitutionVersion": "2.0",
+  "autonomousOrchestration": "Cursor executes roadmap/priorities/deps; owner controls via /operations/priorities and observes execution/reviews/deployment — no manual ChatGPT relay.",
   "ownerDirective": "PRIMARY: Driver Intelligence Core (real profit, rental, GPS history, OCR queue). P1 APK poll parallel — не freeze на EAS.",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
-  "nextImplementationTarget": "Snapshot backfill for legacy shifts; monorepo/workspace CI isolation if repos merge",
-  "executionNotes": "GPS stop zone text patterns from real stops (cluster + evidence). Repo safety scripts isolate portal vs driver deploy. Heatmaps blocked.",
+  "nextImplementationTarget": "Route timeline intelligence UI; field validation of backfill + zone insights on device",
+  "executionNotes": "Analytics backfill from GPS+shift history (24h cooldown). Route efficiency median on dashboard. Repo safety gates active. Heatmaps blocked.",
   "priorities": [
     {
       "id": "driver-intelligence-core",
@@ -13,7 +14,7 @@
       "subsystemIds": ["mobile-app", "ocr", "background-drive"],
       "status": "in_progress",
       "rationale": "MASTER §11–12: модуль Driver должен быть полезен в реальной жизни до расширения экосистемы.",
-      "nextAction": "Snapshot backfill for pre-analytics shifts; field validation of zone insights",
+      "nextAction": "Route intelligence UX + device validation of backfill/zone insights",
       "setAt": "2026-05-15",
       "setBy": "product-owner"
     },
@@ -141,7 +142,7 @@
       "title": "Best hours / zones analytics",
       "dependsOn": ["route-gps-store", "post-shift-analytics"],
       "status": "in_progress",
-      "reason": "30d rollups + weekday/hour + GPS stop zone text on dashboard; backfill optional"
+      "reason": "Rollups + stop zones + backfill + route km/h median; route timeline UX next"
     }
   ],
   "cursorAdaptationRules": [

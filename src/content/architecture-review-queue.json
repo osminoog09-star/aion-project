@@ -52,5 +52,24 @@
       "escalationTriggers": ["low confidence", "multi-subsystem blast radius"]
     }
   ],
-  "requests": []
+  "requests": [
+    {
+      "id": "arv-2026-05-15-driver-portal-repo-layout",
+      "templateId": "dependency",
+      "title": "Driver vs Portal repository layout",
+      "status": "open",
+      "createdAt": "2026-05-15T12:00:00Z",
+      "subsystemIds": ["mobile-app", "web-portal", "operations-center"],
+      "confidence": "experimental",
+      "architectureConcern": "Local Expo driver and Next.js portal share misleading origin URL (aion-project); risk of portal overwrite on mistaken push.",
+      "proposedDirection": "Either dedicated aion-driver GitHub repo with EAS base directory, or monorepo with apps/driver + apps/portal and isolated CI/deploy workflows per package.",
+      "reasoning": "repo:verify:push blocks strict push today; long-term needs canonical layout without owner as manual relay.",
+      "runtimeConcern": null,
+      "scalingConcern": null,
+      "dependencyConcern": "time-intelligence and OTA depend on correct repo wiring",
+      "roadmapItemId": "driver-intelligence-core",
+      "dependencyNodeIds": ["route-gps-store", "post-shift-analytics"],
+      "commits": []
+    }
+  ]
 }

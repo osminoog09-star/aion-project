@@ -31,6 +31,40 @@
       "validation": { "web_build": "passed" }
     },
     {
+      "id": "evt-2026-05-15-analytics-backfill-route",
+      "occurredAt": "2026-05-15",
+      "title": "Shift analytics backfill + route efficiency from snapshots",
+      "summary": "aion-driver: backfillMissingShiftAnalytics rebuilds ShiftAnalyticsSnapshot from shift history + GPS sessions (no fake data); 24h cooldown; wired into historical hook. Median route km/h (moving) on intelligence strip. Constitution v2: owner observes /operations/* without ChatGPT relay.",
+      "subsystemIds": ["mobile-app", "driver-intelligence"],
+      "eventType": "analytics_engine_changed",
+      "task": "Driver Intelligence — snapshot backfill + route efficiency",
+      "reasoning": "Legacy shifts with GPS but no snapshot now feed rollups/stop zones without duplicate engines. Route metric from canonical snapshot.route only.",
+      "confidence": "high",
+      "runtimeImpact": "Dashboard refresh backfills up to 32 shifts then recomputes rollups/zones",
+      "apkImpact": "ota-safe",
+      "repository": "aion-driver",
+      "changedFiles": [
+        "features/analytics/engine/backfillShiftAnalyticsSnapshots.ts",
+        "features/analytics/hooks/useHistoricalDriverRollups.ts",
+        "features/analytics/engine/computeHistoricalDriverRollups.ts",
+        "components/driver/DriverIntelligenceStrip.tsx"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ backfillMissingShiftAnalytics (GPS≥5 pts)",
+          "✅ median route km/h on strip",
+          "✅ Orchestration constitution v2 in priorities"
+        ],
+        "partiallyDone": ["🟨 Route timeline intelligence UX"],
+        "notStarted": ["⬜ Historical heatmaps"],
+        "technicalDebt": ["Driver git remote must not target portal repo"]
+      },
+      "stillMissing": ["Device field validation of backfill counts"],
+      "blocked": [],
+      "impacts": { "release": "medium", "otaApk": "low", "backend": "none", "realtime": "none", "ux": "high", "cloud": "none" },
+      "validation": { "driver_typecheck": "passed" }
+    },
+    {
       "id": "evt-2026-05-15-stop-zone-patterns",
       "occurredAt": "2026-05-15",
       "title": "GPS stop zone patterns (text-only) + portal/driver repo safety",
