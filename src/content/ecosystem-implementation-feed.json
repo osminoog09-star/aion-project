@@ -4,6 +4,34 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-ocr-queue-primary",
+      "occurredAt": "2026-05-15",
+      "title": "OCR queue hardening — primary execution path",
+      "summary": "aion-driver: runOcrThroughQueue on Import screen, serialized queue storage, exponential backoff, dedupe/replay, stuck recovery, OcrQueueProcessor drain on reconnect.",
+      "subsystemIds": ["ocr", "mobile-app"],
+      "eventType": "ocr_pipeline_changed",
+      "task": "PRIMARY #1 OCR queue",
+      "reasoning": "Queue is now the only import OCR path; inline pipeline removed from UI; failures stay in queue for replay.",
+      "confidence": "high",
+      "runtimeImpact": "OCR jobs persisted with retry/backoff",
+      "apkImpact": "ota-safe",
+      "repository": "aion-driver",
+      "rollup": {
+        "fullyDone": [
+          "✅ runOcrThroughQueue primary",
+          "✅ Serialized RMW storage + backoff",
+          "✅ Processor reconnect drain"
+        ],
+        "partiallyDone": ["🟨 Headless GPS→trip store merge"],
+        "notStarted": ["⬜ Route timeline UI"],
+        "technicalDebt": []
+      },
+      "stillMissing": ["Headless FGS points in trip store"],
+      "blocked": [],
+      "impacts": { "release": "medium", "otaApk": "low", "backend": "none", "realtime": "none", "ux": "high", "cloud": "none" },
+      "validation": { "driver_typecheck": "passed" }
+    },
+    {
       "id": "evt-2026-05-15-priority-control-editor",
       "occurredAt": "2026-05-15",
       "title": "Editable Priority Control Panel + owner auth",

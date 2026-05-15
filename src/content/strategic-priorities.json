@@ -3,7 +3,7 @@
   "constitutionVersion": "1.0",
   "ownerDirective": "PRIMARY: Driver Intelligence Core (real profit, rental, GPS history, OCR queue). P1 APK poll parallel — не freeze на EAS.",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
-  "nextImplementationTarget": "OCR queue hardening (primary path) + GPS ingestion gateway merge headless batches",
+  "nextImplementationTarget": "Route timeline UI + headless GPS batches into trip store via ingestion gateway",
   "executionNotes": "Architecture review approved: JSON V1 GPS ok; prepare SQLite adapter; no heatmaps until route segmentation.",
   "priorities": [
     {
@@ -33,9 +33,9 @@
       "title": "OCR production queue",
       "level": "high",
       "subsystemIds": ["ocr"],
-      "status": "in_progress",
+      "status": "done",
       "rationale": "MASTER §18: retry, dedupe, offline, replay — без ручного ввода топлива.",
-      "nextAction": "Сделать queue primary path после fuel confirm modal",
+      "nextAction": "Route timeline UI + headless GPS→trip store merge",
       "setAt": "2026-05-15",
       "setBy": "product-owner"
     },
