@@ -42,7 +42,7 @@
       "Валидация: web_build passed для изменений портала; для client — согласованный gate в репо клиента"
     ],
     "collaborationWorkflow": [
-      "0) При FINISHED Android preview: `aion-com` → `npm run release:apk-manifest:sync <buildId>` (или workflow apk-manifest-from-eas) → commit манифеста → деплой портала → device check.",
+      "0) При FINISHED Android preview: `aion-project` → `npm run release:apk-manifest:sync <buildId>` (или workflow apk-manifest-from-eas) → commit манифеста → деплой портала → device check.",
       "1) Cursor читает /api/aion/context и /api/roadmap/execution.",
       "2) Cursor выбирает задачу по executionQueue и nextRecommendedStep подсистемы.",
       "2b) Внешний блокер только по ожиданию (EAS FINISHED, сеть, deploy, review): зафиксировать честно; не останавливать цикл — переключаться на следующий actionable пункт стека (2–9) без fake done для APK.",

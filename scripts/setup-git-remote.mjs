@@ -1,5 +1,5 @@
 /**
- * Configure canonical GitHub remote for aion-com autonomous deploys.
+ * Configure canonical GitHub remote for portal autonomous deploys (aion-project).
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
-const CANONICAL = "https://github.com/osminoog09-star/aion-com.git";
+const CANONICAL = "https://github.com/osminoog09-star/aion-project.git";
 
 function git(...args) {
   return spawnSync("git", args, { cwd: root, encoding: "utf8", shell: true });

@@ -27,7 +27,7 @@ alwaysApply: false
 
 ## Live implementation reporting
 
-- After a **meaningful** portal or cross-repo change, append an event: `npm run feed:append -- --title "…" --summary "…" [--commit HASH] [--repo aion-com|aion-driver] [--subsystems id1,id2] [--event-type implementation_finished] [--task "…"] [--reasoning "…"] [--confidence high|medium|experimental|unstable|blocked] [--files "path/a,path/b"] [--runtime-impact "…"] [--apk-impact "…"]` then tighten `rollup` / `validation` in `ecosystem-implementation-feed.json`.
+- After a **meaningful** portal or cross-repo change, append an event: `npm run feed:append -- --title "…" --summary "…" [--commit HASH] [--repo aion-project|aion-driver] [--subsystems id1,id2] [--event-type implementation_finished] [--task "…"] [--reasoning "…"] [--confidence high|medium|experimental|unstable|blocked] [--files "path/a,path/b"] [--runtime-impact "…"] [--apk-impact "…"]` then tighten `rollup` / `validation` in `ecosystem-implementation-feed.json`.
 - Keep `validationMatrix` honest: unknown/pending is better than fake **passed**.
 - Human audit: `/operations/execution`, `/operations/blockers`, `/operations/runtime`, `/operations/validation`; timeline: `/operations/timeline`; AI: `GET /api/implementation-feed` + `buildExecutionAuditView` data on operations pages.
 

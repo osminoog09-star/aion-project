@@ -7,13 +7,13 @@
       "id": "evt-2026-05-15-ai-orchestration-bridge",
       "occurredAt": "2026-05-15",
       "title": "AI orchestration bridge — architecture review queue",
-      "summary": "aion-com: /operations/reviews + /operations/review-queue, architecture-review-queue.json SoT, POST/PATCH /api/architecture-reviews, structured ChatGPT packets, npm run review:request, feed linkage. Owner observer-only.",
+      "summary": "aion-project: /operations/reviews + /operations/review-queue, architecture-review-queue.json SoT, POST/PATCH /api/architecture-reviews, structured ChatGPT packets, npm run review:request, feed linkage. Owner observer-only.",
       "subsystemIds": ["operations-center", "web-portal"],
       "eventType": "architecture_change",
       "task": "AI orchestration bridge",
       "reasoning": "End manual owner relay; Cursor self-escalates via portal queue while autonomous execution continues.",
       "confidence": "high",
-      "repository": "aion-com",
+      "repository": "aion-project",
       "rollup": {
         "fullyDone": [
           "✅ Review queue model + statuses",
@@ -120,12 +120,12 @@
       "id": "evt-2026-05-15-priority-control-editor",
       "occurredAt": "2026-05-15",
       "title": "Editable Priority Control Panel + owner auth",
-      "summary": "aion-com: /operations/priorities editor, OPERATIONS_OWNER_SECRET cookie auth, PUT /api/strategic-priorities with dependency validation + feed audit + roadmap target sync. aion-driver: GpsStorageAdapter + GpsIngestionGateway (architecture prep).",
+      "summary": "aion-project: /operations/priorities editor, OPERATIONS_OWNER_SECRET cookie auth, PUT /api/strategic-priorities with dependency validation + feed audit + roadmap target sync. aion-driver: GpsStorageAdapter + GpsIngestionGateway (architecture prep).",
       "subsystemIds": ["operations-center", "web-portal"],
       "eventType": "priority_changed",
       "reasoning": "Owner strategic control without micro-TZ; autonomous loop re-reads priorities after save.",
       "confidence": "high",
-      "repository": "aion-com+aion-driver",
+      "repository": "aion-project+aion-driver",
       "rollup": {
         "fullyDone": [
           "✅ Priority editor UI + owner login",
@@ -209,7 +209,7 @@
       "runtimeImpact": "portal-only; guides driver execution order",
       "apkImpact": "none",
       "commitHash": null,
-      "repository": "aion-com",
+      "repository": "aion-project",
       "rollup": {
         "fullyDone": [
           "✅ /operations/priorities + API",
@@ -293,7 +293,7 @@
       "id": "evt-2026-05-15-ai-execution-audit",
       "occurredAt": "2026-05-15",
       "title": "AI Execution Audit System on operations portal",
-      "summary": "aion-com: /operations/execution|blockers|runtime|validation, buildExecutionAuditView, OperationsSubNav, AuditFeedCard с reasoning/confidence/files; feed:append расширен audit-флагами.",
+      "summary": "aion-project: /operations/execution|blockers|runtime|validation, buildExecutionAuditView, OperationsSubNav, AuditFeedCard с reasoning/confidence/files; feed:append расширен audit-флагами.",
       "subsystemIds": ["operations-center", "web-portal", "roadmap-system"],
       "eventType": "implementation_finished",
       "task": "AI execution audit + operations subpages",
@@ -311,7 +311,7 @@
       "runtimeImpact": "read-only audit; driver runtime unchanged",
       "apkImpact": "none",
       "commitHash": null,
-      "repository": "aion-com",
+      "repository": "aion-project",
       "rollup": {
         "fullyDone": [
           "✅ Operations subpages + ExecutionAuditPanels",
@@ -344,7 +344,7 @@
       "subsystemIds": ["roadmap-system", "release-ops", "background-drive"],
       "activeEpicLabel": "Always-on drive: background shift + live profit + two-phone Link relay",
       "commitHash": null,
-      "repository": "aion-com",
+      "repository": "aion-project",
       "rollup": {
         "fullyDone": [],
         "partiallyDone": ["🟨 Политика не-freeze при EAS/deploy/review"],
@@ -369,11 +369,11 @@
       "id": "evt-2026-05-14-release-automation-bg-foundation",
       "occurredAt": "2026-05-14",
       "title": "Release automation (EAS→manifest) + experimental Android location FGS path",
-      "summary": "aion-com: sync-apk-manifest-from-eas.mjs + npm run release:apk-manifest:sync + workflow apk-manifest-from-eas.yml. aion-driver: expo-task-manager, tasks/shiftLocationTask, ExperimentalTaskManagerLocationAdapter (EXPO_PUBLIC_EXPERIMENTAL_BG_LOCATION=1), ACCESS_BACKGROUND_LOCATION + expo-location isAndroidBackgroundLocationEnabled; versionCode 6. BACKGROUND_TRACKING_PRODUCTION_READY остаётся false.",
+      "summary": "aion-project: sync-apk-manifest-from-eas.mjs + npm run release:apk-manifest:sync + workflow apk-manifest-from-eas.yml. aion-driver: expo-task-manager, tasks/shiftLocationTask, ExperimentalTaskManagerLocationAdapter (EXPO_PUBLIC_EXPERIMENTAL_BG_LOCATION=1), ACCESS_BACKGROUND_LOCATION + expo-location isAndroidBackgroundLocationEnabled; versionCode 6. BACKGROUND_TRACKING_PRODUCTION_READY остаётся false.",
       "subsystemIds": ["release-ops", "background-drive", "mobile-app"],
       "activeEpicLabel": "Always-on drive: background shift + live profit + two-phone Link relay",
       "commitHash": null,
-      "repository": "aion-com+aion-driver",
+      "repository": "aion-project+aion-driver",
       "rollup": {
         "fullyDone": [],
         "partiallyDone": [
@@ -410,8 +410,8 @@
       "summary": "aion-driver: 1.0.4/5 (86a7681). Новый EAS preview f71cec0a-a936-41e6-838d-476be202e789 — IN_QUEUE; apkUrl в манифесте ждёт FINISHED. В releases.json зафиксирован последний FINISHED 1.0.3 артефакт (4df2899b) для ops, не как 1.0.4. Фон/Link/profit — без изменения кода noop.",
       "subsystemIds": ["mobile-app", "release-ops"],
       "activeEpicLabel": "Update transparency completion",
-      "commitHash": "577c337 (aion-com) + 86a7681 (aion-driver)",
-      "repository": "aion-com+aion-driver",
+      "commitHash": "577c337 (aion-project) + 86a7681 (aion-driver)",
+      "repository": "aion-project+aion-driver",
       "rollup": {
         "fullyDone": [],
         "partiallyDone": [
@@ -447,7 +447,7 @@
       "subsystemIds": ["background-drive", "aion-link", "dashboard", "mobile-app"],
       "activeEpicLabel": "Always-on drive: background shift + live profit + two-phone Link relay",
       "commitHash": null,
-      "repository": "aion-com+aion-driver",
+      "repository": "aion-project+aion-driver",
       "rollup": {
         "fullyDone": [],
         "partiallyDone": [
@@ -484,7 +484,7 @@
       "subsystemIds": ["roadmap-system", "web-portal", "operations-center"],
       "activeEpicLabel": "Master roadmap UI",
       "commitHash": "96e2120",
-      "repository": "aion-com",
+      "repository": "aion-project",
       "rollup": {
         "fullyDone": [],
         "partiallyDone": [
@@ -517,7 +517,7 @@
       "summary": "Hero, metadata, nav, ecosystem JSON vision; Driver как модуль.",
       "subsystemIds": ["web-portal"],
       "commitHash": "0032b55",
-      "repository": "aion-com",
+      "repository": "aion-project",
       "rollup": {
         "fullyDone": ["✅ Копирайт и SEO основных маршрутов"],
         "partiallyDone": ["🟨 Подсистемные описания — по мере появления новых модулей"],
@@ -571,7 +571,7 @@
       "id": "apk_build",
       "label": "APK / native pipeline",
       "lastKnown": "unknown",
-      "evidence": "Вне aion-com (aion-driver / EAS)"
+      "evidence": "Вне aion-project (aion-driver / EAS)"
     },
     {
       "id": "ota_publish",

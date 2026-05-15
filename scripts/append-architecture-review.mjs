@@ -137,7 +137,7 @@ feed.items = [
     task: `architecture-review:${id}`,
     reasoning,
     confidence,
-    repository: "aion-com",
+    repository: "aion-project",
     rollup: { fullyDone: ["✅ Review request queued"], partiallyDone: [], notStarted: [], technicalDebt: [] },
     stillMissing: [],
     blocked: [],

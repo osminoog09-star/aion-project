@@ -2,7 +2,7 @@
  * Append one event to src/content/ecosystem-implementation-feed.json
  * Usage:
  *   node scripts/append-implementation-feed.mjs --title "..." --summary "..." \
- *     [--commit abc] [--repo aion-com] [--subsystems web-portal,operations-center] \
+ *     [--commit abc] [--repo aion-project] [--subsystems web-portal,operations-center] \
  *     [--event-type implementation_finished] [--reasoning "..."] [--task "..."] \
  *     [--confidence high|medium|experimental|unstable|blocked] \
  *     [--files "path/a,path/b"] [--runtime-impact "..."] [--apk-impact "..."]
@@ -29,7 +29,7 @@ if (!title || !summary) {
 }
 
 const commitHash = arg("--commit");
-const repository = arg("--repo") ?? "aion-com";
+const repository = arg("--repo") ?? "aion-project";
 const subRaw = arg("--subsystems");
 const subsystemIds = subRaw ? subRaw.split(",").map((s) => s.trim()).filter(Boolean) : ["operations-center"];
 const eventType = arg("--event-type") ?? "implementation_finished";

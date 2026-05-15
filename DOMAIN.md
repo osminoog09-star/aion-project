@@ -30,7 +30,7 @@
 
 ## Subpath / multi-product
 
-- Один Next.js-проект (`aion-com`): сегменты `app/aionproject`, `app/roadmap`, … без `basePath` — проще SEO и ссылки.
+- Один Next.js-проект (repo `aion-project`): сегменты `app/aionproject`, `app/roadmap`, … без `basePath` — проще SEO и ссылки.
 - Новые продукты: добавляйте `app/<product>/page.tsx` и константы в `src/lib/ecosystem-routes.ts`.
 
 ## SEO (вложенные маршруты)

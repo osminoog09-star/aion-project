@@ -46,7 +46,7 @@ async function appendReviewFeedEvent(input: {
       task: `architecture-review:${input.reviewId}`,
       reasoning: input.summary,
       confidence: input.confidence ?? "medium",
-      repository: "aion-com",
+      repository: "aion-project",
       rollup: {
         fullyDone: [`✅ Review queue ${input.eventType}`],
         partiallyDone: [],

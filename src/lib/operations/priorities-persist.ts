@@ -40,7 +40,7 @@ async function appendPriorityAuditFeed(audit: PriorityChangeAudit): Promise<stri
     eventType: "priority_changed",
     reasoning: audit.reason,
     confidence: "high" as const,
-    repository: "aion-com",
+    repository: "aion-project",
     priorityAudit: audit,
     rollup: {
       fullyDone: ["✅ Priority panel save"],

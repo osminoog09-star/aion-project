@@ -35,7 +35,7 @@ status.gitLinkage.githubRepoExists = false;
 status.gitLinkage.lastPushError = (ls.stderr || ls.stdout || "not found").trim();
 fs.writeFileSync(statusPath, `${JSON.stringify(status, null, 2)}\n`);
 
-console.error("\n⬜ BLOCKER: GitHub repo missing. Owner one-time action:\n");
-console.error(status.ownerUnblock.stepA_github);
-console.error("\nThen run: npm run owner:unblock-check\n");
+console.error("\n⬜ BLOCKER: GitHub repo unreachable:", remote);
+console.error("Expected canonical:", status.canonicalGitHubRepo ?? "osminoog09-star/aion-project");
+console.error("\nFix: npm run git:remote && verify https://github.com/osminoog09-star/aion-project\n");
 process.exit(2);

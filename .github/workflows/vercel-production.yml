@@ -47,7 +47,7 @@ jobs:
             --title "Production deploy succeeded" \
             --summary "Vercel production deploy + operations routes validated (${{ github.sha }})" \
             --event-type implementation_finished \
-            --repo aion-com \
+            --repo aion-project \
             --confidence high \
             --subsystems operations-center,web-portal
 
@@ -58,7 +58,7 @@ jobs:
             --title "Production deploy FAILED" \
             --summary "Vercel deploy or route validation failed — see Actions log (${{ github.sha }})" \
             --event-type validation_failed \
-            --repo aion-com \
+            --repo aion-project \
             --confidence blocked \
             --subsystems operations-center,web-portal
 

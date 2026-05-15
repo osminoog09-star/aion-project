@@ -17,7 +17,7 @@ Copy `.env.example` → `.env.local` for local optional vars.
 
 ## Vercel — new project
 
-1. [Vercel](https://vercel.com) → **Add New** → **Project** → import the **`aion-com`** repository (root directory must be repo root if mono-repo, or set **Root Directory** to `aion-com`).
+1. [Vercel](https://vercel.com) → **Add New** → **Project** → import **`osminoog09-star/aion-project`** (Next.js app at repo root).
 2. **Framework Preset:** Next.js (auto).
 3. **Build:** `npm run build` · **Output:** Next default.
 4. **Environment Variables** (Production + Preview):
@@ -46,7 +46,7 @@ Copy `.env.example` → `.env.local` for local optional vars.
 
 ## Monorepo / root directory
 
-- If the Git repo root is **not** `aion-com`, set Vercel **Root Directory** to `aion-com` so this Next app owns **www.aion.com**; Driver stays a separate EAS deploy, linked from **`/aionproject`**.
+- Canonical GitHub repo: **`osminoog09-star/aion-project`**. Portal Next.js lives at repo root; Driver is a separate local repo / EAS deploy, linked from **`/aionproject`**.
 
 ## Updates
 
@@ -60,7 +60,7 @@ Copy `.env.example` → `.env.local` for local optional vars.
    npm run build && npm run verify:routes
    ```
 2. **Redeploy** latest `master`/`main`:
-   - Vercel Dashboard → Project `aion-com` → Deployments → **Redeploy** latest commit, or
+   - Vercel Dashboard → project **`aion-com`** (hostname) → Git **`aion-project`** → Deployments → **Redeploy**, or
    - `npx vercel login && npm run deploy:vercel` from this directory (`.vercel/project.json` must match), or
    - GitHub Actions workflow `vercel-production.yml` (set secrets `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`).
 3. Confirm production includes `/operations` (not only subpaths): if `/operations` is 404, the whole Operations section was never deployed.

@@ -1,80 +1,69 @@
 {
   "lastUpdated": "2026-05-15",
   "productionUrl": "https://aion-com.vercel.app",
-  "expectedGitRemote": "https://github.com/osminoog09-star/aion-com.git",
+  "canonicalGitHubRepo": "osminoog09-star/aion-project",
+  "expectedGitRemote": "https://github.com/osminoog09-star/aion-project.git",
   "vercelProjectId": "prj_ep8i1CoHfHdZKwto8gkF5XStzonK",
   "vercelOrgId": "team_4I1qT09taD3cqaGmhpCpoCxC",
-  "pipelineVersion": "1.1",
+  "pipelineVersion": "1.2",
   "gitLinkage": {
     "remoteConfigured": true,
-    "remoteUrl": "https://github.com/osminoog09-star/aion-com.git",
+    "remoteUrl": "https://github.com/osminoog09-star/aion-project.git",
     "defaultBranch": "master",
-    "githubRepoExists": false,
-    "lastPushAttempt": "2026-05-15T08:41:00Z",
-    "lastPushError": "Repository not found"
+    "githubRepoExists": true,
+    "lastPushAttempt": null,
+    "lastPushError": null
   },
   "vercelLinkage": {
     "projectLinkedLocally": true,
     "productionBranch": "master",
-    "autoDeployOnPush": false,
-    "notes": "Connect Vercel project to GitHub repo after repo created"
+    "autoDeployOnPush": true,
+    "gitRepository": "osminoog09-star/aion-project",
+    "notes": "Vercel project aion-com → Settings → Git → osminoog09-star/aion-project"
   },
   "lastProductionDeploy": {
     "status": "stale",
     "deployedAt": null,
-    "commit": "3ce6dfc",
+    "commit": "485f899",
     "commitFull": null,
     "deploymentUrl": null,
     "deploymentId": null,
     "trigger": "none",
     "durationMs": null,
     "rollbackTarget": null,
-    "notes": "Local HEAD 3ce6dfc not on production. Pre-/operations build live."
+    "notes": "Awaiting push to aion-project + Vercel production redeploy"
   },
   "routeValidation": {
-    "checkedAt": "2026-05-15T08:41:01.966Z",
+    "checkedAt": null,
     "baseUrl": "https://aion-com.vercel.app",
     "routes": {
-      "/operations": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/reviews": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/review-queue": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/priorities": { "status": "fail", "httpStatus": null, "renderOk": false },
-      "/operations/execution": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/blockers": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/runtime": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/validation": { "status": "fail", "httpStatus": 404, "renderOk": false },
-      "/operations/deployment": { "status": "fail", "httpStatus": 404, "renderOk": false }
+      "/operations": { "status": "pending", "httpStatus": null, "renderOk": false },
+      "/operations/reviews": { "status": "pending", "httpStatus": null, "renderOk": false },
+      "/operations/review-queue": { "status": "pending", "httpStatus": null, "renderOk": false },
+      "/operations/priorities": { "status": "pending", "httpStatus": null, "renderOk": false },
+      "/operations/deployment": { "status": "pending", "httpStatus": null, "renderOk": false }
     },
     "allPassed": false
   },
   "deploymentTimeline": [
     {
-      "at": "2026-05-15T08:41:00Z",
-      "kind": "validation_failed",
-      "summary": "Production route check: all /operations/* returned 404 or error",
-      "commit": "3ce6dfc"
-    },
-    {
       "at": "2026-05-15",
-      "kind": "pipeline_ready",
-      "summary": "Autonomous pipeline scripts + GH workflow + /operations/deployment committed locally",
-      "commit": "dc550ff"
+      "kind": "infra_migration",
+      "summary": "Canonical GitHub repo aligned to osminoog09-star/aion-project (was aion-com)",
+      "commit": null
     }
   ],
-  "pipelineBlockers": [
-    "BLOCKER-1: GitHub repo osminoog09-star/aion-com does not exist — one-time create required",
-    "BLOCKER-2: Vercel CLI auth not available in agent — one-time npx vercel login OR VERCEL_TOKEN secret"
-  ],
+  "pipelineBlockers": [],
   "ownerUnblock": {
-    "stepA_github": "Create empty repo https://github.com/new?name=aion-com&owner=osminoog09-star — NO README, NO .gitignore, NO license",
-    "stepB_push": "cd aion-com && git push -u origin master",
-    "stepC_vercel": "Vercel → aion-com → Settings → Git → Connect osminoog09-star/aion-com, Production branch master",
-    "stepD_secrets": "GitHub repo Settings → Secrets: VERCEL_TOKEN, VERCEL_ORG_ID=team_4I1qT09taD3cqaGmhpCpoCxC, VERCEL_PROJECT_ID=prj_ep8i1CoHfHdZKwto8gkF5XStzonK",
-    "stepE_alt": "OR: npx vercel login && npm run deploy:pipeline"
+    "stepA_github": "Repo: https://github.com/osminoog09-star/aion-project (canonical)",
+    "stepB_push": "cd aion-com && npm run git:remote && git push -u origin master",
+    "stepC_vercel": "Vercel → project aion-com → Settings → Git → Connect osminoog09-star/aion-project, branch master",
+    "stepD_secrets": "GitHub aion-project → Secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID",
+    "stepE_alt": "npx vercel login && npm run deploy:pipeline"
   },
   "autonomousRecovery": [
-    "After stepA+B: git push triggers vercel-production.yml (if secrets set)",
-    "npm run deploy:validate after any deploy",
+    "git push to aion-project triggers vercel-production.yml when secrets set",
+    "npm run deploy:validate after deploy",
     "npm run deploy:pipeline for CLI path"
   ]
 }
