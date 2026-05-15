@@ -176,9 +176,29 @@ export function LiveExecutionPanel() {
   const cards = timeline.slice(0, 14).map((ev, i) =>
     buildHumanTimelineCard(ev, timeline[i + 1]?.at ?? null, r.confidence),
   );
+  const latest = r.recentActions?.[0];
 
   return (
     <div className="space-y-8">
+      {(r.validationProgress || latest) ? (
+        <section className="rounded-2xl border border-cyan-400/50 bg-cyan-500/10 px-5 py-4">
+          <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-cyan-200">
+            Сейчас в работе (как в чате Cursor)
+          </p>
+          {r.validationProgress ? (
+            <p className="mt-2 text-base font-medium text-white">{r.validationProgress}</p>
+          ) : null}
+          {latest ? (
+            <p className="mt-2 font-mono text-sm text-slate-200">
+              [{latest.tag}] {latest.message}
+              {latest.file ? (
+                <span className="block truncate text-xs text-slate-500">{latest.file}</span>
+              ) : null}
+            </p>
+          ) : null}
+        </section>
+      ) : null}
+
       {/* Owner control banner */}
       <section
         className={`rounded-2xl border px-5 py-5 ${

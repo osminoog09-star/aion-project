@@ -11,8 +11,8 @@
     "reasoning": "Финиш мандата",
     "confidence": 0.88,
     "startedAt": "2026-05-15T13:22:56.670Z",
-    "updatedAt": "2026-05-15T15:28:57.309Z",
-    "heartbeatAt": "2026-05-15T15:28:57.309Z",
+    "updatedAt": "2026-05-15T15:31:17.407Z",
+    "heartbeatAt": "2026-05-15T15:31:17.407Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -33,15 +33,29 @@
     "lastFailure": null,
     "lastCompletedAction": "AI анализирует систему: Background runtime field matrix",
     "retryCount": 0,
-    "validationProgress": "Dashboard → чеклист 8/8 всегда виден",
+    "validationProgress": "работа в процессе",
     "progressPercent": 99,
     "etaMinutes": 60,
     "autonomousDepth": 1,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "aion-driver/screens/DashboardScreen.tsx",
+    "currentFile": "src/components/operations/LiveExecutionPanel.tsx",
     "recentActions": [
+      {
+        "at": "2026-05-15T15:30:58.142Z",
+        "tag": "CODE",
+        "message": "работа в процессе",
+        "file": "src/components/operations/LiveExecutionPanel.tsx",
+        "repo": "aion-com"
+      },
+      {
+        "at": "2026-05-15T15:29:10.528Z",
+        "tag": "CODE",
+        "message": "Dashboard intelligence strip + live runtime snapshot push",
+        "file": "aion-driver/components/driver/DriverIntelligenceStrip.tsx",
+        "repo": "aion-driver"
+      },
       {
         "at": "2026-05-15T15:26:55.302Z",
         "tag": "CODE",
@@ -554,6 +568,51 @@
   ],
   "heartbeats": [
     {
+      "at": "2026-05-15T15:31:17.407Z"
+    },
+    {
+      "at": "2026-05-15T15:31:07.414Z"
+    },
+    {
+      "at": "2026-05-15T15:30:58.142Z"
+    },
+    {
+      "at": "2026-05-15T15:30:57.515Z"
+    },
+    {
+      "at": "2026-05-15T15:30:47.388Z"
+    },
+    {
+      "at": "2026-05-15T15:30:37.358Z"
+    },
+    {
+      "at": "2026-05-15T15:30:27.442Z"
+    },
+    {
+      "at": "2026-05-15T15:30:17.374Z"
+    },
+    {
+      "at": "2026-05-15T15:30:07.365Z"
+    },
+    {
+      "at": "2026-05-15T15:29:57.360Z"
+    },
+    {
+      "at": "2026-05-15T15:29:47.396Z"
+    },
+    {
+      "at": "2026-05-15T15:29:37.463Z"
+    },
+    {
+      "at": "2026-05-15T15:29:27.375Z"
+    },
+    {
+      "at": "2026-05-15T15:29:17.343Z"
+    },
+    {
+      "at": "2026-05-15T15:29:10.528Z"
+    },
+    {
       "at": "2026-05-15T15:28:57.309Z"
     },
     {
@@ -651,51 +710,6 @@
     },
     {
       "at": "2026-05-15T15:23:57.119Z"
-    },
-    {
-      "at": "2026-05-15T15:23:47.105Z"
-    },
-    {
-      "at": "2026-05-15T15:23:37.163Z"
-    },
-    {
-      "at": "2026-05-15T15:23:27.109Z"
-    },
-    {
-      "at": "2026-05-15T15:23:17.146Z"
-    },
-    {
-      "at": "2026-05-15T15:23:07.129Z"
-    },
-    {
-      "at": "2026-05-15T15:22:57.265Z"
-    },
-    {
-      "at": "2026-05-15T15:22:47.091Z"
-    },
-    {
-      "at": "2026-05-15T15:22:37.059Z"
-    },
-    {
-      "at": "2026-05-15T15:22:27.099Z"
-    },
-    {
-      "at": "2026-05-15T15:22:17.126Z"
-    },
-    {
-      "at": "2026-05-15T15:22:07.015Z"
-    },
-    {
-      "at": "2026-05-15T15:21:57.169Z"
-    },
-    {
-      "at": "2026-05-15T15:21:47.002Z"
-    },
-    {
-      "at": "2026-05-15T15:21:37.008Z"
-    },
-    {
-      "at": "2026-05-15T15:21:26.972Z"
     }
   ]
 }
