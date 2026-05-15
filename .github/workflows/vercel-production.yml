@@ -1,5 +1,5 @@
-# Production deploy via VERCEL_TOKEN (GitHub secrets) or skip when using deploy-hook workflow.
-# Required secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# Production deploy via VERCEL_TOKEN (GitHub secrets).
+# Required: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
 
 name: Vercel production deploy
 
@@ -14,37 +14,51 @@ concurrency:
 
 jobs:
   deploy:
-    if: ${{ secrets.VERCEL_TOKEN != '' }}
     runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
+      - name: Check credentials
+        id: creds
+        run: |
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "VERCEL_TOKEN not set — skip token deploy (use vercel-deploy-hook.yml or Vercel Git)."
+            exit 0
+          fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
       - uses: actions/checkout@v4
+        if: steps.creds.outputs.configured == 'true'
 
       - uses: actions/setup-node@v4
+        if: steps.creds.outputs.configured == 'true'
         with:
           node-version: "20"
           cache: npm
 
-      - run: npm ci
-      - run: npm run build
-      - run: node scripts/verify-app-routes.mjs
+      - name: Build
+        if: steps.creds.outputs.configured == 'true'
+        run: |
+          npm ci
+          npm run build
+          node scripts/verify-app-routes.mjs
 
       - name: Deploy to Vercel Production
+        if: steps.creds.outputs.configured == 'true'
         run: npx --yes vercel@54 deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Wait for alias propagation
+        if: steps.creds.outputs.configured == 'true'
         run: sleep 60
 
       - name: Post-deploy route validation
+        if: steps.creds.outputs.configured == 'true'
         run: node scripts/post-deploy-validate.mjs --base https://aion-com.vercel.app
 
       - name: Record deploy in implementation feed
-        if: success()
+        if: success() && steps.creds.outputs.configured == 'true'
         run: |
           node scripts/append-implementation-feed.mjs \
             --title "Production deploy succeeded" \
@@ -55,21 +69,21 @@ jobs:
             --subsystems operations-center,web-portal
 
       - name: Record deploy failure in feed
-        if: failure()
+        if: failure() && steps.creds.outputs.configured == 'true'
         run: |
           node scripts/append-implementation-feed.mjs \
             --title "Production deploy FAILED" \
-            --summary "Vercel deploy or route validation failed — see Actions log (${{ github.sha }})" \
+            --summary "Vercel deploy or route validation failed (${{ github.sha }})" \
             --event-type validation_failed \
             --repo aion-project \
             --confidence blocked \
             --subsystems operations-center,web-portal
 
       - name: Commit deployment status (bot)
-        if: success() && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+        if: success() && steps.creds.outputs.configured == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add src/content/deployment-status.json src/content/ecosystem-implementation-feed.json || true
           git diff --staged --quiet || git commit -m "chore(deploy): update production deployment status [skip ci]"
-          git push || echo "Push skipped (permissions or no changes)"
+          git push || echo "Push skipped"
