@@ -230,9 +230,6 @@ export function LiveExecutionPanel() {
           {phaseMeta.icon} {phaseMeta.label}
         </p>
         <p className="mt-2 text-sm text-slate-200">{r.currentTask}</p>
-        {r.validationProgress ? (
-          <p className="mt-2 text-xs text-cyan-200/90">Сейчас: {r.validationProgress}</p>
-        ) : null}
         {r.retryCount != null && r.retryCount > 0 ? (
           <p className="mt-1 text-xs text-amber-300/90">Попытка восстановления: {r.retryCount}</p>
         ) : null}

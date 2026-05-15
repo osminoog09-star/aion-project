@@ -11,8 +11,8 @@
   "totalAutonomousTicks": 1,
   "autonomousDepth": 1,
   "ownerMandate": {
-    "active": true,
-    "labelRu": "Автономная работа (+ продление)",
+    "active": false,
+    "labelRu": "Сессия завершена — портал готов, ждём 8/8 на устройстве",
     "startedAt": "2026-05-15T16:00:00.000Z",
     "endsAt": "2026-05-15T16:30:00.000Z",
     "durationMs": 1800000
