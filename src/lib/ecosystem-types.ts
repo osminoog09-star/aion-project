@@ -117,7 +117,8 @@ export type ExecutionEventType =
   | "roadmap_updated"
   | "release_created"
   | "overlay_changed"
-  | "ocr_pipeline_changed";
+  | "ocr_pipeline_changed"
+  | "priority_changed";
 
 export type AiConfidenceLevel = "high" | "medium" | "experimental" | "unstable" | "blocked";
 
@@ -154,6 +155,7 @@ export type ImplementationFeedItem = {
   technicalDebtIntroduced?: string[];
   confidence?: AiConfidenceLevel;
   architectureReview?: ArchitectureReviewRecord;
+  priorityAudit?: PriorityChangeAudit;
 };
 
 export type ValidationMatrixRow = {
@@ -197,6 +199,21 @@ export type StrategicPriorityItem = {
   nextAction: string;
   setAt: string;
   setBy: string;
+  executionNotes?: string;
+};
+
+export type PriorityChangeRecord = {
+  path: string;
+  previousValue: string;
+  newValue: string;
+  affectedSubsystemIds?: string[];
+};
+
+export type PriorityChangeAudit = {
+  reason: string;
+  changedAt: string;
+  changedBy: string;
+  changes: PriorityChangeRecord[];
 };
 
 export type ExecutionDependencyNode = {
@@ -212,6 +229,8 @@ export type StrategicPrioritiesPayload = {
   constitutionVersion: string;
   ownerDirective: string;
   editPolicy: string;
+  executionNotes?: string;
+  nextImplementationTarget?: string;
   priorities: StrategicPriorityItem[];
   dependencyGraph: ExecutionDependencyNode[];
   cursorAdaptationRules: string[];

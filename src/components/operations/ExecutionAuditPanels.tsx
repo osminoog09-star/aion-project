@@ -252,5 +252,5 @@ export function ValidationDashboard({ view }: { view: ExecutionAuditView }) {
 export async function loadExecutionAuditView() {
   const { getEcosystemStatus, getLocalImplementationFeed } = await import("@/lib/ecosystem-data");
   const [feed, eco] = await Promise.all([Promise.resolve(getLocalImplementationFeed()), getEcosystemStatus()]);
-  return buildExecutionAuditView(feed, eco);
+  return await buildExecutionAuditView(feed, eco);
 }

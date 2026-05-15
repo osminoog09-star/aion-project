@@ -1,10 +1,13 @@
 import strategicPrioritiesJson from "@/content/strategic-priorities.json";
+import { createPortalSupabase } from "@/lib/supabase/portal-client";
 import type {
   ExecutionDependencyNode,
   StrategicPrioritiesPayload,
   StrategicPriorityItem,
   StrategicPriorityLevel,
 } from "@/lib/ecosystem-types";
+
+export const SNAPSHOT_KIND_STRATEGIC_PRIORITIES = "portal_strategic_priorities";
 
 const LEVEL_ORDER: Record<StrategicPriorityLevel, number> = {
   critical: 0,
@@ -17,6 +20,39 @@ const LEVEL_ORDER: Record<StrategicPriorityLevel, number> = {
 
 export function getLocalStrategicPriorities(): StrategicPrioritiesPayload {
   return strategicPrioritiesJson as StrategicPrioritiesPayload;
+}
+
+function parsePayload(raw: unknown): StrategicPrioritiesPayload | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as StrategicPrioritiesPayload;
+  if (!Array.isArray(o.priorities) || !Array.isArray(o.dependencyGraph)) return null;
+  return o;
+}
+
+export async function fetchCloudStrategicPriorities(
+  local: StrategicPrioritiesPayload,
+): Promise<StrategicPrioritiesPayload> {
+  const supabase = createPortalSupabase();
+  if (!supabase) return local;
+  const { data, error } = await supabase
+    .from("ecosystem_public_snapshots")
+    .select("payload, updated_at")
+    .eq("kind", SNAPSHOT_KIND_STRATEGIC_PRIORITIES)
+    .eq("is_public", true)
+    .order("updated_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error || !data?.payload) return local;
+  const cloud = parsePayload(data.payload);
+  if (!cloud) return local;
+  const localDate = local.lastUpdated;
+  const cloudDate = cloud.lastUpdated;
+  if (cloudDate >= localDate) return cloud;
+  return local;
+}
+
+export async function getStrategicPriorities(): Promise<StrategicPrioritiesPayload> {
+  return fetchCloudStrategicPriorities(getLocalStrategicPriorities());
 }
 
 export function sortPriorities(items: StrategicPriorityItem[]): StrategicPriorityItem[] {

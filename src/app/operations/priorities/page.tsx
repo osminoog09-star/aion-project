@@ -7,17 +7,27 @@ import {
   OwnerDirectivePanel,
   PriorityBoard,
 } from "@/components/operations/PriorityControlPanels";
-import { getLocalStrategicPriorities, buildAutonomousNextTargets } from "@/lib/strategic-priorities";
+import { PriorityControlEditor } from "@/components/operations/PriorityControlEditor";
+import { getEcosystemStatus } from "@/lib/ecosystem-data";
+import { isOwnerAuthenticated, isOwnerAuthConfigured } from "@/lib/operations/owner-auth";
+import { buildAutonomousNextTargets, getStrategicPriorities } from "@/lib/strategic-priorities";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export const metadata: Metadata = {
   title: "Strategic priorities — операции AION",
   description:
-    "Приоритеты владельца продукта, dependency graph и правила адаптации автономного Cursor.",
+    "Редактируемые приоритеты владельца, dependency graph и orchestration для автономного Cursor.",
 };
 
-export default function OperationsPrioritiesPage() {
-  const payload = getLocalStrategicPriorities();
+export const dynamic = "force-dynamic";
+
+export default async function OperationsPrioritiesPage() {
+  const [payload, eco, authenticated, authConfigured] = await Promise.all([
+    getStrategicPriorities(),
+    getEcosystemStatus(),
+    isOwnerAuthenticated(),
+    Promise.resolve(isOwnerAuthConfigured()),
+  ]);
   const autonomousTargets = buildAutonomousNextTargets(payload);
 
   return (
@@ -25,9 +35,8 @@ export default function OperationsPrioritiesPage() {
       <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-amber-400/90">Priority control</p>
       <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">Strategic priorities</h1>
       <p className="mt-3 max-w-3xl text-sm text-slate-400">
-        MASTER Constitution §9: владелец задаёт приоритеты в{" "}
-        <code className="font-mono text-cyan-300/90">src/content/strategic-priorities.json</code>. Cursor
-        адаптирует autonomous loop без постоянных micro-TZ.
+        Orchestration panel: owner edits persist to JSON (+ optional Supabase snapshot), roadmap target, and
+        implementation feed audit.
       </p>
       <p className="mt-2 text-xs text-slate-600">
         API:{" "}
@@ -41,7 +50,14 @@ export default function OperationsPrioritiesPage() {
       </p>
       <OperationsSubNav />
 
-      <div className="mt-8">
+      <PriorityControlEditor
+        initial={payload}
+        executionQueue={eco.executionQueue}
+        authConfigured={authConfigured}
+        initialAuthenticated={authenticated}
+      />
+
+      <div className="mt-10">
         <OwnerDirectivePanel payload={payload} />
       </div>
 
@@ -59,7 +75,7 @@ export default function OperationsPrioritiesPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">Приоритеты</h2>
+        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">Read-only board</h2>
         <PriorityBoard items={payload.priorities} />
       </section>
 
@@ -72,12 +88,6 @@ export default function OperationsPrioritiesPage() {
         <h2 className="text-xs font-bold uppercase tracking-widest text-violet-300/80">Cursor adaptation</h2>
         <CursorAdaptationRules rules={payload.cursorAdaptationRules} />
       </section>
-
-      <p className="mt-12 text-xs text-slate-600">
-        Изменить приоритеты: отредактируйте{" "}
-        <code className="font-mono text-slate-400">strategic-priorities.json</code> в репозитории aion-com и
-        задеплойте портал.
-      </p>
     </div>
   );
 }

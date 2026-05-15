@@ -4,6 +4,31 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-priority-control-editor",
+      "occurredAt": "2026-05-15",
+      "title": "Editable Priority Control Panel + owner auth",
+      "summary": "aion-com: /operations/priorities editor, OPERATIONS_OWNER_SECRET cookie auth, PUT /api/strategic-priorities with dependency validation + feed audit + roadmap target sync. aion-driver: GpsStorageAdapter + GpsIngestionGateway (architecture prep).",
+      "subsystemIds": ["operations-center", "web-portal"],
+      "eventType": "priority_changed",
+      "reasoning": "Owner strategic control without micro-TZ; autonomous loop re-reads priorities after save.",
+      "confidence": "high",
+      "repository": "aion-com+aion-driver",
+      "rollup": {
+        "fullyDone": [
+          "✅ Priority editor UI + owner login",
+          "✅ Persist JSON + audit feed",
+          "✅ Dependency hard validation (overlay)"
+        ],
+        "partiallyDone": ["🟨 Supabase snapshot on Vercel without service key"],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": ["Production Vercel FS write — use SUPABASE_SERVICE_ROLE"],
+      "blocked": [],
+      "impacts": { "release": "low", "otaApk": "none", "backend": "medium", "realtime": "none", "ux": "high", "cloud": "medium" },
+      "validation": { "web_build": "pending", "driver_typecheck": "pending" }
+    },
+    {
       "id": "evt-2026-05-15-gps-trip-store",
       "occurredAt": "2026-05-15",
       "title": "GPS trip history store (v1 foundation)",

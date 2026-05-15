@@ -2,7 +2,9 @@
   "lastUpdated": "2026-05-15",
   "constitutionVersion": "1.0",
   "ownerDirective": "PRIMARY: Driver Intelligence Core (real profit, rental, GPS history, OCR queue). P1 APK poll parallel — не freeze на EAS.",
-  "editPolicy": "Product owner правит этот JSON (PR или прямой commit). Cursor читает перед каждым циклом и адаптирует execution order.",
+  "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
+  "nextImplementationTarget": "OCR queue hardening (primary path) + GPS ingestion gateway merge headless batches",
+  "executionNotes": "Architecture review approved: JSON V1 GPS ok; prepare SQLite adapter; no heatmaps until route segmentation.",
   "priorities": [
     {
       "id": "driver-intelligence-core",
@@ -77,7 +79,8 @@
       "subsystemIds": ["web-portal", "operations-center"],
       "status": "in_progress",
       "rationale": "MASTER §6–8: observability, audit, priorities, validation.",
-      "nextAction": "Priorities page + dependency graph visibility",
+      "nextAction": "Auth hardening + Supabase write on Vercel prod",
+      "status": "done",
       "setAt": "2026-05-15",
       "setBy": "cursor"
     },

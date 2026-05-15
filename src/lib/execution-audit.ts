@@ -9,7 +9,7 @@ import type {
   ValidationMatrixRow,
 } from "@/lib/ecosystem-types";
 import { buildRoadmapExecutionPayload } from "@/lib/roadmap-execution";
-import { buildAutonomousNextTargets, getLocalStrategicPriorities } from "@/lib/strategic-priorities";
+import { buildAutonomousNextTargets, getStrategicPriorities } from "@/lib/strategic-priorities";
 
 export type SubsystemConfidenceRow = {
   id: string;
@@ -111,10 +111,10 @@ export function buildRiskAreas(eco: EcosystemStatus): RiskArea[] {
   return risks;
 }
 
-export function buildExecutionAuditView(
+export async function buildExecutionAuditView(
   feed: ImplementationFeedPayload,
   eco: EcosystemStatus,
-): ExecutionAuditView {
+): Promise<ExecutionAuditView> {
   const ex = buildRoadmapExecutionPayload(eco);
   const q = ex.executionQueue;
   const recentDecisions = feed.items
@@ -127,7 +127,7 @@ export function buildExecutionAuditView(
       eventType: ev.eventType,
     }));
 
-  const strategic = getLocalStrategicPriorities();
+  const strategic = await getStrategicPriorities();
   const plannedNext: string[] = buildAutonomousNextTargets(strategic);
   if (q?.nextImplementationTarget) plannedNext.push(q.nextImplementationTarget);
   if (eco.execution?.nextPriority) plannedNext.push(eco.execution.nextPriority);
