@@ -40,6 +40,10 @@ export type ExecutionRuntimeCore = {
   commitCandidate: string | null;
   blocker: string | null;
   nextStep: string;
+  lastCompletedAction?: string | null;
+  retryCount?: number;
+  validationProgress?: string | null;
+  recoveryConfidence?: number;
   branch?: string;
   dependencyTarget?: string;
   pendingReviewCount?: number;

@@ -1,5 +1,5 @@
 ---
-description: Live autonomous execution visibility — portal + Cursor progress logs
+description: Live autonomous execution visibility — portal + Cursor [AION ACTIVE] logs
 globs: "**/*"
 alwaysApply: true
 ---
@@ -9,35 +9,53 @@ alwaysApply: true
 ## Portal SoT
 
 - `src/content/execution-runtime.json` (canonical)
-- `src/contracts/` — shared schemas (no duplicate runtime types)
+- `src/contracts/` — shared schemas
 - API: `GET/PATCH /api/execution-runtime`
 - UI: `/operations/live` (poll 8s)
 
-## Cursor progress (every phase change + during long work)
+## Cursor — NEVER silent during work
+
+Every phase change and every 12s during long tasks:
 
 ```bash
-npm run execution:phase -- --phase planning --task "..." --subsystem ... --reasoning "..." --confidence 0.85 --next "..."
-npm run execution:heartbeat   # every 5–15s during active work
-npm run execution:waiting-review -- --pending 5   # when diff awaits Apply
-npm run execution:heal        # self-healing: typecheck, build, deploy:validate
+npm run execution:phase -- --phase coding --task "..." --subsystem ... --reasoning "..." --confidence 0.85 --next "..." --progress "step"
+npm run execution:heartbeat   # or: npm run execution:daemon
+npm run execution:banner      # re-print [AION ACTIVE] block
+npm run execution:waiting-review -- --pending 5
+npm run execution:heal
+npm run execution:stale-recover
+npm run execution:finalize-live   # build + verify:routes + deploy:validate
 ```
 
-Terminal must echo: `[PHASE] summary` (script does this).
+Console format (script prints automatically):
 
-## Status values
+```
+[AION ACTIVE]
+phase: coding
+task: ...
+next: validate build
+```
 
-`idle | planning | analyzing | coding | validating | reviewing | deploying | blocked | waiting_approval | waiting_review | completed`
+## Phases (deterministic)
 
-## After owner Apply/Accept
+`idle | analyzing | planning | coding | validating | deploying | waiting_review | blocked | recovering | completed`
 
-Resume autonomously — update phase to `coding` or `validating`, **no "what next?"**
+Also allowed: `reviewing | waiting_approval`
+
+## After owner Apply
+
+Resume with `execution:phase --phase coding` — **never ask "what next?"**
+
+## Self-healing
+
+On build/typecheck/deploy/route failure: `execution:heal` (retries deploy, escalates only if recovery confidence < 0.45).
+
+## Feed
+
+Phase transitions auto-append via `execution-runtime.mjs`. Milestones: `npm run feed:append`.
 
 ## Do NOT
 
+- Fake heartbeat without work
 - Stream raw chain-of-thought
-- Fake heartbeat without real work
-- Spam feed with log dumps (use runtime state + feed:append at milestones)
-
-## Commit runtime state
-
-Include `execution-runtime-state.json` in portal commits at cycle end (`validating` → `deploying` → `completed`).
+- Push aion-driver to portal repo

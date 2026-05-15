@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ExecutionRuntimeStatus, ValidationStepStatus } from "@/contracts/execution-runtime";
 import type { DeploymentStatusPayload } from "@/contracts/deployment-status";
 
@@ -21,6 +21,10 @@ type LiveApiResponse = {
     commitCandidate: string | null;
     blocker: string | null;
     nextStep: string;
+    lastCompletedAction?: string | null;
+    retryCount?: number;
+    validationProgress?: string | null;
+    recoveryConfidence?: number;
     branch?: string;
     dependencyTarget?: string;
     pendingReviewCount?: number;
@@ -111,6 +115,7 @@ function ValidationRow({ label, status }: { label: string; status: ValidationSte
 export function LiveExecutionPanel() {
   const [data, setData] = useState<LiveApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const timelineEndRef = useRef<HTMLDivElement>(null);
 
   const refresh = useCallback(async () => {
     try {
@@ -129,6 +134,10 @@ export function LiveExecutionPanel() {
     return () => clearInterval(id);
   }, [refresh]);
 
+  useEffect(() => {
+    timelineEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [data?.document.timeline[0]?.at]);
+
   if (error && !data) {
     return <p className="text-sm text-rose-300">API: {error}</p>;
   }
@@ -146,6 +155,15 @@ export function LiveExecutionPanel() {
         <p className="text-sm font-semibold">
           {badge.dot} {badge.text}
         </p>
+        <p className="mt-2 text-lg font-mono text-white">
+          heartbeat {Math.round(data.health.heartbeatAgeMs / 1000)}s ago
+        </p>
+        {r.validationProgress ? (
+          <p className="mt-1 text-xs text-cyan-200/90">progress: {r.validationProgress}</p>
+        ) : null}
+        {r.retryCount != null && r.retryCount > 0 ? (
+          <p className="mt-1 text-xs text-amber-300/90">retries: {r.retryCount}</p>
+        ) : null}
         <p className="mt-2 text-xs opacity-80">
           poll {POLL_MS / 1000}s · {data.meta.persistedVia === "build_snapshot" ? "снимок main" : "filesystem"}
         </p>
@@ -182,6 +200,14 @@ export function LiveExecutionPanel() {
           {r.lastFailure ? (
             <p className="mt-2 text-xs text-amber-300/90">
               Последний сбой ({r.lastFailure.kind}): {r.lastFailure.message}
+            </p>
+          ) : null}
+          {r.lastCompletedAction ? (
+            <p className="mt-2 text-xs text-slate-500">last: {r.lastCompletedAction}</p>
+          ) : null}
+          {r.recoveryConfidence != null ? (
+            <p className="mt-1 text-xs text-violet-300/80">
+              recovery {(r.recoveryConfidence * 100).toFixed(0)}%
             </p>
           ) : null}
           <p className="mt-3 text-xs text-cyan-200/90">→ {r.nextStep}</p>
@@ -233,6 +259,7 @@ export function LiveExecutionPanel() {
             </li>
           ))}
         </ul>
+        <div ref={timelineEndRef} />
       </section>
     </div>
   );
