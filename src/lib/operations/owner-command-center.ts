@@ -76,6 +76,19 @@ export type ValidationMatrixRu = {
   routes: string;
 };
 
+export type ContinuousRuntimePanel = {
+  progressPercent: number;
+  etaMinutes: number | null;
+  autonomousDepth: number;
+  currentFile: string | null;
+  runtimeGraph: string;
+  heartbeatAgeSec: number;
+  orchestrationModeRu: string;
+  currentTaskRu: string;
+  reasoningRu: string;
+  lastAction: string | null;
+};
+
 export type OwnerCommandCenterView = {
   overallReadinessPercent: number;
   readiness: ProjectReadinessMetrics;
@@ -88,6 +101,7 @@ export type OwnerCommandCenterView = {
   retryCount: number;
   nextActionRu: string;
   primaryObjectiveRu: string;
+  continuousRuntime: ContinuousRuntimePanel;
   subsystems: OwnerSubsystemBlock[];
   taskQueue: TaskQueueItem[];
   dependencyGraph: DependencyGraphNodeView[];
@@ -444,6 +458,26 @@ export function buildOwnerCommandCenterView(
       r.nextStep || priorities.nextImplementationTarget || "Продолжить автоматически",
     ),
     primaryObjectiveRu: priorities.ownerDirective ?? priorities.nextImplementationTarget ?? "",
+    continuousRuntime: {
+      progressPercent: r.progressPercent ?? 50,
+      etaMinutes: r.etaMinutes ?? null,
+      autonomousDepth: r.autonomousDepth ?? 0,
+      currentFile: r.currentFile ?? null,
+      runtimeGraph: r.runtimeGraph ?? "ACTIVE",
+      heartbeatAgeSec: Math.round(
+        Math.max(
+          0,
+          Date.now() - Date.parse(r.heartbeatAt || r.updatedAt || new Date().toISOString()),
+        ) / 1000,
+      ),
+      orchestrationModeRu:
+        r.orchestrationMode === "continuous"
+          ? "Непрерывный автономный режим"
+          : "Ручной режим (запустите execution:runtime-loop)",
+      currentTaskRu: humanizeTaskRu(r.currentTask),
+      reasoningRu: r.reasoning,
+      lastAction: r.lastAction ?? null,
+    },
     subsystems,
     taskQueue: buildTaskQueue(priorities, r.currentTask),
     dependencyGraph: buildDependencyGraph(priorities.dependencyGraph, r.currentTask),
@@ -461,7 +495,9 @@ export function buildOwnerCommandCenterView(
           ? "AI приостановлен — требуется внимание"
           : r.status === "recovering"
             ? "AI восстанавливает систему"
-            : "Цикл исполнения активен",
+            : r.orchestrationMode === "continuous"
+              ? "Непрерывный цикл исполнения активен"
+              : "Цикл исполнения активен",
       aiExecutionRu: phaseMeta?.label ?? "—",
       validationRu:
         v.build === "passed" && v.deploy === "passed"

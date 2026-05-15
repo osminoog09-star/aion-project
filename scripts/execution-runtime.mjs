@@ -19,6 +19,8 @@ const PHASE_FEED_TYPES = {
   blocked: "execution_blocked",
   completed: "execution_completed",
   coding: "execution_resumed",
+  optimizing: "execution_analyzing",
+  auditing: "execution_analyzing",
 };
 
 const ACTIVE_PHASES = new Set([
@@ -29,7 +31,11 @@ const ACTIVE_PHASES = new Set([
   "deploying",
   "recovering",
   "reviewing",
+  "optimizing",
+  "auditing",
 ]);
+
+const RESTING_PHASES = new Set(["idle", "completed"]);
 
 function arg(name) {
   const i = process.argv.indexOf(name);
@@ -40,6 +46,8 @@ function arg(name) {
 function hasFlag(name) {
   return process.argv.includes(name);
 }
+
+const CONTINUOUS_MODE = arg("--mode") === "continuous" || process.env.AION_CONTINUOUS === "1";
 
 function readDoc() {
   return JSON.parse(fs.readFileSync(RUNTIME_FILE, "utf8"));
@@ -65,12 +73,19 @@ if (!doc.runtime && doc.state) {
 
 if (hasFlag("--banner")) {
   narrateAionActiveRu({
-    phase: prev.phase ?? prev.status ?? "idle",
+    phase: prev.phase ?? prev.status ?? "analyzing",
     task: prev.currentTask,
+    subsystem: prev.subsystem,
     reasoning: prev.reasoning,
     next: prev.nextStep,
     confidence: prev.confidence,
     progress: prev.validationProgress,
+    progressPercent: prev.progressPercent,
+    etaMinutes: prev.etaMinutes,
+    runtimeGraph: prev.runtimeGraph,
+    autonomousDepth: prev.autonomousDepth,
+    currentFile: prev.currentFile,
+    lastAction: prev.lastAction,
   });
   process.exit(0);
 }
@@ -80,20 +95,31 @@ if (hasFlag("--heartbeat")) {
   doc.runtime = { ...prev, updatedAt: now, heartbeatAt: now };
   writeDoc(doc);
   narrateAionActiveRu({
-    phase: prev.phase ?? prev.status,
+    phase: prev.phase ?? prev.status ?? "coding",
     task: prev.currentTask || "Продолжаю работу…",
+    subsystem: prev.subsystem,
     reasoning: prev.reasoning,
     next: prev.nextStep ?? "продолжить",
     confidence: prev.confidence,
     progress: prev.validationProgress ?? "работа в процессе",
+    progressPercent: prev.progressPercent,
+    etaMinutes: prev.etaMinutes,
+    runtimeGraph: prev.runtimeGraph ?? "ACTIVE",
+    autonomousDepth: prev.autonomousDepth,
+    currentFile: prev.currentFile,
+    lastAction: prev.lastAction ?? "HEARTBEAT",
   });
   process.exit(0);
 }
 
 const waitingReview = hasFlag("--waiting-review");
-const phase = waitingReview
+let phase = waitingReview
   ? "waiting_review"
   : (arg("--phase") ?? arg("--status") ?? prev.phase ?? prev.status);
+
+if (CONTINUOUS_MODE && RESTING_PHASES.has(phase) && !waitingReview && !hasFlag("--allow-rest")) {
+  phase = "analyzing";
+}
 
 const currentTask = arg("--task") ?? prev.currentTask;
 const reasoning = arg("--reasoning") ?? prev.reasoning;
@@ -131,6 +157,18 @@ const retryCount = arg("--retry")
 
 const timelineRu = buildTimelineRu(phase, currentTask, reasoning);
 
+const progressPct = arg("--progress-pct")
+  ? Number.parseInt(arg("--progress-pct"), 10)
+  : prev.progressPercent;
+const etaMinutes = arg("--eta") ? Number.parseInt(arg("--eta"), 10) : prev.etaMinutes;
+const autonomousDepth = arg("--depth")
+  ? Number.parseInt(arg("--depth"), 10)
+  : prev.autonomousDepth;
+const runtimeGraph = arg("--runtime-graph") ?? prev.runtimeGraph ?? "ACTIVE";
+const currentFile = arg("--file") ?? prev.currentFile ?? null;
+const lastAction = arg("--action") ?? prev.lastAction ?? null;
+const orchestrationMode = CONTINUOUS_MODE ? "continuous" : (prev.orchestrationMode ?? "manual");
+
 doc.runtime = {
   ...prev,
   status: phase,
@@ -139,6 +177,13 @@ doc.runtime = {
   subsystem: arg("--subsystem") ?? prev.subsystem,
   reasoning,
   confidence,
+  progressPercent: Number.isFinite(progressPct) ? progressPct : prev.progressPercent ?? 50,
+  etaMinutes: Number.isFinite(etaMinutes) ? etaMinutes : prev.etaMinutes ?? null,
+  autonomousDepth: Number.isFinite(autonomousDepth) ? autonomousDepth : prev.autonomousDepth ?? 0,
+  runtimeGraph,
+  currentFile,
+  lastAction,
+  orchestrationMode,
   files: arg("--files") ? arg("--files").split(",").map((s) => s.trim()) : prev.files,
   commitCandidate: arg("--commit") ?? prev.commitCandidate,
   blocker:
@@ -206,15 +251,31 @@ doc.lastUpdated = now.slice(0, 10);
 
 writeDoc(doc);
 logPhaseRu(phase, summary);
+if (arg("--action")) {
+  const tag = `[${arg("--action")}]`;
+  console.log(`${tag} ${currentTask}`);
+}
+
 narrateAionActiveRu({
   phase,
   task: currentTask,
+  subsystem: doc.runtime.subsystem,
   reasoning,
   next: nextStep,
   confidence,
   progress: doc.runtime.validationProgress,
+  progressPercent: doc.runtime.progressPercent,
+  etaMinutes: doc.runtime.etaMinutes,
+  runtimeGraph: doc.runtime.runtimeGraph,
+  autonomousDepth: doc.runtime.autonomousDepth,
+  currentFile: doc.runtime.currentFile,
+  lastAction: doc.runtime.lastAction,
 });
 
-if (ACTIVE_PHASES.has(phase) && !hasFlag("--no-hint")) {
-  console.log("[AION] Подсказка: npm run execution:daemon — сигнал каждые 12 сек, чтобы AI не казался «замёрзшим»");
+if (CONTINUOUS_MODE && !hasFlag("--no-hint")) {
+  console.log("[AION] Непрерывный цикл: npm run execution:runtime-loop");
+} else if (ACTIVE_PHASES.has(phase) && !hasFlag("--no-hint")) {
+  console.log("[AION] Подсказка: npm run execution:runtime-loop — непрерывный orchestration");
 }
+
+doc.orchestrationVersion = "3.0";

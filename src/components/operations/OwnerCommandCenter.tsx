@@ -110,6 +110,39 @@ export function OwnerCommandCenter({ view }: { view: OwnerCommandCenterView }) {
               <span className="text-slate-500">Следующее: </span>
               {view.nextActionRu}
             </p>
+            <div className="mt-5 grid gap-2 rounded-xl border border-emerald-500/25 bg-emerald-500/5 p-4 text-xs sm:grid-cols-2">
+              <p className="col-span-2 font-bold uppercase tracking-wider text-emerald-300/90">
+                {view.continuousRuntime.orchestrationModeRu}
+              </p>
+              <p>
+                <span className="text-slate-500">Прогресс: </span>
+                {view.continuousRuntime.progressPercent}%
+              </p>
+              <p>
+                <span className="text-slate-500">ETA: </span>
+                {view.continuousRuntime.etaMinutes != null
+                  ? `~${view.continuousRuntime.etaMinutes} мин`
+                  : "—"}
+              </p>
+              <p>
+                <span className="text-slate-500">Runtime: </span>
+                {view.continuousRuntime.runtimeGraph}
+              </p>
+              <p>
+                <span className="text-slate-500">Глубина: </span>
+                {view.continuousRuntime.autonomousDepth}
+              </p>
+              <p>
+                <span className="text-slate-500">Heartbeat: </span>
+                {view.continuousRuntime.heartbeatAgeSec} сек
+              </p>
+              {view.continuousRuntime.lastAction ? (
+                <p>
+                  <span className="text-slate-500">Действие: </span>
+                  [{view.continuousRuntime.lastAction}]
+                </p>
+              ) : null}
+            </div>
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-row xl:flex-col">

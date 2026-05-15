@@ -12,12 +12,13 @@ Owner supervises strategy via `/operations/command` and `/operations/priorities`
 
 ## Autonomous loop (every cycle)
 
-1. `npm run execution:autonomous-next` — pick next dependency-safe task
-2. Implement without asking "what next?"
-3. `npm run execution:heartbeat` or `execution:daemon` during long work
-4. `npm run execution:heal` on failures
-5. `npm run feed:append` at milestones (Russian titles)
-6. Continue to next queue item
+1. `npm run execution:runtime-loop` — TRUE continuous mode (preferred)
+2. `npm run execution:autonomous-next` — pick next dependency-safe task
+3. Implement without asking "what next?" — never idle after task
+4. `execution:heartbeat` via runtime-loop or `execution:daemon` during long work
+5. `npm run execution:heal` on failures
+6. `npm run feed:append` at milestones (Russian titles)
+7. Continue to next queue item automatically
 
 ## ChatGPT escalation
 

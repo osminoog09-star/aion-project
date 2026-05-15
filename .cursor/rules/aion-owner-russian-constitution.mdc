@@ -26,4 +26,4 @@ Always `[AION АКТИВЕН]` in Russian during work. Never appear silent — u
 
 ## Autonomous mode
 
-No "what next?". Use `npm run execution:autonomous-next`. Escalate architecture via `review:request` only.
+No "what next?". Use `npm run execution:runtime-loop` (continuous) or `execution:autonomous-next`. Never idle after task. Escalate architecture via `review:request` only.

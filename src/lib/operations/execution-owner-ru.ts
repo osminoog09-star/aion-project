@@ -15,14 +15,14 @@ export type OwnerControlMode =
   | "ai_repairing"
   | "ai_validating"
   | "ai_deploying"
-  | "ai_idle"
+  | "ai_optimizing"
   | "ai_stale";
 
 export const PHASE_OWNER: Record<
   ExecutionRuntimeStatus,
   { icon: string; label: string; mode: OwnerControlMode; verb: string }
 > = {
-  idle: { icon: "⚪", label: "AI в режиме ожидания", mode: "ai_idle", verb: "ожидает новую задачу" },
+  idle: { icon: "🔄", label: "AI анализирует roadmap", mode: "ai_active", verb: "выбирает следующую задачу" },
   planning: { icon: "📋", label: "AI планирует работу", mode: "ai_active", verb: "составляет план" },
   analyzing: { icon: "🔍", label: "AI анализирует систему", mode: "ai_active", verb: "изучает контекст" },
   coding: { icon: "⚡", label: "AI пишет и улучшает код", mode: "ai_active", verb: "вносит изменения" },
@@ -33,7 +33,24 @@ export const PHASE_OWNER: Record<
   recovering: { icon: "🛠", label: "AI исправляет проблему", mode: "ai_repairing", verb: "пытается восстановить автоматически" },
   waiting_approval: { icon: "⏸", label: "AI ждёт вашего решения", mode: "ai_waiting", verb: "ожидает подтверждения" },
   waiting_review: { icon: "📝", label: "AI ждёт Apply в Cursor", mode: "ai_waiting", verb: "ждёт принятия изменений" },
-  completed: { icon: "✨", label: "AI завершил этап", mode: "ai_idle", verb: "этап выполнен" },
+  completed: {
+    icon: "🔄",
+    label: "AI переходит к следующей задаче",
+    mode: "ai_active",
+    verb: "завершил этап — цикл продолжается",
+  },
+  optimizing: {
+    icon: "⚙️",
+    label: "AI оптимизирует систему",
+    mode: "ai_optimizing",
+    verb: "улучшает производительность и наблюдаемость",
+  },
+  auditing: {
+    icon: "📊",
+    label: "AI проводит аудит",
+    mode: "ai_optimizing",
+    verb: "проверяет архитектуру и технический долг",
+  },
 };
 
 export const HEALTH_OWNER: Record<
@@ -46,9 +63,17 @@ export const HEALTH_OWNER: Record<
     subtitle: (s) => `последний сигнал ${s} сек назад`,
   },
   idle: {
-    icon: "⚪",
-    title: "AI на паузе",
-    subtitle: (s) => `без активности ${s} сек`,
+    icon: "🔄",
+    title: "AI в непрерывном цикле",
+    subtitle: (s) => `анализ roadmap · сигнал ${s} сек назад`,
+  },
+  continuous: {
+    icon: "🟢",
+    title: "AI в непрерывном исполнении",
+    subtitle: (s) =>
+      s < 60
+        ? `цикл активен · сигнал ${s} сек назад`
+        : `цикл активен · snapshot ${s} сек (обновляется при деплое)`,
   },
   waiting_review: {
     icon: "🟡",
@@ -66,6 +91,17 @@ export const HEALTH_OWNER: Record<
     subtitle: (s) => `нет обновлений ${s} сек — возможна задержка`,
   },
 };
+
+const EXECUTION_HEALTH_KEYS = new Set<string>(Object.keys(HEALTH_OWNER));
+
+export function isExecutionHealth(value: string): value is ExecutionHealth {
+  return EXECUTION_HEALTH_KEYS.has(value);
+}
+
+/** API may return unknown health strings; always map to a defined HEALTH_OWNER entry. */
+export function resolveExecutionHealth(health: string): ExecutionHealth {
+  return isExecutionHealth(health) ? health : "stale";
+}
 
 const VALIDATION_STEP_RU: Record<string, string> = {
   typecheck: "Проверка типов TypeScript",
@@ -143,12 +179,19 @@ export function abstractFileChanges(files: string[]): string[] {
 export function ownerControlMode(runtime: ExecutionRuntimeCore, health: ExecutionHealth): OwnerControlMode {
   if (health === "blocked" || runtime.status === "blocked") return "ai_blocked";
   if (health === "waiting_review" || runtime.status === "waiting_review") return "ai_waiting";
-  if (health === "stale") return "ai_stale";
+  if (
+    health === "stale" &&
+    !(runtime.orchestrationMode === "continuous" || runtime.status === "coding" || runtime.status === "validating")
+  ) {
+    return "ai_stale";
+  }
   if (runtime.status === "recovering") return "ai_repairing";
   if (runtime.status === "validating") return "ai_validating";
   if (runtime.status === "deploying") return "ai_deploying";
-  if (health === "active") return "ai_active";
-  return PHASE_OWNER[runtime.phase]?.mode ?? "ai_idle";
+  if (runtime.status === "optimizing" || runtime.status === "auditing") return "ai_optimizing";
+  if (health === "active" || health === "continuous") return "ai_active";
+  if (runtime.orchestrationMode === "continuous") return "ai_active";
+  return PHASE_OWNER[runtime.phase]?.mode ?? "ai_active";
 }
 
 export const CONTROL_MODE_RU: Record<OwnerControlMode, string> = {
@@ -158,7 +201,7 @@ export const CONTROL_MODE_RU: Record<OwnerControlMode, string> = {
   ai_repairing: "AI чинит автоматически",
   ai_validating: "AI проверяет",
   ai_deploying: "AI выкладывает на сайт",
-  ai_idle: "AI свободен",
+  ai_optimizing: "AI оптимизирует и аудирует",
   ai_stale: "Связь с AI устарела",
 };
 

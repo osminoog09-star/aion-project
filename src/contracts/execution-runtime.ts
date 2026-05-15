@@ -13,7 +13,21 @@ export const EXECUTION_RUNTIME_STATUSES = [
   "waiting_review",
   "recovering",
   "completed",
+  "optimizing",
+  "auditing",
 ] as const;
+
+export type OrchestrationRuntimeGraph =
+  | "ACTIVE"
+  | "VALIDATING"
+  | "DEPLOYING"
+  | "HEALING"
+  | "BLOCKED"
+  | "WAITING REVIEW"
+  | "RECOVERING"
+  | "OPTIMIZING";
+
+export type OrchestrationMode = "continuous" | "manual";
 
 export type ExecutionRuntimeStatus = (typeof EXECUTION_RUNTIME_STATUSES)[number];
 
@@ -53,6 +67,14 @@ export type ExecutionRuntimeCore = {
     message: string;
     at: string;
   } | null;
+  /** Continuous orchestration (v3) */
+  progressPercent?: number;
+  etaMinutes?: number | null;
+  autonomousDepth?: number;
+  currentFile?: string | null;
+  lastAction?: string | null;
+  runtimeGraph?: OrchestrationRuntimeGraph;
+  orchestrationMode?: OrchestrationMode;
 };
 
 export type ExecutionRuntimeTimelineEvent = {
@@ -80,7 +102,18 @@ export type ExecutionRuntimeDocument = {
   heartbeats: ExecutionRuntimeHeartbeat[];
 };
 
-export type ExecutionHealth = "active" | "idle" | "waiting_review" | "blocked" | "stale";
+export type ExecutionHealth =
+  | "active"
+  | "idle"
+  | "waiting_review"
+  | "blocked"
+  | "stale"
+  | "continuous";
+
+/** Owner-facing: never show «свободен» when continuous mode is on */
+export function isContinuousOrchestration(runtime: ExecutionRuntimeCore): boolean {
+  return runtime.orchestrationMode === "continuous";
+}
 
 export const HEARTBEAT_ACTIVE_MS = 15_000;
 export const HEARTBEAT_IDLE_MS = 60_000;

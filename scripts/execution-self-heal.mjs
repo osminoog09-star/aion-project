@@ -124,7 +124,7 @@ for (let attempt = 1; attempt <= deployRetries; attempt++) {
 
   if (attempt < deployRetries && live404) {
     console.log(`[🛠 AI восстанавливает] Ожидание 45 сек — Vercel обновляет сайт…`);
-    execSync("powershell -Command Start-Sleep -Seconds 45", { cwd: root, stdio: "inherit" });
+    execSync("powershell -Command Start-Sleep -Seconds 45", { cwd: root, shell: true, stdio: "inherit" });
     continue;
   }
 

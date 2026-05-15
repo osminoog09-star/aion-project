@@ -4,6 +4,165 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-exec-wwveo4",
+      "occurredAt": "2026-05-15",
+      "title": "AI пишет и улучшает код",
+      "summary": "AI пишет и улучшает код: OTA smoke test: field validation на устройстве",
+      "subsystemIds": [
+        "operations-center",
+        "web-portal"
+      ],
+      "eventType": "execution_resumed",
+      "reasoning": "Чеклист на /route-timeline готов — владелец проверяет 6 gates на телефоне",
+      "confidence": "high",
+      "repository": "aion-project",
+      "changedFiles": [
+        "src/app/operations/command/page.tsx",
+        "src/lib/operations/owner-command-center.ts",
+        "src/components/operations/OwnerCommandCenter.tsx"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ AI пишет и улучшает код"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "none",
+        "backend": "low",
+        "realtime": "high",
+        "ux": "high",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      }
+    },
+    {
+      "id": "evt-2026-05-15-exec-x9ikbs",
+      "occurredAt": "2026-05-15",
+      "title": "AI проверяет качество",
+      "summary": "AI проверяет качество: Field validation Driver — typecheck",
+      "subsystemIds": [
+        "operations-center",
+        "web-portal"
+      ],
+      "eventType": "execution_validating",
+      "reasoning": "Проверка после чеклиста field validation на /driver/route-timeline",
+      "confidence": "high",
+      "repository": "aion-project",
+      "changedFiles": [
+        "src/app/operations/command/page.tsx",
+        "src/lib/operations/owner-command-center.ts",
+        "src/components/operations/OwnerCommandCenter.tsx"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ AI проверяет качество"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "none",
+        "backend": "low",
+        "realtime": "high",
+        "ux": "high",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      }
+    },
+    {
+      "id": "evt-2026-05-15-exec-k3dsxj",
+      "occurredAt": "2026-05-15",
+      "title": "Field validation UX на маршрутах Driver",
+      "summary": "aion-driver: чеклист field validation (6 gates), fix backfill в header, pull-to-refresh для coverage + stop-zone insights.",
+      "subsystemIds": [
+        "operations-center",
+        "web-portal"
+      ],
+      "eventType": "execution_resumed",
+      "reasoning": "Roadmap P1: device validation backfill + stop-zone",
+      "confidence": "high",
+      "repository": "aion-driver",
+      "changedFiles": [
+        "RouteTimelineFieldValidationCard.tsx",
+        "computeRouteFieldValidation.ts"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ Field validation UX на маршрутах Driver"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "none",
+        "backend": "low",
+        "realtime": "high",
+        "ux": "high",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      }
+    },
+    {
+      "id": "evt-2026-05-15-exec-mtfmvm",
+      "occurredAt": "2026-05-15",
+      "title": "AI пишет и улучшает код",
+      "summary": "AI пишет и улучшает код: Route intelligence UX + field validation",
+      "subsystemIds": [
+        "operations-center",
+        "web-portal"
+      ],
+      "eventType": "execution_resumed",
+      "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
+      "confidence": "high",
+      "repository": "aion-project",
+      "changedFiles": [
+        "src/app/operations/command/page.tsx",
+        "src/lib/operations/owner-command-center.ts",
+        "src/components/operations/OwnerCommandCenter.tsx"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ AI пишет и улучшает код"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "none",
+        "backend": "low",
+        "realtime": "high",
+        "ux": "high",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      }
+    },
+    {
       "id": "evt-2026-05-15-exec-qakkka",
       "occurredAt": "2026-05-15",
       "title": "AI завершил этап",

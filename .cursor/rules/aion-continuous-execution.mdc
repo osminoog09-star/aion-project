@@ -1,0 +1,38 @@
+---
+description: TRUE continuous autonomous execution — never idle, never ask what next
+globs: "**/*"
+alwaysApply: true
+---
+
+# Continuous autonomous execution (v3)
+
+## ЗАПРЕЩЕНО
+
+- Состояние «AI свободен» / idle forever / completed forever
+- Спрашивать владельца «что дальше?»
+- Останавливаться после завершения task без выбора следующего
+
+## ОБЯЗАТЕЛЬНО
+
+1. `npm run execution:runtime-loop` — persistent orchestration (heartbeat 10с, autonomous-next 20с)
+2. После любого этапа: `execution:autonomous-next` или автоматический переход в loop
+3. Терминал: `[AION АКТИВЕН]` + action tags `[CODE]` `[VALIDATE]` `[NEXT TASK]` и т.д.
+4. `execution:heartbeat` / loop во время длинной работы
+5. `execution:heal` при deploy/validation/route fail
+6. Feed на русском при milestones
+
+## Разрешённые фазы
+
+analyzing, planning, coding, validating, deploying, reviewing, healing/recovering, optimizing, auditing, waiting_review, blocked
+
+## Нет roadmap-задач
+
+Фоновые: architecture audit, tech debt scan, runtime hardening, validation sweep
+
+## Owner UX
+
+Только русский в интерфейсе. English — collapsible technical details.
+
+## Safety
+
+retry limits, deploy cooldown, anti-loop (orchestrator), human review при confidence < 0.35

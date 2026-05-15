@@ -1,0 +1,13 @@
+{
+  "version": "1.0",
+  "loopStartedAt": "2026-05-15T12:15:18.138Z",
+  "lastTaskKey": "stop-zone-validation-на-устройстве",
+  "sameTaskCount": 1,
+  "lastAutonomousAt": "2026-05-15T12:15:17.848Z",
+  "lastHealAt": null,
+  "healCountHour": 0,
+  "healHourStarted": null,
+  "deployCooldownUntil": null,
+  "totalAutonomousTicks": 1,
+  "autonomousDepth": 1
+}

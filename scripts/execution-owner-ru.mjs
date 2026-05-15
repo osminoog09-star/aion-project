@@ -3,7 +3,7 @@
  */
 
 export const PHASE_OWNER = {
-  idle: { icon: "⚪", label: "AI в режиме ожидания", verb: "ожидает новую задачу" },
+  idle: { icon: "🔄", label: "AI анализирует roadmap", verb: "выбирает следующую задачу" },
   planning: { icon: "📋", label: "AI планирует работу", verb: "составляет план" },
   analyzing: { icon: "🔍", label: "AI анализирует систему", verb: "изучает контекст" },
   coding: { icon: "⚡", label: "AI пишет и улучшает код", verb: "вносит изменения" },
@@ -14,7 +14,9 @@ export const PHASE_OWNER = {
   recovering: { icon: "🛠", label: "AI исправляет проблему", verb: "пытается восстановить автоматически" },
   waiting_approval: { icon: "⏸", label: "AI ждёт вашего решения", verb: "ожидает подтверждения" },
   waiting_review: { icon: "📝", label: "AI ждёт Apply в Cursor", verb: "ждёт принятия изменений" },
-  completed: { icon: "✨", label: "AI завершил этап", verb: "этап выполнен" },
+  completed: { icon: "🔄", label: "AI переходит к следующей задаче", verb: "завершил этап — цикл продолжается" },
+  optimizing: { icon: "⚙️", label: "AI оптимизирует систему", verb: "улучшает производительность и наблюдаемость" },
+  auditing: { icon: "📊", label: "AI проводит аудит", verb: "проверяет архитектуру и технический долг" },
 };
 
 export function validationHuman(step, status) {
@@ -32,23 +34,41 @@ export function validationHuman(step, status) {
   return `${n} — ещё не запускалась`;
 }
 
-export function narrateAionActiveRu({ phase, task, reasoning, next, confidence, progress }) {
+export function narrateAionActiveRu({
+  phase,
+  task,
+  subsystem,
+  reasoning,
+  next,
+  confidence,
+  progress,
+  progressPercent,
+  etaMinutes,
+  runtimeGraph,
+  autonomousDepth,
+  currentFile,
+  lastAction,
+}) {
   const meta = PHASE_OWNER[phase] ?? PHASE_OWNER.coding;
   console.log("");
   console.log("[AION АКТИВЕН]");
   console.log("");
-  console.log("Сейчас:");
-  console.log(task || meta.label);
+  console.log(`Фаза: ${phase}`);
+  if (subsystem) console.log(`Подсистема: ${subsystem}`);
+  console.log(`Задача: ${task || meta.label}`);
+  if (progressPercent != null) console.log(`Прогресс: ${progressPercent}%`);
+  if (etaMinutes != null) console.log(`ETA: ~${etaMinutes} мин`);
+  console.log(`Следующее: ${next || "продолжить по roadmap"}`);
+  if (progress) console.log(`Последнее действие: ${progress}`);
+  if (lastAction) console.log(`Действие: [${lastAction}]`);
+  if (currentFile) console.log(`Файл: ${currentFile}`);
+  console.log("Heartbeat: alive");
+  if (confidence != null) console.log(`Уверенность: ${Math.round(confidence * 100)}%`);
+  if (runtimeGraph) console.log(`Runtime: ${runtimeGraph}`);
+  if (autonomousDepth != null) console.log(`Глубина цикла: ${autonomousDepth}`);
   console.log("");
   console.log("Причина:");
   console.log(reasoning || meta.verb);
-  console.log("");
-  console.log("Действие:");
-  console.log(progress || meta.verb);
-  console.log("");
-  console.log("Следующий шаг:");
-  console.log(next || "продолжить по roadmap");
-  if (confidence != null) console.log(`\nУверенность: ${Math.round(confidence * 100)}%`);
   console.log("");
 }
 
@@ -59,7 +79,7 @@ export function buildTimelineRu(phase, task, reasoning) {
     explanationRu: reasoning || task || meta.verb,
     resultRu:
       phase === "completed"
-        ? "Этап выполнен"
+        ? "Переход к следующей задаче"
         : phase === "blocked"
           ? "Нужна помощь владельца"
           : phase === "recovering"

@@ -1,7 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { ExecutionRuntimeStatus, ValidationStepStatus } from "@/contracts/execution-runtime";
+import type {
+  ExecutionRuntimeCore,
+  ExecutionRuntimeStatus,
+  OrchestrationMode,
+  OrchestrationRuntimeGraph,
+  ValidationStepStatus,
+} from "@/contracts/execution-runtime";
 import type { DeploymentStatusPayload } from "@/contracts/deployment-status";
 import {
   abstractFileChanges,
@@ -12,15 +18,15 @@ import {
   HEALTH_OWNER,
   ownerControlMode,
   PHASE_OWNER,
+  resolveExecutionHealth,
   selfHealOwnerCard,
   validationHuman,
 } from "@/lib/operations/execution-owner-ru";
-import type { ExecutionHealth } from "@/contracts/execution-runtime";
 
 type LiveApiResponse = {
   meta: { health: string; heartbeatAgeMs: number; persistedVia: string };
   health: { health: string; heartbeatAgeMs: number; label: string };
-  runtime: {
+  runtime: ExecutionRuntimeCore & {
     status: ExecutionRuntimeStatus;
     phase: ExecutionRuntimeStatus;
     currentTask: string;
@@ -48,6 +54,13 @@ type LiveApiResponse = {
       routes?: ValidationStepStatus;
     };
     lastFailure?: { kind: string; message: string; at: string } | null;
+    progressPercent?: number;
+    etaMinutes?: number | null;
+    autonomousDepth?: number;
+    currentFile?: string | null;
+    lastAction?: string | null;
+    runtimeGraph?: OrchestrationRuntimeGraph;
+    orchestrationMode?: OrchestrationMode;
   };
   document: {
     timeline: {
@@ -146,10 +159,11 @@ export function LiveExecutionPanel() {
   }
 
   const r = data.runtime;
-  const healthKey = data.health.health as ExecutionHealth;
+  const isBuildSnapshot = data.meta.persistedVia === "build_snapshot";
+  const healthKey = resolveExecutionHealth(data.health.health);
   const healthRu = HEALTH_OWNER[healthKey];
   const sec = Math.round(data.health.heartbeatAgeMs / 1000);
-  const phaseMeta = PHASE_OWNER[r.phase] ?? PHASE_OWNER.idle;
+  const phaseMeta = PHASE_OWNER[r.phase] ?? PHASE_OWNER.analyzing;
   const controlMode = ownerControlMode(r, healthKey);
   const controlLabel = CONTROL_MODE_RU[controlMode];
   const heal = selfHealOwnerCard(r);
@@ -179,7 +193,13 @@ export function LiveExecutionPanel() {
       >
         <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-cyan-300/80">
           Центр управления AI
+          {r.orchestrationMode === "continuous" ? " · непрерывный цикл" : ""}
         </p>
+        {isBuildSnapshot && sec > 60 ? (
+          <p className="mt-1 text-[10px] text-amber-300/80">
+            Production snapshot · обновляется при каждом деплое · Cursor пушит runtime в git
+          </p>
+        ) : null}
         <p className="mt-2 text-2xl font-bold text-white">
           {healthRu.icon} {controlLabel}
         </p>
@@ -194,9 +214,47 @@ export function LiveExecutionPanel() {
         {r.retryCount != null && r.retryCount > 0 ? (
           <p className="mt-1 text-xs text-amber-300/90">Попытка восстановления: {r.retryCount}</p>
         ) : null}
-        <p className="mt-3 text-xs text-slate-500">
-          Обновление каждые {POLL_MS / 1000} сек · уверенность {(r.confidence * 100).toFixed(0)}%
-        </p>
+        <div className="mt-4 grid gap-2 rounded-xl border border-white/10 bg-black/20 p-3 text-xs sm:grid-cols-2">
+          {r.progressPercent != null ? (
+            <p>
+              <span className="text-slate-500">Прогресс: </span>
+              {r.progressPercent}%
+            </p>
+          ) : null}
+          {r.etaMinutes != null ? (
+            <p>
+              <span className="text-slate-500">ETA: </span>~{r.etaMinutes} мин
+            </p>
+          ) : null}
+          {r.runtimeGraph ? (
+            <p>
+              <span className="text-slate-500">Runtime: </span>
+              {r.runtimeGraph}
+            </p>
+          ) : null}
+          {r.autonomousDepth != null ? (
+            <p>
+              <span className="text-slate-500">Глубина цикла: </span>
+              {r.autonomousDepth}
+            </p>
+          ) : null}
+          {r.lastAction ? (
+            <p>
+              <span className="text-slate-500">Действие: </span>[{r.lastAction}]
+            </p>
+          ) : null}
+          {r.currentFile ? (
+            <p className="col-span-2 truncate">
+              <span className="text-slate-500">Файл: </span>
+              {r.currentFile}
+            </p>
+          ) : null}
+          <p className="col-span-2 text-slate-500">
+            Heartbeat: {sec} сек назад · обновление каждые {POLL_MS / 1000} сек · уверенность{" "}
+            {(r.confidence * 100).toFixed(0)}%
+            {r.orchestrationMode === "continuous" ? " · непрерывный режим" : ""}
+          </p>
+        </div>
       </section>
 
       {/* Self-heal card */}

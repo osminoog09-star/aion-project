@@ -3,43 +3,44 @@
  *   node scripts/execution-autonomous-next.mjs
  */
 import { execSync } from "node:child_process";
-import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  ACTION_TAGS,
+  logAction,
+  pickNextTask,
+  readJson,
+  readLoopState,
+  resolveRuntimeGraph,
+  taskKey,
+  writeLoopState,
+  PRIORITIES_FILE,
+} from "./execution-orchestrator-core.mjs";
 import { narrateAionActiveRu } from "./execution-owner-ru.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const priorities = JSON.parse(
-  fs.readFileSync(path.join(root, "src/content/strategic-priorities.json"), "utf8"),
-);
+const priorities = readJson(PRIORITIES_FILE);
+const loopState = readLoopState();
+const pick = pickNextTask(priorities, loopState);
+const depth = (loopState.autonomousDepth ?? 0) + 1;
+const sameKey = taskKey(pick.task);
+const phase = pick.phase ?? "coding";
+const graph = resolveRuntimeGraph(phase);
 
-const QUEUE = [
-  {
-    task: "Route intelligence UX + field validation",
-    subsystem: "driver-intelligence",
-    reasoning: "Проверка backfill и stop-zone на реальном устройстве",
-    next: "OTA тест Driver",
-  },
-  {
-    task: "Stop-zone validation на устройстве",
-    subsystem: "driver-intelligence",
-    reasoning: "Подтвердить GPS cluster insights после 2+ смен",
-    next: "runtime stabilization",
-  },
-  {
-    task: "Runtime stabilization",
-    subsystem: "background-drive",
-    reasoning: "FGS + unified shift path production gate",
-    next: "Overlay HUD v2",
-  },
-];
+writeLoopState({
+  ...loopState,
+  lastTaskKey: sameKey,
+  sameTaskCount: loopState.lastTaskKey === sameKey ? (loopState.sameTaskCount ?? 0) + 1 : 1,
+  lastAutonomousAt: new Date().toISOString(),
+  autonomousDepth: depth,
+  totalAutonomousTicks: (loopState.totalAutonomousTicks ?? 0) + 1,
+});
 
-const target = priorities.nextImplementationTarget || QUEUE[0].task;
-const pick = QUEUE.find((q) => target.toLowerCase().includes(q.task.slice(0, 12).toLowerCase())) ?? QUEUE[0];
+logAction(ACTION_TAGS.NEXT, pick.task);
 
 const args = [
   "--phase",
-  "coding",
+  phase,
   "--task",
   `"${pick.task}"`,
   "--subsystem",
@@ -50,18 +51,33 @@ const args = [
   `"${pick.next}"`,
   "--confidence",
   "0.88",
-  "--progress",
-  `"${target}"`,
+  "--progress-pct",
+  String(pick.progressPercent ?? 55),
+  "--eta",
+  String(pick.etaMinutes ?? 60),
+  "--depth",
+  String(depth),
+  "--runtime-graph",
+  graph,
+  "--action",
+  "NEXT",
+  "--mode",
+  "continuous",
 ].join(" ");
 
 execSync(`node scripts/execution-runtime.mjs ${args}`, { cwd: root, stdio: "inherit" });
 
-console.log("\n[AION AUTONOMOUS] Следующая задача выбрана автоматически — продолжаю без запроса владельцу.\n");
+console.log("\n[AION AUTONOMOUS] Следующая задача выбрана — непрерывный цикл без запроса владельцу.\n");
 narrateAionActiveRu({
-  phase: "coding",
+  phase,
   task: pick.task,
+  subsystem: pick.subsystem,
   reasoning: pick.reasoning,
   next: pick.next,
   confidence: 0.88,
-  progress: target,
+  progress: pick.reasoning,
+  progressPercent: pick.progressPercent,
+  etaMinutes: pick.etaMinutes,
+  runtimeGraph: graph,
+  autonomousDepth: depth,
 });

@@ -40,6 +40,16 @@ status.lastProductionDeploy = {
 };
 fs.writeFileSync(statusPath, `${JSON.stringify(status, null, 2)}\n`);
 
+console.log("→ stamp execution runtime for live panel");
+run("node", [
+  "scripts/execution-runtime.mjs",
+  "--heartbeat",
+  "--mode",
+  "continuous",
+  "--no-hint",
+  "--skip-feed",
+]);
+
 console.log("→ npm run build");
 run("npm", ["run", "build"]);
 

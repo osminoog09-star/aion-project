@@ -11,6 +11,7 @@ import {
   EXECUTION_RUNTIME_STATUSES,
   HEARTBEAT_ACTIVE_MS,
   HEARTBEAT_IDLE_MS,
+  isContinuousOrchestration,
 } from "@/contracts/execution-runtime";
 import { CONTROL_MODE_RU, ownerControlMode } from "@/lib/operations/execution-owner-ru";
 import { getLocalStrategicPriorities } from "@/lib/strategic-priorities";
@@ -81,6 +82,7 @@ export function getLocalDeploymentStatus(): DeploymentStatusPayload {
 export function computeExecutionHealth(
   runtime: ExecutionRuntimeCore,
   nowMs = Date.now(),
+  orchestrationVersion?: string,
 ): { health: ExecutionHealth; heartbeatAgeMs: number; label: string } {
   const heartbeatMs = Date.parse(runtime.heartbeatAt || runtime.updatedAt);
   const heartbeatAgeMs = Number.isFinite(heartbeatMs)
@@ -94,12 +96,17 @@ export function computeExecutionHealth(
     health = "waiting_review";
   } else if (runtime.status === "recovering") {
     health = "active";
-  } else if (runtime.status === "completed" || runtime.status === "idle") {
-    health = "idle";
+  } else if (
+    isContinuousOrchestration(runtime) ||
+    runtime.status === "completed" ||
+    runtime.status === "idle" ||
+    Number.parseFloat(String(orchestrationVersion ?? "0")) >= 3
+  ) {
+    health = heartbeatAgeMs >= HEARTBEAT_IDLE_MS ? "continuous" : "continuous";
   } else if (heartbeatAgeMs < HEARTBEAT_ACTIVE_MS) {
     health = "active";
   } else if (heartbeatAgeMs < HEARTBEAT_IDLE_MS) {
-    health = "idle";
+    health = "continuous";
   } else {
     health = "stale";
   }
@@ -111,7 +118,7 @@ export function computeExecutionHealth(
 export function buildLiveExecutionView(doc: ExecutionRuntimeDocument) {
   const priorities = getLocalStrategicPriorities();
   const deployment = getLocalDeploymentStatus();
-  const health = computeExecutionHealth(doc.runtime);
+  const health = computeExecutionHealth(doc.runtime, Date.now(), doc.orchestrationVersion);
 
   return {
     document: doc,
