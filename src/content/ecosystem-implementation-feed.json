@@ -31,6 +31,33 @@
       "validation": { "web_build": "passed" }
     },
     {
+      "id": "evt-2026-05-15-stop-zone-patterns",
+      "occurredAt": "2026-05-15",
+      "title": "GPS stop zone patterns (text-only) + portal/driver repo safety",
+      "summary": "aion-driver: computeStopZonePatterns clusters real GpsStopPoint data (120m), outputs explainable Russian insights (waiting windows, weekday idle, high-idle coords). aion-project: verify-portal-deploy-safety + driver verify-repo-safety blocks portal overwrite from Expo root.",
+      "subsystemIds": ["mobile-app", "driver-intelligence", "operations-center"],
+      "eventType": "analytics_engine_changed",
+      "task": "Driver Intelligence — zone patterns without heatmaps",
+      "reasoning": "Text intelligence from GPS stops + ShiftAnalyticsSnapshot window only; no synthetic demand or heatmap layers. Isolated deploy safety for portal vs driver.",
+      "confidence": "high",
+      "runtimeImpact": "DriverIntelligenceStrip shows stop zone insights with evidence strings",
+      "apkImpact": "ota-safe",
+      "repository": "aion-driver+aion-project",
+      "rollup": {
+        "fullyDone": [
+          "✅ computeStopZonePatterns + dashboard strip",
+          "✅ Portal/driver repo safety scripts + CI gates"
+        ],
+        "partiallyDone": ["🟨 Snapshot backfill for legacy shifts"],
+        "notStarted": ["⬜ Historical heatmaps"],
+        "technicalDebt": ["Driver origin must not point at portal repo (repo:verify:push)"]
+      },
+      "stillMissing": ["Snapshot backfill helper"],
+      "blocked": [],
+      "impacts": { "release": "medium", "otaApk": "low", "backend": "none", "realtime": "none", "ux": "high", "cloud": "low" },
+      "validation": { "driver_typecheck": "passed", "portal_build": "pending" }
+    },
+    {
       "id": "evt-2026-05-15-historical-driver-rollups",
       "occurredAt": "2026-05-15",
       "title": "Historical driver rollups from shift analytics snapshots",

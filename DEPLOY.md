@@ -5,10 +5,15 @@
 - Node 20+ (matches Vercel default)
 - Git repo pushed to GitHub/GitLab/Bitbucket (Vercel imports from git)
 
+## Repository safety
+
+Portal deploys only from this Next.js tree (`npm run repo:verify`). Driver (Expo/EAS) must use a **separate** repository or monorepo subdirectory — never push Driver commits to `aion-project` root or Vercel production will break.
+
 ## Local verify
 
 ```bash
 npm ci
+npm run repo:verify
 npm run build
 npm run start
 ```

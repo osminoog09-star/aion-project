@@ -16,5 +16,6 @@ jobs:
           node-version: "20"
           cache: npm
       - run: npm ci
+      - run: node scripts/verify-portal-deploy-safety.mjs
       - run: npm run build
       - run: node scripts/verify-app-routes.mjs

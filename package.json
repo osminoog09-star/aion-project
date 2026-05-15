@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run repo:verify && next build",
     "start": "next start",
     "lint": "eslint",
     "feed:append": "node scripts/append-implementation-feed.mjs",
@@ -12,8 +12,9 @@
     "verify:routes": "node scripts/verify-app-routes.mjs",
     "deploy:vercel": "npx vercel@54 deploy --prod",
     "deploy:hook": "node scripts/trigger-deploy-hook.mjs",
-    "deploy:pipeline": "node scripts/deploy-pipeline.mjs",
+    "deploy:pipeline": "npm run repo:verify && node scripts/deploy-pipeline.mjs",
     "deploy:validate": "node scripts/post-deploy-validate.mjs",
+    "repo:verify": "node scripts/verify-portal-deploy-safety.mjs",
     "git:remote": "node scripts/setup-git-remote.mjs",
     "owner:unblock-check": "node scripts/owner-unblock-check.mjs",
     "release:apk-manifest:sync": "node scripts/sync-apk-manifest-from-eas.mjs"
