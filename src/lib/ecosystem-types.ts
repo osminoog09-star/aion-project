@@ -118,10 +118,13 @@ export type ExecutionEventType =
   | "release_created"
   | "overlay_changed"
   | "ocr_pipeline_changed"
-  | "priority_changed";
+  | "priority_changed"
+  | "architecture_review_requested"
+  | "architecture_review_resolved";
 
 export type AiConfidenceLevel = "high" | "medium" | "experimental" | "unstable" | "blocked";
 
+/** @deprecated Use ArchitectureReviewRequest — kept for feed backward compat */
 export type ArchitectureReviewRecord = {
   requestedAt: string;
   topic: string;
@@ -129,6 +132,88 @@ export type ArchitectureReviewRecord = {
   outcome?: "approved" | "warnings" | "rejected" | "pending";
   summary?: string;
   warnings?: string[];
+};
+
+export type ArchitectureReviewTemplateId =
+  | "android-runtime"
+  | "ocr-architecture"
+  | "gps-storage"
+  | "overlay-lifecycle"
+  | "scaling"
+  | "dependency"
+  | "production-readiness"
+  | "general";
+
+export type ArchitectureReviewStatus =
+  | "pending"
+  | "reviewing"
+  | "approved"
+  | "blocked"
+  | "risky"
+  | "resolved";
+
+export type ArchitectureReviewPacket = {
+  generatedAt: string;
+  markdown: string;
+  sections: {
+    context: string;
+    concern: string;
+    constraints: string;
+    proposedDirection: string;
+    questionsForReviewer: string[];
+  };
+};
+
+export type ArchitectureReviewResult = {
+  reviewedAt: string;
+  reviewedBy: "chatgpt" | "owner" | "cursor";
+  status: ArchitectureReviewStatus;
+  approvedDirection?: string;
+  warnings: string[];
+  architectureNotes: string[];
+  blockedReasons?: string[];
+};
+
+export type ArchitectureReviewRequest = {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  status: ArchitectureReviewStatus;
+  templateId: ArchitectureReviewTemplateId;
+  title: string;
+  subsystem: string;
+  subsystemIds: string[];
+  reasoning: string;
+  architectureConcern: string;
+  scalingConcern?: string;
+  runtimeConcern?: string;
+  dependencyConcern?: string;
+  proposedDirection: string;
+  confidence: AiConfidenceLevel;
+  affectedSystems: string[];
+  roadmapItemId?: string;
+  dependencyNodeIds?: string[];
+  blockerIds?: string[];
+  technicalDebtRefs?: string[];
+  linkedCommitHashes?: string[];
+  linkedFeedEventIds?: string[];
+  reviewPacket: ArchitectureReviewPacket;
+  result?: ArchitectureReviewResult;
+};
+
+export type ArchitectureReviewTemplate = {
+  id: ArchitectureReviewTemplateId;
+  title: string;
+  description: string;
+  escalationTriggers: string[];
+};
+
+export type ArchitectureReviewQueuePayload = {
+  lastUpdated: string;
+  policy: string;
+  orchestrationVersion: string;
+  templates: ArchitectureReviewTemplate[];
+  requests: ArchitectureReviewRequest[];
 };
 
 export type ImplementationFeedItem = {

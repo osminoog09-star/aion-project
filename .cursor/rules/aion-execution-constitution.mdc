@@ -34,6 +34,8 @@ EAS/deploy/APK/review waits **do not freeze** the ecosystem — continue next ac
 
 architecture uncertain, Android lifecycle, geospatial store, OCR scaling, overlay/runtime, distributed sync.
 
+**Do NOT ask owner to relay.** Use `npm run review:request` → portal `/operations/review-queue` → structured packet.
+
 ## PRIMARY product focus
 
 **Driver Intelligence Core** until genuinely useful: real profit, rental, OCR queue, GPS trip store, overlay HUD from unified runtime.
@@ -44,7 +46,7 @@ architecture uncertain, Android lifecycle, geospatial store, OCR scaling, overla
 
 ## Portal surfaces
 
-`/operations`, `/operations/priorities`, `/operations/execution`, `/operations/timeline`, `/operations/blockers`, `/operations/runtime`, `/operations/validation`
+`/operations`, `/operations/priorities`, `/operations/review-queue`, `/operations/reviews`, `/operations/execution`, `/operations/timeline`, `/operations/blockers`, `/operations/runtime`, `/operations/validation`
 
 ## Owner priority control
 

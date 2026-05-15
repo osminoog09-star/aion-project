@@ -4,6 +4,33 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-ai-orchestration-bridge",
+      "occurredAt": "2026-05-15",
+      "title": "AI orchestration bridge — architecture review queue",
+      "summary": "aion-com: /operations/reviews + /operations/review-queue, architecture-review-queue.json SoT, POST/PATCH /api/architecture-reviews, structured ChatGPT packets, npm run review:request, feed linkage. Owner observer-only.",
+      "subsystemIds": ["operations-center", "web-portal"],
+      "eventType": "architecture_change",
+      "task": "AI orchestration bridge",
+      "reasoning": "End manual owner relay; Cursor self-escalates via portal queue while autonomous execution continues.",
+      "confidence": "high",
+      "repository": "aion-com",
+      "rollup": {
+        "fullyDone": [
+          "✅ Review queue model + statuses",
+          "✅ API create/update + agent key",
+          "✅ Portal reviews + review-queue pages",
+          "✅ review:request script + cursor rules"
+        ],
+        "partiallyDone": ["🟨 ChatGPT API auto-ingest of results (manual PATCH for now)"],
+        "notStarted": ["⬜ Supabase snapshot for review queue"],
+        "technicalDebt": []
+      },
+      "stillMissing": ["Automated ChatGPT webhook"],
+      "blocked": [],
+      "impacts": { "release": "medium", "otaApk": "none", "backend": "low", "realtime": "none", "ux": "high", "cloud": "low" },
+      "validation": { "web_build": "passed" }
+    },
+    {
       "id": "evt-2026-05-15-post-shift-analytics",
       "occurredAt": "2026-05-15",
       "title": "Post-shift analytics engine + idle/time intelligence",

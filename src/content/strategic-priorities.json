@@ -3,7 +3,7 @@
   "constitutionVersion": "1.0",
   "ownerDirective": "PRIMARY: Driver Intelligence Core (real profit, rental, GPS history, OCR queue). P1 APK poll parallel — не freeze на EAS.",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
-  "nextImplementationTarget": "Historical driver analytics + zone patterns (no heatmaps)",
+  "nextImplementationTarget": "Historical driver analytics + zone patterns (no heatmaps); architecture reviews via /operations/review-queue",
   "executionNotes": "Post-shift analytics snapshots persisted (shift/route/idle/time/profit). Headless pending by shiftId on disk. Heatmaps blocked.",
   "priorities": [
     {

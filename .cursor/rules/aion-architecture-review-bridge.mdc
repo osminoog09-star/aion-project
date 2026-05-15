@@ -1,0 +1,47 @@
+---
+description: Architecture review queue — Cursor self-escalation without owner relay
+globs: "**/*"
+alwaysApply: true
+---
+
+# Architecture Review Bridge
+
+Owner must NOT act as manual relay between Cursor and ChatGPT.
+
+## When to escalate
+
+Create a review request when ANY apply:
+
+- confidence is `experimental`, `unstable`, or `blocked`
+- architecture uncertain (storage, lifecycle, distributed sync)
+- runtime risk high (Android FGS, headless, overlay)
+- dependency conflict in `strategic-priorities.json` dependencyGraph
+- scaling risk (storage growth, payload size)
+
+## How to escalate (do NOT message owner to forward)
+
+```bash
+npm run review:request -- \
+  --template gps-storage \
+  --title "..." \
+  --subsystem background-drive \
+  --reasoning "..." \
+  --architecture-concern "..." \
+  --proposed-direction "..." \
+  --confidence experimental
+```
+
+Or POST `/api/architecture-reviews` with header `X-Aion-Agent-Key: $OPERATIONS_OWNER_SECRET`.
+
+## Rules
+
+- Do NOT freeze entire autonomous loop — continue parallel roadmap priorities
+- Copy review packet from portal `/operations/review-queue` or API response `reviewPacketMarkdown`
+- On resolution: PATCH `/api/architecture-reviews/[id]` with result; link commits via `--commits`
+- Append feed after major implementation regardless
+
+## Portal surfaces
+
+- `/operations/reviews` — history + templates
+- `/operations/review-queue` — pending/reviewing
+- `/api/architecture-reviews`

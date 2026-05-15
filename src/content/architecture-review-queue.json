@@ -1,0 +1,56 @@
+{
+  "lastUpdated": "2026-05-15",
+  "policy": "Cursor creates review requests via npm run review:request or POST /api/architecture-reviews (agent key). Owner observes /operations/reviews — no manual relay to ChatGPT.",
+  "orchestrationVersion": "1.0",
+  "templates": [
+    {
+      "id": "android-runtime",
+      "title": "Android runtime review",
+      "description": "FGS lifecycle, OEM battery, reconnect, headless task boundaries.",
+      "escalationTriggers": ["background production gate", "headless duplication", "OEM-specific crash"]
+    },
+    {
+      "id": "ocr-architecture",
+      "title": "OCR architecture review",
+      "description": "Queue scaling, dedupe, offline replay, model pipeline.",
+      "escalationTriggers": ["queue backlog", "duplicate fuel entries", "OCR accuracy regression"]
+    },
+    {
+      "id": "gps-storage",
+      "title": "GPS storage review",
+      "description": "Trip store V1→SQLite, ingestion gateway, orphan sessions.",
+      "escalationTriggers": ["storage growth", "duplicate routes", "cold-start merge"]
+    },
+    {
+      "id": "overlay-lifecycle",
+      "title": "Overlay lifecycle review",
+      "description": "SYSTEM_ALERT_WINDOW, HUD SoT, overlay vs shift runtime.",
+      "escalationTriggers": ["overlay before stable FGS", "HUD field drift"]
+    },
+    {
+      "id": "scaling",
+      "title": "Scaling review",
+      "description": "Throughput, storage limits, batch sizes, serialization.",
+      "escalationTriggers": ["AsyncStorage pressure", "large timeline payloads"]
+    },
+    {
+      "id": "dependency",
+      "title": "Dependency review",
+      "description": "Roadmap dependency graph conflicts and ordering.",
+      "escalationTriggers": ["dependencyGraph blocked node", "parallel work conflict"]
+    },
+    {
+      "id": "production-readiness",
+      "title": "Production readiness review",
+      "description": "Release gates, validation matrix, field evidence.",
+      "escalationTriggers": ["experimental→production without validation"]
+    },
+    {
+      "id": "general",
+      "title": "General architecture review",
+      "description": "Cross-cutting design when no template fits.",
+      "escalationTriggers": ["low confidence", "multi-subsystem blast radius"]
+    }
+  ],
+  "requests": []
+}

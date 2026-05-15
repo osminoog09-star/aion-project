@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "feed:append": "node scripts/append-implementation-feed.mjs",
+    "review:request": "node scripts/append-architecture-review.mjs",
     "release:apk-manifest:sync": "node scripts/sync-apk-manifest-from-eas.mjs"
   },
   "dependencies": {
