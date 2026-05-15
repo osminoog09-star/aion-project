@@ -11,6 +11,7 @@
     "review:request": "node scripts/append-architecture-review.mjs",
     "verify:routes": "node scripts/verify-app-routes.mjs",
     "deploy:vercel": "npx vercel@54 deploy --prod",
+    "deploy:hook": "node scripts/trigger-deploy-hook.mjs",
     "deploy:pipeline": "node scripts/deploy-pipeline.mjs",
     "deploy:validate": "node scripts/post-deploy-validate.mjs",
     "git:remote": "node scripts/setup-git-remote.mjs",

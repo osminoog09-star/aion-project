@@ -1,5 +1,5 @@
-# Autonomous production deploy → Vercel + route validation + deployment-status.json update
-# Required GitHub secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+# Production deploy via VERCEL_TOKEN (GitHub secrets) or skip when using deploy-hook workflow.
+# Required secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
 
 name: Vercel production deploy
 
@@ -14,7 +14,11 @@ concurrency:
 
 jobs:
   deploy:
+    if: ${{ secrets.VERCEL_TOKEN != '' }}
     runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -28,14 +32,13 @@ jobs:
       - run: node scripts/verify-app-routes.mjs
 
       - name: Deploy to Vercel Production
-        id: vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: "--prod"
-          working-directory: ./
+        run: npx --yes vercel@54 deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Wait for alias propagation
+        run: sleep 60
 
       - name: Post-deploy route validation
         run: node scripts/post-deploy-validate.mjs --base https://aion-com.vercel.app

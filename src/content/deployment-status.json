@@ -5,114 +5,73 @@
   "expectedGitRemote": "https://github.com/osminoog09-star/aion-project.git",
   "vercelProjectId": "prj_ep8i1CoHfHdZKwto8gkF5XStzonK",
   "vercelOrgId": "team_4I1qT09taD3cqaGmhpCpoCxC",
-  "pipelineVersion": "1.2",
+  "pipelineVersion": "1.3",
   "gitLinkage": {
     "remoteConfigured": true,
     "remoteUrl": "https://github.com/osminoog09-star/aion-project.git",
     "defaultBranch": "master",
     "githubRepoExists": true,
-    "lastPushAttempt": "2026-05-15T09:18:00Z",
+    "lastPushAttempt": "2026-05-15T09:19:45Z",
     "lastPushError": null,
-    "lastPushedCommit": "adb1208"
+    "lastPushedCommit": "96091a2"
   },
   "vercelLinkage": {
+    "projectName": "aion-com",
     "projectLinkedLocally": true,
     "productionBranch": "master",
-    "autoDeployOnPush": true,
+    "rootDirectory": ".",
+    "rootDirectoryWarning": "If Vercel Root Directory is aion-com (legacy), builds fail and production stays stale — set to repo root (.)",
+    "autoDeployOnPush": false,
     "gitRepository": "osminoog09-star/aion-project",
-    "notes": "Vercel project aion-com → Settings → Git → osminoog09-star/aion-project"
+    "notes": "Production alias serves cached deployment ~22h old (X-Vercel-Cache HIT). Git push does not update production until redeploy."
   },
   "lastProductionDeploy": {
     "status": "stale",
     "deployedAt": null,
-    "commit": "adb1208",
+    "commit": "96091a2",
     "commitFull": null,
-    "deploymentUrl": null,
+    "deploymentUrl": "https://aion-dgfqhbgbt-osminoog09-3913s-projects.vercel.app",
     "deploymentId": null,
     "trigger": "none",
     "durationMs": null,
     "rollbackTarget": null,
-    "notes": "Route validation failed — redeploy required."
+    "notes": "Production missing /operations/* (404). GitHub master has routes; CI build passes. Vercel production not redeployed."
   },
   "routeValidation": {
-    "checkedAt": "2026-05-15T09:19:09.915Z",
+    "checkedAt": "2026-05-15T09:40:00Z",
     "baseUrl": "https://aion-com.vercel.app",
     "routes": {
-      "/operations": {
-        "status": "fail",
-        "httpStatus": null,
-        "renderOk": false
-      },
-      "/operations/reviews": {
-        "status": "fail",
-        "httpStatus": null,
-        "renderOk": false
-      },
-      "/operations/review-queue": {
-        "status": "fail",
-        "httpStatus": null,
-        "renderOk": false
-      },
-      "/operations/priorities": {
-        "status": "fail",
-        "httpStatus": null,
-        "renderOk": false
-      },
-      "/operations/execution": {
-        "status": "fail",
-        "httpStatus": null,
-        "renderOk": false
-      },
-      "/operations/blockers": {
-        "status": "fail",
-        "httpStatus": null,
-        "renderOk": false
-      },
-      "/operations/runtime": {
-        "status": "fail",
-        "httpStatus": null,
-        "renderOk": false
-      },
-      "/operations/validation": {
-        "status": "fail",
-        "httpStatus": null,
-        "renderOk": false
-      },
-      "/operations/deployment": {
-        "status": "fail",
-        "httpStatus": null,
-        "renderOk": false
-      }
+      "/operations": { "status": "fail", "httpStatus": 404, "renderOk": false },
+      "/operations/reviews": { "status": "fail", "httpStatus": 404, "renderOk": false },
+      "/operations/review-queue": { "status": "fail", "httpStatus": 404, "renderOk": false },
+      "/operations/priorities": { "status": "fail", "httpStatus": 404, "renderOk": false },
+      "/operations/deployment": { "status": "fail", "httpStatus": 404, "renderOk": false },
+      "/roadmap": { "status": "pass", "httpStatus": 200, "renderOk": true }
     },
     "allPassed": false
   },
   "deploymentTimeline": [
     {
-      "at": "2026-05-15T09:19:09.915Z",
-      "kind": "validation_failed",
-      "summary": "Production validation failed — stale or broken deploy",
-      "durationMs": 613
-    },
-    {
-      "at": "2026-05-15",
-      "kind": "infra_migration",
-      "summary": "Canonical GitHub repo aligned to osminoog09-star/aion-project (was aion-com)",
-      "commit": null
+      "at": "2026-05-15T09:40:00Z",
+      "kind": "investigation",
+      "summary": "Root cause: stale production alias, not routing bug. VERCEL_TOKEN missing in GitHub; local CLI token invalid. vercel-production.yml deploy step fails.",
+      "commit": "96091a2"
     }
   ],
   "pipelineBlockers": [
-    "Production still stale: connect Vercel Git to osminoog09-star/aion-project and redeploy (or npm run deploy:pipeline with vercel login)"
+    "VERCEL_TOKEN not in GitHub secrets — vercel-production.yml deploy step fails instantly",
+    "Local Vercel CLI token expired (invalidToken) — cannot CLI deploy from agent",
+    "Vercel Git auto-deploy not promoting new builds to aion-com.vercel.app"
   ],
   "ownerUnblock": {
-    "stepA_github": "Repo: https://github.com/osminoog09-star/aion-project (canonical)",
-    "stepB_push": "cd aion-com && npm run git:remote && git push -u origin master",
-    "stepC_vercel": "Vercel → project aion-com → Settings → Git → Connect osminoog09-star/aion-project, branch master",
-    "stepD_secrets": "GitHub aion-project → Secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID",
-    "stepE_alt": "npx vercel login && npm run deploy:pipeline"
+    "stepA_vercel_git": "Vercel → aion-com → Settings → Git: repo osminoog09-star/aion-project, Production branch master, Root Directory empty (.)",
+    "stepB_deploy_hook": "Vercel → Deploy Hooks → Production → copy URL → GitHub secret VERCEL_DEPLOY_HOOK (enables vercel-deploy-hook.yml)",
+    "stepC_token": "OR: vercel.com/account/tokens → GitHub secrets VERCEL_TOKEN + VERCEL_ORG_ID + VERCEL_PROJECT_ID",
+    "stepD_cli": "OR: npx vercel login && npm run deploy:vercel"
   },
   "autonomousRecovery": [
-    "git push to aion-project triggers vercel-production.yml when secrets set",
-    "npm run deploy:validate after deploy",
-    "npm run deploy:pipeline for CLI path"
+    "After stepB: push triggers vercel-deploy-hook.yml → production redeploy",
+    "After stepC: push triggers vercel-production.yml",
+    "npm run deploy:validate confirms /operations/* HTTP 200"
   ]
 }

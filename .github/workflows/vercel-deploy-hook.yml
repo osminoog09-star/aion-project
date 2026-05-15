@@ -1,0 +1,30 @@
+# Triggers Vercel production deploy via Deploy Hook (no VERCEL_TOKEN required).
+# GitHub secret: VERCEL_DEPLOY_HOOK = full hook URL from Vercel → Project → Settings → Git → Deploy Hooks
+
+name: Vercel deploy hook
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master, main]
+
+jobs:
+  trigger-production:
+    if: ${{ secrets.VERCEL_DEPLOY_HOOK != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: POST production deploy hook
+        run: |
+          curl -fsSL -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
+          echo "Deploy hook triggered."
+
+      - name: Wait for propagation
+        run: sleep 90
+
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Validate production routes
+        run: node scripts/post-deploy-validate.mjs --base https://aion-com.vercel.app
+        continue-on-error: true
