@@ -10,7 +10,10 @@
     "feed:append": "node scripts/append-implementation-feed.mjs",
     "review:request": "node scripts/append-architecture-review.mjs",
     "verify:routes": "node scripts/verify-app-routes.mjs",
-    "deploy:vercel": "vercel deploy --prod",
+    "deploy:vercel": "npx vercel@54 deploy --prod",
+    "deploy:pipeline": "node scripts/deploy-pipeline.mjs",
+    "deploy:validate": "node scripts/post-deploy-validate.mjs",
+    "git:remote": "node scripts/setup-git-remote.mjs",
     "release:apk-manifest:sync": "node scripts/sync-apk-manifest-from-eas.mjs"
   },
   "dependencies": {

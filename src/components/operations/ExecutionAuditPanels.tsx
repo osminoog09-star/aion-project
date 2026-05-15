@@ -19,6 +19,7 @@ export function OperationsSubNav() {
     { href: ecosystemRoutes.operationsPriorities, label: "Priorities" },
     { href: ecosystemRoutes.operationsReviewQueue, label: "Review queue" },
     { href: ecosystemRoutes.operationsReviews, label: "Reviews" },
+    { href: ecosystemRoutes.operationsDeployment, label: "Deploy" },
     { href: ecosystemRoutes.operationsContext, label: "Context" },
     { href: ecosystemRoutes.roadmapExecution, label: "Queue" },
   ];

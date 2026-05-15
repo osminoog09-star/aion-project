@@ -1,5 +1,5 @@
-# Production deploy to Vercel (required when git push does not auto-trigger or local-only commits).
-# Secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID (from .vercel/project.json or Vercel dashboard)
+# Autonomous production deploy → Vercel + route validation + deployment-status.json update
+# Required GitHub secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
 
 name: Vercel production deploy
 
@@ -7,26 +7,28 @@ on:
   workflow_dispatch:
   push:
     branches: [master, main]
-    paths:
-      - "src/**"
-      - "public/**"
-      - "package.json"
-      - "package-lock.json"
-      - "next.config.ts"
+
+concurrency:
+  group: vercel-production
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
+
       - run: npm ci
       - run: npm run build
       - run: node scripts/verify-app-routes.mjs
+
       - name: Deploy to Vercel Production
+        id: vercel
         uses: amondnet/vercel-action@v25
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
@@ -34,3 +36,37 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: "--prod"
           working-directory: ./
+
+      - name: Post-deploy route validation
+        run: node scripts/post-deploy-validate.mjs --base https://aion-com.vercel.app
+
+      - name: Record deploy in implementation feed
+        if: success()
+        run: |
+          node scripts/append-implementation-feed.mjs \
+            --title "Production deploy succeeded" \
+            --summary "Vercel production deploy + operations routes validated (${{ github.sha }})" \
+            --event-type implementation_finished \
+            --repo aion-com \
+            --confidence high \
+            --subsystems operations-center,web-portal
+
+      - name: Record deploy failure in feed
+        if: failure()
+        run: |
+          node scripts/append-implementation-feed.mjs \
+            --title "Production deploy FAILED" \
+            --summary "Vercel deploy or route validation failed — see Actions log (${{ github.sha }})" \
+            --event-type validation_failed \
+            --repo aion-com \
+            --confidence blocked \
+            --subsystems operations-center,web-portal
+
+      - name: Commit deployment status (bot)
+        if: success() && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/content/deployment-status.json src/content/ecosystem-implementation-feed.json || true
+          git diff --staged --quiet || git commit -m "chore(deploy): update production deployment status [skip ci]"
+          git push || echo "Push skipped (permissions or no changes)"
