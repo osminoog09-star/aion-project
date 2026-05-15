@@ -44,12 +44,13 @@ const HYDRATION_MARKERS = [
 ];
 
 function fetchHtmlPowerShell(url) {
+  const psUrl = url.replace(/'/g, "''");
   const out = execFileSync(
     "powershell",
     [
       "-NoProfile",
       "-Command",
-      `[Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8; $r = Invoke-WebRequest -Uri '${url.replace(/'/g, "''")}' -UseBasicParsing; Write-Output $r.StatusCode; Write-Output '---'; Write-Output $r.Content`,
+      `[Console]::OutputEncoding = [Text.UTF8Encoding]::UTF8; try { $r = Invoke-WebRequest -Uri '${psUrl}' -UseBasicParsing; Write-Output $r.StatusCode; Write-Output '---'; Write-Output $r.Content } catch { if ($_.Exception.Response) { Write-Output ([int]$_.Exception.Response.StatusCode); Write-Output '---'; Write-Output $_.ErrorDetails.Message } else { Write-Output 0; Write-Output '---'; Write-Output '' } }`,
     ],
     { encoding: "utf8", maxBuffer: 12 * 1024 * 1024 },
   );

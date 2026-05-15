@@ -4,13 +4,13 @@
   "agentId": "cursor-autonomous",
   "lastUpdated": "2026-05-15",
   "state": {
-    "status": "validating",
-    "currentTask": "Live execution visibility — portal build",
+    "status": "deploying",
+    "currentTask": "Ожидание Vercel deploy /operations/live",
     "subsystem": "operations-center",
-    "reasoning": "Build + deploy /operations/live",
-    "confidence": 0.92,
-    "startedAt": "2026-05-15T11:28:52.885Z",
-    "updatedAt": "2026-05-15T11:28:52.885Z",
+    "reasoning": "Push 6af45c3; production ещё на предыдущем билде",
+    "confidence": 0.9,
+    "startedAt": "2026-05-15T11:32:07.737Z",
+    "updatedAt": "2026-05-15T11:32:07.737Z",
     "files": [
       "src/content/execution-runtime-state.json",
       "src/lib/execution-runtime.ts",
@@ -18,13 +18,18 @@
     ],
     "commitCandidate": null,
     "blocker": null,
-    "nextStep": "push main + deploy:validate",
+    "nextStep": "deploy:validate после propagate",
     "branch": "main",
     "dependencyTarget": "Route timeline intelligence UX",
     "validationStatus": "running",
     "pendingReviewCount": 0
   },
   "timeline": [
+    {
+      "at": "2026-05-15T11:32:07.737Z",
+      "phase": "deploying",
+      "summary": "deploying: Ожидание Vercel deploy /operations/live"
+    },
     {
       "at": "2026-05-15T11:28:52.885Z",
       "phase": "validating",
@@ -48,4 +53,13 @@
   ],
   "heartbeats": [
     {
-      "at": "2026-05-15T11:28
+      "at": "2026-05-15T11:32:07.737Z"
+    },
+    {
+      "at": "2026-05-15T11:28:52.885Z"
+    },
+    {
+      "at": "2026-05-15T12:30:00.000Z"
+    }
+  ]
+}
