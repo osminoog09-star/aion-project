@@ -4,6 +4,53 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-gps-trip-store",
+      "occurredAt": "2026-05-15",
+      "title": "GPS trip history store (v1 foundation)",
+      "summary": "aion-driver: ShiftGpsSession AsyncStorage, buffered GPS append on location ticks, stop detection (3min/80m), finalize on endShift with gpsPointCount/gpsStopCount on Shift record. Dep route-gps-store → done.",
+      "subsystemIds": ["mobile-app", "driver-intelligence"],
+      "eventType": "runtime_change",
+      "task": "PRIMARY #1 GPS trip history store",
+      "reasoning": "Autonomous roadmap-first: geospatial foundation from real ticks only; enables route intelligence and honest heatmaps later.",
+      "changedFiles": [
+        "features/gps/tripStore/gpsTripStorage.ts",
+        "features/gps/tripStore/gpsTripBuffer.ts",
+        "features/gps/tripStore/detectStopPoints.ts",
+        "contexts/ShiftContext.tsx"
+      ],
+      "confidence": "high",
+      "runtimeImpact": "persists GPS points per shift offline; no cloud sync yet",
+      "apkImpact": "ota-safe",
+      "commitHash": null,
+      "repository": "aion-driver",
+      "rollup": {
+        "fullyDone": [
+          "✅ GPS session store + buffer flush",
+          "✅ Stop point detection",
+          "✅ Shift snapshot gpsPointCount/gpsStopCount"
+        ],
+        "partiallyDone": [
+          "🟨 Map/timeline UI for route",
+          "🟨 Headless GPS merge into trip store"
+        ],
+        "notStarted": ["⬜ Heatmaps", "⬜ Cloud sync of trips"],
+        "technicalDebt": ["⚠ Headless FGS points not yet merged into trip store"]
+      },
+      "stillMissing": ["Route map UI", "mergeHeadlessGpsLocationsIntoStore → trip store"],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "low",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "none"
+      },
+      "validation": {
+        "driver_typecheck": "passed"
+      }
+    },
+    {
       "id": "evt-2026-05-15-strategic-priorities",
       "occurredAt": "2026-05-15",
       "title": "Strategic priority control + dependency graph on portal",

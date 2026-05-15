@@ -11,7 +11,7 @@
       "subsystemIds": ["mobile-app", "ocr", "background-drive"],
       "status": "in_progress",
       "rationale": "MASTER §11–12: модуль Driver должен быть полезен в реальной жизни до расширения экосистемы.",
-      "nextAction": "GPS trip store + stop points; OCR queue primary; post-shift analytics",
+      "nextAction": "Route intelligence UI + OCR queue primary; post-shift analytics from GPS session",
       "setAt": "2026-05-15",
       "setBy": "product-owner"
     },
@@ -123,8 +123,8 @@
       "id": "route-gps-store",
       "title": "GPS trip history store",
       "dependsOn": ["unified-shift-runtime", "background-runtime-production"],
-      "status": "in_progress",
-      "reason": "Geospatial phase §19–20"
+      "status": "done",
+      "reason": "v1: AsyncStorage session, buffered append, stop detection, shift snapshot fields"
     },
     {
       "id": "post-shift-analytics",
