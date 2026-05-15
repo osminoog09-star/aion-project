@@ -29,12 +29,16 @@ const ROUTES = [
 ];
 
 const HYDRATION_MARKERS = [
-  "Operations center",
-  "route intelligence",
-  "Review queue",
-  "deployment pipeline",
-  "AI execution audit",
-  "Architecture reviews",
+  "Центр операций",
+  "Операции",
+  "Очередь ревью",
+  "конвейер деплоя",
+  "Production-деплой",
+  "Аудит AI-исполнения",
+  "Центр исполнения",
+  "Архитектурные ревью",
+  "Стратегические приоритеты",
+  "Панель валидации",
 ];
 
 async function fetchHtml(url) {
@@ -68,8 +72,8 @@ async function checkRoute(route) {
       ok &&
       html.length > 500 &&
       (route.includes("deployment")
-        ? html.includes("deployment pipeline") || html.includes("Production deploy")
-        : HYDRATION_MARKERS.some((m) => html.includes(m)) || html.includes("operations"));
+        ? html.includes("конвейер деплоя") || html.includes("Production-деплой")
+        : HYDRATION_MARKERS.some((m) => html.includes(m)) || html.includes("операц"));
     return { status: ok ? "pass" : "fail", httpStatus: status, renderOk };
   } catch {
     return { status: "fail", httpStatus: null, renderOk: false };

@@ -10,6 +10,7 @@ import type {
   StrategicPriorityLevel,
   StrategicPriorityStatus,
 } from "@/lib/ecosystem-types";
+import { priorityLevelLabel, priorityStatusLabel, t } from "@/i18n";
 import { priorityLevelBadgeClass } from "@/lib/strategic-priorities";
 import {
   validateStrategicPriorities,
@@ -211,8 +212,7 @@ export function PriorityControlEditor({
   if (!authConfigured) {
     return (
       <section className="mt-8 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 text-sm text-amber-100/90">
-        Задайте <code className="font-mono">OPERATIONS_OWNER_SECRET</code> на сервере (≥16 символов), чтобы
-        включить редактирование. Публичный просмотр остаётся доступен.
+        {t("operations.pages.priorities.authSetup")}
       </section>
     );
   }
@@ -221,14 +221,14 @@ export function PriorityControlEditor({
     <section className="mt-10 space-y-8">
       {!authenticated ? (
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-          <h2 className="text-xs font-bold uppercase tracking-widest text-cyan-400/90">Owner login</h2>
-          <p className="mt-2 text-xs text-slate-500">Только владелец может менять приоритеты.</p>
+          <h2 className="text-xs font-bold uppercase tracking-widest text-cyan-400/90">{t("common.ownerLogin")}</h2>
+          <p className="mt-2 text-xs text-slate-500">{t("operations.pages.priorities.ownerOnly")}</p>
           <div className="mt-4 flex flex-wrap gap-2">
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Owner secret"
+              placeholder={t("common.ownerSecret")}
               className="min-w-[12rem] flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white"
             />
             <button
@@ -237,19 +237,19 @@ export function PriorityControlEditor({
               onClick={() => void login()}
               className="rounded-lg bg-cyan-600 px-4 py-2 text-sm font-semibold text-white hover:bg-cyan-500 disabled:opacity-50"
             >
-              Войти
+              {t("common.login")}
             </button>
           </div>
         </div>
       ) : (
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-xs text-emerald-300/90">Режим редактирования · owner</p>
+          <p className="text-xs text-emerald-300/90">{t("operations.pages.priorities.editMode")}</p>
           <button
             type="button"
             onClick={() => void logout()}
             className="text-xs text-slate-500 hover:text-slate-300"
           >
-            Выйти
+            {t("common.logout")}
           </button>
         </div>
       )}
@@ -279,7 +279,7 @@ export function PriorityControlEditor({
 
       <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5">
         <label className="text-[10px] font-bold uppercase tracking-widest text-amber-300/80">
-          Owner directive
+          {t("common.ownerDirective")}
         </label>
         <textarea
           disabled={!authenticated}
@@ -299,7 +299,7 @@ export function PriorityControlEditor({
           className="mt-2 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white disabled:opacity-60"
         />
         <label className="mt-4 block text-[10px] font-bold uppercase tracking-widest text-cyan-300/80">
-          nextImplementationTarget (roadmap)
+          {t("operations.pages.priorities.nextTargetField")}
         </label>
         <textarea
           disabled={!authenticated}
@@ -310,13 +310,14 @@ export function PriorityControlEditor({
         />
         {executionQueue?.currentSubsystemFocus ? (
           <p className="mt-2 text-[10px] text-slate-600">
-            Queue focus: {executionQueue.currentSubsystemFocus} · epic: {executionQueue.currentActiveEpic}
+            {t("operations.pages.priorities.queueFocus")}: {executionQueue.currentSubsystemFocus} ·{" "}
+            {t("operations.pages.priorities.epic")}: {executionQueue.currentActiveEpic}
           </p>
         ) : null}
       </div>
 
       <div>
-        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">Edit priorities</h2>
+        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">{t("common.editPriorities")}</h2>
         <ul className="mt-4 space-y-4">
           {draft.priorities.map((p, index) => (
             <li key={p.id} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
@@ -325,7 +326,7 @@ export function PriorityControlEditor({
                 <span
                   className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase ${priorityLevelBadgeClass(p.level)}`}
                 >
-                  {p.level}
+                  {priorityLevelLabel(p.level)}
                 </span>
                 {authenticated ? (
                   <span className="ml-auto flex gap-1">

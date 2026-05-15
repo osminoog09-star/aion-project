@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { confidenceLabel, t, validationLabel } from "@/i18n";
 import type { ImplementationFeedItem } from "@/lib/ecosystem-types";
 import {
   buildExecutionAuditView,
@@ -10,18 +11,18 @@ import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export function OperationsSubNav() {
   const links = [
-    { href: ecosystemRoutes.operations, label: "Overview" },
-    { href: ecosystemRoutes.operationsExecution, label: "Execution" },
-    { href: ecosystemRoutes.operationsTimeline, label: "Timeline" },
-    { href: ecosystemRoutes.operationsBlockers, label: "Blockers" },
-    { href: ecosystemRoutes.operationsRuntime, label: "Runtime" },
-    { href: ecosystemRoutes.operationsValidation, label: "Validation" },
-    { href: ecosystemRoutes.operationsPriorities, label: "Priorities" },
-    { href: ecosystemRoutes.operationsReviewQueue, label: "Review queue" },
-    { href: ecosystemRoutes.operationsReviews, label: "Reviews" },
-    { href: ecosystemRoutes.operationsDeployment, label: "Deploy" },
-    { href: ecosystemRoutes.operationsContext, label: "Context" },
-    { href: ecosystemRoutes.roadmapExecution, label: "Queue" },
+    { href: ecosystemRoutes.operations, label: t("operations.subNav.overview") },
+    { href: ecosystemRoutes.operationsExecution, label: t("operations.subNav.execution") },
+    { href: ecosystemRoutes.operationsTimeline, label: t("operations.subNav.timeline") },
+    { href: ecosystemRoutes.operationsBlockers, label: t("operations.subNav.blockers") },
+    { href: ecosystemRoutes.operationsRuntime, label: t("operations.subNav.runtime") },
+    { href: ecosystemRoutes.operationsValidation, label: t("operations.subNav.validation") },
+    { href: ecosystemRoutes.operationsPriorities, label: t("operations.subNav.priorities") },
+    { href: ecosystemRoutes.operationsReviewQueue, label: t("operations.subNav.reviewQueue") },
+    { href: ecosystemRoutes.operationsReviews, label: t("operations.subNav.reviews") },
+    { href: ecosystemRoutes.operationsDeployment, label: t("operations.subNav.deploy") },
+    { href: ecosystemRoutes.operationsContext, label: t("operations.subNav.context") },
+    { href: ecosystemRoutes.roadmapExecution, label: t("operations.subNav.queue") },
   ];
   return (
     <nav className="mt-4 flex flex-wrap gap-2 text-xs">
@@ -41,7 +42,9 @@ export function OperationsSubNav() {
 export function NextActionPanel({ view }: { view: ExecutionAuditView }) {
   return (
     <section className="rounded-2xl border border-cyan-500/25 bg-cyan-500/5 p-5">
-      <h2 className="text-xs font-bold uppercase tracking-widest text-cyan-400/90">Следующий шаг (roadmap)</h2>
+      <h2 className="text-xs font-bold uppercase tracking-widest text-cyan-400/90">
+        {t("operations.audit.nextStepRoadmap")}
+      </h2>
       <p className="mt-2 text-sm text-slate-200">{view.nextTarget}</p>
       {view.plannedNext.length ? (
         <ul className="mt-3 space-y-1 text-xs text-slate-400">
@@ -57,7 +60,9 @@ export function NextActionPanel({ view }: { view: ExecutionAuditView }) {
 export function ConfidenceGrid({ view }: { view: ExecutionAuditView }) {
   return (
     <section className="mt-10">
-      <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">Уверенность по подсистемам</h2>
+      <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">
+        {t("operations.audit.subsystemConfidence")}
+      </h2>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {view.subsystemConfidence.map((row) => (
           <div key={row.id} className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
@@ -66,7 +71,7 @@ export function ConfidenceGrid({ view }: { view: ExecutionAuditView }) {
               <span
                 className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase ${confidenceBadgeClass(row.confidence)}`}
               >
-                {row.confidence}
+                {confidenceLabel(row.confidence)}
               </span>
             </div>
             <p className="mt-2 text-xs text-slate-500">
@@ -82,7 +87,7 @@ export function ConfidenceGrid({ view }: { view: ExecutionAuditView }) {
 
 export function RiskBoard({ view }: { view: ExecutionAuditView }) {
   if (!view.riskAreas.length) {
-    return <p className="mt-4 text-sm text-slate-500">Нет зафиксированных зон повышенного риска в JSON.</p>;
+    return <p className="mt-4 text-sm text-slate-500">{t("operations.audit.noRisksJson")}</p>;
   }
   return (
     <ul className="mt-4 space-y-3">
@@ -111,7 +116,7 @@ export function RiskBoard({ view }: { view: ExecutionAuditView }) {
 export function BlockersList({ view }: { view: ExecutionAuditView }) {
   const unique = [...new Set(view.blockedTasks)];
   if (!unique.length) {
-    return <p className="text-sm text-slate-500">Нет открытых блокеров в execution queue / ecosystem-status.</p>;
+    return <p className="text-sm text-slate-500">{t("operations.audit.noBlockersQueue")}</p>;
   }
   return (
     <ul className="mt-4 space-y-2">
@@ -137,36 +142,37 @@ export function AuditFeedCard({ ev }: { ev: ImplementationFeedItem }) {
       <p className="mt-2 text-sm text-slate-400">{ev.summary}</p>
       {ev.reasoning ? (
         <div className="mt-3 rounded-lg border border-cyan-500/20 bg-cyan-500/5 px-3 py-2">
-          <p className="text-[10px] font-bold uppercase text-cyan-400/80">Почему</p>
+          <p className="text-[10px] font-bold uppercase text-cyan-400/80">{t("operations.audit.why")}</p>
           <p className="mt-1 text-xs text-slate-300">{ev.reasoning}</p>
         </div>
       ) : null}
       {ev.changedFiles?.length ? (
         <p className="mt-2 text-xs text-slate-500">
-          Файлы: <span className="font-mono text-slate-400">{ev.changedFiles.join(", ")}</span>
+          {t("common.files")}: <span className="font-mono text-slate-400">{ev.changedFiles.join(", ")}</span>
         </p>
       ) : null}
       {ev.runtimeImpact || ev.apkImpact ? (
         <p className="mt-2 text-xs text-slate-500">
-          Runtime: {ev.runtimeImpact ?? "—"} · APK: {ev.apkImpact ?? "—"}
+          {t("operations.audit.runtimeApk")}: {ev.runtimeImpact ?? t("common.dash")} · {t("operations.audit.apk")}:{" "}
+          {ev.apkImpact ?? t("common.dash")}
         </p>
       ) : null}
       {ev.confidence ? (
         <span
           className={`mt-2 inline-block rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase ${confidenceBadgeClass(ev.confidence)}`}
         >
-          confidence {ev.confidence}
+          {t("operations.audit.confidencePrefix")} {confidenceLabel(ev.confidence)}
         </span>
       ) : null}
       {ev.architectureReview ? (
         <div className="mt-3 rounded-lg border border-violet-500/25 bg-violet-500/5 px-3 py-2 text-xs">
-          <p className="font-bold uppercase text-violet-300/90">Architecture review</p>
+          <p className="font-bold uppercase text-violet-300/90">{t("operations.audit.archReview")}</p>
           <p className="mt-1 text-slate-400">{ev.architectureReview.topic}</p>
           <p className="mt-1 text-slate-500">{ev.architectureReview.summary ?? ev.architectureReview.requestReason}</p>
         </div>
       ) : null}
       <p className="mt-2 text-xs text-slate-500">
-        Подсистемы: <span className="font-mono">{ev.subsystemIds.join(", ")}</span>
+        {t("common.subsystems")}: <span className="font-mono">{ev.subsystemIds.join(", ")}</span>
         {ev.repository ? (
           <>
             {" "}
@@ -176,13 +182,13 @@ export function AuditFeedCard({ ev }: { ev: ImplementationFeedItem }) {
         {ev.commitHash ? (
           <>
             {" "}
-            · commit <span className="font-mono">{ev.commitHash}</span>
+            · {t("common.commits")} <span className="font-mono">{ev.commitHash}</span>
           </>
         ) : null}
       </p>
       <div className="mt-4 grid gap-3 text-xs md:grid-cols-2">
         <div>
-          <p className="font-bold uppercase tracking-wider text-slate-500">Rollup</p>
+          <p className="font-bold uppercase tracking-wider text-slate-500">{t("operations.audit.rollup")}</p>
           <ul className="mt-1 space-y-1 text-slate-400">
             {[...ev.rollup.fullyDone, ...ev.rollup.partiallyDone, ...ev.rollup.notStarted, ...ev.rollup.technicalDebt].map(
               (line) => (
@@ -192,13 +198,13 @@ export function AuditFeedCard({ ev }: { ev: ImplementationFeedItem }) {
           </ul>
         </div>
         <div>
-          <p className="font-bold uppercase tracking-wider text-slate-500">Пробелы / блок</p>
+          <p className="font-bold uppercase tracking-wider text-slate-500">{t("operations.audit.gapsBlock")}</p>
           <p className="mt-1 text-slate-400">{ev.stillMissing.join(" · ") || "—"}</p>
           <p className="mt-2 text-rose-200/80">{ev.blocked.join(" · ") || "—"}</p>
         </div>
       </div>
       <p className="mt-3 text-[10px] uppercase tracking-wider text-slate-600">
-        validation:{" "}
+        {t("operations.audit.validationPrefix")}:{" "}
         <span className="font-mono normal-case text-slate-400">
           {Object.entries(ev.validation)
             .map(([k, v]) => `${k}=${v}`)
@@ -222,7 +228,7 @@ export function ValidationDashboard({ view }: { view: ExecutionAuditView }) {
         ].map((x) => (
           <div key={x.k} className="rounded-xl border border-white/10 bg-white/[0.03] p-4 text-center">
             <p className={`text-2xl font-bold ${x.c}`}>{x.v}</p>
-            <p className="text-[10px] uppercase text-slate-500">{x.k}</p>
+            <p className="text-[10px] uppercase text-slate-500">{validationLabel(x.k)}</p>
           </div>
         ))}
       </div>
@@ -230,10 +236,10 @@ export function ValidationDashboard({ view }: { view: ExecutionAuditView }) {
         <table className="w-full min-w-[32rem] border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-white/10 text-[10px] uppercase text-slate-500">
-              <th className="py-2 pr-4">Сигнал</th>
-              <th className="py-2 pr-4">Статус</th>
-              <th className="py-2 pr-4">Дата</th>
-              <th className="py-2">Доказательство</th>
+              <th className="py-2 pr-4">{t("common.signal")}</th>
+              <th className="py-2 pr-4">{t("common.status")}</th>
+              <th className="py-2 pr-4">{t("common.date")}</th>
+              <th className="py-2">{t("common.evidence")}</th>
             </tr>
           </thead>
           <tbody>

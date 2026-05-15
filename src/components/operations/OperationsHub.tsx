@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { t } from "@/i18n";
 import type { OperationsHubView } from "@/lib/operations-hub-types";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 import { ReadinessBar } from "@/components/ecosystem/EcosystemAuditViews";
@@ -37,12 +38,12 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
   return (
     <div className="space-y-6">
       <div className="rounded-2xl border border-violet-500/25 bg-violet-500/5 px-4 py-3 text-xs text-violet-100/90 md:text-sm">
-        <strong className="text-white">Operations Hub</strong> — единая сборка APK + OTA + релизы + roadmap + облако.
-        Собрано: <time className="font-mono text-slate-400">{view.assembledAt}</time>
+        <strong className="text-white">{t("operations.hub.title")}</strong> — {t("operations.hub.banner")}{" "}
+        <time className="font-mono text-slate-400">{view.assembledAt}</time>
         {compact ? (
           <span className="text-slate-500">
             {" "}
-            · <Link href={ecosystemRoutes.control} className="text-cyan-400 hover:underline">полный хаб</Link>
+            · <Link href={ecosystemRoutes.control} className="text-cyan-400 hover:underline">{t("common.fullHub")}</Link>
           </span>
         ) : null}
       </div>
@@ -50,23 +51,31 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
       {compact ? (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-[10px] font-bold uppercase text-slate-500">APK (manifest)</p>
+            <p className="text-[10px] font-bold uppercase text-slate-500">{t("operations.hub.apkManifest")}</p>
             <p className="mt-1 font-mono text-lg text-white">{m?.latestVersion ?? "—"}</p>
             <p className="text-[10px] text-slate-600">runtime {m?.runtimeVersion ?? "—"}</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-[10px] font-bold uppercase text-slate-500">OTA ops</p>
+            <p className="text-[10px] font-bold uppercase text-slate-500">{t("operations.hub.otaOps")}</p>
             <p className="mt-1 text-2xl font-bold text-cyan-200">{view.ota.otaOps?.percent ?? "—"}%</p>
             <p className="text-[10px] text-slate-500">{view.ota.otaOps?.status ?? "—"}</p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-[10px] font-bold uppercase text-slate-500">Roadmap Ø</p>
+            <p className="text-[10px] font-bold uppercase text-slate-500">{t("operations.hub.roadmapAvg")}</p>
             <p className="mt-1 text-2xl font-bold text-violet-200">{view.roadmap.subsystemAvg}%</p>
-            <p className="text-[10px] text-slate-500">дебт: {view.roadmap.technicalDebtOpen}</p>
+            <p className="text-[10px] text-slate-500">
+              {t("operations.hub.debt")}: {view.roadmap.technicalDebtOpen}
+            </p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
-            <p className="text-[10px] font-bold uppercase text-slate-500">Cloud</p>
-            <p className="mt-1 text-lg text-white">{view.cloud.portalConfigured ? (view.cloud.snapshotsReachable ? "OK" : "ошибка") : "нет ключей"}</p>
+            <p className="text-[10px] font-bold uppercase text-slate-500">{t("operations.hub.cloud")}</p>
+            <p className="mt-1 text-lg text-white">
+              {view.cloud.portalConfigured
+                ? view.cloud.snapshotsReachable
+                  ? t("operations.hub.cloudOk")
+                  : t("operations.hub.cloudError")
+                : t("operations.hub.cloudNoKeys")}
+            </p>
             <p className="text-[10px] text-slate-600">{view.cloud.snapshotKinds.slice(0, 3).join(", ") || "—"}</p>
           </div>
         </div>
@@ -75,7 +84,7 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
       {!compact ? (
         <>
           <div className="grid gap-6 lg:grid-cols-2">
-            <Card title="APK operations" subtitle="Манифест + политика релизов">
+            <Card title={t("operations.hub.apkOps")} subtitle={t("operations.hub.apkOpsSub")}>
               <Row k="Latest (manifest)" v={<span className="font-mono text-cyan-200">{m?.latestVersion ?? "—"}</span>} />
               <Row k="Minimum supported" v={<span className="font-mono">{m?.minimumSupported ?? "—"}</span>} />
               <Row k="Runtime" v={<span className="font-mono">{m?.runtimeVersion ?? "—"}</span>} />
@@ -114,7 +123,7 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
               ) : null}
             </Card>
 
-            <Card title="OTA operations" subtitle="Каналы, rollout, строка ops из roadmap">
+            <Card title={t("operations.hub.otaOpsCard")} subtitle={t("operations.hub.otaOpsSub")}>
               <Row
                 k="Ops health %"
                 v={
@@ -153,7 +162,7 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <Card title="Release operations" subtitle="История и канон версий">
+            <Card title={t("operations.hub.releaseOps")} subtitle={t("operations.hub.releaseOpsSub")}>
               <Row k="Releases.json updated" v={view.releases.lastUpdated} />
               <p className="mt-3 text-[10px] font-bold uppercase text-slate-500">Timeline</p>
               <ul className="mt-2 space-y-2 text-xs text-slate-400">
@@ -175,7 +184,7 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
               </p>
             </Card>
 
-            <Card title="Roadmap operations" subtitle="Сводка с /roadmap + /status">
+            <Card title={t("operations.hub.roadmapOps")} subtitle={t("operations.hub.roadmapOpsSub")}>
               <Row k="Спринт" v={view.roadmap.sprintLabel} />
               <Row k="Фокус" v={view.roadmap.sprintFocus} />
               <Row k="Readiness pillars Ø" v={`${view.roadmap.readinessPillarAvg}%`} />
@@ -214,14 +223,14 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
             </Card>
           </div>
 
-          <Card title="Device operations" subtitle={view.deviceCenter.headline}>
+          <Card title={t("operations.hub.deviceOps")} subtitle={view.deviceCenter.headline}>
             <p className="text-sm text-slate-400">{view.deviceCenter.detail}</p>
             <p className="mt-3 text-xs text-amber-200/90">
-              Не строим фейковые счётчики устройств: требуется аутентификация и серверные агрегаты.
+              {t("operations.hub.deviceFakeNote")}
             </p>
           </Card>
 
-          <Card title="Cloud + infrastructure health" subtitle="Supabase + ops строки">
+          <Card title={t("operations.hub.cloudHealth")} subtitle={t("operations.hub.cloudHealthSub")}>
             <Row k="NEXT_PUBLIC_SUPABASE" v={view.cloud.portalConfigured ? "настроено" : "не задано"} />
             <Row k="Snapshots SELECT" v={view.cloud.snapshotsReachable ? "ok" : view.cloud.portalConfigured ? "ошибка" : "—"} />
             {view.cloud.probeError ? <Row k="Ошибка пробы" v={<span className="text-rose-300">{view.cloud.probeError}</span>} /> : null}

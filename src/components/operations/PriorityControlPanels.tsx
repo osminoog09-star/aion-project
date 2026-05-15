@@ -1,3 +1,4 @@
+import { priorityLevelLabel, priorityStatusLabel, t } from "@/i18n";
 import type { ExecutionDependencyNode, StrategicPrioritiesPayload, StrategicPriorityItem } from "@/lib/ecosystem-types";
 import {
   getActionableDependencies,
@@ -9,7 +10,7 @@ import {
 export function OwnerDirectivePanel({ payload }: { payload: StrategicPrioritiesPayload }) {
   return (
     <section className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5">
-      <h2 className="text-xs font-bold uppercase tracking-widest text-amber-300/90">Owner directive</h2>
+      <h2 className="text-xs font-bold uppercase tracking-widest text-amber-300/90">{t("common.ownerDirective")}</h2>
       <p className="mt-2 text-sm text-slate-200">{payload.ownerDirective}</p>
       <p className="mt-3 text-xs text-slate-500">
         Constitution v{payload.constitutionVersion} · обновлено {payload.lastUpdated}
@@ -30,7 +31,7 @@ export function PriorityBoard({ items }: { items: StrategicPriorityItem[] }) {
             <span
               className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase ${priorityLevelBadgeClass(p.level)}`}
             >
-              {p.level}
+              {priorityLevelLabel(p.level)}
             </span>
           </div>
           <p className="mt-2 text-xs text-slate-400">{p.rationale}</p>
@@ -59,7 +60,7 @@ export function DependencyGraphBoard({
       {actionable.length > 0 ? (
         <div>
           <h3 className="text-[10px] font-bold uppercase tracking-widest text-emerald-400/80">
-            Готово к исполнению (deps satisfied)
+            {t("operations.pages.priorities.readyToExecute")}
           </h3>
           <ul className="mt-2 space-y-2">
             {actionable.map((n) => (
@@ -69,7 +70,7 @@ export function DependencyGraphBoard({
         </div>
       ) : null}
       <div>
-        <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Граф зависимостей</h3>
+        <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{t("common.dependencyGraph")}</h3>
         <ul className="mt-2 space-y-2">
           {graph.map((n) => (
             <DependencyRow key={n.id} node={n} tone={n.status === "blocked" ? "blocked" : "default"} />
@@ -78,7 +79,7 @@ export function DependencyGraphBoard({
       </div>
       {blocked.length > 0 ? (
         <p className="text-xs text-slate-500">
-          Заблокировано узлов: {blocked.length} — Cursor не должен claim done для зависимых slice.
+          {t("operations.pages.priorities.blockedNodes", { count: blocked.length })}
         </p>
       ) : null}
     </div>
@@ -102,10 +103,10 @@ function DependencyRow({
     <li className={`rounded-lg border px-3 py-2 text-xs ${border}`}>
       <p className="font-semibold text-white">{node.title}</p>
       <p className="mt-1 text-slate-500">
-        depends: <span className="font-mono text-slate-400">{node.dependsOn.join(" → ")}</span>
+        {t("common.depends")}: <span className="font-mono text-slate-400">{node.dependsOn.join(" → ")}</span>
       </p>
       <p className="mt-1 text-slate-400">{node.reason}</p>
-      <p className="mt-1 font-mono text-[10px] uppercase text-slate-600">{node.status}</p>
+      <p className="mt-1 font-mono text-[10px] uppercase text-slate-600">{priorityStatusLabel(node.status)}</p>
     </li>
   );
 }

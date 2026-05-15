@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { t } from "@/i18n";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
 import { getOperationsHubView } from "@/lib/operations-hub-data";
 import { OperationsHub } from "@/components/operations/OperationsHub";
@@ -13,9 +14,8 @@ import { DefinitionOfDoneCallout, OperationsDashboard, ReadinessPillarGrid, Tech
 import { OperationsSubNav } from "@/components/operations/ExecutionAuditPanels";
 
 export const metadata: Metadata = {
-  title: "Operations — исполнение экосистемы",
-  description:
-    "Приоритеты, блокеры, техдолг и операционное здоровье модульной AI-платформы AION: облако, realtime, релизы.",
+  title: t("operations.pages.center.metaTitle"),
+  description: t("operations.pages.center.metaDescription"),
 };
 
 export default async function OperationsPage() {
@@ -23,12 +23,11 @@ export default async function OperationsPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-violet-400/90">Operations center</p>
-      <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">Operations</h1>
-      <p className="mt-3 max-w-3xl text-sm text-slate-400">
-        Единый слой исполнения платформы: приоритеты, блокеры, планка качества, облачный SoT и метрики для всех
-        модулей.
+      <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-violet-400/90">
+        {t("operations.pages.center.eyebrow")}
       </p>
+      <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">{t("operations.pages.center.title")}</h1>
+      <p className="mt-3 max-w-3xl text-sm text-slate-400">{t("operations.pages.center.description")}</p>
       <div className="mt-4">
         <RoadmapHubLinks />
       </div>
@@ -60,7 +59,9 @@ export default async function OperationsPage() {
       </div>
 
       <section className="mt-12">
-        <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">Операционное здоровье</h2>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">
+          {t("operations.pages.center.health")}
+        </h2>
         <div className="mt-6">
           <OperationsDashboard rows={eco.operations ?? []} />
         </div>
@@ -74,7 +75,9 @@ export default async function OperationsPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="text-sm font-bold uppercase tracking-widest text-rose-300/80">Технический долг</h2>
+        <h2 className="text-sm font-bold uppercase tracking-widest text-rose-300/80">
+          {t("operations.pages.center.techDebt")}
+        </h2>
         <div className="mt-4">
           <TechnicalDebtBoard items={eco.technicalDebt ?? []} />
         </div>

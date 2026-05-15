@@ -1,27 +1,28 @@
 import Link from "next/link";
+import { t } from "@/i18n";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 const primaryNav = [
-  { href: ecosystemRoutes.home, label: "Платформа" },
-  { href: ecosystemRoutes.ecosystem, label: "Экосистема" },
-  { href: ecosystemRoutes.roadmap, label: "Roadmap" },
-  { href: ecosystemRoutes.operations, label: "Операции" },
-  { href: ecosystemRoutes.status, label: "Статус" },
-  { href: ecosystemRoutes.releases, label: "Релизы" },
-  { href: ecosystemRoutes.control, label: "Control" },
+  { href: ecosystemRoutes.home, label: t("nav.platform") },
+  { href: ecosystemRoutes.ecosystem, label: t("nav.ecosystem") },
+  { href: ecosystemRoutes.roadmap, label: t("nav.roadmap") },
+  { href: ecosystemRoutes.operations, label: t("nav.operations") },
+  { href: ecosystemRoutes.status, label: t("nav.status") },
+  { href: ecosystemRoutes.releases, label: t("nav.releases") },
+  { href: ecosystemRoutes.control, label: t("nav.control") },
 ] as const;
 
 const moduleNav = [
-  { href: ecosystemRoutes.aionProject, label: "Driver" },
-  { href: ecosystemRoutes.roadmapExecution, label: "Execute" },
-  { href: ecosystemRoutes.operationsContext, label: "Ops ctx" },
-  { href: ecosystemRoutes.operationsTimeline, label: "Timeline" },
-  { href: ecosystemRoutes.link, label: "Link" },
-  { href: ecosystemRoutes.core, label: "Core" },
-  { href: ecosystemRoutes.downloads, label: "Downloads" },
-  { href: ecosystemRoutes.ai, label: "AI" },
-  { href: ecosystemRoutes.aiContext, label: "AI ctx" },
-  { href: ecosystemRoutes.studio, label: "Studio" },
+  { href: ecosystemRoutes.aionProject, label: t("nav.driver") },
+  { href: ecosystemRoutes.roadmapExecution, label: t("nav.execute") },
+  { href: ecosystemRoutes.operationsContext, label: t("nav.opsCtx") },
+  { href: ecosystemRoutes.operationsTimeline, label: t("nav.timeline") },
+  { href: ecosystemRoutes.link, label: t("nav.link") },
+  { href: ecosystemRoutes.core, label: t("nav.core") },
+  { href: ecosystemRoutes.downloads, label: t("nav.downloads") },
+  { href: ecosystemRoutes.ai, label: t("nav.ai") },
+  { href: ecosystemRoutes.aiContext, label: t("nav.aiCtx") },
+  { href: ecosystemRoutes.studio, label: t("nav.studio") },
 ] as const;
 
 export function SiteShell({ children }: { children: React.ReactNode }) {

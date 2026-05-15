@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { OperationsSubNav } from "@/components/operations/ExecutionAuditPanels";
+import {
+  deployStatusLabel,
+  renderCheckLabel,
+  routeCheckLabel,
+  t,
+} from "@/i18n";
 import { getDeploymentStatus } from "@/lib/deployment-status";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 export const metadata: Metadata = {
-  title: "Deployment health — production pipeline",
-  description: "Vercel production deploy status and operations route validation.",
+  title: t("operations.pages.deployment.metaTitle"),
+  description: t("operations.pages.deployment.metaDescription"),
 };
 
 function StatusBadge({ status }: { status: string }) {
@@ -20,7 +26,7 @@ function StatusBadge({ status }: { status: string }) {
           : "border-amber-500/40 text-amber-300";
   return (
     <span className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase ${cls}`}>
-      {status}
+      {deployStatusLabel(status)}
     </span>
   );
 }
@@ -33,11 +39,13 @@ export default function OperationsDeploymentPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14 md:px-6 md:py-20">
       <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-emerald-400/90">
-        deployment pipeline v{d.pipelineVersion}
+        {t("operations.pages.deployment.eyebrow", { version: d.pipelineVersion })}
       </p>
-      <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">Production deploy</h1>
+      <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">
+        {t("operations.pages.deployment.title")}
+      </h1>
       <p className="mt-3 max-w-3xl text-sm text-slate-400">
-        System-owned deployment health. Target:{" "}
+        {t("operations.pages.deployment.intro")}{" "}
         <a href={d.productionUrl} className="font-mono text-cyan-400 hover:underline">
           {d.productionUrl}
         </a>
@@ -46,50 +54,65 @@ export default function OperationsDeploymentPage() {
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-          <p className="text-[10px] uppercase text-slate-500">Deploy</p>
+          <p className="text-[10px] uppercase text-slate-500">{t("operations.pages.deployment.deploy")}</p>
           <div className="mt-2">
             <StatusBadge status={deploy.status} />
           </div>
-          <p className="mt-2 font-mono text-xs text-slate-400">{deploy.commit ?? "—"}</p>
+          <p className="mt-2 font-mono text-xs text-slate-400">{deploy.commit ?? t("common.dash")}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-          <p className="text-[10px] uppercase text-slate-500">GitHub</p>
+          <p className="text-[10px] uppercase text-slate-500">{t("operations.pages.deployment.github")}</p>
           <p className="mt-2 text-sm text-white">
-            {d.gitLinkage.githubRepoExists ? "linked" : "repo missing"}
+            {d.gitLinkage.githubRepoExists ? t("common.linked") : t("common.repoMissing")}
           </p>
           <p className="text-xs text-slate-500">{d.gitLinkage.defaultBranch}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
-          <p className="text-[10px] uppercase text-slate-500">Routes</p>
+          <p className="text-[10px] uppercase text-slate-500">{t("operations.pages.deployment.routes")}</p>
           <p className="mt-2 text-2xl font-bold text-white">
-            {d.routeValidation.allPassed ? "PASS" : "FAIL"}
+            {routeCheckLabel(d.routeValidation.allPassed)}
           </p>
           {deploy.durationMs != null ? (
-            <p className="text-xs text-slate-500">last check {deploy.durationMs}ms</p>
+            <p className="text-xs text-slate-500">
+              {t("operations.pages.deployment.lastCheck", { ms: deploy.durationMs })}
+            </p>
           ) : null}
         </div>
       </div>
 
       <section className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
         <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">
-          Latest deployment
+          {t("operations.pages.deployment.latest")}
         </h2>
         <ul className="mt-3 space-y-1 text-sm text-slate-400">
-          <li>Deployed: {deploy.deployedAt ?? "—"}</li>
-          <li>Trigger: {deploy.trigger}</li>
-          <li>Duration: {deploy.durationMs != null ? `${deploy.durationMs}ms` : "—"}</li>
-          <li>Rollback ref: {deploy.rollbackTarget ?? "previous Vercel deployment (dashboard)"}</li>
-          <li>Deployment URL: {deploy.deploymentUrl ?? "—"}</li>
+          <li>
+            {t("operations.pages.deployment.deployedAt")}: {deploy.deployedAt ?? t("common.dash")}
+          </li>
+          <li>
+            {t("operations.pages.deployment.trigger")}: {deploy.trigger}
+          </li>
+          <li>
+            {t("operations.pages.deployment.duration")}:{" "}
+            {deploy.durationMs != null ? `${deploy.durationMs}ms` : t("common.dash")}
+          </li>
+          <li>
+            {t("operations.pages.deployment.rollback")}:{" "}
+            {deploy.rollbackTarget ?? t("operations.pages.deployment.rollbackDefault")}
+          </li>
+          <li>
+            {t("operations.pages.deployment.deploymentUrl")}: {deploy.deploymentUrl ?? t("common.dash")}
+          </li>
           {deploy.notes ? <li className="text-amber-200/80">{deploy.notes}</li> : null}
         </ul>
       </section>
 
       <section className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
         <h2 className="text-xs font-bold uppercase tracking-widest text-cyan-400/90">
-          Route validation
+          {t("operations.pages.deployment.routeValidation")}
         </h2>
         <p className="mt-1 text-xs text-slate-500">
-          HTTP + render markers · {d.routeValidation.checkedAt ?? "never"}
+          {t("operations.pages.deployment.routeValidationHint")}{" "}
+          {d.routeValidation.checkedAt ?? t("common.never")}
         </p>
         <ul className="mt-4 space-y-2 font-mono text-xs">
           {routes.map(([route, v]) => (
@@ -98,7 +121,7 @@ export default function OperationsDeploymentPage() {
                 {route}
               </a>
               <span className={v.status === "pass" && v.renderOk ? "text-emerald-400" : "text-rose-400"}>
-                {v.httpStatus ?? "—"} · render {v.renderOk ? "ok" : "fail"}
+                {v.httpStatus ?? t("common.dash")} · {renderCheckLabel(v.renderOk)}
               </span>
             </li>
           ))}
@@ -107,7 +130,7 @@ export default function OperationsDeploymentPage() {
 
       <section className="mt-6 rounded-2xl border border-white/10 bg-white/[0.02] p-5">
         <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">
-          Deployment timeline
+          {t("operations.pages.deployment.timeline")}
         </h2>
         <ul className="mt-3 space-y-2 text-xs text-slate-400">
           {(d.deploymentTimeline ?? []).slice(0, 12).map((e) => (
@@ -119,31 +142,38 @@ export default function OperationsDeploymentPage() {
           ))}
         </ul>
         <Link href={ecosystemRoutes.operationsTimeline} className="mt-3 inline-block text-cyan-400">
-          Implementation feed →
+          {t("common.implementationFeed")} →
         </Link>
       </section>
 
       {d.pipelineBlockers.length ? (
         <section className="mt-6 rounded-2xl border border-rose-500/30 bg-rose-500/5 p-5">
-          <h2 className="text-xs font-bold uppercase text-rose-300">Blockers (system)</h2>
+          <h2 className="text-xs font-bold uppercase text-rose-300">
+            {t("operations.pages.deployment.blockersSystem")}
+          </h2>
           <ul className="mt-2 list-inside list-disc text-sm text-slate-300">
             {d.pipelineBlockers.map((b) => (
               <li key={b}>{b}</li>
             ))}
           </ul>
-          <div className="mt-4 rounded-lg bg-black/30 p-3 font-mono text-[11px] text-amber-200/90">
-            <p className="font-bold text-amber-300">One-time owner unblock</p>
-            {Object.entries(d.ownerUnblock).map(([k, v]) => (
-              <p key={k} className="mt-2">
-                {v}
-              </p>
-            ))}
-          </div>
+          {Object.keys(d.ownerUnblock).length ? (
+            <div className="mt-4 rounded-lg bg-black/30 p-3 font-mono text-[11px] text-amber-200/90">
+              <p className="font-bold text-amber-300">{t("operations.pages.deployment.ownerUnblock")}</p>
+              {Object.entries(d.ownerUnblock).map(([k, v]) => (
+                <p key={k} className="mt-2">
+                  {v}
+                </p>
+              ))}
+            </div>
+          ) : null}
         </section>
       ) : null}
 
       <p className="mt-6 text-xs text-slate-600">
-        Vercel {d.vercelProjectId} · auto-deploy {d.vercelLinkage.autoDeployOnPush ? "on" : "off"}
+        {t("operations.pages.deployment.vercelAuto", {
+          projectId: d.vercelProjectId,
+          state: d.vercelLinkage.autoDeployOnPush ? t("common.on") : t("common.off"),
+        })}
       </p>
     </div>
   );

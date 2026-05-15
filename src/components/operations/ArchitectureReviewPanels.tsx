@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { confidenceLabel, reviewStatusLabel, t } from "@/i18n";
+import { ru } from "@/i18n/locales/ru";
 import type {
   ArchitectureReviewQueuePayload,
   ArchitectureReviewRequest,
@@ -21,7 +23,7 @@ function CopyPacketButton({ markdown }: { markdown: string }) {
       }}
       className="rounded-lg border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-200"
     >
-      {copied ? "Скопировано" : "Копировать packet для ChatGPT"}
+      {copied ? t("common.copied") : t("common.copyPacket")}
     </button>
   );
 }
@@ -42,7 +44,7 @@ export function ReviewQueueStatsBar({ stats }: { stats: ReviewQueueStats }) {
           key={label}
           className={`rounded-full border px-3 py-1 text-xs font-bold uppercase ${statusBadgeClass(label)}`}
         >
-          {label} {n}
+          {reviewStatusLabel(label)} {n}
         </span>
       ))}
     </div>
@@ -65,27 +67,29 @@ export function ReviewRequestCard({ request }: { request: ArchitectureReviewRequ
         <span
           className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase ${statusBadgeClass(request.status)}`}
         >
-          {request.status}
+          {reviewStatusLabel(request.status)}
         </span>
       </div>
       <p className="mt-3 text-sm text-slate-300">{request.reasoning}</p>
       <p className="mt-2 text-xs text-amber-200/80">
-        <span className="text-slate-500">Architecture: </span>
+        <span className="text-slate-500">{t("common.architecture")}: </span>
         {request.architectureConcern}
       </p>
       <p className="mt-2 text-xs text-cyan-200/80">
-        <span className="text-slate-500">Direction: </span>
+        <span className="text-slate-500">{t("common.direction")}: </span>
         {request.proposedDirection}
       </p>
       <div className="mt-4 flex flex-wrap gap-2">
         <CopyPacketButton markdown={request.reviewPacket.markdown} />
         <span className="rounded-lg border border-white/10 px-2 py-1 text-[10px] text-slate-500">
-          confidence {request.confidence}
+          {t("operations.audit.confidencePrefix")} {confidenceLabel(request.confidence)}
         </span>
       </div>
       {request.result ? (
         <div className="mt-4 rounded-lg border border-emerald-500/20 bg-emerald-500/5 p-3 text-xs text-slate-300">
-          <p className="font-semibold text-emerald-300">Result ({request.result.reviewedBy})</p>
+          <p className="font-semibold text-emerald-300">
+            {t("common.result")} ({request.result.reviewedBy})
+          </p>
           {request.result.approvedDirection ? (
             <p className="mt-1">{request.result.approvedDirection}</p>
           ) : null}
@@ -100,7 +104,7 @@ export function ReviewRequestCard({ request }: { request: ArchitectureReviewRequ
       ) : null}
       {request.linkedCommitHashes?.length ? (
         <p className="mt-2 font-mono text-[10px] text-slate-600">
-          commits: {request.linkedCommitHashes.join(", ")}
+          {t("common.commits")}: {request.linkedCommitHashes.join(", ")}
         </p>
       ) : null}
     </article>
@@ -126,17 +130,16 @@ export function ReviewTemplatesGrid({ templates }: { templates: ArchitectureRevi
 }
 
 export function OrchestrationFlowCallout({ queue }: { queue: ArchitectureReviewQueuePayload }) {
+  const flowSteps = ru.operations.reviews.flowSteps;
   return (
     <div className="mt-8 rounded-2xl border border-violet-500/25 bg-violet-500/5 p-5 text-sm text-slate-300">
       <p className="text-xs font-bold uppercase tracking-widest text-violet-300/90">
-        Orchestration flow v{queue.orchestrationVersion}
+        {t("operations.reviews.flowTitle", { version: queue.orchestrationVersion })}
       </p>
       <ol className="mt-3 list-inside list-decimal space-y-1 text-xs text-slate-400">
-        <li>roadmap → autonomous execution</li>
-        <li>review queue if confidence/architecture/runtime/scaling risk</li>
-        <li>ChatGPT reviews structured packet (owner does not relay)</li>
-        <li>implementation continues on parallel priorities</li>
-        <li>audit feed + roadmap update</li>
+        {flowSteps.map((step) => (
+          <li key={step}>{step}</li>
+        ))}
       </ol>
       <p className="mt-3 text-[11px] text-slate-500">{queue.policy}</p>
     </div>
