@@ -1,0 +1,51 @@
+{
+  "version": "1.0",
+  "orchestrationVersion": "2.0",
+  "agentId": "cursor-autonomous",
+  "lastUpdated": "2026-05-15",
+  "state": {
+    "status": "validating",
+    "currentTask": "Live execution visibility — portal build",
+    "subsystem": "operations-center",
+    "reasoning": "Build + deploy /operations/live",
+    "confidence": 0.92,
+    "startedAt": "2026-05-15T11:28:52.885Z",
+    "updatedAt": "2026-05-15T11:28:52.885Z",
+    "files": [
+      "src/content/execution-runtime-state.json",
+      "src/lib/execution-runtime.ts",
+      "src/app/operations/live/page.tsx"
+    ],
+    "commitCandidate": null,
+    "blocker": null,
+    "nextStep": "push main + deploy:validate",
+    "branch": "main",
+    "dependencyTarget": "Route timeline intelligence UX",
+    "validationStatus": "running",
+    "pendingReviewCount": 0
+  },
+  "timeline": [
+    {
+      "at": "2026-05-15T11:28:52.885Z",
+      "phase": "validating",
+      "summary": "validating: Live execution visibility — portal build"
+    },
+    {
+      "at": "2026-05-15T12:28:00.000Z",
+      "phase": "planning",
+      "summary": "Прочитаны priorities, deployment status, review queue"
+    },
+    {
+      "at": "2026-05-15T12:29:00.000Z",
+      "phase": "analyzing",
+      "summary": "Спроектирован executionRuntimeState + heartbeat API"
+    },
+    {
+      "at": "2026-05-15T12:30:00.000Z",
+      "phase": "coding",
+      "summary": "Реализация /operations/live и Cursor scripts"
+    }
+  ],
+  "heartbeats": [
+    {
+      "at": "2026-05-15T11:28

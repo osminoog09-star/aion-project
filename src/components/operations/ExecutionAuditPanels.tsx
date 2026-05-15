@@ -13,6 +13,7 @@ export function OperationsSubNav() {
   const links = [
     { href: ecosystemRoutes.operations, label: t("operations.subNav.overview") },
     { href: ecosystemRoutes.operationsExecution, label: t("operations.subNav.execution") },
+    { href: ecosystemRoutes.operationsLive, label: t("operations.subNav.live") },
     { href: ecosystemRoutes.operationsTimeline, label: t("operations.subNav.timeline") },
     { href: ecosystemRoutes.operationsBlockers, label: t("operations.subNav.blockers") },
     { href: ecosystemRoutes.operationsRuntime, label: t("operations.subNav.runtime") },

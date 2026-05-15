@@ -127,6 +127,7 @@ export const en = {
     subNav: {
       overview: "Overview",
       execution: "Execution",
+      live: "Live",
       timeline: "Timeline",
       blockers: "Blockers",
       runtime: "Runtime",
@@ -236,6 +237,14 @@ export const en = {
         feed: "Events with audit fields ({count})",
         feedEmpty: "No events with eventType/reasoning yet — use npm run feed:append.",
         risks: "Risk areas",
+      },
+      live: {
+        eyebrow: "Live execution",
+        title: "Live execution",
+        metaTitle: "Live — autonomous execution",
+        metaDescription: "Current Cursor phase, heartbeat, reasoning, files, and timeline.",
+        intro:
+          "Panel polls every 8 seconds. State syncs via execution-runtime-state.json on push to main and npm run execution:phase in Cursor.",
       },
       blockers: {
         eyebrow: "Blockers",

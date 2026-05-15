@@ -312,6 +312,7 @@ export type ExecutionDependencyNode = {
 export type StrategicPrioritiesPayload = {
   lastUpdated: string;
   constitutionVersion: string;
+  autonomousOrchestration?: string;
   ownerDirective: string;
   editPolicy: string;
   executionNotes?: string;

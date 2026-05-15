@@ -1,0 +1,41 @@
+---
+description: Live autonomous execution visibility — portal + Cursor progress logs
+globs: "**/*"
+alwaysApply: true
+---
+
+# Live execution visibility (mandatory)
+
+## Portal SoT
+
+- `src/content/execution-runtime-state.json`
+- API: `GET/PATCH /api/execution-runtime`
+- UI: `/operations/live` (poll 8s)
+
+## Cursor progress (every phase change + during long work)
+
+```bash
+npm run execution:phase -- --phase planning --task "..." --subsystem ... --reasoning "..." --confidence 0.85 --next "..."
+npm run execution:heartbeat   # every 5–15s during active work
+npm run execution:waiting-review -- --pending 5   # when diff awaits Apply
+```
+
+Terminal must echo: `[PHASE] summary` (script does this).
+
+## Status values
+
+`idle | planning | analyzing | coding | validating | reviewing | deploying | blocked | waiting_approval | waiting_review | completed`
+
+## After owner Apply/Accept
+
+Resume autonomously — update phase to `coding` or `validating`, **no "what next?"**
+
+## Do NOT
+
+- Stream raw chain-of-thought
+- Fake heartbeat without real work
+- Spam feed with log dumps (use runtime state + feed:append at milestones)
+
+## Commit runtime state
+
+Include `execution-runtime-state.json` in portal commits at cycle end (`validating` → `deploying` → `completed`).

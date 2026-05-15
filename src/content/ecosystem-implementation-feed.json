@@ -31,6 +31,39 @@
       "validation": { "web_build": "passed" }
     },
     {
+      "id": "evt-2026-05-15-live-execution-visibility",
+      "occurredAt": "2026-05-15",
+      "title": "Live autonomous execution visibility (/operations/live)",
+      "summary": "execution-runtime-state.json SoT, GET/PATCH /api/execution-runtime, /operations/live panel (8s poll, health badges), npm run execution:phase|heartbeat|waiting-review for Cursor terminal logs. Owner observes phase/reasoning/files without ChatGPT relay.",
+      "subsystemIds": ["operations-center", "web-portal"],
+      "eventType": "implementation_finished",
+      "task": "Live execution UX infrastructure",
+      "reasoning": "Eliminates false idle perception; waiting_review explicit when Apply pending; heartbeat staleness honest on Vercel build snapshot.",
+      "confidence": "high",
+      "repository": "aion-project",
+      "changedFiles": [
+        "src/content/execution-runtime-state.json",
+        "src/lib/execution-runtime.ts",
+        "src/app/operations/live/page.tsx",
+        "src/components/operations/LiveExecutionPanel.tsx",
+        "scripts/execution-runtime.mjs"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ executionRuntimeState model + timeline",
+          "✅ /operations/live + API",
+          "✅ Cursor execution:phase scripts"
+        ],
+        "partiallyDone": ["🟨 Sub-second prod updates without push (needs KV/Supabase)"],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": { "release": "medium", "otaApk": "none", "backend": "low", "realtime": "medium", "ux": "high", "cloud": "low" },
+      "validation": { "web_build": "passed" }
+    },
+    {
       "id": "evt-2026-05-15-analytics-backfill-route",
       "occurredAt": "2026-05-15",
       "title": "Shift analytics backfill + route efficiency from snapshots",

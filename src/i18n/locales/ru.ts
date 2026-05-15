@@ -128,6 +128,7 @@ export const ru = {
     subNav: {
       overview: "Обзор",
       execution: "Исполнение",
+      live: "Live",
       timeline: "Таймлайн",
       blockers: "Блокеры",
       runtime: "Рантайм",
@@ -240,6 +241,15 @@ export const ru = {
         feedEmpty:
           "Пока нет событий с eventType/reasoning — используйте npm run feed:append с --event-type и --reasoning.",
         risks: "Зоны риска",
+      },
+      live: {
+        eyebrow: "Live execution",
+        title: "Живое исполнение",
+        metaTitle: "Live — автономное исполнение",
+        metaDescription:
+          "Текущая фаза Cursor, heartbeat, reasoning, файлы и timeline без ручного relay.",
+        intro:
+          "Панель обновляется каждые 8 секунд. Состояние синхронизируется через execution-runtime-state.json при push в main и npm run execution:phase в Cursor.",
       },
       blockers: {
         eyebrow: "Блокеры",

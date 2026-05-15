@@ -46,7 +46,11 @@ architecture uncertain, Android lifecycle, geospatial store, OCR scaling, overla
 
 ## Portal surfaces
 
-`/operations`, `/operations/priorities`, `/operations/review-queue`, `/operations/reviews`, `/operations/execution`, `/operations/timeline`, `/operations/blockers`, `/operations/runtime`, `/operations/validation`
+`/operations`, `/operations/live`, `/operations/priorities`, `/operations/review-queue`, `/operations/reviews`, `/operations/execution`, `/operations/timeline`, `/operations/blockers`, `/operations/runtime`, `/operations/validation`
+
+## Live visibility
+
+`npm run execution:phase` / `execution:heartbeat` / `execution:waiting-review` — owner observes `/operations/live` without manual ChatGPT relay.
 
 ## Owner priority control
 
