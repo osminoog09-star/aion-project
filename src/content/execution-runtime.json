@@ -11,8 +11,8 @@
     "reasoning": "shiftDisplayEconomics, heartbeat diagnostics, FGS constants aligned",
     "confidence": 0.9,
     "startedAt": "2026-05-15T12:21:34.440Z",
-    "updatedAt": "2026-05-15T13:02:12.691Z",
-    "heartbeatAt": "2026-05-15T13:02:12.691Z",
+    "updatedAt": "2026-05-15T13:02:25.436Z",
+    "heartbeatAt": "2026-05-15T13:02:25.436Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -254,6 +254,12 @@
   ],
   "heartbeats": [
     {
+      "at": "2026-05-15T13:02:25.436Z"
+    },
+    {
+      "at": "2026-05-15T13:02:22.665Z"
+    },
+    {
       "at": "2026-05-15T13:02:12.691Z"
     },
     {
@@ -390,12 +396,6 @@
     },
     {
       "at": "2026-05-15T12:16:58.867Z"
-    },
-    {
-      "at": "2026-05-15T12:16:54.859Z"
-    },
-    {
-      "at": "2026-05-15T12:16:48.852Z"
     }
   ]
 }
