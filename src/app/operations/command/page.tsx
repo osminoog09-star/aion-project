@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { OwnerCommandCenter } from "@/components/operations/OwnerCommandCenter";
+import { OwnerAutonomousMandateBanner } from "@/components/operations/OwnerAutonomousMandateBanner";
 import { OperationsSubNav } from "@/components/operations/ExecutionAuditPanels";
 import { buildOwnerCommandCenterView } from "@/lib/operations/owner-command-center";
 
@@ -15,6 +16,7 @@ export default function OwnerCommandCenterPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-14 md:px-6 md:py-20">
       <OperationsSubNav />
+      <OwnerAutonomousMandateBanner />
       <OwnerCommandCenter view={view} />
     </div>
   );

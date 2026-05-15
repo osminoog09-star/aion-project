@@ -33,7 +33,7 @@ function StatusBadge({ status }: { status: string }) {
 
 export default function OperationsDeploymentPage() {
   const d = getDeploymentStatus();
-  const deploy = d.lastProductionDeploy;
+  const deploy = d.lastProductionDeploy ?? null;
   const routes = Object.entries(d.routeValidation?.routes ?? {});
 
   return (
@@ -56,9 +56,9 @@ export default function OperationsDeploymentPage() {
         <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
           <p className="text-[10px] uppercase text-slate-500">{t("operations.pages.deployment.deploy")}</p>
           <div className="mt-2">
-            <StatusBadge status={deploy.status} />
+            <StatusBadge status={deploy?.status ?? "stale"} />
           </div>
-          <p className="mt-2 font-mono text-xs text-slate-400">{deploy.commit ?? t("common.dash")}</p>
+          <p className="mt-2 font-mono text-xs text-slate-400">{deploy?.commit ?? t("common.dash")}</p>
         </div>
         <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4">
           <p className="text-[10px] uppercase text-slate-500">{t("operations.pages.deployment.github")}</p>
@@ -72,7 +72,7 @@ export default function OperationsDeploymentPage() {
           <p className="mt-2 text-2xl font-bold text-white">
             {routeCheckLabel(d.routeValidation?.allPassed ?? false)}
           </p>
-          {deploy.durationMs != null ? (
+          {deploy?.durationMs != null ? (
             <p className="text-xs text-slate-500">
               {t("operations.pages.deployment.lastCheck", { ms: deploy.durationMs })}
             </p>
@@ -86,23 +86,24 @@ export default function OperationsDeploymentPage() {
         </h2>
         <ul className="mt-3 space-y-1 text-sm text-slate-400">
           <li>
-            {t("operations.pages.deployment.deployedAt")}: {deploy.deployedAt ?? t("common.dash")}
+            {t("operations.pages.deployment.deployedAt")}: {deploy?.deployedAt ?? t("common.dash")}
           </li>
           <li>
-            {t("operations.pages.deployment.trigger")}: {deploy.trigger}
+            {t("operations.pages.deployment.trigger")}: {deploy?.trigger ?? t("common.dash")}
           </li>
           <li>
             {t("operations.pages.deployment.duration")}:{" "}
-            {deploy.durationMs != null ? `${deploy.durationMs}ms` : t("common.dash")}
+            {deploy?.durationMs != null ? `${deploy.durationMs}ms` : t("common.dash")}
           </li>
           <li>
             {t("operations.pages.deployment.rollback")}:{" "}
-            {deploy.rollbackTarget ?? t("operations.pages.deployment.rollbackDefault")}
+            {deploy?.rollbackTarget ?? t("operations.pages.deployment.rollbackDefault")}
           </li>
           <li>
-            {t("operations.pages.deployment.deploymentUrl")}: {deploy.deploymentUrl ?? t("common.dash")}
+            {t("operations.pages.deployment.deploymentUrl")}:{" "}
+            {deploy?.deploymentUrl ?? t("common.dash")}
           </li>
-          {deploy.notes ? <li className="text-amber-200/80">{deploy.notes}</li> : null}
+          {deploy?.notes ? <li className="text-amber-200/80">{deploy.notes}</li> : null}
         </ul>
       </section>
 

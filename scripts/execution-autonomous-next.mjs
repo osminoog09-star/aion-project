@@ -75,9 +75,10 @@ narrateAionActiveRu({
   reasoning: pick.reasoning,
   next: pick.next,
   confidence: 0.88,
-  progress: pick.reasoning,
+  progress: `Автономно: ${pick.task}`,
   progressPercent: pick.progressPercent,
   etaMinutes: pick.etaMinutes,
   runtimeGraph: graph,
   autonomousDepth: depth,
+  lastAction: "NEXT",
 });

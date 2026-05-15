@@ -190,11 +190,32 @@ console.log(`  autonomous-next: каждые ${AUTONOMOUS_MS / 1000}с`);
 console.log(`  режим: непрерывный — idle/completed запрещены`);
 console.log("");
 
+const mandateHoursArg = process.argv.indexOf("--mandate-hours");
+const mandateHours =
+  mandateHoursArg >= 0 && process.argv[mandateHoursArg + 1]
+    ? Number.parseFloat(process.argv[mandateHoursArg + 1])
+    : 2;
+const mandateMs = Math.round(mandateHours * 3_600_000);
+
 let loopState = readLoopState();
+const nowIso = new Date().toISOString();
 if (!loopState.loopStartedAt) {
-  loopState = { ...loopState, loopStartedAt: new Date().toISOString() };
-  writeLoopState(loopState);
+  loopState = { ...loopState, loopStartedAt: nowIso };
 }
+if (!loopState.ownerMandate?.active) {
+  const endsAt = new Date(Date.now() + mandateMs).toISOString();
+  loopState = {
+    ...loopState,
+    ownerMandate: {
+      active: true,
+      labelRu: `Владелец поручил: автономная работа ${mandateHours} ч по roadmap`,
+      startedAt: nowIso,
+      endsAt,
+      durationMs: mandateMs,
+    },
+  };
+}
+writeLoopState(loopState);
 
 const doc = readRuntimeDoc();
 const phase = doc.runtime.phase ?? doc.runtime.status;

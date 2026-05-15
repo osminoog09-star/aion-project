@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LiveExecutionPanel } from "@/components/operations/LiveExecutionPanel";
+import { OwnerAutonomousMandateBanner } from "@/components/operations/OwnerAutonomousMandateBanner";
 import { OperationsSubNav } from "@/components/operations/ExecutionAuditPanels";
 import { buildLiveExecutionView, getLocalExecutionRuntime } from "@/lib/execution-runtime";
 import { t } from "@/i18n";
@@ -23,6 +24,7 @@ export default function OperationsLivePage() {
       </h1>
       <p className="mt-3 max-w-3xl text-sm text-slate-400">{t("operations.pages.live.intro")}</p>
       <OperationsSubNav />
+      <OwnerAutonomousMandateBanner />
       <p className="mt-6 text-xs text-slate-500">
         Снимок: {view.health.label} · панель обновляется каждые 8 секунд
       </p>

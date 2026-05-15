@@ -14,6 +14,7 @@ import {
   isContinuousOrchestration,
 } from "@/contracts/execution-runtime";
 import { CONTROL_MODE_RU, ownerControlMode } from "@/lib/operations/execution-owner-ru";
+import { getOwnerAutonomousMandate } from "@/lib/operations/owner-autonomous-mandate";
 import { getLocalStrategicPriorities } from "@/lib/strategic-priorities";
 import deploymentJson from "@/content/deployment-status.json";
 import type { DeploymentStatusPayload } from "@/contracts/deployment-status";
@@ -119,11 +120,13 @@ export function buildLiveExecutionView(doc: ExecutionRuntimeDocument) {
   const priorities = getLocalStrategicPriorities();
   const deployment = getLocalDeploymentStatus();
   const health = computeExecutionHealth(doc.runtime, Date.now(), doc.orchestrationVersion);
+  const ownerMandate = getOwnerAutonomousMandate();
 
   return {
     document: doc,
     runtime: doc.runtime,
     health,
+    ownerMandate,
     deployment,
     dependencyTarget:
       doc.runtime.dependencyTarget ?? priorities.nextImplementationTarget ?? "—",

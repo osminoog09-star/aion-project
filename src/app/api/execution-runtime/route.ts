@@ -24,6 +24,7 @@ export async function GET() {
       health: view.health.health,
       heartbeatAgeMs: view.health.heartbeatAgeMs,
       persistedVia: process.env.VERCEL ? "build_snapshot" : "filesystem",
+      ownerMandateActive: Boolean(view.ownerMandate?.active),
     },
     ...view,
   });

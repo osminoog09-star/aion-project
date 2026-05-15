@@ -1,13 +1,20 @@
-{
-  "version": "1.0",
-  "loopStartedAt": "2026-05-15T12:15:18.138Z",
-  "lastTaskKey": "stop-zone-validation-на-устройстве",
-  "sameTaskCount": 1,
-  "lastAutonomousAt": "2026-05-15T12:15:17.848Z",
-  "lastHealAt": null,
-  "healCountHour": 0,
-  "healHourStarted": null,
-  "deployCooldownUntil": null,
-  "totalAutonomousTicks": 1,
-  "autonomousDepth": 1
+﻿{
+    "version":  "1.0",
+    "loopStartedAt":  "2026-05-15T13:10:00.000Z",
+    "lastTaskKey":  "background-runtime-field-matrix",
+    "sameTaskCount":  1,
+    "lastAutonomousAt":  "2026-05-15T13:10:00.000Z",
+    "lastHealAt":  null,
+    "healCountHour":  0,
+    "healHourStarted":  null,
+    "deployCooldownUntil":  null,
+    "totalAutonomousTicks":  12,
+    "autonomousDepth":  3,
+    "ownerMandate":  {
+                         "active":  true,
+                         "labelRu":  "Р’Р»Р°РґРµР»РµС† РїРѕСЂСѓС‡РёР»: Р°РІС‚РѕРЅРѕРјРЅР°СЏ СЂР°Р±РѕС‚Р° 2 С‡Р°СЃР° РїРѕ roadmap",
+                         "startedAt":  "2026-05-15T13:06:57.5309616Z",
+                         "endsAt":  "2026-05-15T15:06:57.5309616Z",
+                         "durationMs":  7200000
+                     }
 }

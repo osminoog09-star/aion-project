@@ -269,9 +269,25 @@ export function heartbeatAgeMs(runtime) {
   return Number.isFinite(ms) ? Math.max(0, Date.now() - ms) : 999_999;
 }
 
+const STALE_RECOVER_PHASES = new Set([
+  "planning",
+  "analyzing",
+  "coding",
+  "validating",
+  "deploying",
+  "recovering",
+  "reviewing",
+  "optimizing",
+  "auditing",
+]);
+
 export function shouldRunStaleRecover(runtime) {
   const phase = runtime.phase ?? runtime.status;
-  return CONTINUOUS_ACTIVE_PHASES.has(phase) && heartbeatAgeMs(runtime) >= 60_000;
+  if (RESTING_PHASES.has(phase)) return false;
+  if (phase === "waiting_review" || phase === "waiting_approval" || phase === "blocked") {
+    return false;
+  }
+  return STALE_RECOVER_PHASES.has(phase) && heartbeatAgeMs(runtime) >= 60_000;
 }
 
 export function canHeal(loopState) {
