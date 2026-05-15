@@ -1,69 +1,71 @@
 {
   "lastUpdated": "2026-05-15",
   "productionUrl": "https://aion-com.vercel.app",
-  "canonicalGitHubRepo": "osminoog09-star/aion-project",
-  "vercelTeam": "osminoog09-3913s-projects",
-  "vercelProjectName": "aion-com",
+  "expectedGitRemote": "https://github.com/osminoog09-star/aion-project.git",
   "vercelProjectId": "prj_ep8i1CoHfHdZKwto8gkF5XStzonK",
   "vercelOrgId": "team_4I1qT09taD3cqaGmhpCpoCxC",
-  "pipelineVersion": "1.4",
+  "pipelineVersion": "1.5",
   "gitLinkage": {
     "remoteConfigured": true,
     "remoteUrl": "https://github.com/osminoog09-star/aion-project.git",
     "defaultBranch": "master",
     "githubRepoExists": true,
-    "lastPushedCommit": "dc8a799"
+    "lastPushAttempt": "2026-05-15T12:00:00Z",
+    "lastPushError": null
   },
   "vercelLinkage": {
-    "gitConnected": false,
+    "projectLinkedLocally": true,
     "productionBranch": "master",
-    "rootDirectory": "./",
-    "framework": "Next.js",
-    "gitRepository": "osminoog09-star/aion-project",
-    "productionDeploymentId": "GsrxHVBiU",
-    "productionDeploymentAge": "~23h",
-    "productionDeploymentSource": "vercel deploy (CLI, not Git)",
-    "notes": "Vercel dashboard verified: Connect Git Repository shown; no GitHub link active"
+    "autoDeployOnPush": true,
+    "notes": "Git connected: osminoog09-star/aion-project. Vercel GitHub App granted aion-project repo."
   },
   "lastProductionDeploy": {
-    "status": "stale",
+    "status": "in_progress",
     "deployedAt": null,
-    "commit": "dc8a799",
-    "deploymentUrl": "https://aion-dgfqhbgbt-osminoog09-3913s-projects.vercel.app",
-    "notes": "Stale CLI deploy predates /operations/* routes. GitHub master has full routes; CI build passes."
+    "commit": "d8a2146",
+    "commitFull": "d8a2146",
+    "deploymentUrl": null,
+    "deploymentId": "81A6hrWhq",
+    "trigger": "git push master",
+    "durationMs": null,
+    "rollbackTarget": "GsrxHVBiU",
+    "notes": "Git linked; deploy triggered. Prior build failed TS check on deployment-status.json schema."
   },
   "routeValidation": {
-    "checkedAt": "2026-05-15T10:00:00Z",
+    "checkedAt": "2026-05-15T12:00:00Z",
     "baseUrl": "https://aion-com.vercel.app",
     "routes": {
-      "/roadmap": { "status": "pass", "httpStatus": 200, "renderOk": true },
+      "/operations": { "status": "fail", "httpStatus": 404, "renderOk": false },
       "/operations/reviews": { "status": "fail", "httpStatus": 404, "renderOk": false },
       "/operations/review-queue": { "status": "fail", "httpStatus": 404, "renderOk": false },
       "/operations/priorities": { "status": "fail", "httpStatus": 404, "renderOk": false },
+      "/operations/execution": { "status": "fail", "httpStatus": 404, "renderOk": false },
+      "/operations/blockers": { "status": "fail", "httpStatus": 404, "renderOk": false },
+      "/operations/runtime": { "status": "fail", "httpStatus": 404, "renderOk": false },
+      "/operations/validation": { "status": "fail", "httpStatus": 404, "renderOk": false },
       "/operations/deployment": { "status": "fail", "httpStatus": 404, "renderOk": false }
     },
     "allPassed": false
   },
   "deploymentTimeline": [
     {
+      "at": "2026-05-15T12:00:00Z",
+      "kind": "git_connected",
+      "summary": "Vercel aion-com connected to osminoog09-star/aion-project; GitHub App access granted.",
+      "commit": "d8a2146"
+    },
+    {
       "at": "2026-05-15T10:00:00Z",
       "kind": "investigation_complete",
-      "summary": "Vercel UI: aion-com has NO Git repo connected; production GsrxHVBiU is 23h-old CLI deploy. Fix = connect Git or deploy hook.",
-      "commit": "dc8a799"
+      "summary": "Root cause: stale CLI deploy GsrxHVBiU; Git not connected.",
+      "commit": "94f96d0"
     }
   ],
   "pipelineBlockers": [
-    "Vercel project aion-com: Git repository not connected (dashboard shows Connect Git Repository)",
-    "GitHub Vercel App integration required for osminoog09-star/aion-project",
-    "VERCEL_DEPLOY_HOOK not set in GitHub secrets (workflow skips deploy)"
+    "Vercel production build must pass (deployment-status.json schema aligned with TypeScript)"
   ],
-  "ownerUnblock": {
-    "stepA_vercel_git": "https://vercel.com/osminoog09-3913s-projects/aion-com/settings/git → GitHub → select osminoog09-star/aion-project → Production branch master → Root Directory ./",
-    "stepB_deploy_hook": "After Git connected: Settings → Git → Deploy Hooks → Production → copy URL → GitHub secret VERCEL_DEPLOY_HOOK",
-    "stepC_auto": "Any git push to master triggers production deploy automatically once step A complete"
-  },
+  "ownerUnblock": {},
   "autonomousRecovery": [
-    "After step A: npm run deploy:validate should return allPassed true within ~2 min",
-    "deploy-hook workflow triggers on push when VERCEL_DEPLOY_HOOK secret set"
+    "npm run deploy:validate returns allPassed after successful Vercel production deploy"
   ]
 }
