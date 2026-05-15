@@ -4,6 +4,61 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-15-driver-intelligence-rental",
+      "occurredAt": "2026-05-15",
+      "title": "Driver Intelligence Core: rental-adjusted profit + dashboard strip",
+      "summary": "aion-driver: RentalEconomics (day/week/month + fixed ops/deposit), unified operationalCosts в ActiveShiftRuntime, snapshot на endShift, Settings UI, DriverIntelligenceStrip, orb HUD after-costs. Roadmap SoT: PRIMARY driver intelligence.",
+      "subsystemIds": ["mobile-app", "profit-engine", "driver-intelligence"],
+      "eventType": "implementation_finished",
+      "task": "MASTER §9–10 rental economics + unified profit path",
+      "reasoning": "Первый production slice Driver OS: реальная чистая прибыль с арендой без fake analytics; единый runtime path.",
+      "changedFiles": [
+        "types/rental.ts",
+        "utils/rentalEconomics.ts",
+        "utils/activeShiftMetrics.ts",
+        "features/shift/runtime/activeShiftRuntimeTypes.ts",
+        "features/driver/intelligence/computeDriverIntelligence.ts",
+        "components/driver/DriverIntelligenceStrip.tsx",
+        "screens/DashboardScreen.tsx",
+        "screens/SettingsScreen.tsx"
+      ],
+      "confidence": "high",
+      "runtimeImpact": "profitAfterCosts in live shift + orb HUD",
+      "apkImpact": "ota-safe JS",
+      "commitHash": null,
+      "repository": "aion-driver",
+      "rollup": {
+        "fullyDone": [
+          "✅ Rental accrual day/week/month + fixed ops",
+          "✅ operationalCosts в runtime + shift snapshot",
+          "✅ Dashboard + Settings + intelligence strip"
+        ],
+        "partiallyDone": [
+          "🟨 Route/heatmap GPS layer",
+          "🟨 OCR replay queue production path",
+          "🟨 Overlay HUD full metrics UI"
+        ],
+        "notStarted": [
+          "⬜ Time-of-day zone analytics",
+          "⬜ Historical heatmaps"
+        ],
+        "technicalDebt": []
+      },
+      "stillMissing": ["GPS trip history store", "OCR queue success path primary"],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "low",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "high",
+        "cloud": "low"
+      },
+      "validation": {
+        "driver_typecheck": "passed"
+      }
+    },
+    {
       "id": "evt-2026-05-15-ai-execution-audit",
       "occurredAt": "2026-05-15",
       "title": "AI Execution Audit System on operations portal",

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-15",
   "maintainedInRepository": true,
   "methodology": "Проценты — ручная оценка по коду и продукту на дату lastUpdated: UI/фичи, бэкенд, realtime, прод-UX, граничные случаи, паритет web/mobile, дизайн, тесты, релизная готовность. Автоматического сбора метрик нет; числа не нормируются к «красивым» значениям. Supabase snapshot при наличии может переопределить поля через ecosystem_public_snapshots.",
   "definitionOfDone": [
@@ -32,7 +32,7 @@
     ]
   },
   "execution": {
-    "currentPriority": "Continuous execution: P1 APK (EAS b9d3c90a ждёт FINISHED) + параллельно подсистемы 2–9 не замирают; честный SoT в blockedTasks/feed.",
+    "currentPriority": "PRIMARY: Driver Intelligence Core (rental economics, real profit, runtime HUD). P1 APK poll (EAS b9d3c90a) + parallel background-drive / OCR / GPS analytics — без freeze на внешних wait.",
     "nextPriority": "После FINISHED f71cec0a: подставить apkUrl, деплой манифеста, ручная приёмка; затем BackgroundTrackingAdapter spike (FGS) + profit refresh hooks после reconnect/OCR.",
     "blockedTasks": [
       "Полная схема release DB без согласования миграций и RLS",

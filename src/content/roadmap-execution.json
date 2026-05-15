@@ -54,7 +54,7 @@
   "executionQueue": {
     "currentActiveEpic": "Always-on drive: background shift + live profit + two-phone Link relay",
     "currentSubsystemFocus": "background-drive",
-    "nextImplementationTarget": "P1 APK остаётся: ждать FINISHED b9d3c90a → sync манифест → deploy → device Update Center (лёгкий poll, не idle всего цикла). Параллельно: production Android background (не только experimental), затем overlay orb / Link relay / profit по nextRecommendedStep подсистем.",
+    "nextImplementationTarget": "P1 APK: FINISHED b9d3c90a → sync манифест → deploy → device check. Параллельно PRIMARY: Driver Intelligence Core (rental-adjusted profit, unified runtime, dashboard intelligence strip) → OCR queue → GPS route layer → heatmaps. Не idle на EAS wait.",
     "blockedTasks": [
       "APK 1.0.4/6: активный preview EAS b9d3c90a-7566-425a-bdb9-53d68f59593a (commit 9baa6bb, vc6) — ждать FINISHED → `npm run release:apk-manifest:sync b9d3c90a-7566-425a-bdb9-53d68f59593a` → commit манифест → деплой портала → Update Center на устройстве; старые IN_QUEUE (f71cec0a/9fa827ce) можно отменить",
       "Полная схема release DB без согласования миграций и RLS",
