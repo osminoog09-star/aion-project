@@ -21,6 +21,7 @@
     "execution:runtime-loop": "node scripts/execution-runtime-loop.mjs",
     "execution:stream": "node scripts/execution-runtime.mjs --banner",
     "execution:action": "node scripts/execution-action.mjs",
+    "execution:push-live": "node scripts/execution-push-live.mjs",
     "execution:extend-mandate": "node scripts/execution-extend-mandate.mjs --hours 1",
     "test:field-validation-report": "node scripts/ci/test-field-validation-report-parse.mjs",
     "verify:routes": "node scripts/verify-app-routes.mjs",

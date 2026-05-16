@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import {
   buildLiveExecutionView,
-  getLocalExecutionRuntime,
+  getExecutionRuntimeForLive,
   EXECUTION_RUNTIME_STATUSES,
 } from "@/lib/execution-runtime";
 import { patchExecutionRuntime } from "@/lib/operations/execution-runtime-persist";
@@ -12,8 +12,10 @@ import type { ExecutionLastValidation } from "@/contracts/execution-runtime";
 export const runtime = "nodejs";
 
 export async function GET() {
-  const document = getLocalExecutionRuntime();
+  const { document, persistedVia } = await getExecutionRuntimeForLive();
   const view = buildLiveExecutionView(document);
+  const staleSnapshot =
+    persistedVia === "build_snapshot" && view.health.heartbeatAgeMs > 60_000;
   return NextResponse.json({
     meta: {
       kind: "execution_runtime",
@@ -23,7 +25,12 @@ export async function GET() {
       lastUpdated: document.lastUpdated,
       health: view.health.health,
       heartbeatAgeMs: view.health.heartbeatAgeMs,
-      persistedVia: process.env.VERCEL ? "build_snapshot" : "filesystem",
+      persistedVia,
+      staleSnapshot,
+      liveConfigured: Boolean(
+        process.env.OPERATIONS_SUPABASE_SERVICE_ROLE_KEY?.trim() &&
+          process.env.NEXT_PUBLIC_SUPABASE_URL?.trim(),
+      ),
       ownerMandateActive: Boolean(view.ownerMandate?.active),
     },
     ...view,

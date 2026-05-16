@@ -15,6 +15,7 @@ import {
 } from "@/contracts/execution-runtime";
 import { CONTROL_MODE_RU, ownerControlMode } from "@/lib/operations/execution-owner-ru";
 import { getLocalFieldValidationReport } from "@/lib/operations/field-validation-report";
+import { resolveExecutionRuntimeDocument } from "@/lib/operations/execution-runtime-live-persist";
 import { getOwnerAutonomousMandate } from "@/lib/operations/owner-autonomous-mandate";
 import { getLocalStrategicPriorities } from "@/lib/strategic-priorities";
 import deploymentJson from "@/content/deployment-status.json";
@@ -77,6 +78,15 @@ export function getLocalExecutionRuntime(): ExecutionRuntimeDocument {
   return normalizeLegacy(raw);
 }
 
+export async function getExecutionRuntimeForLive(): Promise<{
+  document: ExecutionRuntimeDocument;
+  persistedVia: import("@/lib/operations/execution-runtime-live-persist").ExecutionRuntimePersistSource;
+}> {
+  const local = getLocalExecutionRuntime();
+  const { doc, persistedVia } = await resolveExecutionRuntimeDocument(local);
+  return { document: doc, persistedVia };
+}
+
 export function getLocalDeploymentStatus(): DeploymentStatusPayload {
   return deploymentJson as DeploymentStatusPayload;
 }
@@ -92,11 +102,15 @@ export function computeExecutionHealth(
     : HEARTBEAT_IDLE_MS + 1;
 
   let health: ExecutionHealth;
-  if (runtime.status === "blocked" || runtime.lastValidation.build === "failed") {
+  if (heartbeatAgeMs > HEARTBEAT_IDLE_MS) {
+    health = "stale";
+  } else if (runtime.status === "blocked" || runtime.lastValidation.build === "failed") {
     health = "blocked";
   } else if (runtime.status === "waiting_review" || runtime.status === "waiting_approval") {
     health = "waiting_review";
   } else if (runtime.status === "recovering") {
+    health = "active";
+  } else if (heartbeatAgeMs < HEARTBEAT_ACTIVE_MS) {
     health = "active";
   } else if (
     isContinuousOrchestration(runtime) ||
@@ -104,9 +118,7 @@ export function computeExecutionHealth(
     runtime.status === "idle" ||
     Number.parseFloat(String(orchestrationVersion ?? "0")) >= 3
   ) {
-    health = heartbeatAgeMs >= HEARTBEAT_IDLE_MS ? "continuous" : "continuous";
-  } else if (heartbeatAgeMs < HEARTBEAT_ACTIVE_MS) {
-    health = "active";
+    health = "continuous";
   } else if (heartbeatAgeMs < HEARTBEAT_IDLE_MS) {
     health = "continuous";
   } else {

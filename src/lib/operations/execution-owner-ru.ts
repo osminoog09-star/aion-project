@@ -177,13 +177,14 @@ export function abstractFileChanges(files: string[]): string[] {
 }
 
 export function ownerControlMode(runtime: ExecutionRuntimeCore, health: ExecutionHealth): OwnerControlMode {
+  if (health === "stale") return "ai_stale";
   if (health === "blocked" || runtime.status === "blocked") return "ai_blocked";
-  if (health === "waiting_review" || runtime.status === "waiting_review") return "ai_waiting";
   if (
-    health === "stale" &&
-    !(runtime.orchestrationMode === "continuous" || runtime.status === "coding" || runtime.status === "validating")
+    health === "waiting_review" ||
+    runtime.status === "waiting_review" ||
+    runtime.status === "waiting_approval"
   ) {
-    return "ai_stale";
+    return "ai_waiting";
   }
   if (runtime.status === "recovering") return "ai_repairing";
   if (runtime.status === "validating") return "ai_validating";

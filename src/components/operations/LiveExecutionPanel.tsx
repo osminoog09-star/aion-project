@@ -25,7 +25,13 @@ import {
 import { LiveActionStream } from "./LiveActionStream";
 
 type LiveApiResponse = {
-  meta: { health: string; heartbeatAgeMs: number; persistedVia: string };
+  meta: {
+    health: string;
+    heartbeatAgeMs: number;
+    persistedVia: string;
+    staleSnapshot?: boolean;
+    liveConfigured?: boolean;
+  };
   health: { health: string; heartbeatAgeMs: number; label: string };
   runtime: ExecutionRuntimeCore & {
     status: ExecutionRuntimeStatus;
@@ -167,13 +173,24 @@ export function LiveExecutionPanel() {
   }
 
   const r = data.runtime;
-  const isBuildSnapshot = data.meta.persistedVia === "build_snapshot";
+  const persistedVia = data.meta.persistedVia;
+  const isLive = persistedVia === "supabase_live";
   const healthKey = resolveExecutionHealth(data.health.health);
   const healthRu = HEALTH_OWNER[healthKey];
   const sec = Math.round(data.health.heartbeatAgeMs / 1000);
   const phaseMeta = PHASE_OWNER[r.phase] ?? PHASE_OWNER.analyzing;
   const controlMode = ownerControlMode(r, healthKey);
   const controlLabel = CONTROL_MODE_RU[controlMode];
+  const isStale =
+    data.meta.staleSnapshot === true ||
+    controlMode === "ai_stale" ||
+    (data.health.heartbeatAgeMs > 120_000 && !isLive);
+  const persistedViaLabel =
+    persistedVia === "supabase_live"
+      ? "🟢 LIVE (Supabase)"
+      : persistedVia === "filesystem"
+        ? "🟢 LIVE (локальный диск)"
+        : "📦 снимок деплоя";
   const heal = selfHealOwnerCard(r);
   const dep = data.deployment.lastProductionDeploy;
   const routesOk = data.deployment.routeValidation?.allPassed;
@@ -215,10 +232,34 @@ export function LiveExecutionPanel() {
         </section>
       ) : null}
 
+      {isStale ? (
+        <section className="rounded-2xl border border-rose-500/50 bg-rose-500/10 px-5 py-4">
+          <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-rose-300">
+            Не live — снимок устарел
+          </p>
+          <p className="mt-2 text-sm text-rose-100">
+            Последний сигнал <strong>{sec}</strong> сек назад ({persistedViaLabel}). Панель опрашивает API
+            каждые 8 сек, но на production без Supabase данные меняются только после git deploy.
+          </p>
+          {data.meta.liveConfigured === false ? (
+            <p className="mt-2 text-xs text-amber-200/90">
+              Нужно: <span className="font-mono">OPERATIONS_SUPABASE_SERVICE_ROLE_KEY</span> в Vercel +{" "}
+              <span className="font-mono">npm run execution:action</span> (пушит live в Supabase).
+            </p>
+          ) : (
+            <p className="mt-2 text-xs text-slate-400">
+              Supabase настроен — запустите работу в Cursor (execution:action) для обновления live.
+            </p>
+          )}
+        </section>
+      ) : null}
+
       {/* Owner control banner */}
       <section
         className={`rounded-2xl border px-5 py-5 ${
-          controlMode === "ai_blocked"
+          controlMode === "ai_stale"
+            ? "border-rose-500/40 bg-rose-500/10"
+            : controlMode === "ai_blocked"
             ? "border-rose-500/40 bg-rose-500/10"
             : controlMode === "ai_waiting"
               ? "border-amber-500/40 bg-amber-500/10"
@@ -232,12 +273,8 @@ export function LiveExecutionPanel() {
         <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-cyan-300/80">
           Центр управления AI
           {r.orchestrationMode === "continuous" ? " · непрерывный цикл" : ""}
+          <span className="ml-2 text-slate-500">· {persistedViaLabel}</span>
         </p>
-        {isBuildSnapshot && sec > 60 ? (
-          <p className="mt-1 text-[10px] text-amber-300/80">
-            Production snapshot · обновляется при каждом деплое · Cursor пушит runtime в git
-          </p>
-        ) : null}
         <p className="mt-2 text-2xl font-bold text-white">
           {healthRu.icon} {controlLabel}
         </p>

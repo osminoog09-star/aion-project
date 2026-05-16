@@ -5,6 +5,7 @@ import type {
   ExecutionRuntimeCore,
   ExecutionRuntimeStatus,
 } from "@/contracts/execution-runtime";
+import { writeExecutionRuntimeToSupabase } from "@/lib/operations/execution-runtime-live-persist";
 
 const RUNTIME_FILE = path.join(process.cwd(), "src/content/execution-runtime.json");
 const FEED_FILE = path.join(process.cwd(), "src/content/ecosystem-implementation-feed.json");
@@ -126,6 +127,29 @@ export async function patchExecutionRuntime(
   }
 
   payload.lastUpdated = now.slice(0, 10);
-  await writePayload(payload);
+  const allowFs =
+    process.env.OPERATIONS_ALLOW_FS_WRITE !== "0" &&
+    (!process.env.VERCEL || process.env.OPERATIONS_ALLOW_FS_WRITE === "1");
+  if (allowFs) {
+    await writePayload(payload);
+  }
+  await writeExecutionRuntimeToSupabase(payload);
   return payload;
+}
+
+export async function saveExecutionRuntimeDocument(
+  doc: ExecutionRuntimeDocument,
+): Promise<{ persistedTo: ("filesystem" | "supabase")[] }> {
+  const persistedTo: ("filesystem" | "supabase")[] = [];
+  const allowFs =
+    process.env.OPERATIONS_ALLOW_FS_WRITE !== "0" &&
+    (!process.env.VERCEL || process.env.OPERATIONS_ALLOW_FS_WRITE === "1");
+  if (allowFs) {
+    await writePayload(doc);
+    persistedTo.push("filesystem");
+  }
+  if (await writeExecutionRuntimeToSupabase(doc)) {
+    persistedTo.push("supabase");
+  }
+  return { persistedTo };
 }

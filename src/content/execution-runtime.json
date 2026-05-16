@@ -6,21 +6,21 @@
   "runtime": {
     "status": "coding",
     "phase": "coding",
-    "currentTask": "Field validation report inbox + BG gate UI",
-    "subsystem": "driver-intelligence",
+    "currentTask": "Исправление live: Supabase + честный stale UI",
+    "subsystem": "operations-center",
     "reasoning": "Подтвердить GPS cluster insights после 2+ смен",
     "confidence": 0.88,
     "startedAt": "2026-05-16T13:42:47.149Z",
-    "updatedAt": "2026-05-16T13:43:38.975Z",
-    "heartbeatAt": "2026-05-16T13:43:38.975Z",
+    "updatedAt": "2026-05-16T13:47:59.713Z",
+    "heartbeatAt": "2026-05-16T13:47:59.713Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
       "src/components/operations/OwnerCommandCenter.tsx"
     ],
     "commitCandidate": "pending",
-    "blocker": "Device field validation 8/8",
-    "nextStep": "Owner: 8/8 + paste report on /operations/live",
+    "blocker": null,
+    "nextStep": "Vercel: OPERATIONS_SUPABASE_SERVICE_ROLE_KEY",
     "branch": "main",
     "dependencyTarget": "Live execution observability + self-healing",
     "pendingReviewCount": 0,
@@ -33,15 +33,22 @@
     "lastFailure": null,
     "lastCompletedAction": "AI ждёт вашего решения: Пауза: портал готов — ждём 8/8 на устройстве",
     "retryCount": 0,
-    "validationProgress": "Portal: inbox отчёта 8/8 + API + blockers/live",
+    "validationProgress": "Live status: Supabase persist + stale banner + push-live API",
     "progressPercent": 99,
     "etaMinutes": 60,
     "autonomousDepth": 2,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "src/components/operations/OwnerFieldValidationReportPanel.tsx",
+    "currentFile": "src/lib/operations/execution-runtime-live-persist.ts",
     "recentActions": [
+      {
+        "at": "2026-05-16T13:47:59.713Z",
+        "tag": "CODE",
+        "message": "Live status: Supabase persist + stale banner + push-live API",
+        "file": "src/lib/operations/execution-runtime-live-persist.ts",
+        "repo": "aion-com"
+      },
       {
         "at": "2026-05-16T13:43:38.975Z",
         "tag": "CODE",
@@ -246,6 +253,22 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-05-16T13:47:59.713Z",
+      "phase": "coding",
+      "summary": "[CODE] Live status: Supabase persist + stale banner + push-live API"
+    },
+    {
+      "at": "2026-05-16T13:47:58.868Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Исправление live: Supabase + честный stale UI",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Подтвердить GPS cluster insights после 2+ смен",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-05-16T13:42:47.833Z",
       "phase": "coding",
@@ -633,6 +656,12 @@
   ],
   "heartbeats": [
     {
+      "at": "2026-05-16T13:47:59.713Z"
+    },
+    {
+      "at": "2026-05-16T13:47:58.868Z"
+    },
+    {
       "at": "2026-05-16T13:43:38.975Z"
     },
     {
@@ -769,12 +798,6 @@
     },
     {
       "at": "2026-05-15T15:29:57.360Z"
-    },
-    {
-      "at": "2026-05-15T15:29:47.396Z"
-    },
-    {
-      "at": "2026-05-15T15:29:37.463Z"
     }
   ]
 }
