@@ -81,6 +81,12 @@ type LiveApiResponse = {
   dependencyTarget: string;
   primaryObjective: string;
   orchestrationNote: string | null;
+  fieldValidationReport?: {
+    ready: boolean;
+    passedCount: number | null;
+    totalCount: number;
+    submittedAt: string | null;
+  } | null;
 };
 
 const POLL_MS = 8_000;
@@ -177,10 +183,11 @@ export function LiveExecutionPanel() {
     buildHumanTimelineCard(ev, timeline[i + 1]?.at ?? null, r.confidence),
   );
   const latest = r.recentActions?.[0];
+  const fv = data.fieldValidationReport;
 
   return (
     <div className="space-y-8">
-      {(r.validationProgress || latest) ? (
+      {(r.validationProgress || latest || fv?.submittedAt) ? (
         <section className="rounded-2xl border border-cyan-400/50 bg-cyan-500/10 px-5 py-4">
           <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-cyan-200">
             Сейчас в работе (как в чате Cursor)
@@ -194,6 +201,15 @@ export function LiveExecutionPanel() {
               {latest.file ? (
                 <span className="block truncate text-xs text-slate-500">{latest.file}</span>
               ) : null}
+            </p>
+          ) : null}
+          {fv?.submittedAt ? (
+            <p className="mt-2 text-sm text-violet-200">
+              Отчёт устройства:{" "}
+              <span className={fv.ready ? "text-emerald-300" : "text-amber-300"}>
+                {fv.ready ? "8/8" : `${fv.passedCount ?? "?"}/${fv.totalCount}`}
+              </span>
+              <span className="text-slate-500"> · {formatTs(fv.submittedAt)}</span>
             </p>
           ) : null}
         </section>
