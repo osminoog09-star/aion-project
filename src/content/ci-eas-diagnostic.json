@@ -1,0 +1,40 @@
+{
+  "at": "2026-05-16T14:37:01.084Z",
+  "architecture": "AION monorepo — one project, modules (portal + aion-driver)",
+  "github": {
+    "projectRepo": "osminoog09-star/aion-project",
+    "workflowsOnRemote": [],
+    "easWorkflowOnRemote": false,
+    "easWorkflowFile": "eas-build-driver-preview.yml"
+  },
+  "modules": {
+    "driverModule": "aion-driver",
+    "driverPathLocal": "C:\\Users\\osmin\\Desktop\\Проекты\\aion-driver",
+    "driverInRepo": false,
+    "driverSiblingDevLayout": true,
+    "driverWorkflowsLocalOnly": [
+      "ci.yml",
+      "eas-build-android-preview.yml",
+      "eas-build-android-production.yml",
+      "eas-update.yml",
+      "ota-preview-on-push.yml",
+      "ota-production.yml"
+    ]
+  },
+  "credentials": {
+    "githubTokenPresent": false,
+    "expoTokenLocal": false,
+    "expoTokenOnGithub": "Required in aion-project Secrets for EAS job"
+  },
+  "critical": [
+    "Module aion-driver/ not in aion-project repo on GitHub — push driver as subfolder (see docs/AION-MODULES.md)",
+    "GITHUB_TOKEN not set — cannot dispatch workflow from Cursor"
+  ],
+  "remediation": [
+    "Add aion-driver/ to aion-project repo (copy from local ../aion-driver)",
+    "Push .github/workflows/eas-build-driver-preview.yml",
+    "Add EXPO_TOKEN to aion-project GitHub Secrets",
+    "Actions → EAS Build Driver (preview) → Run workflow",
+    "npm run apk:complete-loop -- <BUILD_ID>"
+  ]
+}

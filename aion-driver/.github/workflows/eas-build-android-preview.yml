@@ -1,0 +1,86 @@
+# Preview APK 1.0.6+ — PRIMARY path when local EAS blocked (SSL).
+# Secret: EXPO_TOKEN
+name: EAS Build Android (preview)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: ""
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Generate build manifest
+        run: npm run build:manifest
+
+      - name: Validate
+        run: npm run validate
+
+      - name: Setup EAS
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: EAS Build (profile preview)
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        id: eas_build
+        run: |
+          set -e
+          npx eas-cli@latest build -p android --profile preview --non-interactive --no-wait --json > eas-build.json
+          node -e "
+            const fs = require('fs');
+            const raw = fs.readFileSync('eas-build.json','utf8').trim();
+            const data = JSON.parse(raw);
+            const build = Array.isArray(data) ? data[0] : data;
+            if (!build?.id) throw new Error('No build id in eas output');
+            fs.writeFileSync('build-id.txt', build.id);
+            console.log('EAS_BUILD_ID=' + build.id);
+          "
+          echo "build_id=$(cat build-id.txt)" >> "$GITHUB_OUTPUT"
+
+      - name: Upload build metadata
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: eas-preview-build-metadata
+          path: |
+            eas-build.json
+            build-id.txt
+
+      - name: Summary
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        run: |
+          BUILD_ID=$(cat build-id.txt)
+          echo "## Preview APK build started" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Field | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|-------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| **BUILD_ID** | \`${BUILD_ID}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Profile | preview |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Status | Wait **FINISHED** in [Expo builds](https://expo.dev/accounts/osminoog/projects/aion/builds) |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### After FINISHED (portal repo)" >> "$GITHUB_STEP_SUMMARY"
+          echo "\`\`\`bash" >> "$GITHUB_STEP_SUMMARY"
+          echo "cd aion-com" >> "$GITHUB_STEP_SUMMARY"
+          echo "npm run apk:complete-loop -- ${BUILD_ID}" >> "$GITHUB_STEP_SUMMARY"
+          echo "git add public/apk-manifest.preview.json && git commit -m 'chore: sync preview APK manifest' && git push" >> "$GITHUB_STEP_SUMMARY"
+          echo "\`\`\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Skip — no EXPO_TOKEN
+        if: ${{ secrets.EXPO_TOKEN == '' }}
+        run: |
+          echo "::error::EXPO_TOKEN secret missing — add in repo Settings → Secrets"
+          exit 1

@@ -1,0 +1,69 @@
+# Beta OTA: push в ветки preview / preview-ota → eas update --channel preview
+# Секрет: EXPO_TOKEN (GitHub → Settings → Secrets and variables → Actions)
+name: OTA Preview (beta channel)
+
+on:
+  push:
+    branches: [preview, preview-ota]
+
+concurrency:
+  group: ota-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: ""
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate (typecheck + expo-doctor)
+        run: npm run validate
+
+      - name: Setup EAS
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: EAS Update (channel preview)
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        env:
+          EXPO_PUBLIC_GIT_COMMIT: ${{ github.sha }}
+        run: |
+          SUBJECT="$(git log -1 --pretty='format:%s (%h)' | head -c 420)"
+          BODY="$(git log -8 --pretty='format:- %s (%h)' | head -c 1400)"
+          MSG="[${{ github.ref_name }}] ${SUBJECT}"$'\n\n'"Changelog:"$'\n'"${BODY}"
+          npx eas-cli@latest update --channel preview --message "${MSG}" --non-interactive
+
+      - name: Job summary
+        if: ${{ success() && secrets.EXPO_TOKEN != '' }}
+        run: |
+          echo "## OTA Preview опубликован" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| | |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Channel | \`preview\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Branch | \`${{ github.ref_name }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Commit | \`${{ github.sha }}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| EXPO_PUBLIC_GIT_COMMIT | передан в билд-энв |" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Skip notice (нет EXPO_TOKEN)
+        if: ${{ secrets.EXPO_TOKEN == '' }}
+        run: |
+          echo "EXPO_TOKEN не задан — OTA не опубликован. Добавьте секрет в репозитории."
+          echo "## Пропуск OTA" >> "$GITHUB_STEP_SUMMARY"
+          echo "Секрет \`EXPO_TOKEN\` не настроен." >> "$GITHUB_STEP_SUMMARY"

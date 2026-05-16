@@ -1,0 +1,89 @@
+{
+  "version": "1.0",
+  "at": "2026-05-16T14:18:34.268Z",
+  "signedOff": false,
+  "summary": "BLOCKED — 4 blocker(s), complete Phases A–B on device",
+  "checks": [
+    {
+      "id": "A-apk-runtime",
+      "category": "compatibility",
+      "status": "blocked",
+      "detail": "APK manifest 1.0.4 < required 1.0.6 — run EAS preview + sync"
+    },
+    {
+      "id": "A-version-code",
+      "category": "compatibility",
+      "status": "blocked",
+      "detail": "buildNumber 6 < min 10"
+    },
+    {
+      "id": "A-apk-url",
+      "category": "compatibility",
+      "status": "blocked",
+      "detail": "apkUrl missing or placeholder — sync from FINISHED EAS build"
+    },
+    {
+      "id": "A-driver-source",
+      "category": "compatibility",
+      "status": "pass",
+      "detail": "driver tree 1.0.6"
+    },
+    {
+      "id": "B-heartbeat",
+      "category": "device",
+      "status": "warn",
+      "detail": "no device heartbeat — install APK, open Driver"
+    },
+    {
+      "id": "D-compat-tests",
+      "category": "release",
+      "status": "pass",
+      "detail": "runtime-compatibility tests OK"
+    },
+    {
+      "id": "D-release-safety",
+      "category": "release",
+      "status": "blocked",
+      "detail": "release:safety failed (APK/manifest gate)"
+    },
+    {
+      "id": "D-runtime-hb",
+      "category": "runtime",
+      "status": "warn",
+      "detail": "execution-runtime heartbeat 1350s"
+    },
+    {
+      "id": "D-safe-mode",
+      "category": "governance",
+      "status": "pass",
+      "detail": "SAFE MODE correctly expected until APK 1.0.6+"
+    },
+    {
+      "id": "E-recovery-runtime-recovery.mjs",
+      "category": "recovery",
+      "status": "pass",
+      "detail": "present"
+    },
+    {
+      "id": "E-recovery-execution-stale-recover.mjs",
+      "category": "recovery",
+      "status": "pass",
+      "detail": "present"
+    },
+    {
+      "id": "E-recovery-release-orchestrator.mjs",
+      "category": "recovery",
+      "status": "pass",
+      "detail": "present"
+    }
+  ],
+  "nextSteps": [
+    "PRIMARY: GitHub Actions → EAS Build Android (preview) — see docs/EAS_PREVIEW_BUILD_GHA.md",
+    "npm run eas:build:gha  # print GHA instructions (do NOT use local eas if SSL fails)",
+    "Wait EAS FINISHED → aion-com: npm run release:apk-manifest:sync <BUILD_ID>",
+    "Install APK on device (not OTA) → open Driver → heartbeat",
+    "npm run release:orchestrate -- --activate-runtime",
+    "Physical device: install preview APK ≥1.0.6, open app once",
+    "npm run stabilization:signoff -- --strict"
+  ]
+}

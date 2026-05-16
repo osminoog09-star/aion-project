@@ -6,6 +6,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { resolveAionDriverPath } from "./resolve-aion-driver-path.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -48,8 +49,9 @@ if (!semverGte(apk.runtimeVersion, req.minRuntimeVersion)) {
 
 console.log(`OK: manifest ${apk.runtimeVersion} >= ${req.minRuntimeVersion}`);
 
-const driverManifest = path.join(root, "../aion-driver/build-manifest.json");
-if (fs.existsSync(driverManifest)) {
+const driverRoot = resolveAionDriverPath();
+const driverManifest = driverRoot ? path.join(driverRoot, "build-manifest.json") : null;
+if (driverManifest && fs.existsSync(driverManifest)) {
   const dm = readJson(driverManifest);
   console.log("\n[4/6] Driver build-manifest");
   if (!semverGte(dm.runtimeVersion, req.minRuntimeVersion)) {

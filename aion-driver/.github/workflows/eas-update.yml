@@ -1,0 +1,76 @@
+# Универсальная публикация OTA: вручную (любой channel/message) или по git-тегам ota-*.
+# Основной поток для команд: см. docs/PIPELINE.md (preview branch, production dispatch).
+name: EAS Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: "EAS channel (preview | production)"
+        required: true
+        default: preview
+      message:
+        description: "Сообщение релиза (пусто = последний commit + changelog)"
+        required: false
+        default: ""
+  push:
+    tags:
+      - "ota-*"
+
+jobs:
+  publish:
+    name: eas update
+    runs-on: ubuntu-latest
+    env:
+      NODE_OPTIONS: ""
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate
+        run: npm run validate
+
+      - name: Setup EAS
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: EAS Update (workflow_dispatch)
+        if: ${{ github.event_name == 'workflow_dispatch' && secrets.EXPO_TOKEN != '' }}
+        env:
+          EXPO_PUBLIC_GIT_COMMIT: ${{ github.sha }}
+          CUSTOM_MSG: ${{ github.event.inputs.message }}
+        run: |
+          SUBJECT="$(git log -1 --pretty='format:%s (%h)' | head -c 400)"
+          RECENT="$(git log -6 --pretty='format:- %s (%h)' | head -c 900)"
+          BASE="${CUSTOM_MSG:-$SUBJECT}"
+          MSG="${BASE}"$'\n\n'"Changelog:"$'\n'"${RECENT}"
+          npx eas-cli@latest update --channel ${{ github.event.inputs.channel }} --message "${MSG}" --non-interactive
+
+      - name: EAS Update (tag ota-preview)
+        if: ${{ github.event_name == 'push' && startsWith(github.ref_name, 'ota-preview') && secrets.EXPO_TOKEN != '' }}
+        env:
+          EXPO_PUBLIC_GIT_COMMIT: ${{ github.sha }}
+        run: npx eas-cli@latest update --channel preview --message "Release ${{ github.ref_name }}" --non-interactive
+
+      - name: EAS Update (tag ota-production)
+        if: ${{ github.event_name == 'push' && startsWith(github.ref_name, 'ota-production') && secrets.EXPO_TOKEN != '' }}
+        env:
+          EXPO_PUBLIC_GIT_COMMIT: ${{ github.sha }}
+        run: npx eas-cli@latest update --channel production --message "Release ${{ github.ref_name }}" --non-interactive
+
+      - name: Skip notice
+        if: ${{ secrets.EXPO_TOKEN == '' }}
+        run: echo "EXPO_TOKEN не задан — шаг OTA пропущен. Добавьте секрет в настройках репозитория."

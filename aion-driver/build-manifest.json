@@ -1,0 +1,21 @@
+{
+  "appVersion": "1.0.6",
+  "runtimeVersion": "1.0.6",
+  "versionCode": 10,
+  "gitSha": "da749fa",
+  "buildTimestamp": "2026-05-16T14:24:12.673Z",
+  "channel": "preview",
+  "supportedFeatures": [
+    "field_validation_8_8",
+    "ota_smoke_from_validation",
+    "bg_production_gate_ui",
+    "route_timeline",
+    "device_heartbeat"
+  ],
+  "supportedRoutes": [
+    "/driver/route-timeline",
+    "/ota-debug",
+    "/update-center"
+  ],
+  "requiresNativeBuild": false
+}

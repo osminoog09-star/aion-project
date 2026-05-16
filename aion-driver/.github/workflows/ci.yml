@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, preview]
+  pull_request:
+    branches: [main, master, preview]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Typecheck, expo-doctor, config, export
+    runs-on: ubuntu-latest
+    env:
+      # Не наследовать org/repo NODE_OPTIONS с Windows-only флагами — на Linux Node падает.
+      NODE_OPTIONS: ""
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Repo safety (driver / portal isolation)
+        run: node scripts/ci/verify-repo-safety.mjs
+
+      - name: Validate (typecheck + expo-doctor)
+        run: npm run validate
+
+      - name: Public Expo config
+        run: npm run expo:config
+
+      - name: Export Android bundle (cloud prebuild / bundle smoke)
+        run: npx expo export --platform android --output-dir .expo-ci-export
+
+      - name: CI summary
+        if: success()
+        run: |
+          echo "## CI passed" >> "$GITHUB_STEP_SUMMARY"
+          echo "- \`npm run validate\` (typecheck + expo-doctor)" >> "$GITHUB_STEP_SUMMARY"
+          echo "- \`expo export\` Android smoke" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Ref: \`${{ github.ref }}\` @ \`${{ github.sha }}\`" >> "$GITHUB_STEP_SUMMARY"

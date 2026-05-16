@@ -29,6 +29,7 @@ export const ecosystemRoutes = {
   operationsReviews: "/operations/reviews",
   operationsReviewQueue: "/operations/review-queue",
   operationsDeployment: "/operations/deployment",
+  operationsGovernance: "/operations/governance",
   roadmapExecution: "/roadmap/execution",
   core: "/core",
   studio: "/studio",

@@ -141,6 +141,19 @@ const summary =
 const prevPhase = prev.phase ?? prev.status;
 const phaseChanged = phase !== prevPhase;
 
+if (phaseChanged && !hasFlag("--force") && !hasFlag("--skip-governance")) {
+  try {
+    execSync(
+      `node scripts/execution-governance-gate.mjs --from ${prevPhase} --to ${phase}`,
+      { cwd: path.join(__dirname, ".."), stdio: "inherit" },
+    );
+  } catch {
+    console.error(`[GOVERNANCE] Phase transition blocked: ${prevPhase} → ${phase}`);
+    console.error("[GOVERNANCE] Use --force only for emergency recovery");
+    process.exit(1);
+  }
+}
+
 const lastValidation = { ...(prev.lastValidation ?? { typecheck: "idle", build: "idle", deploy: "idle", routes: "idle" }) };
 if (arg("--typecheck")) lastValidation.typecheck = arg("--typecheck");
 if (arg("--build")) lastValidation.build = arg("--build");

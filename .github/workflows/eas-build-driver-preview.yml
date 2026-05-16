@@ -1,0 +1,83 @@
+# EAS preview APK — модуль aion-driver внутри проекта AION (монорепо).
+# Требует: EXPO_TOKEN в secrets, в репозитории есть папка aion-driver/
+name: EAS Build Driver (preview)
+
+on:
+  workflow_dispatch:
+
+env:
+  AION_DRIVER_MODULE: ${{ vars.AION_DRIVER_MODULE || 'aion-driver' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout AION project
+        uses: actions/checkout@v4
+
+      - name: Verify Driver module exists
+        run: |
+          if [ ! -f "${{ env.AION_DRIVER_MODULE }}/package.json" ]; then
+            echo "::error::Module ${{ env.AION_DRIVER_MODULE }}/ not in repo. AION = один проект: portal + aion-driver + …"
+            echo "Push модуль aion-driver в osminoog09-star/aion-project/${{ env.AION_DRIVER_MODULE }}/"
+            exit 1
+          fi
+          echo "OK: module ${{ env.AION_DRIVER_MODULE }}"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: ${{ env.AION_DRIVER_MODULE }}/package-lock.json
+
+      - name: Generate build manifest
+        working-directory: ${{ env.AION_DRIVER_MODULE }}
+        run: npm ci && npm run build:manifest
+
+      - name: Validate
+        working-directory: ${{ env.AION_DRIVER_MODULE }}
+        run: npm run validate
+
+      - name: Setup EAS
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: EAS Build preview APK
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        working-directory: ${{ env.AION_DRIVER_MODULE }}
+        run: |
+          set -e
+          npx eas-cli@latest build -p android --profile preview --non-interactive --no-wait --json > ../eas-build.json
+          node -e "
+            const fs=require('fs');
+            const d=JSON.parse(fs.readFileSync('../eas-build.json','utf8').trim());
+            const b=Array.isArray(d)?d[0]:d;
+            if(!b?.id) throw new Error('No EAS build id');
+            fs.writeFileSync('../build-id.txt', b.id);
+            console.log('build_id='+b.id);
+          "
+
+      - name: Upload metadata
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: eas-preview-build-metadata
+          path: |
+            eas-build.json
+            build-id.txt
+
+      - name: Summary
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        run: |
+          BUILD_ID=$(cat build-id.txt)
+          echo "## EAS preview (module aion-driver)" >> "$GITHUB_STEP_SUMMARY"
+          echo "**BUILD_ID:** \`${BUILD_ID}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Expo: https://expo.dev/accounts/osminoog/projects/aion/builds" >> "$GITHUB_STEP_SUMMARY"
+          echo "Portal: \`npm run apk:complete-loop -- ${BUILD_ID}\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail — no EXPO_TOKEN
+        if: ${{ secrets.EXPO_TOKEN == '' }}
+        run: echo "::error::EXPO_TOKEN missing in aion-project secrets" && exit 1

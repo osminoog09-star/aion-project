@@ -40,3 +40,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AION driver module (inside monorepo)
+/aion-driver/node_modules
+/aion-driver/.expo
+/aion-driver/android
+/aion-driver/ios
+/aion-driver/dist
+/aion-driver/.tmp-eas-artifact*

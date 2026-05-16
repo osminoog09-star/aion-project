@@ -1,0 +1,16 @@
+---
+description: AION engineering governance — release safety, runtime truth, no fake states
+globs:
+  - "**/*"
+alwaysApply: false
+---
+
+# AION Engineering Governance
+
+See workspace rule at `Проекты/.cursor/rules/aion-engineering-governance.mdc` for full policy.
+
+Quick gates:
+- `npm run release:orchestrate` before runtime activation
+- `npm run release:safety` must pass for production validation flows
+- Phase changes go through `execution-governance-gate.mjs` (auto in `execution-runtime.mjs`)
+- Dashboard: `/operations/governance`

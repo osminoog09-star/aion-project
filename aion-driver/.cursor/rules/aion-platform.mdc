@@ -1,0 +1,86 @@
+---
+description: AION ecosystem — платформа, OTA-first, Driver flagship, качество, offline, pipeline.
+alwaysApply: true
+---
+
+# AION — правила проекта
+
+## 1. Платформа, не «отдельное приложение»
+
+**AION Driver** — первый **production / flagship** модуль внутри **AION ecosystem**, опора для будущих модулей (Finance, CRM, Home и т.д.).
+
+Любая архитектура: **modularity**, **shared core** (`src/core/aion`, реестр модулей), **OTA compatibility**, **переиспользуемые** слои (tokens, diagnostics, sync).
+
+## 2. OTA-first
+
+Минимизировать **новый APK**. UI / логика / фичи — через **EAS Updates** и текущий pipeline.
+
+**Новый APK только если:** новый native-пакет, смена **Expo plugins**, нативные правки Android/iOS, смена **`runtimeVersion`**, смена **SDK**.
+
+Перед native-изменением: **явно предупредить**, зачем APK и что случится с OTA / runtime.
+
+Не класть **`eas-cli`** в `dependencies` / `devDependencies` проекта — `expo-doctor`; использовать **`npx eas-cli@latest`**.
+
+## 3. Production feel
+
+Запрещено: demo/Expo-sample ощущение, сырые `alert`, белые вспышки, прыжки вёрстки, безстилевые экраны, desktop UX на телефоне.
+
+Нужно: **premium dark**, плавные переходы, аккуратные loading/empty, **haptics** по делу, направление **Tesla / Uber Driver / Linear / fintech**.
+
+Использовать **tokens** (colors, spacing, shadows, animations) — не размазывать хаотичные inline-стили.
+
+## 4. Validate всегда
+
+После правок: **`npm run validate`** (typecheck + expo-doctor). Не оставлять репозиторий в broken state.
+
+## 5. Git и ship
+
+Законченная задача: **validate** → **`git add -A`** → **conventional commit** (`feat:` `fix:` `ui:` `perf:` `refactor:` `docs:` `chore:`) → **`npm run ship:preview`** (или `ship:main` / `release:preview` по смыслу).
+
+Превью без push: **`npm run ship:dry`**. Production OTA — только GitHub workflow **OTA Production**, не из локальных скриптов production-канала без процесса.
+
+## 6. Приоритет — AION Driver
+
+Не распылять на Finance / CRM / Family / Home / marketplace, пока Driver не **production-grade, beta-ready, stable, polished, daily-useful**.
+
+Roadmap-фокус: dashboard, maps + fuel, AI insights, shift UX, OCR, timeline, performance, offline/sync UX, beta stability.
+
+## 7. Offline-first
+
+Новый функционал: работа **без сети**, переживание **reconnect**, очередь **sync**, понятные fallback.
+
+Показывать **sync / offline / reconnect** там, где влияет на доверие (хаб, дашборд, настройки).
+
+## 8. Performance
+
+Старт, память, лишние re-render, виртуализация списков, стоимость анимаций и **blur**, изображения, батарея. Не тянуть тяжёлые зависимости без причины.
+
+## 9. AI experience
+
+Ощущение **умного ассистента** и **живой** платформы: рекомендации, адаптивные подсказки, аналитика — на **реальных данных** и эвристиках, без **fake AI** и спама.
+
+## 10. Mobile-first
+
+**Thumb-friendly**, safe-area, edge-to-edge на Android, без desktop-парадигм в навигации.
+
+## 11. Debug / QA
+
+Сохранять и использовать: OTA debug, sync debug, QA HUD (флаги), diagnostics (`/aion-diagnostics`), Sentry. Критичные ошибки — **capture**, лог, **graceful recovery**.
+
+## 12. Maps / APIs
+
+По возможности **бесплатные** API, **OSM**, лёгкие сервисы; уважать лимиты (тайлы, Overpass).
+
+## 13. Стиль разработки
+
+**Production startup engineering**, не tutorial/demo/prototype.
+
+## 14. Автономность агента
+
+Сам анализировать архитектуру, предлагать улучшения, ловить регрессии, держать консистентность с core и tokens.
+
+После **крупных** изменений в ответе пользователю: **краткий summary**, **риски**, **влияние на OTA**, **нужен ли новый APK**, что закоммичено / как ship.
+
+## 15. Architecture escalation (aion-project portal bridge)
+
+Не просить owner пересылать отчёты в ChatGPT. Эскалация: в репо **aion-project** (portal) `npm run review:request` или POST `/api/architecture-reviews` (header `X-Aion-Agent-Key`). Owner смотрит `/operations/review-queue`. Автономное исполнение не останавливается полностью.

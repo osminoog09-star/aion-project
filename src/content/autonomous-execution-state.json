@@ -1,0 +1,18 @@
+{
+  "version": "1.0",
+  "phase": "apk_build_required",
+  "buildId": null,
+  "workflowRunId": null,
+  "humanBoundary": null,
+  "updatedAt": "2026-05-16T14:24:11.842Z",
+  "history": [
+    {
+      "at": "2026-05-16T14:24:11.842Z",
+      "phase": "apk_build_required"
+    },
+    {
+      "at": "2026-05-16T14:23:46.616Z",
+      "phase": "started"
+    }
+  ]
+}

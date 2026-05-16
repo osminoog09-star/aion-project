@@ -156,33 +156,59 @@ AION is **partially operational**: local development and git-backed JSON give a 
 
 ## 12. Stabilization roadmap (implementation status)
 
-### Этап 1 — Audit ✅
-This document.
+### Phase 1 — Full system audit ✅
+This document (`docs/system-audit-report.md`).
 
-### Этап 2 — Runtime stabilization 🔄
-| Task | Status |
-|------|--------|
-| Formal state machine | `src/lib/operations/runtime-state-machine.ts` |
-| Heartbeat watchdog | `src/lib/operations/runtime-watchdog.ts` |
-| Remove fake “работа в процессе” on heartbeat | `execution-runtime.mjs` |
-| Single live truth (Supabase) | `execution-runtime-live-persist.ts` + push-live |
-| Recovery from stale | `execution-stale-recover.mjs` + watchdog → `recovering` |
+### Phase 2 — Autonomous release orchestration ✅ (baseline)
+| Component | Path |
+|-----------|------|
+| Release intelligence | `src/lib/operations/release-intelligence.ts` |
+| Mandatory orchestrator | `scripts/release-orchestrator.mjs` → `npm run release:orchestrate` |
+| Release safety pipeline | `scripts/release-safety-pipeline.mjs` |
+| Governance gate (CLI) | `scripts/execution-governance-gate.mjs` — wired into `execution-runtime.mjs` |
+| Orchestration state | `src/content/release-orchestration-state.json` |
 
-### Этап 3 — Release safety ✅ (baseline)
-Compatibility, manifest, SAFE MODE, pipeline script — see `621b674`.
+**Still operational (human):** EAS preview build ≥1.0.6, `release:apk-manifest:sync`, device install.
 
-### Этап 4 — Observability 🔄
-| Task | Status |
-|------|--------|
-| Event log | `src/content/runtime-event-log.json`, `runtime-event-log.ts` |
-| Ops dashboard | Extend `/operations/live` + API fields |
-| Error telemetry | Future: Sentry bridge |
+### Phase 3 — Runtime governance ✅ (baseline)
+| Component | Path |
+|-----------|------|
+| Formal state machine | `runtime-state-machine.ts` |
+| Governance layer | `runtime-governance.ts` (activation + validation gates) |
+| Watchdog / stale | `runtime-watchdog.ts` |
+| Transition enforcement | `execution-governance-gate.mjs` on phase change |
 
-### Этап 5 — Architecture cleanup ⏳
-Remove stale doc refs; align PIPELINE.md to 1.0.6; CI `build:manifest`.
+Canonical governance phases map to execution phases (`testing`→`validating`, `stale`→`recovering`, etc.).
 
-### Этап 6 — Post-stabilization ⏳
-No autonomous expansion until: live heartbeat <60s on prod, compatible APK on device, `release:safety` green.
+### Phase 4 — Autonomous recovery ✅ (baseline)
+| Flow | Command |
+|------|---------|
+| Runtime stale | `npm run runtime:recover` |
+| Release incompatible | `node scripts/runtime-recovery.mjs --mode release` |
+| Deploy failed | `node scripts/runtime-recovery.mjs --mode deploy` |
+| Stale detect | `execution-stale-recover.mjs` |
+
+### Phase 5 — Observability ✅ (baseline)
+| Component | Path |
+|-----------|------|
+| Event sourcing | `runtime-event-log.ts` + `runtime-event-log.json` |
+| Unified dashboard | `/operations/governance` + `GET /api/operations/governance` |
+| Live panel | `/operations/live` (stale banner, SAFE MODE) |
+
+**Gaps:** Sentry bridge; live `/api/deployment-status`; CI status feed.
+
+### Phase 6 — Engineering governance ✅
+| Component | Path |
+|-----------|------|
+| Cursor rule | `.cursor/rules/aion-engineering-governance.mdc` |
+| No fake states policy | Enforced in UI + scripts |
+| SAFE MODE | `ReleaseSafetyGatedPanel` |
+
+### Post-stabilization exit ⏳ BLOCKED ON APK
+No autonomous feature expansion until §14 sign-off criteria are met.
+
+**Runbook:** `docs/stabilization-signoff-runbook.md`  
+**Automated check:** `npm run stabilization:signoff` → `src/content/stabilization-signoff-status.json`
 
 ---
 
@@ -214,6 +240,30 @@ npm run native:check            # before OTA-only release
 - [ ] Field validation 8/8 achievable on device
 - [ ] No CRITICAL items open in §9
 - [ ] SAFE MODE off on `/operations/live`
+
+---
+
+## 15. System Reliability Layer — automation & recovery gaps
+
+| Gap | Severity | Notes |
+|-----|----------|-------|
+| EAS build not auto-triggered in CI | HIGH | `release:orchestrate --trigger-eas` needs `EXPO_TOKEN` + manual sync |
+| Device heartbeat read on Vercel SSR | MEDIUM | Supabase read path added; env must be set |
+| Deploy rollback not automated | MEDIUM | `runtime-recovery --mode deploy` marks blocked only |
+| GH Actions ≠ `release-orchestrator` | MEDIUM | Wire workflow to `npm run release:orchestrate` |
+| Periodic driver heartbeat | MEDIUM | Only cold-start today |
+| Triple `runtime-compatibility.ts` | MEDIUM | CI hash sync test still missing |
+| Event log not in Supabase | LOW | JSON file only — not multi-writer safe |
+
+**Recovery paths (implemented):**
+
+```bash
+npm run runtime:recover              # stale → recovering → heal → push-live
+npm run release:orchestrate          # full gate chain
+node scripts/runtime-recovery.mjs --mode release   # block incompatible rollout
+```
+
+**Dashboard:** https://aion-com.vercel.app/operations/governance (after deploy)
 
 ---
 

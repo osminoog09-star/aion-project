@@ -1,0 +1,47 @@
+# Production APK — только вручную (стабильные релизы).
+# Секрет: EXPO_TOKEN
+name: EAS Build Android (production)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      NODE_OPTIONS: ""
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Validate
+        run: npm run validate
+
+      - name: Setup EAS
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: EAS Build (profile production)
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        run: npx eas-cli@latest build -p android --profile production --non-interactive --no-wait
+
+      - name: Summary
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        run: |
+          echo "## Production APK build запущен" >> "$GITHUB_STEP_SUMMARY"
+          echo "Профиль \`production\`, канал OTA \`production\`. Статус — в [Expo dashboard](https://expo.dev)." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Skip
+        if: ${{ secrets.EXPO_TOKEN == '' }}
+        run: echo "EXPO_TOKEN не задан."
