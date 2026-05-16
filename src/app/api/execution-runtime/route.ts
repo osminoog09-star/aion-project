@@ -5,6 +5,7 @@ import {
   EXECUTION_RUNTIME_STATUSES,
 } from "@/lib/execution-runtime";
 import { patchExecutionRuntime } from "@/lib/operations/execution-runtime-persist";
+import { evaluateReleaseSafety } from "@/lib/operations/release-safety";
 import { canWriteArchitectureReviews } from "@/lib/operations/review-agent-auth";
 import type { ExecutionRuntimeStatus } from "@/contracts/execution-runtime";
 import type { ExecutionLastValidation } from "@/contracts/execution-runtime";
@@ -14,6 +15,7 @@ export const runtime = "nodejs";
 export async function GET() {
   const { document, persistedVia } = await getExecutionRuntimeForLive();
   const view = buildLiveExecutionView(document);
+  const releaseSafety = evaluateReleaseSafety();
   const staleSnapshot =
     persistedVia === "build_snapshot" && view.health.heartbeatAgeMs > 60_000;
   return NextResponse.json({
@@ -32,7 +34,9 @@ export async function GET() {
           process.env.NEXT_PUBLIC_SUPABASE_URL?.trim(),
       ),
       ownerMandateActive: Boolean(view.ownerMandate?.active),
+      releaseSafeMode: releaseSafety.safeMode,
     },
+    releaseSafety,
     ...view,
   });
 }

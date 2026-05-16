@@ -1,8 +1,10 @@
 {
   "latestVersion": "1.0.4",
-  "minimumSupported": "1.0.3",
+  "minimumSupported": "1.0.6",
   "runtimeVersion": "1.0.4",
   "buildNumber": "6",
+  "compatibilityStatus": "incompatible_with_portal_runtime",
+  "portalMinRuntimeVersion": "1.0.6",
   "releaseDate": "2026-05-14T12:00:00.000Z",
   "releaseType": "test",
   "releaseNotes": "TEST — проверка цепочки APK/манифест (preview). apkUrl — плейсхолдер; после eas build FINISHED для 1.0.4 подставьте прямой URL артефакта (eas build:view --json → artifacts).",

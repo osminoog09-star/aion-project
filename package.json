@@ -32,7 +32,9 @@
     "repo:verify": "node scripts/verify-portal-deploy-safety.mjs",
     "git:remote": "node scripts/setup-git-remote.mjs",
     "owner:unblock-check": "node scripts/owner-unblock-check.mjs",
-    "release:apk-manifest:sync": "node scripts/sync-apk-manifest-from-eas.mjs"
+    "release:apk-manifest:sync": "node scripts/sync-apk-manifest-from-eas.mjs",
+    "release:safety": "node scripts/release-safety-pipeline.mjs",
+    "test:runtime-compatibility": "node scripts/ci/test-runtime-compatibility.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",

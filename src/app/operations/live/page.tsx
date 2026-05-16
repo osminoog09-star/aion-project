@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { ReleaseSafetyBanner } from "@/components/operations/ReleaseSafetyBanner";
+import { ReleaseSafetyGatedPanel } from "@/components/operations/ReleaseSafetyGatedPanel";
 import { DriverFieldValidationOwnerGuide } from "@/components/operations/DriverFieldValidationOwnerGuide";
 import { FieldValidationReportSnapshot } from "@/components/operations/FieldValidationReportSnapshot";
 import { OwnerFieldValidationReportPanel } from "@/components/operations/OwnerFieldValidationReportPanel";
@@ -28,11 +30,14 @@ export default function OperationsLivePage() {
       <p className="mt-3 max-w-3xl text-sm text-slate-400">{t("operations.pages.live.intro")}</p>
       <OperationsSubNav />
       <OwnerAutonomousMandateBanner />
+      <ReleaseSafetyBanner />
       <FieldValidationReportSnapshot />
-      <div className="mt-8 space-y-6">
-        <DriverFieldValidationOwnerGuide />
-        <OwnerFieldValidationReportPanel />
-      </div>
+      <ReleaseSafetyGatedPanel>
+        <div className="mt-8 space-y-6">
+          <DriverFieldValidationOwnerGuide />
+          <OwnerFieldValidationReportPanel />
+        </div>
+      </ReleaseSafetyGatedPanel>
       <p className="mt-6 text-xs text-slate-500">
         Снимок: {view.health.label} · панель обновляется каждые 8 секунд
       </p>

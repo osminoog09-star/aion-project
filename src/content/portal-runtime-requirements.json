@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2026-05-16",
+  "portalGitSha": null,
+  "minRuntimeVersion": "1.0.6",
+  "minAppVersion": "1.0.6",
+  "minVersionCode": 10,
+  "requiredFeatures": [
+    "field_validation_8_8",
+    "ota_smoke_from_validation",
+    "bg_production_gate_ui",
+    "route_timeline"
+  ],
+  "requiredRoutes": ["/driver/route-timeline", "/ota-debug"],
+  "requiresNativeBuild": false,
+  "safeModeWhenIncompatible": true,
+  "blockFieldValidationUntilCompatible": true,
+  "notesRu": "Portal runtime требует Driver ≥1.0.6 / vc10 с field validation и OTA smoke. APK 1.0.4 на preview — несовместим."
+}

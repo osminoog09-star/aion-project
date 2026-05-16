@@ -4,23 +4,23 @@
   "agentId": "cursor-autonomous",
   "lastUpdated": "2026-05-16",
   "runtime": {
-    "status": "coding",
-    "phase": "coding",
-    "currentTask": "Исправление live: Supabase + честный stale UI",
+    "status": "blocked",
+    "phase": "blocked",
+    "currentTask": "SAFE MODE: APK 1.0.4 incompatible — need EAS build 1.0.6+",
     "subsystem": "operations-center",
     "reasoning": "Подтвердить GPS cluster insights после 2+ смен",
     "confidence": 0.88,
-    "startedAt": "2026-05-16T13:42:47.149Z",
-    "updatedAt": "2026-05-16T13:47:59.713Z",
-    "heartbeatAt": "2026-05-16T13:47:59.713Z",
+    "startedAt": "2026-05-16T13:56:04.603Z",
+    "updatedAt": "2026-05-16T13:56:04.603Z",
+    "heartbeatAt": "2026-05-16T13:56:04.603Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
       "src/components/operations/OwnerCommandCenter.tsx"
     ],
     "commitCandidate": "pending",
-    "blocker": null,
-    "nextStep": "Vercel: OPERATIONS_SUPABASE_SERVICE_ROLE_KEY",
+    "blocker": "Mobile build desync — apk-manifest 1.0.4 < portal min 1.0.6",
+    "nextStep": "eas build preview + release:apk-manifest:sync + device heartbeat",
     "branch": "main",
     "dependencyTarget": "Live execution observability + self-healing",
     "pendingReviewCount": 0,
@@ -31,7 +31,7 @@
       "routes": "passed"
     },
     "lastFailure": null,
-    "lastCompletedAction": "AI ждёт вашего решения: Пауза: портал готов — ждём 8/8 на устройстве",
+    "lastCompletedAction": "AI пишет и улучшает код: Исправление live: Supabase + честный stale UI",
     "retryCount": 0,
     "validationProgress": "Live status: Supabase persist + stale banner + push-live API",
     "progressPercent": 99,
@@ -253,6 +253,17 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-05-16T13:56:04.603Z",
+      "phase": "blocked",
+      "summary": "AI заблокирован: SAFE MODE: APK 1.0.4 incompatible — need EAS build 1.0.6+",
+      "feedEventId": "evt-2026-05-16-exec-ij3rqr",
+      "titleRu": "AI заблокирован",
+      "explanationRu": "Подтвердить GPS cluster insights после 2+ смен",
+      "resultRu": "Нужна помощь владельца",
+      "icon": "🛑",
+      "confidence": 0.88
+    },
     {
       "at": "2026-05-16T13:47:59.713Z",
       "phase": "coding",
@@ -656,6 +667,9 @@
   ],
   "heartbeats": [
     {
+      "at": "2026-05-16T13:56:04.603Z"
+    },
+    {
       "at": "2026-05-16T13:47:59.713Z"
     },
     {
@@ -795,9 +809,6 @@
     },
     {
       "at": "2026-05-15T15:30:07.365Z"
-    },
-    {
-      "at": "2026-05-15T15:29:57.360Z"
     }
   ]
 }

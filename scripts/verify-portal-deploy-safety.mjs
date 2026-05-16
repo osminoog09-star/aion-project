@@ -51,5 +51,9 @@ execSync("node scripts/ci/test-field-validation-report-parse.mjs", {
   cwd: root,
   stdio: "inherit",
 });
+execSync("node scripts/ci/test-runtime-compatibility.mjs", {
+  cwd: root,
+  stdio: "inherit",
+});
 
 console.log("Portal deploy safety OK.");
