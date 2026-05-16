@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import { writeFileSync } from "node:fs";
 import path from "node:path";
 import type { DeviceBuildInfo } from "@/lib/shared/runtime-compatibility";
-import { evaluateReleaseSafety } from "@/lib/operations/release-safety";
+import { evaluateReleaseSafetyAsync } from "@/lib/operations/release-safety";
+import { appendRuntimeEvent } from "@/lib/operations/runtime-event-log";
 import { writeExecutionRuntimeToSupabase } from "@/lib/operations/execution-runtime-live-persist";
 import { getLocalExecutionRuntime } from "@/lib/execution-runtime";
 
@@ -13,7 +14,7 @@ const HEARTBEAT_FILE = path.join(process.cwd(), "src/content/device-build-heartb
 type Body = { device: DeviceBuildInfo };
 
 export async function GET() {
-  const safety = evaluateReleaseSafety();
+  const safety = await evaluateReleaseSafetyAsync();
   return NextResponse.json({
     meta: { kind: "device_build_heartbeat" },
     safety,
@@ -74,7 +75,24 @@ export async function POST(req: Request) {
     }
   }
 
-  const safety = evaluateReleaseSafety();
+  const safety = await evaluateReleaseSafetyAsync();
+
+  appendRuntimeEvent(
+    "device_heartbeat",
+    `Device ${body.device.appVersion} rv ${body.device.runtimeVersion}`,
+    { features: body.device.features?.length ?? 0 },
+  );
+  if (safety.safeMode) {
+    appendRuntimeEvent("safe_mode_entered", safety.headlineRu, {
+      runtime: body.device.runtimeVersion,
+    });
+  }
+  if (!safety.compatibility.compatible) {
+    appendRuntimeEvent("compatibility_failed", safety.detailRu, {
+      required: safety.requirements.minRuntimeVersion,
+      actual: body.device.runtimeVersion,
+    });
+  }
 
   if (allowFs && !process.env.VERCEL) {
     try {

@@ -34,7 +34,8 @@
     "owner:unblock-check": "node scripts/owner-unblock-check.mjs",
     "release:apk-manifest:sync": "node scripts/sync-apk-manifest-from-eas.mjs",
     "release:safety": "node scripts/release-safety-pipeline.mjs",
-    "test:runtime-compatibility": "node scripts/ci/test-runtime-compatibility.mjs"
+    "test:runtime-compatibility": "node scripts/ci/test-runtime-compatibility.mjs",
+    "stabilization:verify": "node scripts/stabilization-verify.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",

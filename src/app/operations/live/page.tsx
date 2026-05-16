@@ -4,6 +4,7 @@ import { ReleaseSafetyGatedPanel } from "@/components/operations/ReleaseSafetyGa
 import { DriverFieldValidationOwnerGuide } from "@/components/operations/DriverFieldValidationOwnerGuide";
 import { FieldValidationReportSnapshot } from "@/components/operations/FieldValidationReportSnapshot";
 import { OwnerFieldValidationReportPanel } from "@/components/operations/OwnerFieldValidationReportPanel";
+import { RuntimeEventLogPanel } from "@/components/operations/RuntimeEventLogPanel";
 import { LiveExecutionPanel } from "@/components/operations/LiveExecutionPanel";
 import { OwnerAutonomousMandateBanner } from "@/components/operations/OwnerAutonomousMandateBanner";
 import { OperationsSubNav } from "@/components/operations/ExecutionAuditPanels";
@@ -41,8 +42,9 @@ export default function OperationsLivePage() {
       <p className="mt-6 text-xs text-slate-500">
         Снимок: {view.health.label} · панель обновляется каждые 8 секунд
       </p>
-      <div className="mt-8">
+      <div className="mt-8 space-y-6">
         <LiveExecutionPanel />
+        <RuntimeEventLogPanel />
       </div>
     </div>
   );

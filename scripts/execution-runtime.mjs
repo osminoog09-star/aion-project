@@ -1,6 +1,7 @@
 /**
  * Autonomous execution runtime + Russian owner narration [AION АКТИВЕН]
  */
+import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -101,7 +102,7 @@ if (hasFlag("--heartbeat")) {
     reasoning: prev.reasoning,
     next: prev.nextStep ?? "продолжить",
     confidence: prev.confidence,
-    progress: prev.validationProgress ?? "работа в процессе",
+    progress: prev.validationProgress ?? prev.currentTask ?? "heartbeat",
     progressPercent: prev.progressPercent,
     etaMinutes: prev.etaMinutes,
     runtimeGraph: prev.runtimeGraph ?? "ACTIVE",
@@ -109,6 +110,11 @@ if (hasFlag("--heartbeat")) {
     currentFile: prev.currentFile,
     lastAction: prev.lastAction ?? "HEARTBEAT",
   });
+  try {
+    execSync("node scripts/execution-push-live.mjs", { cwd: path.join(__dirname, ".."), stdio: "inherit" });
+  } catch {
+    /* optional — needs OPERATIONS_OWNER_SECRET */
+  }
   process.exit(0);
 }
 

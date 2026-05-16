@@ -6,6 +6,8 @@ import type {
   ExecutionRuntimeStatus,
 } from "@/contracts/execution-runtime";
 import { writeExecutionRuntimeToSupabase } from "@/lib/operations/execution-runtime-live-persist";
+import { assertRuntimeTransition } from "@/lib/operations/runtime-state-machine";
+import { appendRuntimeEvent } from "@/lib/operations/runtime-event-log";
 
 const RUNTIME_FILE = path.join(process.cwd(), "src/content/execution-runtime.json");
 const FEED_FILE = path.join(process.cwd(), "src/content/ecosystem-implementation-feed.json");
@@ -92,6 +94,14 @@ export async function patchExecutionRuntime(
   } else {
     const nextStatus = input.status ?? prev.status;
     const nextPhase = input.phase ?? input.status ?? prev.phase;
+    const transition = assertRuntimeTransition(prev.phase, nextPhase);
+    if (!transition.ok && nextPhase !== prev.phase) {
+      appendRuntimeEvent("runtime_failed", transition.reason, { from: prev.phase, to: nextPhase });
+    } else if (nextPhase !== prev.phase) {
+      appendRuntimeEvent("runtime_phase_changed", `${prev.phase} → ${nextPhase}`, {
+        task: input.currentTask ?? prev.currentTask,
+      });
+    }
     const timelineSummary =
       input.timelineSummary ??
       (input.currentTask ? `${nextPhase}: ${input.currentTask}` : `Phase ${nextPhase}`);
