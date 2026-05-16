@@ -21,6 +21,8 @@
     "execution:runtime-loop": "node scripts/execution-runtime-loop.mjs",
     "execution:stream": "node scripts/execution-runtime.mjs --banner",
     "execution:action": "node scripts/execution-action.mjs",
+    "execution:extend-mandate": "node scripts/execution-extend-mandate.mjs --hours 1",
+    "test:field-validation-report": "node scripts/ci/test-field-validation-report-parse.mjs",
     "verify:routes": "node scripts/verify-app-routes.mjs",
     "deploy:vercel": "npx vercel@54 deploy --prod",
     "deploy:hook": "node scripts/trigger-deploy-hook.mjs",

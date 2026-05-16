@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { DriverFieldValidationOwnerGuide } from "@/components/operations/DriverFieldValidationOwnerGuide";
+import { OwnerFieldValidationReportPanel } from "@/components/operations/OwnerFieldValidationReportPanel";
 import {
   BlockersList,
   loadExecutionAuditView,
@@ -24,6 +26,10 @@ export default async function OperationsBlockersPage() {
       <h1 className="mt-3 text-3xl font-bold text-white">{t("operations.pages.blockers.title")}</h1>
       <p className="mt-3 text-sm text-slate-400">{t("operations.pages.blockers.source")}</p>
       <OperationsSubNav />
+      <div className="mt-8 space-y-6">
+        <DriverFieldValidationOwnerGuide />
+        <OwnerFieldValidationReportPanel />
+      </div>
       <section className="mt-10">
         <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">
           {t("operations.pages.priorities.blockerQueue")}

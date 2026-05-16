@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { DriverFieldValidationOwnerGuide } from "@/components/operations/DriverFieldValidationOwnerGuide";
+import { FieldValidationReportSnapshot } from "@/components/operations/FieldValidationReportSnapshot";
+import { OwnerFieldValidationReportPanel } from "@/components/operations/OwnerFieldValidationReportPanel";
 import { LiveExecutionPanel } from "@/components/operations/LiveExecutionPanel";
 import { OwnerAutonomousMandateBanner } from "@/components/operations/OwnerAutonomousMandateBanner";
 import { OperationsSubNav } from "@/components/operations/ExecutionAuditPanels";
@@ -26,8 +28,10 @@ export default function OperationsLivePage() {
       <p className="mt-3 max-w-3xl text-sm text-slate-400">{t("operations.pages.live.intro")}</p>
       <OperationsSubNav />
       <OwnerAutonomousMandateBanner />
-      <div className="mt-8">
+      <FieldValidationReportSnapshot />
+      <div className="mt-8 space-y-6">
         <DriverFieldValidationOwnerGuide />
+        <OwnerFieldValidationReportPanel />
       </div>
       <p className="mt-6 text-xs text-slate-500">
         Снимок: {view.health.label} · панель обновляется каждые 8 секунд

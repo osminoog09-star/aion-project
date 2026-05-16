@@ -46,4 +46,10 @@ if (pkg.name !== "aion-project") {
 }
 
 if (failed) process.exit(1);
+
+execSync("node scripts/ci/test-field-validation-report-parse.mjs", {
+  cwd: root,
+  stdio: "inherit",
+});
+
 console.log("Portal deploy safety OK.");
