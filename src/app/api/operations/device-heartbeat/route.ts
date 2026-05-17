@@ -23,6 +23,16 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  try {
+    return await handleDeviceHeartbeatPost(req);
+  } catch (e) {
+    const message = e instanceof Error ? e.message : String(e);
+    console.error("[device-heartbeat] POST failed:", e);
+    return NextResponse.json({ ok: false, error: message }, { status: 500 });
+  }
+}
+
+async function handleDeviceHeartbeatPost(req: Request) {
   let body: Body;
   try {
     body = (await req.json()) as Body;
@@ -82,21 +92,25 @@ export async function POST(req: Request) {
 
   const safety = await evaluateReleaseSafetyAsync();
 
-  appendRuntimeEvent(
-    "device_heartbeat",
-    `Device ${body.device.appVersion} rv ${body.device.runtimeVersion}`,
-    { features: body.device.features?.length ?? 0 },
-  );
-  if (safety.safeMode) {
-    appendRuntimeEvent("safe_mode_entered", safety.headlineRu, {
-      runtime: body.device.runtimeVersion,
-    });
-  }
-  if (!safety.compatibility.compatible) {
-    appendRuntimeEvent("compatibility_failed", safety.detailRu, {
-      required: safety.requirements.minRuntimeVersion,
-      actual: body.device.runtimeVersion,
-    });
+  try {
+    appendRuntimeEvent(
+      "device_heartbeat",
+      `Device ${body.device.appVersion} rv ${body.device.runtimeVersion}`,
+      { features: body.device.features?.length ?? 0 },
+    );
+    if (safety.safeMode) {
+      appendRuntimeEvent("safe_mode_entered", safety.headlineRu, {
+        runtime: body.device.runtimeVersion,
+      });
+    }
+    if (!safety.compatibility.compatible) {
+      appendRuntimeEvent("compatibility_failed", safety.detailRu, {
+        required: safety.requirements.minRuntimeVersion,
+        actual: body.device.runtimeVersion,
+      });
+    }
+  } catch (e) {
+    console.error("[device-heartbeat] runtime event log:", e);
   }
 
   if (allowFs && !process.env.VERCEL) {
