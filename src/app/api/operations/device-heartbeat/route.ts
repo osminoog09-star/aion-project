@@ -17,6 +17,7 @@ export async function GET() {
   const safety = await evaluateReleaseSafetyAsync();
   return NextResponse.json({
     meta: { kind: "device_build_heartbeat" },
+    lastDeviceHeartbeat: safety.lastDeviceHeartbeat,
     safety,
   });
 }
@@ -44,6 +45,7 @@ export async function POST(req: Request) {
     writeFileSync(HEARTBEAT_FILE, `${JSON.stringify(record, null, 2)}\n`, "utf8");
   }
 
+  let supabasePersisted = false;
   if (process.env.OPERATIONS_SUPABASE_SERVICE_ROLE_KEY) {
     try {
       const { createClient } = await import("@supabase/supabase-js");
@@ -65,13 +67,16 @@ export async function POST(req: Request) {
         .eq("kind", kind)
         .limit(1)
         .maybeSingle();
-      if (existing?.id) {
-        await supabase.from("ecosystem_public_snapshots").update(row).eq("id", existing.id);
+      const write = existing?.id
+        ? await supabase.from("ecosystem_public_snapshots").update(row).eq("id", existing.id)
+        : await supabase.from("ecosystem_public_snapshots").insert(row);
+      if (write.error) {
+        console.error("[device-heartbeat] Supabase write failed:", write.error.message);
       } else {
-        await supabase.from("ecosystem_public_snapshots").insert(row);
+        supabasePersisted = true;
       }
-    } catch {
-      /* optional */
+    } catch (e) {
+      console.error("[device-heartbeat] Supabase error:", e);
     }
   }
 
@@ -119,5 +124,5 @@ export async function POST(req: Request) {
     }
   }
 
-  return NextResponse.json({ ok: true, at, safety });
+  return NextResponse.json({ ok: true, at, supabasePersisted, safety });
 }

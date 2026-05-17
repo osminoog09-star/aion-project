@@ -9,6 +9,7 @@
     "remoteConfigured": true,
     "remoteUrl": "https://github.com/osminoog09-star/aion-project.git",
     "defaultBranch": "main",
+    "syncNote": "Release commits land on master; run npm run git:sync-main before Vercel production picks up portal changes.",
     "githubRepoExists": true,
     "lastPushAttempt": "2026-05-15T12:00:00Z",
     "lastPushError": null

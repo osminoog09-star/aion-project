@@ -38,6 +38,8 @@
     "test:runtime-compatibility": "node scripts/ci/test-runtime-compatibility.mjs",
     "stabilization:verify": "node scripts/stabilization-verify.mjs",
     "stabilization:signoff": "node scripts/stabilization-signoff.mjs",
+    "device:heartbeat:bootstrap": "node --use-system-ca scripts/post-expected-device-heartbeat.mjs",
+    "git:sync-main": "git push origin master:main",
     "apk:wait": "node scripts/wait-eas-build.mjs",
     "apk:complete-loop": "node scripts/complete-apk-loop.mjs",
     "apk:manifest:validate": "node scripts/validate-apk-manifest.mjs",

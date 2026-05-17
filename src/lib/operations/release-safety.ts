@@ -20,6 +20,8 @@ export type PublishedApkManifest = {
   runtimeVersion?: string;
   buildNumber?: string;
   releaseDate?: string;
+  supportedFeatures?: string[];
+  supportedRoutes?: string[];
 };
 
 export type DeviceHeartbeatRecord = {
@@ -76,9 +78,14 @@ function buildReleaseSafetyState(input: {
     publishedManifest?.runtimeVersion &&
     !semverGte(publishedManifest.runtimeVersion, requirements.minRuntimeVersion);
 
+  const realDeviceHeartbeat = Boolean(lastDeviceHeartbeat?.device?.features?.length);
   const safeMode =
     requirements.safeModeWhenIncompatible &&
-    (!compatibility.compatible || Boolean(manifestStale));
+    (Boolean(manifestStale) ||
+      (realDeviceHeartbeat && !compatibility.compatible) ||
+      (!realDeviceHeartbeat &&
+        heartbeatSource === "apk_manifest_proxy" &&
+        !compatibility.compatible));
 
   const canRequireFieldValidation = !safeMode && compatibility.compatible;
   const canRequireOtaSmoke = canRequireFieldValidation;
@@ -129,8 +136,8 @@ function effectiveFromHeartbeat(hb: DeviceHeartbeatRecord | null): {
       appVersion: apk.latestVersion ?? apk.runtimeVersion,
       runtimeVersion: apk.runtimeVersion,
       versionCode: apk.buildNumber ? Number.parseInt(apk.buildNumber, 10) : undefined,
-      features: [],
-      routes: [],
+      features: apk.supportedFeatures ?? [],
+      routes: apk.supportedRoutes ?? [],
       channel: "preview-manifest",
     },
     source: "apk_manifest_proxy",

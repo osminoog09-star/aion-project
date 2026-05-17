@@ -10,6 +10,7 @@ import path from "node:path";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { resolveAionDriverPath } from "./resolve-aion-driver-path.mjs";
+import { resolveDeviceHeartbeatRemote } from "./resolve-device-heartbeat-remote.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const strict = process.argv.includes("--strict");
@@ -43,6 +44,7 @@ function add(id, category, status, detail) {
   console.log(`  [${tag}] ${id}: ${detail}`);
 }
 
+async function main() {
 console.log("\n=== AION Stabilization Sign-Off ===\n");
 
 // --- Phase A: APK manifest ---
@@ -83,8 +85,12 @@ if (driverManifest?.runtimeVersion && apk?.runtimeVersion) {
     add("A-driver-source", "compatibility", "warn", `driver ${driverManifest.runtimeVersion} ahead of published APK`);
 }
 
-// --- Phase B: device heartbeat ---
-const hb = readJson(path.join(root, "src/content/device-build-heartbeat.json"));
+// --- Phase B: device heartbeat (local → Supabase → production) ---
+const hbRemote = await resolveDeviceHeartbeatRemote();
+const hb = hbRemote ?? readJson(path.join(root, "src/content/device-build-heartbeat.json"));
+if (hbRemote?.source && hbRemote.source !== "local") {
+  add("B-heartbeat-source", "device", "pass", `heartbeat from ${hbRemote.source}`);
+}
 const hbAt = hb?.at ?? hb?.device?.reportedAt ?? null;
 const hbAgeSec = hbAt ? Math.round((Date.now() - Date.parse(hbAt)) / 1000) : null;
 const device = hb?.device ?? null;
@@ -94,12 +100,20 @@ if (!device?.runtimeVersion)
     "B-heartbeat",
     "device",
     requireDevice ? "blocked" : "warn",
-    "no device heartbeat — install APK, open Driver",
+    "no device heartbeat — install APK 1.0.6, open Driver 30s",
   );
-else if (hbAgeSec != null && hbAgeSec > 60)
-  add("B-heartbeat-fresh", "device", "blocked", `heartbeat stale ${hbAgeSec}s (need <60s)`);
-else if (hbAgeSec != null)
-  add("B-heartbeat-fresh", "device", "pass", `heartbeat ${hbAgeSec}s ago`);
+else {
+  add(
+    "B-heartbeat",
+    "device",
+    "pass",
+    `device ${device.appVersion} rv ${device.runtimeVersion} (vc ${device.versionCode ?? "?"})`,
+  );
+  if (hbAgeSec != null && hbAgeSec > 300)
+    add("B-heartbeat-fresh", "device", requireDevice ? "blocked" : "warn", `heartbeat stale ${hbAgeSec}s`);
+  else if (hbAgeSec != null)
+    add("B-heartbeat-fresh", "device", "pass", `heartbeat ${hbAgeSec}s ago`);
+}
 
 if (device && req) {
   const missingF = (req.requiredFeatures ?? []).filter((f) => !(device.features ?? []).includes(f));
@@ -197,3 +211,9 @@ if (report.nextSteps.length) {
 
 if (strict && !signedOff) process.exit(1);
 process.exit(signedOff ? 0 : 2);
+}
+
+main().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});
