@@ -59,6 +59,9 @@ class AionOverlayOrbModule(private val reactContext: ReactApplicationContext) :
       promise.reject("ORB_HUD", e.message, e)
     }
   }
+
+  @ReactMethod
+  fun updateOrbState(state: String, promise: Promise) {
     try {
       AionOverlayOrbService.requestUpdate(reactApplicationContext, state)
       promise.resolve(true)

@@ -49,3 +49,8 @@ next-env.d.ts
 /aion-driver/ios
 /aion-driver/dist
 /aion-driver/.tmp-eas-artifact*
+.tmp-eas-art/
+.tmp-eas-art.zip
+.tmp-eas-artifact/
+.tmp-eas-artifact.zip
+eas-build-error.json

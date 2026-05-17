@@ -7,8 +7,10 @@
 import { execSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadDotenvLocal } from "./load-dotenv-local.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+loadDotenvLocal();
 const buildId = process.env.EAS_APK_BUILD_ID?.trim() || process.argv[2]?.trim();
 
 if (!buildId) {

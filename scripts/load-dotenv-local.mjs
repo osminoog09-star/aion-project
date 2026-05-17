@@ -98,12 +98,19 @@ export function loadDotenvLocal(options = {}) {
   return loaded;
 }
 
+/** Mask a secret for logs/diagnostics (never fully expose short values). */
+export function maskSecret(value) {
+  const v = typeof value === "string" ? value.trim() : "";
+  if (!v) return null;
+  if (v.length <= 8) return "***";
+  return `${v.slice(0, 4)}…${v.slice(-4)}`;
+}
+
 /** @param {string[]} keys */
 export function maskEnv(keys) {
   const out = {};
   for (const k of keys) {
-    const v = process.env[k]?.trim();
-    out[k] = v ? `${v.slice(0, 4)}…${v.slice(-4)}` : null;
+    out[k] = maskSecret(process.env[k]);
   }
   return out;
 }

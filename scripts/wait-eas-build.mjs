@@ -4,7 +4,10 @@
  *   node scripts/wait-eas-build.mjs <BUILD_ID>
  *   EAS_APK_BUILD_ID=... node scripts/wait-eas-build.mjs
  */
-import { execFileSync } from "node:child_process";
+import { loadDotenvLocal } from "./load-dotenv-local.mjs";
+import { easBuildViewJson } from "./eas-exec.mjs";
+
+loadDotenvLocal();
 
 const buildId = process.env.EAS_APK_BUILD_ID?.trim() || process.argv[2]?.trim();
 const intervalMs = Number(process.env.EAS_POLL_MS ?? 30_000);
@@ -18,12 +21,7 @@ if (!buildId) {
 const terminal = new Set(["FINISHED", "ERRORED", "CANCELED"]);
 
 function view() {
-  const raw = execFileSync("npx", ["eas-cli@latest", "build:view", buildId, "--json"], {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-    env: process.env,
-  });
-  return JSON.parse(raw);
+  return easBuildViewJson(buildId);
 }
 
 const started = Date.now();

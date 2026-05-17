@@ -6,11 +6,14 @@
  *   EAS_APK_BUILD_ID=f71cec0a-... node scripts/sync-apk-manifest-from-eas.mjs
  *   node scripts/sync-apk-manifest-from-eas.mjs f71cec0a-...
  */
-import { execFileSync } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
+import { easBuildViewJson } from "./eas-exec.mjs";
+import { loadDotenvLocal } from "./load-dotenv-local.mjs";
 import { resolveAionDriverPath } from "./resolve-aion-driver-path.mjs";
+
+loadDotenvLocal();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -22,19 +25,13 @@ if (!buildId) {
   process.exit(1);
 }
 
-let jsonRaw;
+let build;
 try {
-  jsonRaw = execFileSync("npx", ["eas-cli@latest", "build:view", buildId, "--json"], {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-    env: process.env,
-  });
+  build = easBuildViewJson(buildId);
 } catch (e) {
-  console.error("eas build:view failed:", e);
+  console.error("eas build:view failed:", e.message ?? e);
   process.exit(1);
 }
-
-const build = JSON.parse(jsonRaw);
 if (build.status !== "FINISHED") {
   console.error(`Build ${buildId} status=${build.status} (need FINISHED). No manifest write.`);
   process.exit(2);
