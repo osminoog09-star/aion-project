@@ -1,10 +1,15 @@
 {
-  "at": "2026-05-16T14:40:33.530Z",
+  "at": "2026-05-17T05:39:08.009Z",
   "architecture": "AION monorepo — one project, modules (portal + aion-driver)",
   "github": {
     "projectRepo": "osminoog09-star/aion-project",
-    "workflowsOnRemote": [],
-    "easWorkflowOnRemote": false,
+    "workflowsOnRemote": [
+      ".github/workflows/eas-build-driver-preview.yml",
+      ".github/workflows/portal-build.yml",
+      ".github/workflows/vercel-deploy-hook.yml",
+      ".github/workflows/vercel-production.yml"
+    ],
+    "easWorkflowOnRemote": true,
     "easWorkflowFile": "eas-build-driver-preview.yml"
   },
   "modules": {
@@ -22,13 +27,20 @@
     ]
   },
   "credentials": {
-    "githubTokenPresent": false,
+    "githubTokenPresent": true,
     "expoTokenLocal": false,
-    "expoTokenOnGithub": "Required in aion-project Secrets for EAS job"
+    "expoTokenOnGithub": "Required in aion-project Secrets for EAS job",
+    "envLocalFiles": [
+      "C:\\Users\\osmin\\Desktop\\Проекты\\aion-com\\.env.local"
+    ],
+    "envLocalMasked": {
+      "GITHUB_TOKEN": "gho_…iPza",
+      "GH_TOKEN": null,
+      "EXPO_TOKEN": null,
+      "OPERATIONS_OWNER_SECRET": null
+    }
   },
-  "critical": [
-    "GITHUB_TOKEN not set — cannot dispatch workflow from Cursor"
-  ],
+  "critical": [],
   "remediation": [
     "Add aion-driver/ to aion-project repo (copy from local ../aion-driver)",
     "Push .github/workflows/eas-build-driver-preview.yml",

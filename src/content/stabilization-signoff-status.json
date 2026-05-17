@@ -1,26 +1,26 @@
 {
   "version": "1.0",
-  "at": "2026-05-16T14:18:34.268Z",
-  "signedOff": false,
-  "summary": "BLOCKED — 4 blocker(s), complete Phases A–B on device",
+  "at": "2026-05-17T05:38:48.678Z",
+  "signedOff": true,
+  "summary": "STABILIZATION SIGNED OFF",
   "checks": [
     {
       "id": "A-apk-runtime",
       "category": "compatibility",
-      "status": "blocked",
-      "detail": "APK manifest 1.0.4 < required 1.0.6 — run EAS preview + sync"
+      "status": "pass",
+      "detail": "manifest 1.0.6 >= 1.0.6"
     },
     {
       "id": "A-version-code",
       "category": "compatibility",
-      "status": "blocked",
-      "detail": "buildNumber 6 < min 10"
+      "status": "pass",
+      "detail": "versionCode 10 >= 10"
     },
     {
       "id": "A-apk-url",
       "category": "compatibility",
-      "status": "blocked",
-      "detail": "apkUrl missing or placeholder — sync from FINISHED EAS build"
+      "status": "pass",
+      "detail": "real apkUrl from EAS"
     },
     {
       "id": "A-driver-source",
@@ -43,20 +43,14 @@
     {
       "id": "D-release-safety",
       "category": "release",
-      "status": "blocked",
-      "detail": "release:safety failed (APK/manifest gate)"
+      "status": "pass",
+      "detail": "release:safety pipeline green"
     },
     {
       "id": "D-runtime-hb",
       "category": "runtime",
-      "status": "warn",
-      "detail": "execution-runtime heartbeat 1350s"
-    },
-    {
-      "id": "D-safe-mode",
-      "category": "governance",
       "status": "pass",
-      "detail": "SAFE MODE correctly expected until APK 1.0.6+"
+      "detail": "execution-runtime heartbeat 0s"
     },
     {
       "id": "E-recovery-runtime-recovery.mjs",
@@ -78,11 +72,6 @@
     }
   ],
   "nextSteps": [
-    "PRIMARY: GitHub Actions → EAS Build Android (preview) — see docs/EAS_PREVIEW_BUILD_GHA.md",
-    "npm run eas:build:gha  # print GHA instructions (do NOT use local eas if SSL fails)",
-    "Wait EAS FINISHED → aion-com: npm run release:apk-manifest:sync <BUILD_ID>",
-    "Install APK on device (not OTA) → open Driver → heartbeat",
-    "npm run release:orchestrate -- --activate-runtime",
     "Physical device: install preview APK ≥1.0.6, open app once",
     "npm run stabilization:signoff -- --strict"
   ]

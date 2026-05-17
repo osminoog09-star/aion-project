@@ -1,18 +1,18 @@
 {
   "version": "1.0",
-  "phase": "apk_build_required",
-  "buildId": null,
-  "workflowRunId": null,
-  "humanBoundary": null,
-  "updatedAt": "2026-05-16T14:24:11.842Z",
+  "phase": "apk_manifest_synced",
+  "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
+  "workflowRunId": 25982310696,
+  "humanBoundary": "install_apk_on_device",
+  "updatedAt": "2026-05-17T05:40:00.000Z",
+  "apkVersion": "1.0.6",
+  "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
   "history": [
     {
-      "at": "2026-05-16T14:24:11.842Z",
-      "phase": "apk_build_required"
-    },
-    {
-      "at": "2026-05-16T14:23:46.616Z",
-      "phase": "started"
+      "at": "2026-05-17T05:40:00.000Z",
+      "phase": "apk_manifest_synced",
+      "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
+      "note": "EAS FINISHED, manifest pushed to master"
     }
   ]
 }
