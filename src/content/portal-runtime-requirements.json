@@ -15,5 +15,5 @@
   "requiresNativeBuild": false,
   "safeModeWhenIncompatible": true,
   "blockFieldValidationUntilCompatible": true,
-  "notesRu": "Portal runtime требует Driver ≥1.0.6 / vc10 с field validation и OTA smoke. APK 1.0.4 на preview — несовместим."
+  "notesRu": "Portal runtime требует Driver ≥1.0.6 / vc10. Preview APK синхронизирован с EAS eb4250a2; SAFE MODE снимается при совместимом манифесте или heartbeat."
 }

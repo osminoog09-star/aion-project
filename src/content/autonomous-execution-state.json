@@ -1,18 +1,24 @@
 {
   "version": "1.0",
-  "phase": "stabilization_signed_off",
+  "phase": "completed",
   "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
   "workflowRunId": 25982310696,
   "humanBoundary": null,
-  "updatedAt": "2026-05-17T12:52:00.000Z",
+  "updatedAt": "2026-05-17T13:00:00.000Z",
   "apkVersion": "1.0.6",
   "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
   "signoff": "YES",
+  "production": {
+    "safeMode": false,
+    "manifestRuntime": "1.0.6",
+    "heartbeatPost": "200",
+    "url": "https://aion-com.vercel.app"
+  },
   "history": [
     {
-      "at": "2026-05-17T12:52:00.000Z",
-      "phase": "stabilization_signed_off",
-      "note": "APK 1.0.6 manifest on main; signoff strict passed; Vercel POST fix pushed"
+      "at": "2026-05-17T13:00:00.000Z",
+      "phase": "completed",
+      "note": "Autonomous cycle: main synced, SAFE MODE off, signoff YES, routes validated"
     }
   ]
 }

@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "at": "2026-05-17T12:50:20.970Z",
+  "at": "2026-05-17T12:55:30.007Z",
   "signedOff": true,
   "summary": "STABILIZATION SIGNED OFF",
   "checks": [
@@ -38,7 +38,7 @@
       "id": "B-heartbeat-fresh",
       "category": "device",
       "status": "pass",
-      "detail": "heartbeat 1s ago"
+      "detail": "heartbeat 230s ago"
     },
     {
       "id": "B-device-compat",
