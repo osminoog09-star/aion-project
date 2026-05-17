@@ -67,7 +67,7 @@ console.log("\n[5/6] Release safety — manifest gate already enforced in step 3
 
 console.log("\n[6/6] Stamp runtime — only if gates passed");
 execSync(
-  'node scripts/execution-runtime.mjs --phase coding --task "Release safety gates passed" --progress-pct 99 --skip-feed',
+  'node scripts/execution-runtime.mjs --phase validating --task "Release safety gates passed" --progress-pct 99 --skip-feed --skip-governance',
   { cwd: root, stdio: "inherit" },
 );
 

@@ -1,19 +1,32 @@
 {
-  "latestVersion": "1.0.4",
+  "latestVersion": "1.0.6",
   "minimumSupported": "1.0.6",
-  "runtimeVersion": "1.0.4",
-  "buildNumber": "6",
-  "compatibilityStatus": "incompatible_with_portal_runtime",
+  "runtimeVersion": "1.0.6",
+  "buildNumber": "10",
+  "compatibilityStatus": "compatible_with_portal_runtime",
   "portalMinRuntimeVersion": "1.0.6",
-  "releaseDate": "2026-05-14T12:00:00.000Z",
+  "releaseDate": "2026-05-17T05:36:30.921Z",
   "releaseType": "test",
-  "releaseNotes": "TEST — проверка цепочки APK/манифест (preview). apkUrl — плейсхолдер; после eas build FINISHED для 1.0.4 подставьте прямой URL артефакта (eas build:view --json → artifacts).",
+  "releaseNotes": "TEST — проверка цепочки APK/манифест (preview). apkUrl — плейсхолдер; после eas build FINISHED для 1.0.4 подставьте прямой URL артефакта (eas build:view --json → artifacts).\nSynced from EAS eb4250a2-8702-4c47-af49-0e5b75eb9724 (ccc2357ca9e6a7665ee37339932f1b1d8a7997fd).",
   "changelog": [
     "Driver 1.0.4 / android versionCode 6 — ACCESS_BACKGROUND_LOCATION + experimental TaskManager path (off by default).",
     "releaseType=test; не для production-канала.",
     "OTA без смены runtime остаётся на канале preview; APK — при смене native/runtime."
   ],
-  "apkUrl": "https://example.com/aion-driver-1.0.4-update-pipeline-placeholder.apk",
+  "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
   "critical": false,
-  "forceUpdate": false
+  "forceUpdate": false,
+  "easBuildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
+  "supportedFeatures": [
+    "field_validation_8_8",
+    "ota_smoke_from_validation",
+    "bg_production_gate_ui",
+    "route_timeline",
+    "device_heartbeat"
+  ],
+  "supportedRoutes": [
+    "/driver/route-timeline",
+    "/ota-debug",
+    "/update-center"
+  ]
 }

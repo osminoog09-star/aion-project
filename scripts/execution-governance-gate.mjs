@@ -48,6 +48,7 @@ const ALLOWED = {
   waiting_approval: ["coding", "blocked", "idle"],
   recovering: ["coding", "analyzing", "blocked", "validating"],
   completed: ["analyzing", "coding", "planning", "idle"],
+  executing: ["validating", "deploying", "blocked", "recovering", "analyzing"],
 };
 
 if (from !== to) {
