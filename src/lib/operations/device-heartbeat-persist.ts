@@ -20,13 +20,12 @@ function readLocal(): DeviceHeartbeatRecord | null {
   }
 }
 
-async function readSupabase(): Promise<DeviceHeartbeatRecord | null> {
-  const key = process.env.OPERATIONS_SUPABASE_SERVICE_ROLE_KEY?.trim();
+async function readSupabaseWithKey(apiKey: string): Promise<DeviceHeartbeatRecord | null> {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  if (!key || !url) return null;
+  if (!apiKey || !url) return null;
   try {
     const { createClient } = await import("@supabase/supabase-js");
-    const supabase = createClient(url, key, { auth: { persistSession: false } });
+    const supabase = createClient(url, apiKey, { auth: { persistSession: false } });
     const { data, error } = await supabase
       .from("ecosystem_public_snapshots")
       .select("payload, updated_at")
@@ -43,6 +42,14 @@ async function readSupabase(): Promise<DeviceHeartbeatRecord | null> {
   } catch {
     return null;
   }
+}
+
+/** Service role (writes + reads) or anon (public SELECT on is_public rows). */
+async function readSupabase(): Promise<DeviceHeartbeatRecord | null> {
+  const serviceKey = process.env.OPERATIONS_SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (serviceKey) return readSupabaseWithKey(serviceKey);
+  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  return readSupabaseWithKey(anonKey ?? "");
 }
 
 /** Newest heartbeat: Supabase (prod) then local FS (dev). */

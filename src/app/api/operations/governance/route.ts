@@ -12,6 +12,7 @@ import {
   detectBlockersFromSnapshot,
 } from "@/lib/operations/operational-continuation";
 import { semverGte } from "@/lib/shared/runtime-compatibility";
+import { resolveDeviceHeartbeatRecord } from "@/lib/operations/device-heartbeat-persist";
 
 function getSignoffStatus() {
   try {
@@ -37,17 +38,21 @@ export async function GET() {
     expoToken: Boolean(process.env.EXPO_TOKEN?.trim()),
     ownerSecret: Boolean(process.env.OPERATIONS_OWNER_SECRET?.trim()),
     supabaseServiceRole: Boolean(process.env.OPERATIONS_SUPABASE_SERVICE_ROLE_KEY?.trim()),
+    supabaseAnon: Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()),
+    supabaseUrl: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()),
   };
 
   let hbFresh = false;
   let hbPresent = false;
   try {
-    const hb = JSON.parse(
-      readFileSync(path.join(process.cwd(), "src/content/device-build-heartbeat.json"), "utf8"),
-    );
+    const hb =
+      (await resolveDeviceHeartbeatRecord()) ??
+      JSON.parse(
+        readFileSync(path.join(process.cwd(), "src/content/device-build-heartbeat.json"), "utf8"),
+      );
     const at = hb?.at ?? hb?.device?.reportedAt;
     hbPresent = Boolean(hb?.device?.runtimeVersion);
-    hbFresh = at ? Date.now() - Date.parse(at) < 60_000 : false;
+    hbFresh = at ? Date.now() - Date.parse(at) < 300_000 : false;
   } catch {
     /* */
   }

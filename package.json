@@ -40,6 +40,7 @@
     "stabilization:signoff": "node scripts/stabilization-signoff.mjs",
     "device:heartbeat:bootstrap": "node --use-system-ca scripts/post-expected-device-heartbeat.mjs",
     "git:sync-main": "git push origin master:main",
+    "vercel:supabase-env": "node scripts/print-vercel-supabase-env.mjs",
     "apk:wait": "node scripts/wait-eas-build.mjs",
     "apk:complete-loop": "node scripts/complete-apk-loop.mjs",
     "apk:manifest:validate": "node scripts/validate-apk-manifest.mjs",
