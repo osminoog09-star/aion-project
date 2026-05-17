@@ -62,7 +62,7 @@ export function RouteTimelineIntelligenceHeader({
   return (
     <View className="mx-4 mb-3 rounded-xl border border-violet-500/25 bg-violet-500/5 px-3 py-3">
       <Text className="text-[10px] font-bold uppercase tracking-widest text-violet-300/90">
-        route intelligence
+        маршрут · аналитика
         {historical ? ` · ${historical.windowDays}д · ${historical.sampleSnapshots} снимков` : ""}
       </Text>
       {coverage ? (
@@ -83,7 +83,7 @@ export function RouteTimelineIntelligenceHeader({
         </Text>
       ))}
       {stopZoneProgress ? (
-        <Text className="mt-2 text-xs text-violet-300/75">stop-zone: {stopZoneProgress}</Text>
+        <Text className="mt-2 text-xs text-violet-300/75">зоны остановок: {stopZoneProgress}</Text>
       ) : null}
       {topZoneInsight ? (
         <Text className="mt-2 text-xs text-cyan-300/80">{topZoneInsight}</Text>

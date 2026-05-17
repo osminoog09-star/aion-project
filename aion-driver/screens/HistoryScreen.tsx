@@ -26,6 +26,10 @@ import {
   formatKm,
   formatLiters,
 } from "../utils/formatting";
+import {
+  formatOperationalCostsBrief,
+  pickProfitFromRouteRow,
+} from "../utils/shiftDisplayEconomics";
 
 export function HistoryScreen() {
   const router = useRouter();
@@ -138,19 +142,39 @@ function ShiftRow({
     hour: "2-digit",
     minute: "2-digit",
   });
+  const profit = pickProfitFromRouteRow({ shift });
+  const profitValue = profit.profit ?? shift.netProfit;
   return (
     <GlowCard className="mb-3" glow="neutral">
       <View className="flex-row items-center justify-between">
         <View>
           <Text className="text-[10px] uppercase tracking-widest text-cyan-400/80">
             Смена
+            {profit.usesAfterCosts ? " · нетто" : ""}
           </Text>
           <Text className="text-sm text-slate-300">{dateLabel}</Text>
         </View>
         <Text className="text-lg font-semibold text-emerald-300">
-          {formatCurrencyDisplay(shift.netProfit, currency)}
+          {formatCurrencyDisplay(profitValue, currency)}
         </Text>
       </View>
+      {profit.usesAfterCosts &&
+      shift.rentalCostAccrued != null &&
+      shift.fixedOpsCost != null ? (
+        <Text className="mt-2 text-[10px] text-violet-300/80">
+          {formatOperationalCostsBrief(
+            {
+              rentalAccrued: shift.rentalCostAccrued,
+              fixedOpsAccrued: shift.fixedOpsCost,
+              totalOperationalCost:
+                shift.rentalCostAccrued + shift.fixedOpsCost,
+              profitAfterCosts: shift.netProfitAfterCosts ?? profitValue,
+              profitPerHourAfterCosts: shift.profitPerHourAfterCosts ?? 0,
+            },
+            currency,
+          )}
+        </Text>
+      ) : null}
       <View className="mt-3 flex-row flex-wrap gap-x-4 gap-y-2">
         <Meta label="Время" value={formatDuration(shift.durationMs)} />
         <Meta label="Км всего" value={formatKm(shift.distanceKm, distanceUnits)} />

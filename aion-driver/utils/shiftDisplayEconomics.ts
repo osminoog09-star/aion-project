@@ -2,7 +2,9 @@ import type { ShiftAnalyticsSnapshot } from "../features/analytics/types/shiftAn
 import type { ActiveShiftRuntime } from "../features/shift/runtime/activeShiftRuntimeTypes";
 import type { LiveShiftMetrics } from "../features/shift/runtime/liveShiftTypes";
 import type { Shift } from "../types";
+import type { AppCurrencyCode } from "../types/device";
 import type { ShiftOperationalCosts } from "../types/rental";
+import { formatCurrencyDisplay } from "./formatting";
 
 export type ShiftProfitDisplay = {
   profit: number;
@@ -80,6 +82,14 @@ export function pickProfitFromRouteRow(input: {
     };
   }
   return { profit: null, profitPerHour: null, usesAfterCosts: false };
+}
+
+/** Краткая строка аренда + фикс. для HUD / истории. */
+export function formatOperationalCostsBrief(
+  oc: ShiftOperationalCosts,
+  currency: AppCurrencyCode,
+): string {
+  return `Аренда ${formatCurrencyDisplay(oc.rentalAccrued, currency)} · фикс. ${formatCurrencyDisplay(oc.fixedOpsAccrued, currency)}`;
 }
 
 export function pickProfitFromRuntime(runtime: ActiveShiftRuntime): ShiftProfitDisplay {

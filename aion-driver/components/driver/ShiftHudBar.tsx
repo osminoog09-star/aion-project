@@ -14,7 +14,11 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import type { LiveShiftMetrics } from "../../features/shift/runtime/liveShiftTypes";
-import { pickProfitFromLive } from "../../utils/shiftDisplayEconomics";
+import type { ShiftOperationalCosts } from "../../types/rental";
+import {
+  formatOperationalCostsBrief,
+  pickProfitFromLive,
+} from "../../utils/shiftDisplayEconomics";
 import type { MotionState } from "../../services/locationPolicy";
 import type { AppCurrencyCode } from "../../types/device";
 import {
@@ -130,6 +134,7 @@ export function ShiftHudBar({
             tripStreak={tripStreak}
             momentum={momentum}
             usesAfterCosts={display.usesAfterCosts}
+            operationalCosts={display.operationalCosts}
           />
         </BlurView>
       ) : (
@@ -150,6 +155,7 @@ export function ShiftHudBar({
             tripStreak={tripStreak}
             momentum={momentum}
             usesAfterCosts={display.usesAfterCosts}
+            operationalCosts={display.operationalCosts}
           />
         </LinearGradient>
       )}
@@ -170,6 +176,7 @@ type InnerProps = {
   tripStreak: number;
   momentum: number;
   usesAfterCosts: boolean;
+  operationalCosts: ShiftOperationalCosts | null;
 };
 
 function HudInner({
@@ -185,6 +192,7 @@ function HudInner({
   tripStreak,
   momentum,
   usesAfterCosts,
+  operationalCosts,
 }: InnerProps) {
   const momPct = Math.round(Math.min(160, momentum * 100));
   return (
@@ -221,6 +229,11 @@ function HudInner({
           <Text className="mt-1 text-[11px] text-slate-400">
             {profitPerHourStr} · {formatDuration(metrics.durationMs)}
           </Text>
+          {operationalCosts ? (
+            <Text className="mt-1 text-[10px] text-violet-300/85">
+              {formatOperationalCostsBrief(operationalCosts, currency)}
+            </Text>
+          ) : null}
         </View>
         <View className="items-end">
           <Text className="text-[9px] uppercase tracking-widest text-slate-500">интенсивность</Text>

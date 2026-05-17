@@ -11,8 +11,8 @@
     "reasoning": "Подтвердить GPS cluster insights после 2+ смен",
     "confidence": 0.88,
     "startedAt": "2026-05-16T13:56:04.603Z",
-    "updatedAt": "2026-05-16T13:56:04.603Z",
-    "heartbeatAt": "2026-05-16T13:56:04.603Z",
+    "updatedAt": "2026-05-17T05:06:28.041Z",
+    "heartbeatAt": "2026-05-17T05:06:28.041Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -33,15 +33,22 @@
     "lastFailure": null,
     "lastCompletedAction": "AI пишет и улучшает код: Исправление live: Supabase + честный stale UI",
     "retryCount": 0,
-    "validationProgress": "Live status: Supabase persist + stale banner + push-live API",
+    "validationProgress": "operationalCosts в ShiftHudBar и истории смен",
     "progressPercent": 99,
     "etaMinutes": 60,
     "autonomousDepth": 2,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "src/lib/operations/execution-runtime-live-persist.ts",
+    "currentFile": "aion-driver/utils/shiftDisplayEconomics.ts",
     "recentActions": [
+      {
+        "at": "2026-05-17T05:06:28.041Z",
+        "tag": "CODE",
+        "message": "operationalCosts в ShiftHudBar и истории смен",
+        "file": "aion-driver/utils/shiftDisplayEconomics.ts",
+        "repo": "aion-driver"
+      },
       {
         "at": "2026-05-16T13:47:59.713Z",
         "tag": "CODE",
@@ -253,6 +260,11 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-05-17T05:06:28.041Z",
+      "phase": "blocked",
+      "summary": "[CODE] operationalCosts в ShiftHudBar и истории смен"
+    },
     {
       "at": "2026-05-16T13:56:04.603Z",
       "phase": "blocked",
@@ -667,6 +679,9 @@
   ],
   "heartbeats": [
     {
+      "at": "2026-05-17T05:06:28.041Z"
+    },
+    {
       "at": "2026-05-16T13:56:04.603Z"
     },
     {
@@ -806,9 +821,6 @@
     },
     {
       "at": "2026-05-15T15:30:17.374Z"
-    },
-    {
-      "at": "2026-05-15T15:30:07.365Z"
     }
   ]
 }
