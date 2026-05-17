@@ -1,18 +1,18 @@
 {
   "version": "1.0",
-  "phase": "apk_manifest_synced",
+  "phase": "stabilization_signed_off",
   "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
   "workflowRunId": 25982310696,
-  "humanBoundary": "install_apk_on_device",
-  "updatedAt": "2026-05-17T05:40:00.000Z",
+  "humanBoundary": null,
+  "updatedAt": "2026-05-17T12:52:00.000Z",
   "apkVersion": "1.0.6",
   "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
+  "signoff": "YES",
   "history": [
     {
-      "at": "2026-05-17T05:40:00.000Z",
-      "phase": "apk_manifest_synced",
-      "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
-      "note": "EAS FINISHED, manifest pushed to master"
+      "at": "2026-05-17T12:52:00.000Z",
+      "phase": "stabilization_signed_off",
+      "note": "APK 1.0.6 manifest on main; signoff strict passed; Vercel POST fix pushed"
     }
   ]
 }

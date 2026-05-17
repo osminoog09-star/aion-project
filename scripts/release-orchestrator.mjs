@@ -84,7 +84,8 @@ const hbPath = path.join(root, "src/content/device-build-heartbeat.json");
 let hbOk = false;
 if (fs.existsSync(hbPath)) {
   const hb = JSON.parse(fs.readFileSync(hbPath, "utf8"));
-  const age = hb?.receivedAt ? Date.now() - Date.parse(hb.receivedAt) : Infinity;
+  const hbAt = hb?.at ?? hb?.receivedAt ?? null;
+  const age = hbAt ? Date.now() - Date.parse(hbAt) : Infinity;
   hbOk = age < 300_000;
   console.log(`[ORCHESTRATOR] 5/8 device heartbeat: ${hbOk ? "fresh" : "stale/missing"} (${Math.round(age / 1000)}s)`);
 } else {
