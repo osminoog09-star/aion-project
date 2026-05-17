@@ -12,6 +12,11 @@ concurrency:
   group: vercel-production
   cancel-in-progress: false
 
+env:
+  NEXT_PUBLIC_SUPABASE_URL: https://eclrkusmwcrtnxqhzpky.supabase.co
+  # Public anon key (client-safe); enables Supabase heartbeat read/write on Vercel without service role.
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjbHJrdXNtd2NydG54cWh6cGt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMDU3ODEsImV4cCI6MjA5MTU4MTc4MX0.FpTqRxDFBToOCyfjJCOj2NvOwTol__4qGDgLp6Q8JUg
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -37,10 +42,26 @@ jobs:
 
       - name: Build
         if: steps.creds.outputs.configured == 'true'
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ env.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ env.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
         run: |
           npm ci
           npm run build
           node scripts/verify-app-routes.mjs
+
+      - name: Sync Supabase env to Vercel project
+        if: steps.creds.outputs.configured == 'true'
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -e
+          add_env() {
+            printf '%s' "$2" | npx --yes vercel@54 env add "$1" production --force --token="${{ secrets.VERCEL_TOKEN }}"
+          }
+          add_env NEXT_PUBLIC_SUPABASE_URL "${{ env.NEXT_PUBLIC_SUPABASE_URL }}"
+          add_env NEXT_PUBLIC_SUPABASE_ANON_KEY "${{ env.NEXT_PUBLIC_SUPABASE_ANON_KEY }}"
 
       - name: Deploy to Vercel Production
         if: steps.creds.outputs.configured == 'true'
@@ -48,6 +69,8 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ env.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ env.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
       - name: Wait for alias propagation
         if: steps.creds.outputs.configured == 'true'

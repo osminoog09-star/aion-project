@@ -3,6 +3,7 @@ import { writeFileSync } from "node:fs";
 import path from "node:path";
 import type { DeviceBuildInfo } from "@/lib/shared/runtime-compatibility";
 import { evaluateReleaseSafetyAsync } from "@/lib/operations/release-safety";
+import { persistDeviceHeartbeatToSupabase } from "@/lib/operations/persist-device-heartbeat";
 import { appendRuntimeEvent } from "@/lib/operations/runtime-event-log";
 import { writeExecutionRuntimeToSupabase } from "@/lib/operations/execution-runtime-live-persist";
 import { getLocalExecutionRuntime } from "@/lib/execution-runtime";
@@ -55,40 +56,7 @@ async function handleDeviceHeartbeatPost(req: Request) {
     writeFileSync(HEARTBEAT_FILE, `${JSON.stringify(record, null, 2)}\n`, "utf8");
   }
 
-  let supabasePersisted = false;
-  if (process.env.OPERATIONS_SUPABASE_SERVICE_ROLE_KEY) {
-    try {
-      const { createClient } = await import("@supabase/supabase-js");
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.OPERATIONS_SUPABASE_SERVICE_ROLE_KEY!,
-        { auth: { persistSession: false } },
-      );
-      const kind = "portal_device_build_heartbeat";
-      const row = {
-        kind,
-        payload: record,
-        is_public: true,
-        updated_at: at,
-      };
-      const { data: existing } = await supabase
-        .from("ecosystem_public_snapshots")
-        .select("id")
-        .eq("kind", kind)
-        .limit(1)
-        .maybeSingle();
-      const write = existing?.id
-        ? await supabase.from("ecosystem_public_snapshots").update(row).eq("id", existing.id)
-        : await supabase.from("ecosystem_public_snapshots").insert(row);
-      if (write.error) {
-        console.error("[device-heartbeat] Supabase write failed:", write.error.message);
-      } else {
-        supabasePersisted = true;
-      }
-    } catch (e) {
-      console.error("[device-heartbeat] Supabase error:", e);
-    }
-  }
+  const supabasePersisted = await persistDeviceHeartbeatToSupabase(record);
 
   const safety = await evaluateReleaseSafetyAsync();
 
