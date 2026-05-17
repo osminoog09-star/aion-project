@@ -11,6 +11,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
     steps:
       - name: Checkout AION project
         uses: actions/checkout@v4
@@ -39,14 +41,14 @@ jobs:
         run: npm run validate
 
       - name: Setup EAS
-        if: ${{ secrets.EXPO_TOKEN != '' }}
+        if: ${{ env.EXPO_TOKEN != '' }}
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
+          token: ${{ env.EXPO_TOKEN }}
 
       - name: EAS Build preview APK
-        if: ${{ secrets.EXPO_TOKEN != '' }}
+        if: ${{ env.EXPO_TOKEN != '' }}
         working-directory: ${{ env.AION_DRIVER_MODULE }}
         run: |
           set -e
@@ -61,7 +63,7 @@ jobs:
           "
 
       - name: Upload metadata
-        if: ${{ secrets.EXPO_TOKEN != '' }}
+        if: ${{ env.EXPO_TOKEN != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: eas-preview-build-metadata
@@ -70,7 +72,7 @@ jobs:
             build-id.txt
 
       - name: Summary
-        if: ${{ secrets.EXPO_TOKEN != '' }}
+        if: ${{ env.EXPO_TOKEN != '' }}
         run: |
           BUILD_ID=$(cat build-id.txt)
           echo "## EAS preview (module aion-driver)" >> "$GITHUB_STEP_SUMMARY"
@@ -79,5 +81,5 @@ jobs:
           echo "Portal: \`npm run apk:complete-loop -- ${BUILD_ID}\`" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Fail — no EXPO_TOKEN
-        if: ${{ secrets.EXPO_TOKEN == '' }}
+        if: ${{ env.EXPO_TOKEN == '' }}
         run: echo "::error::EXPO_TOKEN missing in aion-project secrets" && exit 1

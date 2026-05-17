@@ -6,8 +6,10 @@ import path from "node:path";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { appendTrace } from "./release-execution-trace.mjs";
+import { loadDotenvLocal } from "./load-dotenv-local.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+loadDotenvLocal();
 const STATE_FILE = path.join(root, "src/content/autonomous-execution-state.json");
 const RUNTIME_FILE = path.join(root, "src/content/execution-runtime.json");
 

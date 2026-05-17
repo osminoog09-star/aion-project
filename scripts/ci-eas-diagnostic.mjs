@@ -5,8 +5,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveAionDriverPath } from "./resolve-aion-driver-path.mjs";
+import { loadDotenvLocal, maskEnv } from "./load-dotenv-local.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+const envFiles = loadDotenvLocal();
 const OUT = path.join(root, "src/content/ci-eas-diagnostic.json");
 
 const OWNER = process.env.AION_GITHUB_OWNER ?? "osminoog09-star";
@@ -96,6 +98,8 @@ const report = {
     githubTokenPresent: Boolean(ghToken),
     expoTokenLocal: Boolean(process.env.EXPO_TOKEN?.trim()),
     expoTokenOnGithub: "Required in aion-project Secrets for EAS job",
+    envLocalFiles: envFiles,
+    envLocalMasked: maskEnv(["GITHUB_TOKEN", "GH_TOKEN", "EXPO_TOKEN", "OPERATIONS_OWNER_SECRET"]),
   },
   critical,
   remediation: [

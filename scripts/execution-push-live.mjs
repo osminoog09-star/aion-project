@@ -6,14 +6,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { loadDotenvLocal } from "./load-dotenv-local.mjs";
+
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-const envLocal = path.join(root, ".env.local");
-if (fs.existsSync(envLocal)) {
-  for (const line of fs.readFileSync(envLocal, "utf8").split("\n")) {
-    const m = line.match(/^([A-Z0-9_]+)=(.*)$/);
-    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, "");
-  }
-}
+loadDotenvLocal();
 
 const secret = process.env.OPERATIONS_OWNER_SECRET?.trim();
 const url =
