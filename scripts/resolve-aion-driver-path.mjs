@@ -15,15 +15,13 @@ export function resolveAionDriverPath() {
   }
   const inRepo = path.join(portalRoot, "aion-driver");
   if (fs.existsSync(path.join(inRepo, "package.json"))) return inRepo;
-  const sibling = path.join(portalRoot, "../aion-driver");
-  if (fs.existsSync(path.join(sibling, "package.json"))) return sibling;
   return null;
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const p = resolveAionDriverPath();
   if (!p) {
-    console.error("aion-driver module not found (tried aion-driver/ and ../aion-driver)");
+    console.error("aion-driver module not found — expected aion-com/aion-driver/");
     process.exit(1);
   }
   console.log(p);

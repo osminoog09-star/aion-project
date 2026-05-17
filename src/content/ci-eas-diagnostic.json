@@ -1,5 +1,5 @@
 {
-  "at": "2026-05-16T14:37:01.084Z",
+  "at": "2026-05-16T14:40:33.530Z",
   "architecture": "AION monorepo — one project, modules (portal + aion-driver)",
   "github": {
     "projectRepo": "osminoog09-star/aion-project",
@@ -9,9 +9,9 @@
   },
   "modules": {
     "driverModule": "aion-driver",
-    "driverPathLocal": "C:\\Users\\osmin\\Desktop\\Проекты\\aion-driver",
-    "driverInRepo": false,
-    "driverSiblingDevLayout": true,
+    "driverPathLocal": "C:\\Users\\osmin\\Desktop\\Проекты\\aion-com\\aion-driver",
+    "driverInRepo": true,
+    "driverSiblingDevLayout": false,
     "driverWorkflowsLocalOnly": [
       "ci.yml",
       "eas-build-android-preview.yml",
@@ -27,7 +27,6 @@
     "expoTokenOnGithub": "Required in aion-project Secrets for EAS job"
   },
   "critical": [
-    "Module aion-driver/ not in aion-project repo on GitHub — push driver as subfolder (see docs/AION-MODULES.md)",
     "GITHUB_TOKEN not set — cannot dispatch workflow from Cursor"
   ],
   "remediation": [

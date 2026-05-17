@@ -1,0 +1,6 @@
+AION — открывайте ЭТУ папку (aion-com) в Cursor.
+
+Модуль Driver:
+  aion-com\aion-driver\
+
+Не используйте соседнюю папку Проекты\aion-driver — она legacy.
