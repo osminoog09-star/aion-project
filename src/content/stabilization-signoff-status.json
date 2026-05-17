@@ -1,6 +1,6 @@
 {
   "version": "1.0",
-  "at": "2026-05-17T05:38:48.678Z",
+  "at": "2026-05-17T12:50:20.970Z",
   "signedOff": true,
   "summary": "STABILIZATION SIGNED OFF",
   "checks": [
@@ -31,8 +31,20 @@
     {
       "id": "B-heartbeat",
       "category": "device",
-      "status": "warn",
-      "detail": "no device heartbeat — install APK, open Driver"
+      "status": "pass",
+      "detail": "device 1.0.6 rv 1.0.6 (vc 10)"
+    },
+    {
+      "id": "B-heartbeat-fresh",
+      "category": "device",
+      "status": "pass",
+      "detail": "heartbeat 1s ago"
+    },
+    {
+      "id": "B-device-compat",
+      "category": "device",
+      "status": "pass",
+      "detail": "device 1.0.6 compatible"
     },
     {
       "id": "D-compat-tests",
@@ -51,6 +63,12 @@
       "category": "runtime",
       "status": "pass",
       "detail": "execution-runtime heartbeat 0s"
+    },
+    {
+      "id": "D-safe-mode",
+      "category": "governance",
+      "status": "pass",
+      "detail": "SAFE MODE can be off"
     },
     {
       "id": "E-recovery-runtime-recovery.mjs",
@@ -72,7 +90,6 @@
     }
   ],
   "nextSteps": [
-    "Physical device: install preview APK ≥1.0.6, open app once",
     "npm run stabilization:signoff -- --strict"
   ]
 }

@@ -50,7 +50,13 @@ export function appendRuntimeEvent(
     payload,
   };
   log.events = [event, ...log.events].slice(0, MAX_EVENTS);
-  writeFileSync(LOG_FILE, `${JSON.stringify(log, null, 2)}\n`, "utf8");
+  if (!process.env.VERCEL) {
+    try {
+      writeFileSync(LOG_FILE, `${JSON.stringify(log, null, 2)}\n`, "utf8");
+    } catch {
+      /* read-only FS */
+    }
+  }
   return event;
 }
 

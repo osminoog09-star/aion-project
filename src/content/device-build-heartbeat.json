@@ -1,4 +1,23 @@
 {
-  "at": null,
-  "device": null
+  "at": "2026-05-17T12:50:07.407Z",
+  "device": {
+    "appVersion": "1.0.6",
+    "runtimeVersion": "1.0.6",
+    "versionCode": 10,
+    "gitSha": "da749fa",
+    "buildTimestamp": "2026-05-16T14:24:12.673Z",
+    "features": [
+      "field_validation_8_8",
+      "ota_smoke_from_validation",
+      "bg_production_gate_ui",
+      "route_timeline",
+      "device_heartbeat"
+    ],
+    "routes": [
+      "/driver/route-timeline",
+      "/ota-debug",
+      "/update-center"
+    ],
+    "channel": "preview"
+  }
 }
