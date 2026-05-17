@@ -1,15 +1,11 @@
 {
   "version": "1.0",
-  "phase": "paused",
+  "phase": "field_validation_gate",
   "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
-  "updatedAt": "2026-05-17T13:15:00.000Z",
+  "updatedAt": "2026-05-17T14:00:00.000Z",
   "apkVersion": "1.0.6",
   "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
-  "signoff": "YES",
-  "note": "Autonomous work stopped. Supabase anon RLS + Vercel env wired in CI; redeploy in progress after push.",
-  "production": {
-    "url": "https://aion-com.vercel.app",
-    "safeMode": false,
-    "manifestRuntime": "1.0.6"
-  }
+  "roadmapSynced": true,
+  "humanBoundary": "field_validation_8_8_on_device",
+  "note": "Roadmap JSON synced to 1.0.6. CI tests green. Owner: Маршруты → paste /operations/live."
 }

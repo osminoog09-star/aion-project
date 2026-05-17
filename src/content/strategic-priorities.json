@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-05-15",
+  "lastUpdated": "2026-05-17",
   "constitutionVersion": "2.0",
   "autonomousOrchestration": "Cursor executes roadmap/priorities/deps autonomously; owner observes /operations/command (Russian) and edits /operations/priorities — no ChatGPT relay.",
   "ownerLanguageRule": "Владелец видит только русский интерфейс. Английский — код и технические детали (свёрнуто).",
-  "ownerDirective": "PRIMARY: Driver Intelligence Core (real profit, rental, GPS history, OCR queue). P1 APK poll parallel — не freeze на EAS.",
+  "ownerDirective": "PRIMARY: field validation 8/8 на APK 1.0.6. Параллельно: FGS gate + route/time intelligence.",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
-  "nextImplementationTarget": "Field validation of analytics backfill + stop zone insights on physical device",
+  "nextImplementationTarget": "APK 1.0.6 установлен → Маршруты GPS · чеклист 8/8 → paste отчёт на /operations/live",
   "executionNotes": "Field validation 8/8 + portal report inbox (/operations/live paste). BG gate hint on device when 8/8. CI: test:field-validation-report in repo:verify. Device gate: owner paste report after 8/8.",
   "priorities": [
     {
@@ -15,7 +15,7 @@
       "subsystemIds": ["mobile-app", "ocr", "background-drive"],
       "status": "in_progress",
       "rationale": "MASTER §11–12: модуль Driver должен быть полезен в реальной жизни до расширения экосистемы.",
-      "nextAction": "Device validation: backfill coverage counts + stop zone insights on real GPS shifts",
+      "nextAction": "APK 1.0.6 → Маршруты 8/8 → paste отчёт; backfill + stop zones на реальных сменах",
       "setAt": "2026-05-15",
       "setBy": "product-owner"
     },
@@ -46,11 +46,11 @@
       "title": "APK release loop (device-verified)",
       "level": "high",
       "subsystemIds": ["updates", "apk-channel", "release-ops"],
-      "status": "blocked",
-      "rationale": "MASTER §4: внешний wait EAS — poll, не idle всего цикла.",
-      "nextAction": "FINISHED b9d3c90a → manifest sync → deploy → Update Center",
-      "setAt": "2026-05-14",
-      "setBy": "product-owner"
+      "status": "in_progress",
+      "rationale": "EAS eb4250a2 FINISHED; manifest 1.0.6 на Vercel; signoff YES — осталось device 8/8 + paste отчёта.",
+      "nextAction": "Установить preview APK 1.0.6 → Маршруты → 8/8 → /operations/live",
+      "setAt": "2026-05-17",
+      "setBy": "cursor"
     },
     {
       "id": "background-runtime-production",
@@ -143,7 +143,7 @@
       "title": "Best hours / zones analytics",
       "dependsOn": ["route-gps-store", "post-shift-analytics"],
       "status": "in_progress",
-      "reason": "Rollups + stop zones + backfill + route km/h median; route timeline UX next"
+      "reason": "Route timeline + rollups + stop zones live; field validation 8/8 unlocks production FGS gate"
     }
   ],
   "cursorAdaptationRules": [

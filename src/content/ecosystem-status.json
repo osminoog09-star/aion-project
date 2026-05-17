@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-15",
+  "lastUpdated": "2026-05-17",
   "maintainedInRepository": true,
   "methodology": "Проценты — ручная оценка по коду и продукту на дату lastUpdated: UI/фичи, бэкенд, realtime, прод-UX, граничные случаи, паритет web/mobile, дизайн, тесты, релизная готовность. Автоматического сбора метрик нет; числа не нормируются к «красивым» значениям. Supabase snapshot при наличии может переопределить поля через ecosystem_public_snapshots.",
   "definitionOfDone": [
@@ -32,8 +32,8 @@
     ]
   },
   "execution": {
-    "currentPriority": "PRIMARY: Driver Intelligence Core (rental economics, real profit, runtime HUD). P1 APK poll (EAS b9d3c90a) + parallel background-drive / OCR / GPS analytics — без freeze на внешних wait.",
-    "nextPriority": "После FINISHED f71cec0a: подставить apkUrl, деплой манифеста, ручная приёмка; затем BackgroundTrackingAdapter spike (FGS) + profit refresh hooks после reconnect/OCR.",
+    "currentPriority": "PRIMARY: field validation 8/8 на APK 1.0.6 (Driver Intelligence Core). Параллельно: FGS production gate + time intelligence (route timeline).",
+    "nextPriority": "Owner: установить APK 1.0.6 → Маршруты → paste 8/8 отчёт в /operations/live; затем BACKGROUND_TRACKING_PRODUCTION_READY review + OTA smoke.",
     "blockedTasks": [
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
@@ -86,10 +86,10 @@
     {
       "id": "apk",
       "label": "APK / manifest",
-      "percent": 52,
+      "percent": 82,
       "status": "partially_done",
-      "summary": "Манифест preview в public/ портала + URL в releases.json; полный контур до реального apkUrl и device-приёмки — частично.",
-      "lastSignal": "apk-manifest.preview.json + EXPO_PUBLIC_APK_MANIFEST_URL в .env.example"
+      "summary": "Preview APK 1.0.6 (EAS eb4250a2) на проде; manifest synced; signoff YES. Осталось: device field validation 8/8 + owner report.",
+      "lastSignal": "public/apk-manifest.preview.json runtime 1.0.6 + stabilization signoff"
     },
     {
       "id": "releases-json",
@@ -134,10 +134,10 @@
     {
       "id": "background-drive",
       "label": "Background drive + shift",
-      "percent": 22,
+      "percent": 28,
       "status": "partially_done",
-      "summary": "Android: FGS location task при активной смене + rebind после hydrate; дистанция в UI-watch, headless — heartbeat; production gate не пройден.",
-      "lastSignal": "androidShiftRuntimeBootstrap + ShiftContext FGS bind effect"
+      "summary": "FGS path + heartbeat diagnostics на Маршрутах; production gate ждёт field validation 8/8 на APK 1.0.6.",
+      "lastSignal": "RouteTimelineScreen FGS poll 30s + backgroundTrackingProductionGate"
     },
     {
       "id": "floating-orb-runtime",
@@ -260,7 +260,7 @@
       "target": "2026-Q2",
       "status": "in_progress",
       "subsystemIds": ["updates", "release-ops"],
-      "note": "Частично в driver; портал зеркалит ограниченно."
+      "note": "APK 1.0.6 live; device validation 8/8 — следующий gate."
     },
     {
       "id": "ms-release-db",

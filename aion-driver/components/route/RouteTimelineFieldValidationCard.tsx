@@ -8,6 +8,10 @@ import {
   type RouteFieldValidationStatus,
 } from "../../features/route/computeRouteFieldValidation";
 import { backgroundTrackingProductionGate } from "../../services/backgroundTracking";
+import {
+  getInstalledAppVersion,
+  getInstalledRuntimeVersion,
+} from "../../lib/driverBuildCapabilities";
 
 type Props = {
   validation: RouteFieldValidationStatus;
@@ -40,6 +44,9 @@ export function RouteTimelineFieldValidationCard({ validation, loading }: Props)
       <Text className="text-[10px] font-bold uppercase tracking-widest text-amber-300/90">
         проверка на устройстве
         {loading ? " · загрузка…" : ""}
+      </Text>
+      <Text className="mt-0.5 text-[10px] text-slate-500">
+        APK {getInstalledAppVersion()} · rv {getInstalledRuntimeVersion()}
       </Text>
       <Text className="mt-1 text-sm font-medium text-white">
         {validation.ready
