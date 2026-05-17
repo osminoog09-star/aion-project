@@ -6,7 +6,7 @@ import path from "node:path";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { appendTrace } from "./release-execution-trace.mjs";
-import { loadDotenvLocal } from "./load-dotenv-local.mjs";
+import { getGithubToken, githubAuthHeaders, loadDotenvLocal } from "./load-dotenv-local.mjs";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 loadDotenvLocal();
@@ -69,23 +69,15 @@ function markReleaseFailed(reason) {
   }
 }
 
-function token() {
-  return process.env.GITHUB_TOKEN?.trim() || process.env.GH_TOKEN?.trim() || "";
-}
-
 function expoToken() {
   return process.env.EXPO_TOKEN?.trim() || "";
 }
 
 async function gh(pathname, opts = {}) {
-  const t = token();
-  if (!t) throw new Error("GITHUB_TOKEN or GH_TOKEN required");
   const res = await fetch(`https://api.github.com${pathname}`, {
     ...opts,
     headers: {
-      Authorization: `Bearer ${t}`,
-      Accept: "application/vnd.github+json",
-      "X-GitHub-Api-Version": "2022-11-28",
+      ...githubAuthHeaders(),
       ...(opts.headers ?? {}),
     },
   });
@@ -278,7 +270,7 @@ async function downloadBuildIdArtifact(runId) {
     return null;
   }
   const zipRes = await fetch(meta.archive_download_url, {
-    headers: { Authorization: `Bearer ${token()}`, Accept: "application/vnd.github+json" },
+    headers: githubAuthHeaders(),
   });
   if (!zipRes.ok) throw new Error(`Artifact download ${zipRes.status}`);
   const buf = Buffer.from(await zipRes.arrayBuffer());
@@ -312,7 +304,7 @@ function sleep(ms) {
 const args = process.argv.slice(2);
 
 async function main() {
-  if (!token()) {
+  if (!getGithubToken()) {
     markReleaseFailed("GITHUB_TOKEN missing — cannot dispatch workflow");
     process.exit(1);
   }

@@ -114,3 +114,29 @@ export function maskEnv(keys) {
   }
   return out;
 }
+
+/** @returns {string} */
+export function getGithubToken() {
+  return process.env.GITHUB_TOKEN?.trim() || process.env.GH_TOKEN?.trim() || "";
+}
+
+/** @returns {string} */
+export function requireGithubToken() {
+  const t = getGithubToken();
+  if (!t) {
+    throw new Error(
+      "GITHUB_TOKEN or GH_TOKEN required — add to .env.local or authenticate git for github.com",
+    );
+  }
+  return t;
+}
+
+/** @param {Record<string, string>} [extra] */
+export function githubAuthHeaders(extra = {}) {
+  return {
+    Authorization: `Bearer ${requireGithubToken()}`,
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+    ...extra,
+  };
+}

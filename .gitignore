@@ -53,4 +53,7 @@ next-env.d.ts
 .tmp-eas-art.zip
 .tmp-eas-artifact/
 .tmp-eas-artifact.zip
+# one-off debug scripts (never commit)
+scripts/_tmp-*.mjs
+_tmp-*.mjs
 eas-build-error.json
