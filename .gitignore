@@ -57,3 +57,4 @@ next-env.d.ts
 scripts/_tmp-*.mjs
 _tmp-*.mjs
 eas-build-error.json
+.tmp-eas-wait.log
