@@ -1,4 +1,7 @@
-import { AION_SUPABASE_ANON_KEY, AION_SUPABASE_URL } from "./lib/supabaseDefaults";
+/** Дублируем anon URL/key здесь: EAS `expo config` не резолвит .ts-импорты из app.config. */
+const AION_SUPABASE_URL = "https://eclrkusmwcrtnxqhzpky.supabase.co";
+const AION_SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjbHJrdXNtd2NydG54cWh6cGt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMDU3ODEsImV4cCI6MjA5MTU4MTc4MX0.FpTqRxDFBToOCyfjJCOj2NvOwTol__4qGDgLp6Q8JUg";
 
 const EAS_PROJECT_ID = "e3f964f4-f7ed-4a24-9608-93894096bd0e";
 
