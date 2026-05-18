@@ -13,6 +13,7 @@ const {
 const NATIVE_FILES = [
   "AionOverlayOrbPackage.kt",
   "AionOverlayOrbModule.kt",
+  "OrbView.kt",
   "OrbWindowManager.kt",
   "OrbPersistence.kt",
   "AionOverlayOrbService.kt",
