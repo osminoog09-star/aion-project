@@ -186,26 +186,76 @@
     "nextRecommendedStep": "Реализовать BackgroundTrackingAdapter с измеримым battery test; не включать по умолчанию до gate."
   },
   "floating-orb-runtime": {
-    "whatWorks": ["AionCoreOrb внутри приложения (AionHomeHubScreen)", "Состояния entity/orb в AionCoreContext"],
-    "whatDoesNotWork": ["Системный overlay при minimized/locked", "Запуск приложения из orb вне процесса", "Индикация реального background telemetry без native bridge"],
+    "whatWorks": [
+      "AionRuntimeSphere в Control Room: 6 слоёв, orbital particles, energy ring, flow arcs, breath/glow по AionEntityState + runtimePulse",
+      "Runtime Sync Engine (intelligent auto-sync): debounce + queue + AppState/NetInfo/shift/OCR/periodic триггеры — кнопка SYNC удалена",
+      "runtimePulseBus: syncBusy/phase, networkTick, gpsTick, uploadTick, errorTick, recoveryTick — единый канал для sphere + overlay",
+      "Native overlay orb (Android): живой OrbView (ValueAnimator radial gradient + breath + orbit dots), magnetic snap-to-edge, long-press → /orb/status deep link → AionEntityPanel",
+      "FGS notification + persistence X/Y позиции + auto clamp с edge padding"
+    ],
+    "whatDoesNotWork": [
+      "Авто-снижение opacity во время вождения (smart positioning v2)",
+      "Связь runtime state ↔ overlay orb на ходу (orb пока берёт состояние из ShiftContext, не из runtimePulse)",
+      "iOS overlay (Apple запрещает system-wide overlay)"
+    ],
     "mocked": [],
-    "localOnly": ["UI-орб без связи с FGS/OS"],
+    "localOnly": ["Overlay только Android"],
     "cloudReady": [],
-    "requiresApk": ["SYSTEM_ALERT_WINDOW / native bubble / config plugin", "Согласование с политикой OEM и батареей"],
-    "otaImpact": "low",
-    "realtimeReadiness": 5,
-    "backendReadiness": 5,
-    "productionReadiness": 4,
-    "subsystemDebt": ["Нет UX для запроса overlay permission", "Нет связи orb states ↔ sync/OCR/критические ошибки вне приложения"],
-    "architectureState": "Не начато как Android overlay; орб не доказывает always-on runtime.",
-    "missingUx": ["Все orb states из ТЗ (OCR flash, offline dim, critical ring) вне приложения", "Drag-to-move поверх других приложений"],
+    "requiresApk": ["Native OrbView + OrbWindowManager (Kotlin) — изменения в native-modules/aion-overlay-orb"],
+    "otaImpact": "medium",
+    "realtimeReadiness": 65,
+    "backendReadiness": 50,
+    "productionReadiness": 55,
+    "subsystemDebt": [
+      "OVERLAY_ORB_NATIVE_PRODUCTION_READY=false до полевой приёмки на 2–3 OEM",
+      "Пробросить runtimePulse в OrbView для GPS/upload/error импульсов вне приложения"
+    ],
+    "architectureState": "Living sphere + intelligent sync + native overlay orb v1: рендер и интеракция готовы; промо-готовность ждёт field validation (батарея/OEM/lifecycle).",
+    "missingUx": [
+      "Auto-dim во время активного вождения (если GPS active и приложение свернуто)",
+      "Mini-popup около орба на long-press вместо deep link → app (текущая версия открывает приложение с /orb/status)"
+    ],
     "missingBackend": [],
-    "missingRealtime": ["Duplex статуса на персональное устройство без открытого приложения"],
-    "biggestWeakness": "Отсутствует нативный слой overlay + единый runtime state bridge.",
-    "highestValueImprovement": "Нативный модуль (или поддерживаемая lib) + контракт состояния из FGS/task в overlay UI.",
-    "requiredDependencies": ["Production background session", "FGS notification channel parity", "Design tokens для мини-орба"],
-    "recommendedNextPhase": "Spike: overlay permission + reopen Activity + battery profile.",
-    "nextRecommendedStep": "RFC: Expo config plugin vs bare native module; не путать с in-app AionCoreOrb."
+    "missingRealtime": ["Duplex статуса на личный второй девайс (Aion Link)"],
+    "biggestWeakness": "Long-press показывает панель только через deep link → open app; полностью overlay-only popup потребует второго TYPE_APPLICATION_OVERLAY окна.",
+    "highestValueImprovement": "Field validation на 2–3 OEM (battery + lifecycle) → переключить OVERLAY_ORB_NATIVE_PRODUCTION_READY=true.",
+    "requiredDependencies": ["Production background session", "FGS notification channel parity"],
+    "recommendedNextPhase": "Field validation overlay: battery profile, OEM whitelist, lifecycle test.",
+    "nextRecommendedStep": "EAS preview build с новым OrbView → ручной тест snap/long-press/breath на 2 OEM → owner sign-off."
+  },
+  "aion-runtime-sphere": {
+    "whatWorks": [
+      "AionRuntimeSphere component: halo + recovery wave + counter-rotating dashed ring + energy ring + 8 orbital particles + 3 flow arcs + layered core со specular highlight",
+      "Reagibility: idle / thinking / syncing / updating / success / warning / critical / offline — разные цвета, скорости, частицы, arc opacity",
+      "runtimePulseBus с tick-семантикой (networkTick, gpsTick, uploadTick, errorTick, recoveryTick, aiThinkTick) — sphere пересчитывает burst/shake/recoveryWave",
+      "useReducedMotion: автоматическое отключение анимаций для системного accessibility"
+    ],
+    "whatDoesNotWork": [
+      "Skia particle system (не в deps — пока используем чистый Reanimated)",
+      "GPS активность напрямую в sphere (нужна интеграция с tasks/shiftLocationTask)",
+      "Network bandwidth visualisation (volume = thickness flow)"
+    ],
+    "mocked": [],
+    "localOnly": [],
+    "cloudReady": [],
+    "requiresApk": [],
+    "otaImpact": "high",
+    "realtimeReadiness": 80,
+    "backendReadiness": 70,
+    "productionReadiness": 70,
+    "subsystemDebt": [
+      "Profiler не запускался на low-end Android — нужен 60fps benchmark",
+      "Сфера на web (react-native-web) теряет shadow-эффекты — degrade gracefully не проверен"
+    ],
+    "architectureState": "Living AI core: NOT a loader, NOT a button. Реагирует на entityState + runtimePulse. Premium animation profile через layered View + Reanimated.",
+    "missingUx": [],
+    "missingBackend": [],
+    "missingRealtime": ["Volume-aware flow arcs (упрощённо: всегда фиксированной толщины)"],
+    "biggestWeakness": "Без Skia — нельзя реализовать настоящие particles с GPU; орбитальные точки через transform хорошо, но volumetric внутренние particles требуют canvas/GL.",
+    "highestValueImprovement": "Опциональная Skia-ветка для high-end девайсов (lazy-load, fallback на текущую реализацию).",
+    "requiredDependencies": ["react-native-reanimated 3.16+", "expo-linear-gradient"],
+    "recommendedNextPhase": "60fps benchmark на 2 устройствах (mid + low) → если падает — упростить количество particles.",
+    "nextRecommendedStep": "Owner: запустить новый APK, открыть Control Room, оценить sphere idle/syncing/updating; зафиксировать впечатление."
   },
   "operations-center": {
     "whatWorks": ["/control", "/status", "/operations", "rollout read"],

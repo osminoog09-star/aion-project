@@ -4,8 +4,9 @@ import { router, type Href } from "expo-router";
 import { useCallback, useMemo } from "react";
 import { Platform, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { AionCoreOrb } from "../components/aion/AionCoreOrb";
+import { AionRuntimeSphere } from "../components/aion/AionRuntimeSphere";
 import { GlowCard } from "../components/ui/GlowCard";
+import { requestRuntimeSync } from "../features/sync/services/runtimeSyncManager";
 import { deriveAdaptiveUiHints } from "../src/core/aion/ai/adaptiveUi";
 import {
   AION_MODULES,
@@ -14,6 +15,7 @@ import {
 } from "../src/core/modules/registry";
 import { navigateFromAionRecommendation } from "../src/core/aion/ai/recommendationNavigation";
 import type { AionEntityState } from "../src/core/aion/diagnostics/types";
+import { useRuntimePulse } from "../src/core/aion/runtime/runtimePulseBus";
 import { useAionCore } from "../src/core/aion/system/AionCoreContext";
 import { useAionEntityStore } from "../src/core/aion/entity/aionEntityStore";
 import { AION_PERSONA } from "../src/core/aion/personality/persona";
@@ -64,6 +66,17 @@ function entityStateLabelRu(s: AionEntityState): string {
   return m[s] ?? s;
 }
 
+function formatLastSync(at: number): string {
+  if (!at) return "ещё не синхронизировались";
+  const sec = Math.max(0, Math.round((Date.now() - at) / 1000));
+  if (sec < 5) return "только что";
+  if (sec < 60) return `${sec} сек назад`;
+  const min = Math.round(sec / 60);
+  if (min < 60) return `${min} мин назад`;
+  const h = Math.round(min / 60);
+  return `${h} ч назад`;
+}
+
 /**
  * Главный хаб экосистемы AION: орб, статусы, модули, рекомендации и лента событий.
  */
@@ -71,6 +84,9 @@ export function AionHomeHubScreen() {
   const insets = useSafeAreaInsets();
   const openPanel = useAionEntityStore((x) => x.openPanel);
   const { snapshot, entityState, recommendations, timeline, refresh, refreshing } = useAionCore();
+  const syncBusy = useRuntimePulse((s) => s.syncBusy);
+  const syncPhase = useRuntimePulse((s) => s.syncPhase);
+  const lastSyncOkAtMs = useRuntimePulse((s) => s.lastSyncOkAtMs);
 
   const hints = useMemo(
     () => (snapshot ? deriveAdaptiveUiHints(snapshot) : null),
@@ -90,6 +106,21 @@ export function AionHomeHubScreen() {
     const ch = snapshot.channelTier.slice(0, 3).toUpperCase();
     return `${net} · ${q} · OTA ${ota} · ${ch}`;
   }, [snapshot]);
+
+  const syncStatusLineRu = useMemo(() => {
+    if (syncBusy) {
+      return syncPhase === "queued"
+        ? "ожидание сети…"
+        : "синхронизация…";
+    }
+    if (syncPhase === "error") return "ошибка синка — повторим автоматически";
+    return `авто-синк · ${formatLastSync(lastSyncOkAtMs)}`;
+  }, [syncBusy, syncPhase, lastSyncOkAtMs]);
+
+  const onSphereTap = useCallback(() => {
+    requestRuntimeSync("manual");
+    openPanel();
+  }, [openPanel]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.canvas }}>
@@ -129,17 +160,35 @@ export function AionHomeHubScreen() {
             </View>
             <Pressable
               onPress={() => void refresh()}
+              accessibilityRole="button"
+              accessibilityLabel="Обновить диагностику"
               style={{
-                paddingHorizontal: 12,
-                paddingVertical: 8,
-                borderRadius: 12,
+                paddingHorizontal: 10,
+                paddingVertical: 6,
+                borderRadius: 999,
                 borderWidth: 1,
-                borderColor: "rgba(255,255,255,0.1)",
-                backgroundColor: "rgba(15,23,42,0.6)",
+                borderColor: "rgba(255,255,255,0.08)",
+                backgroundColor: "rgba(15,23,42,0.5)",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 6,
               }}
             >
-              <Text style={{ color: colors.cyan400, fontSize: 11, fontWeight: "800" }}>
-                {refreshing ? "…" : "SYNC"}
+              <View
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: syncBusy
+                    ? colors.cyan400
+                    : syncPhase === "error"
+                      ? "#fb7185"
+                      : "#34d399",
+                  opacity: syncBusy ? 0.9 : 0.7,
+                }}
+              />
+              <Text style={{ color: colors.slate300, fontSize: 10, fontWeight: "700", letterSpacing: 1 }}>
+                {refreshing ? "…" : "LIVE"}
               </Text>
             </Pressable>
           </View>
@@ -167,19 +216,19 @@ export function AionHomeHubScreen() {
           ) : null}
 
           <Pressable
-            onPress={() => openPanel()}
+            onPress={onSphereTap}
             accessibilityRole="button"
-            accessibilityLabel="Открыть панель AION"
+            accessibilityLabel="AION runtime sphere — статус и действия"
             style={{ alignItems: "center", marginTop: spacing.xl }}
           >
-            <AionCoreOrb state={entityState} size={158} />
-            <Text style={{ marginTop: spacing.md, color: colors.slate400, fontSize: 12, letterSpacing: 2 }}>
-              {entityStateLabelRu(entityState)}
+            <AionRuntimeSphere state={entityState} size={196} />
+            <Text style={{ marginTop: spacing.md, color: colors.slate200, fontSize: 13, letterSpacing: 3, fontWeight: "700" }}>
+              {entityStateLabelRu(entityState).toUpperCase()}
             </Text>
             <Text style={{ marginTop: 6, color: colors.slate500, fontSize: 11, fontWeight: "700" }}>
               {statusLine}
             </Text>
-            <Text style={{ marginTop: 8, color: colors.slate600, fontSize: 10 }}>Нажмите на сферу — статус и действия</Text>
+            <Text style={{ marginTop: 8, color: colors.slate600, fontSize: 10 }}>{syncStatusLineRu}</Text>
           </Pressable>
 
           <GlowCard glow="cyan" className="mt-6">

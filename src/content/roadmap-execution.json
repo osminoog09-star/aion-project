@@ -52,12 +52,12 @@
     ]
   },
   "executionQueue": {
-    "currentActiveEpic": "Always-on drive: background shift + live profit + two-phone Link relay",
-    "currentSubsystemFocus": "background-drive",
-    "nextImplementationTarget": "PRIMARY: EAS preview APK 1.0.7 (Google OAuth native + intentFilters) → field validation 8/8 → /operations/live. Google auth в Supabase: готово. Параллельно: FGS + route intelligence.",
+    "currentActiveEpic": "AION Runtime Sphere System: living core + intelligent auto-sync + native overlay orb",
+    "currentSubsystemFocus": "aion-runtime-sphere",
+    "nextImplementationTarget": "PRIMARY: новый EAS preview APK 1.0.8 (native OrbView + magnetic snap + deep link /orb/status) → field validation на 2 OEM → переключить OVERLAY_ORB_NATIVE_PRODUCTION_READY=true. SECONDARY: 60fps benchmark sphere на low-end, прокинуть runtimePulse в OrbView (GPS/upload/error pulses вне приложения).",
     "blockedTasks": [
-      "EAS preview APK 1.0.7: workflow_dispatch «EAS Build Driver (preview)» → FINISHED → npm run release:apk-manifest:sync",
-      "Field validation 8/8: ждёт физическое устройство с APK 1.0.7 — owner paste отчёта в /operations/live",
+      "EAS preview APK 1.0.8: ждёт workflow_dispatch — несёт native OrbView, magnetic snap, deep link /orb/status",
+      "Field validation 8/8: ждёт физическое устройство с APK — owner paste отчёта в /operations/live",
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
     ],

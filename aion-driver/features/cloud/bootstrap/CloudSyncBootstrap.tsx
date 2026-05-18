@@ -4,6 +4,11 @@ import { useAuth } from "../../auth/hooks/useAuth";
 import { useOnline } from "../../sync/hooks/useNetworkStatus";
 import { flushSyncQueue } from "../../sync/services/syncEngine";
 import { enqueueSyncOperation } from "../../sync/services/offlineQueue";
+import {
+  initRuntimeSyncManager,
+  requestRuntimeSync,
+  setRuntimeSyncUserId,
+} from "../../sync/services/runtimeSyncManager";
 import { onShiftRecorded } from "../../trips/services/shiftRecordedBus";
 import { qk } from "../../../lib/queryKeys";
 import { supabase } from "../../../lib/supabase";
@@ -26,6 +31,14 @@ export function CloudSyncBootstrap() {
   const userId = session?.user.id && !isGuest ? session.user.id : null;
   const ensuredRef = useRef<string | null>(null);
   const restoredRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    initRuntimeSyncManager();
+  }, []);
+
+  useEffect(() => {
+    setRuntimeSyncUserId(userId);
+  }, [userId]);
 
   useEffect(() => {
     setCloudBackupUserId(userId);
@@ -63,8 +76,8 @@ export function CloudSyncBootstrap() {
           dedupeKey: `trip:${shift.id}`,
         });
         scheduleCloudBackupPush();
+        requestRuntimeSync("shift_recorded");
         if (online) {
-          await flushSyncQueue(userId);
           await queryClient.invalidateQueries({ queryKey: qk.trips(userId) });
         }
       })();
@@ -86,10 +99,8 @@ export function CloudSyncBootstrap() {
 
   useEffect(() => {
     if (!online || !userId) return;
-    void (async () => {
-      await flushSyncQueue(userId);
-      await queryClient.invalidateQueries({ queryKey: qk.trips(userId) });
-    })();
+    requestRuntimeSync("net_reconnect");
+    void queryClient.invalidateQueries({ queryKey: qk.trips(userId) });
   }, [online, userId, queryClient]);
 
   return null;

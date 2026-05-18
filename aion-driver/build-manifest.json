@@ -1,9 +1,9 @@
 {
-  "appVersion": "1.0.7",
-  "runtimeVersion": "1.0.7",
-  "versionCode": 11,
-  "gitSha": "61ef29b",
-  "buildTimestamp": "2026-05-18T16:34:53.676Z",
+  "appVersion": "1.0.8",
+  "runtimeVersion": "1.0.8",
+  "versionCode": 12,
+  "gitSha": "6683004",
+  "buildTimestamp": "2026-05-18T17:04:55.107Z",
   "channel": "preview",
   "supportedFeatures": [
     "field_validation_8_8",
