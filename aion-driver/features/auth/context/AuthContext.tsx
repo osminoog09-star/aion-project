@@ -16,7 +16,15 @@ import {
   signInWithAppleNative,
   signInWithOAuthRedirect,
 } from "../services/supabaseOAuth";
+import { translateAuthError } from "../services/authErrorRu";
 import { STORAGE_KEYS } from "../../../storage/core/keys";
+import * as Linking from "expo-linking";
+
+export type AuthActionResult = {
+  error: string | null;
+  /** Успех без сессии (например, подтверждение email). */
+  info?: string;
+};
 
 type AuthStatus = {
   ready: boolean;
@@ -25,14 +33,8 @@ type AuthStatus = {
   isConfigured: boolean;
   /** Гостевой режим: локальные данные без аккаунта */
   isGuest: boolean;
-  signInWithEmail: (
-    email: string,
-    password: string,
-  ) => Promise<{ error: string | null }>;
-  signUpWithEmail: (
-    email: string,
-    password: string,
-  ) => Promise<{ error: string | null }>;
+  signInWithEmail: (email: string, password: string) => Promise<AuthActionResult>;
+  signUpWithEmail: (email: string, password: string) => Promise<AuthActionResult>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<{ error: string | null }>;
   signInWithApple: () => Promise<{ error: string | null }>;
@@ -143,7 +145,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await AsyncStorage.removeItem(STORAGE_KEYS.AUTH_GUEST);
         setIsGuest(false);
       }
-      return { error: error?.message ?? null };
+      return { error: error ? translateAuthError(error.message) : null };
     },
     [],
   );
@@ -151,21 +153,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signUpWithEmail = useCallback(
     async (email: string, password: string) => {
       if (!supabase) {
-        return { error: "Supabase не настроен в .env" };
+        return { error: "Облако не настроено в этой сборке" };
       }
       const trimmed = email.trim().toLowerCase();
       if (!trimmed || password.length < 8) {
         return { error: "Email и пароль ≥ 8 символов" };
       }
-      const { error } = await supabase.auth.signUp({
+      const emailRedirectTo = Linking.createURL("auth/callback");
+      const { data, error } = await supabase.auth.signUp({
         email: trimmed,
         password,
+        options: { emailRedirectTo },
       });
-      if (!error) {
+      if (error) {
+        return { error: translateAuthError(error.message) };
+      }
+      if (data.session) {
         await AsyncStorage.removeItem(STORAGE_KEYS.AUTH_GUEST);
         setIsGuest(false);
+        return { error: null };
       }
-      return { error: error?.message ?? null };
+      if (data.user) {
+        await AsyncStorage.removeItem(STORAGE_KEYS.AUTH_GUEST);
+        setIsGuest(false);
+        return {
+          error: null,
+          info: `Аккаунт создан. На ${trimmed} отправлено письмо — откройте ссылку для подтверждения, затем нажмите «Вход» с тем же паролем.`,
+        };
+      }
+      return { error: "Не удалось зарегистрироваться. Попробуйте другой email." };
     },
     [],
   );

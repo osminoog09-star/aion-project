@@ -1,10 +1,22 @@
 import "react-native-url-polyfill/auto";
+import Constants from "expo-constants";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./database.types";
 import { supabaseAuthStorage } from "./supabaseSecureStorage";
+import { AION_SUPABASE_ANON_KEY, AION_SUPABASE_URL } from "./supabaseDefaults";
 
-const url = process.env.EXPO_PUBLIC_SUPABASE_URL;
-const anonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+const extra = Constants.expoConfig?.extra as
+  | { supabaseUrl?: string; supabaseAnonKey?: string }
+  | undefined;
+
+const url =
+  process.env.EXPO_PUBLIC_SUPABASE_URL?.trim() ||
+  extra?.supabaseUrl?.trim() ||
+  AION_SUPABASE_URL;
+const anonKey =
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY?.trim() ||
+  extra?.supabaseAnonKey?.trim() ||
+  AION_SUPABASE_ANON_KEY;
 
 /**
  * Typed Supabase client. Сессия: chunked SecureStore, auto refresh, persist.

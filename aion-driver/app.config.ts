@@ -1,4 +1,11 @@
+import { AION_SUPABASE_ANON_KEY, AION_SUPABASE_URL } from "./lib/supabaseDefaults";
+
 const EAS_PROJECT_ID = "e3f964f4-f7ed-4a24-9608-93894096bd0e";
+
+const supabaseUrl =
+  process.env.EXPO_PUBLIC_SUPABASE_URL?.trim() || AION_SUPABASE_URL;
+const supabaseAnonKey =
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY?.trim() || AION_SUPABASE_ANON_KEY;
 
 export default {
   expo: {
@@ -94,6 +101,8 @@ export default {
       /** Маркер тестовой сборки проверки цепочки APK/манифест (не production). */
       apkUpdatePipelineVerification: "2026-05-14-preview-test",
       aionPortalBaseUrl: process.env.EXPO_PUBLIC_AION_PORTAL_URL ?? "https://aion-com.vercel.app",
+      supabaseUrl,
+      supabaseAnonKey,
     },
     runtimeVersion: {
       policy: "appVersion",

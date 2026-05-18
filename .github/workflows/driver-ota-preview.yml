@@ -52,8 +52,10 @@ jobs:
         env:
           EXPO_PUBLIC_GIT_COMMIT: ${{ github.sha }}
           EXPO_PUBLIC_AION_PORTAL_URL: https://aion-com.vercel.app
+          EXPO_PUBLIC_SUPABASE_URL: https://eclrkusmwcrtnxqhzpky.supabase.co
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjbHJrdXNtd2NydG54cWh6cGt5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwMDU3ODEsImV4cCI6MjA5MTU4MTc4MX0.FpTqRxDFBToOCyfjJCOj2NvOwTol__4qGDgLp6Q8JUg
         run: |
-          MSG="OTA: EUR/заправка без смены, облачный бэкап, gate 8/8 off"
+          MSG="OTA: регистрация Supabase, облачный бэкап, EUR/заправка"
           npx eas-cli@latest update --channel preview --message "${MSG}" --non-interactive
 
       - name: Job summary

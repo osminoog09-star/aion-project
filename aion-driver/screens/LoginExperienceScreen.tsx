@@ -82,14 +82,18 @@ export function LoginExperienceScreen() {
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
   const [msg, setMsg] = useState<string | null>(null);
+  const [msgIsInfo, setMsgIsInfo] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [emailFocused, setEmailFocused] = useState(false);
   const [passFocused, setPassFocused] = useState(false);
 
   const onSubmit = async () => {
     setMsg(null);
+    setMsgIsInfo(false);
     if (!isConfigured) {
-      setMsg("Облако не настроено на этой сборке. Используйте гостевой режим или обратитесь к администратору.");
+      setMsg(
+        "Сервер авторизации недоступен. Обновите Driver (OTA) или напишите в поддержку.",
+      );
       return;
     }
     if (!isValidEmail(email)) {
@@ -108,6 +112,13 @@ export function LoginExperienceScreen() {
     setBusy(null);
     if (res.error) {
       setMsg(res.error);
+      setMsgIsInfo(false);
+      return;
+    }
+    if (res.info) {
+      setMsg(res.info);
+      setMsgIsInfo(true);
+      setMode("signIn");
       return;
     }
     router.replace("/home");
@@ -370,11 +381,18 @@ export function LoginExperienceScreen() {
             <View
               className="mt-5 rounded-2xl border px-4 py-3"
               style={{
-                borderColor: resolved === "light" ? "rgba(225,29,72,0.28)" : "rgba(251,113,133,0.35)",
+                borderColor: msgIsInfo
+                  ? "rgba(52,211,153,0.35)"
+                  : resolved === "light"
+                    ? "rgba(225,29,72,0.28)"
+                    : "rgba(251,113,133,0.35)",
                 backgroundColor: semantic.surfaceMuted,
               }}
             >
-              <Text className="text-sm leading-5" style={{ color: semantic.danger }}>
+              <Text
+                className="text-sm leading-5"
+                style={{ color: msgIsInfo ? "#6ee7b7" : semantic.danger }}
+              >
                 {msg}
               </Text>
             </View>
