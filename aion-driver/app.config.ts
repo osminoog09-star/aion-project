@@ -43,6 +43,14 @@ export default {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#030712",
       },
+      intentFilters: [
+        {
+          action: "VIEW",
+          autoVerify: false,
+          category: ["BROWSABLE", "DEFAULT"],
+          data: [{ scheme: "aion-driver" }],
+        },
+      ],
       permissions: [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_BACKGROUND_LOCATION",

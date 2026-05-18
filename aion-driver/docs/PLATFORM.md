@@ -9,7 +9,7 @@
 | Expo SDK 52, Router, OTA | Готово | `app.config.ts`, `eas.json` |
 | TanStack Query + persist `cloud:*` | Готово | `PersistQueryClientProvider`, `lib/queryKeys.ts`, AsyncStorage persister |
 | Supabase typed client | Готово | `lib/supabase.ts`, `lib/database.types.ts`, `lib/supabaseSecureStorage.ts` |
-| Auth (email, Google, Apple, guest) | MVP | `features/auth/context/AuthContext.tsx`, `app/(auth)/login.tsx`, PKCE OAuth |
+| Auth (email, Google, Apple, guest) | MVP | `features/auth/context/AuthContext.tsx`, PKCE OAuth; Google: `npm run auth:google-setup` + Supabase Providers |
 | Гараж облако / локально | MVP | `features/vehicles/hooks/useGarage.ts`, `features/cloud/repositories/vehiclesRepository.ts` |
 | Поездки trips + офлайн-очередь | MVP | `features/cloud/repositories/tripsRepository.ts`, `features/sync/services/syncEngine.ts`, `CloudSyncBootstrap` |
 | Сеть | Каркас | `features/sync/hooks/useNetworkStatus.ts` |

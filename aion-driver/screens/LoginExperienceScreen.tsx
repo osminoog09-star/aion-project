@@ -167,15 +167,34 @@ export function LoginExperienceScreen() {
 
   const onGoogle = async () => {
     setMsg(null);
+    clearBanner();
     if (!isConfigured) {
       setMsg("Вход Google недоступен без облачной конфигурации.");
       return;
     }
     setBusy("google");
     const res = await signInWithGoogle();
+    if (res.error) {
+      setBusy(null);
+      setMsg(res.error);
+      return;
+    }
+    let sess = supabase ? (await supabase.auth.getSession()).data.session : null;
+    if (!sess && supabase) {
+      for (let i = 0; i < 20; i++) {
+        await new Promise((r) => setTimeout(r, 250));
+        sess = (await supabase.auth.getSession()).data.session;
+        if (sess) break;
+      }
+    }
     setBusy(null);
-    if (res.error) setMsg(res.error);
-    else router.replace("/home");
+    if (!sess) {
+      setMsg(
+        "Вход через Google не завершился. Убедитесь, что провайдер Google включён в Supabase (Client ID + Secret).",
+      );
+      return;
+    }
+    router.replace("/home");
   };
 
   const onApple = async () => {

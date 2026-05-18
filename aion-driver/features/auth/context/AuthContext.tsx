@@ -18,6 +18,7 @@ import {
 } from "../services/supabaseOAuth";
 import { translateAuthError } from "../services/authErrorRu";
 import { getAuthRedirectUrl } from "../services/authRedirect";
+import { ensureProfileRow } from "../../cloud/bootstrap/ensureProfileRow";
 import { scheduleCloudBackupPush } from "../../cloud/services/scheduleCloudBackup";
 import { STORAGE_KEYS } from "../../../storage/core/keys";
 
@@ -235,11 +236,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signInWithGoogle = useCallback(async () => {
     if (!supabase) return { error: "Supabase не настроен" };
     const res = await signInWithOAuthRedirect(supabase, "google");
-    if (res.ok) {
-      await AsyncStorage.removeItem(STORAGE_KEYS.AUTH_GUEST);
-      setIsGuest(false);
+    if (!res.ok) return { error: res.message };
+    await AsyncStorage.removeItem(STORAGE_KEYS.AUTH_GUEST);
+    setIsGuest(false);
+    const { data: sess } = await supabase.auth.getSession();
+    if (sess.session?.user) {
+      try {
+        await ensureProfileRow(supabase, sess.session.user.id);
+      } catch {
+        /* profile row optional on first OAuth */
+      }
+      scheduleCloudBackupPush();
     }
-    return res.ok ? { error: null } : { error: res.message };
+    return { error: null };
   }, []);
 
   const signInWithApple = useCallback(async () => {

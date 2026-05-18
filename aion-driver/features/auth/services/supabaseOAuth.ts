@@ -25,6 +25,14 @@ export async function signInWithOAuthRedirect(
     options: {
       redirectTo,
       skipBrowserRedirect: true,
+      ...(provider === "google"
+        ? {
+            queryParams: {
+              access_type: "offline",
+              prompt: "select_account",
+            },
+          }
+        : {}),
     },
   });
   if (error || !data?.url) {
@@ -33,8 +41,17 @@ export async function signInWithOAuthRedirect(
       message: translateAuthError(error?.message ?? "OAuth URL недоступен"),
     };
   }
-  const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
+  const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo, {
+    showInRecents: false,
+  });
+  if (result.type === "cancel" || result.type === "dismiss") {
+    const { data: sess } = await client.auth.getSession();
+    if (sess.session) return { ok: true };
+    return { ok: false, message: "Вход отменён" };
+  }
   if (result.type !== "success" || !("url" in result) || !result.url) {
+    const { data: sess } = await client.auth.getSession();
+    if (sess.session) return { ok: true };
     return { ok: false, message: "Вход отменён" };
   }
   const url = result.url;

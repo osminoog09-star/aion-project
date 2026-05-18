@@ -27,6 +27,19 @@ export function translateAuthError(message: string | undefined | null): string {
   if (m.includes("network") || m.includes("fetch")) {
     return "Нет связи с сервером. Проверьте интернет.";
   }
+  if (
+    m.includes("provider is not enabled") ||
+    m.includes("unsupported provider") ||
+    m.includes("oauth provider not enabled")
+  ) {
+    return "Вход через Google ещё не включён на сервере. Нужны Client ID и Secret в Supabase → Auth → Google.";
+  }
+  if (m.includes("redirect_uri_mismatch") || m.includes("redirect uri")) {
+    return "Неверный redirect URI в Google Cloud. Добавьте callback Supabase (см. npm run auth:google-setup).";
+  }
+  if (m.includes("invalid_client") || m.includes("unauthorized_client")) {
+    return "Неверный Google Client ID или Secret в Supabase.";
+  }
 
   return message;
 }
