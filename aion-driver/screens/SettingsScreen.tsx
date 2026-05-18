@@ -1,6 +1,6 @@
 import { router, useFocusEffect, type Href } from "expo-router";
 import Constants from "expo-constants";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   KeyboardAvoidingView,
   Modal,
@@ -30,7 +30,9 @@ import { isSupabaseConfigured, requireSupabase } from "../lib/supabase";
 import { featureFlags } from "../lib/featureFlags";
 import { useUpdates } from "../hooks/useUpdates";
 import { getOtaDebugInfo, manualOtaCheckForSettings } from "../services/updateService";
+import { APP_CURRENCIES, getCurrencySymbol } from "../core/constants/currencies";
 import { GPS_INTERVAL_PRESETS_MS } from "../types/device";
+import type { AppCurrencyCode } from "../types/device";
 import type { UserProfile } from "../types";
 import type { RentalPeriod } from "../types/rental";
 
@@ -46,6 +48,8 @@ export function SettingsScreen() {
     updateSettings,
   } = useDevice();
   const { profile, saveUserProfile } = useShift();
+  const [currencyModalOpen, setCurrencyModalOpen] = useState(false);
+  const [currencyQuery, setCurrencyQuery] = useState("");
   const [name, setName] = useState("");
   const [carModel, setCarModel] = useState("");
   const [petrolConsumption, setPetrolConsumption] = useState("");
@@ -82,6 +86,24 @@ export function SettingsScreen() {
     cinematic: "Кино",
     energetic: "Энергично",
   };
+
+  const filteredCurrencies = useMemo(() => {
+    const q = currencyQuery.trim().toUpperCase();
+    if (!q) return APP_CURRENCIES.slice(0, 48);
+    return APP_CURRENCIES.filter((c) => c.includes(q)).slice(0, 64);
+  }, [currencyQuery]);
+
+  const onPickCurrency = useCallback(
+    async (code: AppCurrencyCode) => {
+      await updateSettings({ currencyCode: code, fuelRegionAuto: false });
+      if (profile) {
+        await saveUserProfile({ ...profile, currencyCode: code });
+      }
+      setCurrencyModalOpen(false);
+      setCurrencyQuery("");
+    },
+    [profile, saveUserProfile, updateSettings],
+  );
 
   const refreshSyncQueue = useCallback(async () => {
     const q = await peekSyncQueue();
@@ -264,9 +286,16 @@ export function SettingsScreen() {
                   : "Гость — данные только на телефоне. Зарегистрируйтесь, чтобы сохранить всё в облаке."}
               </Text>
               <Text className="mt-2 text-xs text-slate-500">
-                Регион {settings.regionCountryCode} · {settings.currencyCode}
+                Регион {settings.regionCountryCode} · {settings.currencyCode} (
+                {getCurrencySymbol(settings.currencyCode)})
                 {settings.fuelRegionAuto ? " · авто из локали" : ""}
               </Text>
+              <GradientButton
+                title={`Валюта: ${settings.currencyCode} (${getCurrencySymbol(settings.currencyCode)})`}
+                variant="ghost"
+                className="mt-3"
+                onPress={() => setCurrencyModalOpen(true)}
+              />
               <GradientButton
                 title={session ? "Управление аккаунтом" : "Войти / зарегистрироваться"}
                 variant="glass"
@@ -707,7 +736,7 @@ export function SettingsScreen() {
                 className="mt-2"
               />
               <Field
-                label={`Цена, ${settings.currencyCode} / л`}
+                label={`Цена, ${getCurrencySymbol(settings.currencyCode)} / л`}
                 value={petrolPrice}
                 onChangeText={setPetrolPrice}
                 keyboardType="decimal-pad"
@@ -724,7 +753,7 @@ export function SettingsScreen() {
                 className="mt-2"
               />
               <Field
-                label={`Цена, ${settings.currencyCode} / л-экв.`}
+                label={`Цена, ${getCurrencySymbol(settings.currencyCode)} / л-экв.`}
                 value={gasPrice}
                 onChangeText={setGasPrice}
                 keyboardType="decimal-pad"
@@ -750,6 +779,47 @@ export function SettingsScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+      <Modal visible={currencyModalOpen} transparent animationType="slide">
+        <View className="flex-1 justify-end bg-black/70">
+          <View className="max-h-[85%] rounded-t-3xl border border-white/10 bg-slate-950 px-4 pb-8 pt-5">
+            <Text className="text-lg font-semibold text-white">Валюта отображения</Text>
+            <Text className="mt-1 text-sm text-slate-400">
+              Все суммы в приложении — в выбранной валюте (доход, заправка, аналитика).
+            </Text>
+            <TextInput
+              value={currencyQuery}
+              onChangeText={setCurrencyQuery}
+              placeholder="Поиск ISO…"
+              placeholderTextColor="#64748b"
+              className="mt-4 rounded-xl border border-white/10 bg-slate-900 px-4 py-3 text-base text-white"
+            />
+            <ScrollView className="mt-4" keyboardShouldPersistTaps="handled">
+              <View className="flex-row flex-wrap gap-2 pb-4">
+                {filteredCurrencies.map((c) => (
+                  <Pressable
+                    key={c}
+                    onPress={() => void onPickCurrency(c)}
+                    className={`rounded-xl border px-3 py-2 ${
+                      settings.currencyCode === c
+                        ? "border-violet-400/60 bg-violet-500/15"
+                        : "border-white/10 bg-white/5"
+                    }`}
+                  >
+                    <Text className="text-xs font-bold text-white">
+                      {c} {getCurrencySymbol(c)}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+            </ScrollView>
+            <GradientButton
+              title="Закрыть"
+              variant="ghost"
+              onPress={() => setCurrencyModalOpen(false)}
+            />
+          </View>
+        </View>
+      </Modal>
       <Modal visible={otaDialog != null} transparent animationType="fade">
         <View className="flex-1 justify-center bg-black/70 px-6">
           <View className="rounded-3xl border border-white/10 bg-slate-950 p-5">

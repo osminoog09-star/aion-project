@@ -31,6 +31,7 @@ import { GlowCard } from "../components/ui/GlowCard";
 import { GlowMeter } from "../components/ui/GlowMeter";
 import { GradientButton } from "../components/ui/GradientButton";
 import { useDevice } from "../hooks/useDevice";
+import { useResolvedCurrency } from "../hooks/useResolvedCurrency";
 import type { OcrParseResult, OcrTripRow, PayoutPlatform } from "../features/import/types";
 import type { FuelReceiptExtraction } from "../features/import/extraction/fuelReceiptTypes";
 import { recomputeOcrParseTotals } from "../features/import/services/ocrParseMapper";
@@ -96,7 +97,7 @@ function OcrPhaseBar({ phase }: { phase: number }) {
 export function ImportScreenshotScreen() {
   const { settings } = useDevice();
   const { activeShift, addConfirmedFuelEntry } = useShift();
-  const currency = settings.currencyCode as AppCurrencyCode;
+  const currency = useResolvedCurrency();
   const [platform, setPlatform] = useState<PayoutPlatform>("bolt");
   const [images, setImages] = useState<string[]>([]);
   const [pastedText, setPastedText] = useState("");

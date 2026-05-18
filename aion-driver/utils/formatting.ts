@@ -1,22 +1,13 @@
+import { DEFAULT_CURRENCY, getCurrencySymbol } from "../core/constants/currencies";
 import { formatCurrency as intlCurrency } from "../core/utils/formatCurrency";
 import type { AppCurrencyCode } from "../types/device";
 import type { DistanceUnits } from "../types/device";
 
 export function formatCurrencyDisplay(
   value: number,
-  currency: AppCurrencyCode = "EUR",
+  currency: AppCurrencyCode = DEFAULT_CURRENCY,
 ): string {
   return intlCurrency(value, currency);
-}
-
-export function formatCurrency(value: number, currencySymbol = "₽"): string {
-  const abs = Math.abs(value);
-  const formatted = abs.toLocaleString("ru-RU", {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-  const sign = value < 0 ? "−" : "";
-  return `${sign}${formatted} ${currencySymbol}`;
 }
 
 export function formatCompactCurrency(value: number): string {
@@ -47,17 +38,23 @@ export function formatLiters(l: number): string {
   return `${l.toLocaleString(undefined, { maximumFractionDigits: 2 })} л`;
 }
 
-export function formatPerHour(value: number, currency: AppCurrencyCode = "EUR"): string {
+export function formatPerHour(
+  value: number,
+  currency: AppCurrencyCode = DEFAULT_CURRENCY,
+): string {
   return `${intlCurrency(value, currency)}/ч`;
 }
 
-export function formatPerKm(value: number, currency: AppCurrencyCode = "EUR"): string {
+export function formatPerKm(
+  value: number,
+  currency: AppCurrencyCode = DEFAULT_CURRENCY,
+): string {
   return `${intlCurrency(value, currency)}/км`;
 }
 
-/** Подпись поля ввода суммы в выбранной валюте (EUR, ₽, …). */
+/** Подпись поля ввода суммы в выбранной валюте (€, ₽, $, …). */
 export function currencyAmountFieldLabel(currency: AppCurrencyCode): string {
-  return `Сумма (${currency})`;
+  return `Сумма (${getCurrencySymbol(currency)})`;
 }
 
 /** Расход топлива на 100 км / 100 mi в валюте пользователя. */

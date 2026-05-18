@@ -19,6 +19,7 @@ import {
   clearPendingFuelEntries,
   loadPendingFuelEntries,
 } from "../storage/driver/pendingFuelStorage";
+import { pickCurrencyReconcileAction } from "../services/currencyReconcile";
 import { loadProfile, saveProfile } from "../storage/driver/profileStorage";
 import {
   appendShift,
@@ -98,7 +99,7 @@ type ShiftContextValue = {
 const ShiftContext = createContext<ShiftContextValue | undefined>(undefined);
 
 export function ShiftProvider({ children }: { children: ReactNode }) {
-  const { settings: deviceSettings } = useDevice();
+  const { settings: deviceSettings, updateSettings } = useDevice();
   const [hydrated, setHydrated] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [activeShift, setActiveShift] = useState<ActiveShift | null>(null);
@@ -173,6 +174,30 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       })();
     });
   }, []);
+
+  useEffect(() => {
+    if (!hydrated || !profile) return;
+    const action = pickCurrencyReconcileAction(
+      deviceSettings.currencyCode,
+      deviceSettings.regionCountryCode,
+      profile,
+    );
+    if (action === "none") return;
+    if (action === "profile-to-settings" && profile.currencyCode) {
+      void updateSettings({ currencyCode: profile.currencyCode });
+      return;
+    }
+    if (action === "settings-to-profile") {
+      const next = { ...profile, currencyCode: deviceSettings.currencyCode };
+      void saveProfile(next).then(() => setProfile(next));
+    }
+  }, [
+    hydrated,
+    profile,
+    deviceSettings.currencyCode,
+    deviceSettings.regionCountryCode,
+    updateSettings,
+  ]);
 
   useEffect(() => {
     if (!hydrated || !activeShift?.id) return;
@@ -441,11 +466,17 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const saveUserProfile = useCallback(async (p: UserProfile) => {
-    await saveProfile(p);
-    setProfile(p);
-    scheduleCloudBackupPush();
-  }, []);
+  const saveUserProfile = useCallback(
+    async (p: UserProfile) => {
+      await saveProfile(p);
+      setProfile(p);
+      if (p.currencyCode && p.currencyCode !== deviceSettings.currencyCode) {
+        await updateSettings({ currencyCode: p.currencyCode });
+      }
+      scheduleCloudBackupPush();
+    },
+    [deviceSettings.currencyCode, updateSettings],
+  );
 
   const startShift = useCallback(async (): Promise<{
     ok: boolean;

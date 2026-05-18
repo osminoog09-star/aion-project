@@ -1,0 +1,16 @@
+# Однократная настройка redirect URL для Driver (email / OAuth / reset).
+# Secrets: SUPABASE_ACCESS_TOKEN (PAT с https://supabase.com/dashboard/account/tokens)
+name: Supabase auth redirects (Driver)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure uri_allow_list
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: node scripts/configure-supabase-auth-redirects.mjs
