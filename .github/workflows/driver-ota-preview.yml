@@ -53,7 +53,7 @@ jobs:
           EXPO_PUBLIC_GIT_COMMIT: ${{ github.sha }}
           EXPO_PUBLIC_AION_PORTAL_URL: https://aion-com.vercel.app
         run: |
-          MSG="OTA preview: заправка вручную (сумма+литры), подсказки field validation 8/8"
+          MSG="OTA: EUR/заправка без смены, облачный бэкап, gate 8/8 off"
           npx eas-cli@latest update --channel preview --message "${MSG}" --non-interactive
 
       - name: Job summary

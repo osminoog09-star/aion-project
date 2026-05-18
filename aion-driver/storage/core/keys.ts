@@ -22,6 +22,7 @@ const SHIFT_GPS_PREFIX = "@aion_driver/shift_gps_v1:";
 const SHIFT_ANALYTICS_INDEX_KEY = "@aion_driver/shift_analytics_index_v1";
 const SHIFT_ANALYTICS_PREFIX = "@aion_driver/shift_analytics_v1:";
 const PENDING_HEADLESS_GPS_KEY = "@aion_driver/pending_headless_gps_v1";
+const PENDING_FUEL_ENTRIES_KEY = "@aion_driver/pending_fuel_entries_v1";
 
 export const STORAGE_KEYS = {
   PROFILE: PROFILE_KEY,
@@ -46,4 +47,5 @@ export const STORAGE_KEYS = {
   SHIFT_ANALYTICS_INDEX: SHIFT_ANALYTICS_INDEX_KEY,
   SHIFT_ANALYTICS_PREFIX,
   PENDING_HEADLESS_GPS: PENDING_HEADLESS_GPS_KEY,
+  PENDING_FUEL_ENTRIES: PENDING_FUEL_ENTRIES_KEY,
 } as const;

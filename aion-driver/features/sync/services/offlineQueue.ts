@@ -17,6 +17,7 @@ export type SyncOperationType =
   | "profile_upsert"
   | "vehicle_upsert"
   | "trip_upsert"
+  | "cloud_backup_upsert"
   | "analytics_event"
   /** Payload снимка/OCR с рабочего телефона — relay в облаке (фаза 1: очередь + снятие без сети) */
   | "link_ocr_snapshot";

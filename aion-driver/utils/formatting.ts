@@ -54,3 +54,18 @@ export function formatPerHour(value: number, currency: AppCurrencyCode = "EUR"):
 export function formatPerKm(value: number, currency: AppCurrencyCode = "EUR"): string {
   return `${intlCurrency(value, currency)}/км`;
 }
+
+/** Подпись поля ввода суммы в выбранной валюте (EUR, ₽, …). */
+export function currencyAmountFieldLabel(currency: AppCurrencyCode): string {
+  return `Сумма (${currency})`;
+}
+
+/** Расход топлива на 100 км / 100 mi в валюте пользователя. */
+export function formatFuelCostPer100Km(
+  value: number,
+  currency: AppCurrencyCode,
+  units: DistanceUnits = "km",
+): string {
+  const per100 = units === "mi" ? "100 mi" : "100 км";
+  return `${intlCurrency(value, currency)}/${per100}`;
+}

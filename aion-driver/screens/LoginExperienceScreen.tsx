@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState, type ReactNode } from "react";
 import {
   KeyboardAvoidingView,
@@ -39,7 +39,8 @@ function CloudStatusBanner({
             Облако готово
           </Text>
           <Text className="mt-1 text-sm leading-5" style={{ color: semantic.textSecondary }}>
-            Вход синхронизирует смены и гараж между устройствами. Офлайн-очередь сохраняется локально.
+            Профиль, валюта, смены и заправки сохраняются на сервере — после переустановки APK
+            восстановятся при входе в тот же аккаунт.
           </Text>
         </View>
       </Animated.View>
@@ -64,6 +65,8 @@ function CloudStatusBanner({
 
 export function LoginExperienceScreen() {
   const insets = useSafeAreaInsets();
+  const params = useLocalSearchParams<{ fromOnboarding?: string }>();
+  const fromOnboarding = params.fromOnboarding === "1";
   const { semantic, resolved } = useTheme();
   const {
     isConfigured,
@@ -186,7 +189,9 @@ export function LoginExperienceScreen() {
             Вход
           </Text>
           <Text className="mt-2 text-sm leading-6" style={{ color: semantic.textSecondary }}>
-            Безопасная сессия и восстановление аккаунта. Гостевой режим — полный локальный кокпит без синка.
+            {fromOnboarding
+              ? "Создайте аккаунт, чтобы данные не пропали при переустановке приложения. Можно пропустить — тогда всё останется только на телефоне."
+              : "Войдите или зарегистрируйтесь для облачного бэкапа. Гостевой режим — только на устройстве."}
           </Text>
           {__DEV__ ? (
             <Text className="mt-2 text-[10px]" style={{ color: semantic.textTertiary }} selectable>
@@ -331,8 +336,17 @@ export function LoginExperienceScreen() {
                     />
                   ) : null}
 
+                  {fromOnboarding ? (
+                    <GradientButton
+                      title="Позже — без облака"
+                      variant="ghost"
+                      className="mt-6"
+                      onPress={() => router.replace("/home")}
+                      disabled={busy !== null}
+                    />
+                  ) : null}
                   <Pressable
-                    className="mt-8 items-center py-2"
+                    className="mt-4 items-center py-2"
                     onPress={() => {
                       void (async () => {
                         setBusy("guest");

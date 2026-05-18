@@ -10,9 +10,11 @@ async function main() {
     process.exit(0);
   }
 
-  assert.equal(backgroundTrackingProductionGate(false).allowed, false);
-  assert.equal(backgroundTrackingProductionGate(true).allowed, false);
-  assert.ok(backgroundTrackingProductionGate(false).reasonRu.includes("8/8"));
+  const off = backgroundTrackingProductionGate(false);
+  assert.equal(off.allowed, true, "gate off by default — не блокируем FGS/UI");
+  assert.ok(
+    off.reasonRu.includes("информацион") || off.reasonRu.includes("временно"),
+  );
 
   console.log("test-background-gate: ok");
 }

@@ -11,7 +11,14 @@ import {
 import { AppState, Platform, type AppStateStatus } from "react-native";
 import type { ActiveShift, FuelEntry, FuelKind, Shift, UserProfile } from "../types";
 import { emitShiftRecorded } from "../features/trips/services/shiftRecordedBus";
+import { onCloudDataRestored } from "../features/cloud/services/cloudRestoreBus";
+import { scheduleCloudBackupPush } from "../features/cloud/services/scheduleCloudBackup";
 import { loadActiveShift, saveActiveShift } from "../storage/driver/activeShiftStorage";
+import {
+  appendPendingFuelEntry,
+  clearPendingFuelEntries,
+  loadPendingFuelEntries,
+} from "../storage/driver/pendingFuelStorage";
 import { loadProfile, saveProfile } from "../storage/driver/profileStorage";
 import {
   appendShift,
@@ -155,6 +162,16 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
+  }, []);
+
+  useEffect(() => {
+    return onCloudDataRestored(() => {
+      void (async () => {
+        const [p, hist] = await Promise.all([loadProfile(), loadShiftHistory()]);
+        setProfile(p);
+        setHistory(hist);
+      })();
+    });
   }, []);
 
   useEffect(() => {
@@ -427,6 +444,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   const saveUserProfile = useCallback(async (p: UserProfile) => {
     await saveProfile(p);
     setProfile(p);
+    scheduleCloudBackupPush();
   }, []);
 
   const startShift = useCallback(async (): Promise<{
@@ -443,6 +461,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     }
     await savePostShiftHandoff(null);
     setPostShiftHandoff(null);
+    const pendingFuel = await loadPendingFuelEntries();
     const next: ActiveShift = {
       id: createShiftId(),
       startedAt: new Date().toISOString(),
@@ -458,11 +477,14 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       accumulatedPauseMs: 0,
       incomeEventsCount: 0,
       milestonesHit: [],
-      fuelEntries: [],
+      fuelEntries: [...pendingFuel],
       incomeLedger: [],
       motionMovingMs: 0,
       motionIdleMs: 0,
     };
+    if (pendingFuel.length > 0) {
+      await clearPendingFuelEntries();
+    }
     await clearBackgroundShiftLocationRuntimeState();
     await saveActiveShift(next);
     setActiveShift(next);
@@ -639,13 +661,18 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
 
   const addConfirmedFuelEntry = useCallback(async (entry: FuelEntry) => {
     const prev = activeShiftRef.current;
-    if (!prev) return;
+    if (!prev) {
+      await appendPendingFuelEntry(entry);
+      scheduleCloudBackupPush();
+      return;
+    }
     const next: ActiveShift = {
       ...prev,
       fuelEntries: [...(prev.fuelEntries ?? []), entry],
     };
     await saveActiveShift(next);
     setActiveShift(next);
+    scheduleCloudBackupPush();
   }, []);
 
   const setActiveFuelType = useCallback(async (kind: FuelKind) => {

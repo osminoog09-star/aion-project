@@ -1,4 +1,5 @@
 import type { ActiveShift } from "../types";
+import { isFieldValidationProductionGateEnabled } from "../features/route/computeRouteFieldValidation";
 
 /**
  * Слой для фонового трекинга (Android foreground service, BG location).
@@ -17,6 +18,13 @@ export function backgroundTrackingProductionGate(fieldValidationReady: boolean):
   allowed: boolean;
   reasonRu: string;
 } {
+  if (!isFieldValidationProductionGateEnabled()) {
+    return {
+      allowed: true,
+      reasonRu:
+        "Чеклист 8/8 временно не блокирует (информационный режим). Включить gate: EXPO_PUBLIC_FIELD_VALIDATION_GATE=1",
+    };
+  }
   if (!fieldValidationReady) {
     return {
       allowed: false,

@@ -1,14 +1,14 @@
 import type { FuelEntry } from "../types";
 
 export type ManualFuelInput = {
-  totalCostRub: number;
+  totalCost: number;
   liters: number;
   fuelType: string;
 };
 
 /** Сумма + литры → цена за литр и запись для смены. */
 export function buildManualFuelEntry(input: ManualFuelInput): FuelEntry | null {
-  const totalCost = Number(input.totalCostRub);
+  const totalCost = Number(input.totalCost);
   const liters = Number(input.liters);
   if (!Number.isFinite(totalCost) || totalCost <= 0) return null;
   if (!Number.isFinite(liters) || liters <= 0) return null;
@@ -41,7 +41,7 @@ export function sumFuelEntriesLiters(entries: FuelEntry[] | undefined): number {
   );
 }
 
-/** ₽/100 км по фактическим заправкам и пройденным км смены. */
+/** Стоимость на 100 км по фактическим заправкам и пройденным км смены. */
 export function fuelCostPer100Km(totalCost: number, distanceKm: number): number | null {
   if (totalCost <= 0 || distanceKm <= 0) return null;
   return Math.round((totalCost / distanceKm) * 100 * 10) / 10;

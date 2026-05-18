@@ -43,6 +43,7 @@ import {
   formatDuration,
   formatKm,
   formatLiters,
+  formatFuelCostPer100Km,
   formatPerHour,
   formatPerKm,
 } from "../utils/formatting";
@@ -333,7 +334,11 @@ export function DashboardScreen() {
                     Заправки за смену: {formatCurrencyDisplay(shiftFuelSpent, currency)}
                     {shiftFuelLiters > 0 ? ` · ${formatLiters(shiftFuelLiters)}` : ""}
                     {m && m.distanceKm > 0
-                      ? ` · ≈ ${Math.round((shiftFuelSpent / m.distanceKm) * 100)} ₽/100 км`
+                      ? ` · ≈ ${formatFuelCostPer100Km(
+                          Math.round((shiftFuelSpent / m.distanceKm) * 100),
+                          currency,
+                          distanceUnits,
+                        )}`
                       : ""}
                   </Text>
                 ) : null}
@@ -368,8 +373,8 @@ export function DashboardScreen() {
             >
               <Text className="text-sm text-cyan-300">
                 {mergedHistory.length > 0
-                  ? "Маршруты GPS · чеклист 8/8 →"
-                  : "Маршруты · проверка на устройстве →"}
+                  ? "Маршруты GPS · аналитика →"
+                  : "Маршруты · GPS →"}
               </Text>
             </Pressable>
           </GlowCard>
@@ -677,7 +682,7 @@ export function DashboardScreen() {
               />
             </View>
             ) : null}
-            {(canPause || canResume || canEnd) ? (
+            {(canStart || canPause || canResume || canEnd) ? (
             <View className="min-w-[47%] flex-1">
               <GradientButton
                 title="Заправка"

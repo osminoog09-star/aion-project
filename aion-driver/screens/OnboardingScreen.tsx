@@ -255,7 +255,10 @@ export function OnboardingScreen() {
     });
     await saveUserProfile(profile);
     setSaving(false);
-    router.replace("/home");
+    router.replace({
+      pathname: "/(auth)/login",
+      params: { fromOnboarding: "1" },
+    });
   };
 
   const validStep1 = name.trim().length >= 2;

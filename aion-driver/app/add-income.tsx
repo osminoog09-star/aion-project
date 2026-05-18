@@ -12,9 +12,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GlassCard } from "../components/GlassCard";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { useShift } from "../hooks/useShift";
+import { useResolvedCurrency } from "../hooks/useResolvedCurrency";
+import { currencyAmountFieldLabel } from "../utils/formatting";
 
 export default function AddIncomeModal() {
   const { addIncome, activeShift } = useShift();
+  const currency = useResolvedCurrency();
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -51,7 +54,7 @@ export default function AddIncomeModal() {
 
               <GlassCard className="mt-6" glow="cyan">
                 <Text className="text-xs uppercase tracking-[0.2em] text-slate-500">
-                  Сумма, ₽
+                  {currencyAmountFieldLabel(currency)}
                 </Text>
                 <TextInput
                   value={value}

@@ -17,6 +17,8 @@ import {
   mergeDeviceSettings,
   saveDeviceSettings,
 } from "../services/deviceModeService";
+import { scheduleCloudBackupPush } from "../features/cloud/services/scheduleCloudBackup";
+import { onCloudDataRestored } from "../features/cloud/services/cloudRestoreBus";
 
 type DeviceContextValue = {
   hydrated: boolean;
@@ -55,6 +57,12 @@ export function DeviceProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  useEffect(() => {
+    return onCloudDataRestored(() => {
+      void loadDeviceSettings().then((s) => setSettings(s));
+    });
+  }, []);
+
   const updateSettings = useCallback(
     async (partial: Partial<DeviceSettings>) => {
       const next = mergeDeviceSettings({
@@ -63,6 +71,7 @@ export function DeviceProvider({ children }: { children: ReactNode }) {
       });
       await saveDeviceSettings(next);
       setSettings(next);
+      scheduleCloudBackupPush();
     },
     []
   );

@@ -3,6 +3,7 @@ import { captureSyncError } from "../../../lib/sentry";
 import { touchLastSyncFlushAt } from "../../../storage/core/syncDebugMeta";
 import { upsertTripFromShift } from "../../cloud/repositories/tripsRepository";
 import { syncLocalUserProfileToCloud } from "../../cloud/repositories/profileRepository";
+import { pushDriverCloudBackup } from "../../cloud/services/driverCloudSync";
 import {
   dequeueSucceeded,
   markAttempt,
@@ -48,6 +49,10 @@ async function processOperation(
       const client = requireSupabase();
       const p = op.payload as UserProfile;
       await syncLocalUserProfileToCloud(client, userId, p);
+      return true;
+    }
+    case "cloud_backup_upsert": {
+      await pushDriverCloudBackup(userId);
       return true;
     }
     default:

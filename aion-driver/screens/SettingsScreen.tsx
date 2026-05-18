@@ -260,8 +260,8 @@ export function SettingsScreen() {
               </Text>
               <Text className="mt-2 text-sm text-slate-400">
                 {session?.user?.email
-                  ? `Вход: ${session.user.email}`
-                  : "Гость — профиль и смены хранятся на устройстве. Войдите для синка."}
+                  ? `Вход: ${session.user.email}. Профиль, настройки и смены копируются на сервер — при переустановке APK войдите снова.`
+                  : "Гость — данные только на телефоне. Зарегистрируйтесь, чтобы сохранить всё в облаке."}
               </Text>
               <Text className="mt-2 text-xs text-slate-500">
                 Регион {settings.regionCountryCode} · {settings.currencyCode}
@@ -707,7 +707,7 @@ export function SettingsScreen() {
                 className="mt-2"
               />
               <Field
-                label="Цена, ₽ / л"
+                label={`Цена, ${settings.currencyCode} / л`}
                 value={petrolPrice}
                 onChangeText={setPetrolPrice}
                 keyboardType="decimal-pad"
@@ -724,7 +724,7 @@ export function SettingsScreen() {
                 className="mt-2"
               />
               <Field
-                label="Цена, ₽ / л-экв."
+                label={`Цена, ${settings.currencyCode} / л-экв.`}
                 value={gasPrice}
                 onChangeText={setGasPrice}
                 keyboardType="decimal-pad"

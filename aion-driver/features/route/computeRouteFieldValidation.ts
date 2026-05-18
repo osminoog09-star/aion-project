@@ -43,6 +43,17 @@ export function isFgsHeartbeatFresh(
 /** OTA smoke + production FGS gate — полный чеклист на устройстве. */
 export const FIELD_VALIDATION_MIN_PASSED = 8;
 
+/**
+ * Production gate 8/8: включить через EXPO_PUBLIC_FIELD_VALIDATION_GATE=1 в EAS.
+ * По умолчанию выключен — чеклист информационный, OTA/приложение не блокируются.
+ */
+export function isFieldValidationProductionGateEnabled(): boolean {
+  return (
+    typeof process !== "undefined" &&
+    process.env.EXPO_PUBLIC_FIELD_VALIDATION_GATE === "1"
+  );
+}
+
 /** Базовый слой маршрутов/GPS — можно пользоваться без 8/8. */
 export const FIELD_VALIDATION_CORE_CHECK_IDS = [
   "gps-sessions",
