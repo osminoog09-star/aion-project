@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { OperationsSubNav } from "@/components/operations/ExecutionAuditPanels";
+import { OperationsBugReportsLive } from "@/components/operations/OperationsBugReportsLive";
 import { fetchDriverBugReports } from "@/lib/operations/fetch-driver-bug-reports";
 
 export const metadata: Metadata = {
@@ -19,8 +20,8 @@ export default async function OperationsBugsPage() {
       </p>
       <h1 className="mt-3 text-3xl font-bold text-white md:text-4xl">Баг-репорты</h1>
       <p className="mt-3 max-w-3xl text-sm text-slate-400">
-        Сообщения из приложения с категорией, описанием и полным журналом диагностики. Обновление при
-        каждой загрузке страницы.
+        Сообщения из приложения с категорией, описанием и полным журналом диагностики. Список
+        обновляется автоматически каждые 45 секунд; можно включить уведомления в браузере.
       </p>
       <OperationsSubNav />
 
@@ -29,33 +30,7 @@ export default async function OperationsBugsPage() {
           Пока нет отчётов или Supabase недоступен из окружения портала.
         </p>
       ) : (
-        <ul className="mt-8 space-y-4">
-          {reports.map((r) => (
-            <li
-              key={r.id}
-              className="rounded-2xl border border-white/10 bg-slate-950/60 p-4"
-            >
-              <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-widest text-slate-500">
-                <span className="rounded-full border border-rose-400/30 bg-rose-500/10 px-2 py-0.5 text-rose-200">
-                  {r.category}
-                </span>
-                <span>{r.status}</span>
-                <span>{r.platform ?? "—"}</span>
-                <span>v{r.app_version ?? "?"}</span>
-                <span className="ml-auto font-mono text-slate-600">{r.id.slice(0, 8)}</span>
-              </div>
-              <p className="mt-2 text-xs text-slate-500">
-                {new Date(r.created_at).toLocaleString("ru-RU")}
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-white">{r.description}</p>
-              {r.diagnostics ? (
-                <pre className="mt-3 max-h-48 overflow-auto rounded-xl border border-white/5 bg-black/40 p-3 font-mono text-[10px] leading-relaxed text-slate-400">
-                  {JSON.stringify(r.diagnostics, null, 2)}
-                </pre>
-              ) : null}
-            </li>
-          ))}
-        </ul>
+        <OperationsBugReportsLive initial={reports} />
       )}
     </div>
   );

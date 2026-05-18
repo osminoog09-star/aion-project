@@ -58,6 +58,8 @@ class OrbView(context: Context) : View(context) {
   private var coreColor: Int = 0xFF22D3EE.toInt()
   private var rimColor: Int = 0x88BAE6FD.toInt()
   private var dotColor: Int = 0xBBE0F2FE.toInt()
+  /** Приложение в фоне / пауза — приглушаем орб, чтобы не отвлекал. */
+  private var dimAlpha: Float = 1f
 
   fun applyState(state: String) {
     when (state) {
@@ -117,6 +119,11 @@ class OrbView(context: Context) : View(context) {
         breathAnimator.duration = 2400L
         rotationAnimator.duration = 6000L
       }
+    }
+    dimAlpha = when (state) {
+      "background" -> 0.42f
+      "paused", "offline" -> 0.58f
+      else -> 1f
     }
     invalidate()
   }
@@ -230,7 +237,7 @@ class OrbView(context: Context) : View(context) {
   }
 
   private fun withAlpha(color: Int, alpha: Float): Int {
-    val a = (alpha.coerceIn(0f, 1f) * 255f).toInt()
+    val a = (alpha.coerceIn(0f, 1f) * dimAlpha.coerceIn(0.2f, 1f) * 255f).toInt()
     return (a shl 24) or (color and 0x00FFFFFF)
   }
 

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Pressable,
   ScrollView,
   Text,
@@ -24,6 +25,8 @@ import {
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { requireSupabase } from "../../lib/supabase";
 import { colors } from "../../tokens";
+import { LinkPairQrScannerModal } from "../../components/aion-link/LinkPairQrScannerModal";
+import { getAionPortalBaseUrl } from "../../lib/aionPortalUrl";
 
 type Mode = "issue" | "claim";
 
@@ -194,7 +197,7 @@ function IssuePane({ userId }: IssuePaneProps) {
     return (
       <GlowCard glow="violet" className="mt-4">
         <Text className="text-sm leading-6 text-slate-300">
-          Сгенерируйте короткий код. На втором телефоне откройте этот же экран и введите код во вкладке «Ввести код».
+          Сгенерируйте код и QR. На втором телефоне — вкладка «Ввести код»: скан QR или ввод вручную.
         </Text>
         <Text className="mt-3 text-[11px] text-slate-500">
           Срок действия кода — 10 минут. После пары код больше нельзя использовать.
@@ -233,6 +236,22 @@ function IssuePane({ userId }: IssuePaneProps) {
       >
         {token.code}
       </Text>
+      {!claimed ? (
+        <Image
+          source={{
+            uri: `${getAionPortalBaseUrl()}/api/operations/pair-qr?code=${encodeURIComponent(token.code)}`,
+          }}
+          style={{
+            width: 200,
+            height: 200,
+            alignSelf: "center",
+            marginTop: 16,
+            borderRadius: 12,
+            backgroundColor: "#fff",
+          }}
+          accessibilityLabel="QR-код для связи второго телефона"
+        />
+      ) : null}
       {!claimed ? (
         <Text className="mt-2 text-center text-xs text-slate-500">
           {expiresMs > 0
@@ -273,6 +292,7 @@ function ClaimPane({ userId }: ClaimPaneProps) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
 
   const onClaim = useCallback(async () => {
     setError(null);
@@ -336,13 +356,29 @@ function ClaimPane({ userId }: ClaimPaneProps) {
         }}
       />
       {error ? <Text className="mt-3 text-xs text-rose-300">{error}</Text> : null}
-      <View className="mt-4">
+      <View className="mt-4 gap-2">
         {busy ? (
           <ActivityIndicator color={colors.violet400 ?? "#a78bfa"} />
         ) : (
-          <GradientButton title="Связать" variant="primary" onPress={() => void onClaim()} />
+          <>
+            <GradientButton title="Связать" variant="primary" onPress={() => void onClaim()} />
+            <GradientButton
+              title="Сканировать QR"
+              variant="glass"
+              onPress={() => setQrOpen(true)}
+            />
+          </>
         )}
       </View>
+      <LinkPairQrScannerModal
+        visible={qrOpen}
+        onClose={() => setQrOpen(false)}
+        onCode={(c) => {
+          setCode(c);
+          setError(null);
+        }}
+      />
     </GlowCard>
   );
 }
+

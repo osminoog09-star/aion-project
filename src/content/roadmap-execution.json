@@ -54,7 +54,7 @@
   "executionQueue": {
     "currentActiveEpic": "Driver production polish: Link relay + live profit + ops feedback loop",
     "currentSubsystemFocus": "mobile-app",
-    "nextImplementationTarget": "Автономно: QR pair scanner; auto-dim overlay orb; push/email owner на новый bug-report. APK 1.0.8 device smoke. Field validation 8/8 — ОТЛОЖЕНО.",
+    "nextImplementationTarget": "APK 1.0.9 (OrbView dim native) device smoke; push/email owner на bug-report. Field validation 8/8 — ОТЛОЖЕНО.",
     "autonomousSwimStack": [
       {
         "priority": 1,
@@ -77,7 +77,7 @@
           "Kotlin OrbView.applyPulse(kind) + pulseAnimator (200ms RadialGradient overlay) — DONE",
           "OrbWindowManager.pulse(kind) + AionOverlayOrbService.ACTION_PULSE — DONE",
           "JS orbNativePulse(kind) + AionOverlayOrbPulseBridge подписан на runtimePulse — DONE",
-          "auto-dim opacity overlay (GPS active + background) — NEXT (native)"
+          "auto-dim opacity overlay (background/paused ~42–58%) — DONE (native OrbView.dimAlpha)"
         ]
       },
       {
@@ -91,7 +91,7 @@
           "linkSnapshots.ts: pushLinkSnapshot + subscribeToLinkSnapshots — DONE",
           "OCR queue → relayOcrSnapshotToLink после успеха — DONE",
           "LinkSnapshotRelayBridge: Realtime toast в timeline — DONE",
-          "QR scanner — NEXT"
+          "QR scanner claim + issue QR via portal /api/operations/pair-qr — DONE"
         ]
       },
       {
@@ -104,7 +104,7 @@
           "Claim: input code → claimPairToken — DONE",
           "ensureCloudDevice upsert — DONE",
           "AionEntityPanel cloud devices count + last_seen — DONE",
-          "QR scanner — NEXT"
+          "QR scanner + LinkPairQrScannerModal — DONE"
         ]
       },
       {
@@ -164,6 +164,7 @@
           "diagnosticLog ring buffer + sync/fuel hooks — DONE",
           "fuel journal edit/delete + profit recalc — DONE",
           "/operations/bugs portal list — DONE",
+          "Portal /operations/bugs poll 45s + browser Notification — DONE",
           "Push/email alert owner on new bug — NEXT"
         ]
       }
