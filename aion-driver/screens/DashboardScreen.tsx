@@ -47,6 +47,7 @@ import {
   formatPerKm,
 } from "../utils/formatting";
 import { pickProfitFromLive, pickProfitFromRuntime } from "../utils/shiftDisplayEconomics";
+import { sumFuelEntriesLiters, sumFuelEntriesTotal } from "../utils/fuelEntryFromManual";
 
 export function DashboardScreen() {
   const companion = useCompanionMode();
@@ -207,6 +208,15 @@ export function DashboardScreen() {
     return motionState === "idle" ? "Стоим · GPS эконом" : "В движении";
   }, [activeShift, motionState]);
 
+  const shiftFuelSpent = useMemo(
+    () => sumFuelEntriesTotal(activeShift?.fuelEntries),
+    [activeShift?.fuelEntries],
+  );
+  const shiftFuelLiters = useMemo(
+    () => sumFuelEntriesLiters(activeShift?.fuelEntries),
+    [activeShift?.fuelEntries],
+  );
+
   const chartVariant = useMemo(
     () => (visualStyle === "cyberpunk" ? "cyber" : "premium"),
     [visualStyle],
@@ -316,6 +326,15 @@ export function DashboardScreen() {
                       runtimeProfitDisplay.operationalCosts.fixedOpsAccrued,
                       currency,
                     )}
+                  </Text>
+                ) : null}
+                {shiftFuelSpent > 0 ? (
+                  <Text className="mt-1 text-[10px] text-amber-300/85">
+                    Заправки за смену: {formatCurrencyDisplay(shiftFuelSpent, currency)}
+                    {shiftFuelLiters > 0 ? ` · ${formatLiters(shiftFuelLiters)}` : ""}
+                    {m && m.distanceKm > 0
+                      ? ` · ≈ ${Math.round((shiftFuelSpent / m.distanceKm) * 100)} ₽/100 км`
+                      : ""}
                   </Text>
                 ) : null}
                 <Text className="mt-1 text-xs text-slate-400">
@@ -654,6 +673,17 @@ export function DashboardScreen() {
                 variant="glass"
                 size="cockpit"
                 onPress={() => router.push("/add-income")}
+                disabled={busy !== null}
+              />
+            </View>
+            ) : null}
+            {(canPause || canResume || canEnd) ? (
+            <View className="min-w-[47%] flex-1">
+              <GradientButton
+                title="Заправка"
+                variant="glass"
+                size="cockpit"
+                onPress={() => router.push("/add-fuel")}
                 disabled={busy !== null}
               />
             </View>

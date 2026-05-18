@@ -40,8 +40,25 @@ export function isFgsHeartbeatFresh(
   return ageMs != null && ageMs >= 0 && ageMs < freshMs;
 }
 
-/** OTA smoke — все пункты чеклиста, включая FGS и merge state. */
+/** OTA smoke + production FGS gate — полный чеклист на устройстве. */
 export const FIELD_VALIDATION_MIN_PASSED = 8;
+
+/** Базовый слой маршрутов/GPS — можно пользоваться без 8/8. */
+export const FIELD_VALIDATION_CORE_CHECK_IDS = [
+  "gps-sessions",
+  "analytics-coverage",
+  "historical-rollups",
+] as const;
+
+export type FieldValidationTier = "production_gate" | "core_ready" | "in_progress";
+
+export function getFieldValidationTier(status: RouteFieldValidationStatus): FieldValidationTier {
+  if (status.ready) return "production_gate";
+  const coreOk = FIELD_VALIDATION_CORE_CHECK_IDS.every((id) =>
+    status.checks.find((c) => c.id === id)?.passed,
+  );
+  return coreOk ? "core_ready" : "in_progress";
+}
 
 export function computeRouteFieldValidation(input: {
   summary: RouteTimelineSummary;

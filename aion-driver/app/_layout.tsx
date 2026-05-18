@@ -131,6 +131,14 @@ function ThemedAppTree() {
                       contentStyle: { backgroundColor: "transparent" },
                     }}
                   />
+                  <Stack.Screen
+                    name="add-fuel"
+                    options={{
+                      presentation: "transparentModal",
+                      animation: "slide_from_bottom",
+                      contentStyle: { backgroundColor: "transparent" },
+                    }}
+                  />
                   <Stack.Screen name="settings" />
                   <Stack.Screen name="update-center" options={{ animation: "slide_from_right" }} />
                   <Stack.Screen name="desktop" options={{ animation: "fade" }} />

@@ -5,6 +5,7 @@ import { Alert, Pressable, Text, View } from "react-native";
 import {
   formatFieldValidationBlockersRu,
   formatFieldValidationReportRu,
+  getFieldValidationTier,
   type RouteFieldValidationStatus,
 } from "../../features/route/computeRouteFieldValidation";
 import { backgroundTrackingProductionGate } from "../../services/backgroundTracking";
@@ -24,6 +25,7 @@ export function RouteTimelineFieldValidationCard({ validation, loading }: Props)
 
   const blockers = !validation.ready ? formatFieldValidationBlockersRu(validation) : "";
   const bgGate = backgroundTrackingProductionGate(validation.ready);
+  const tier = getFieldValidationTier(validation);
 
   const copyReport = useCallback(async () => {
     await Clipboard.setStringAsync(formatFieldValidationReportRu(validation));
@@ -51,14 +53,18 @@ export function RouteTimelineFieldValidationCard({ validation, loading }: Props)
       <Text className="mt-1 text-sm font-medium text-white">
         {validation.ready
           ? "✓ 8/8 — можно OTA smoke test"
-          : `Чеклист: ${validation.passedCount}/${validation.totalCount} (нужно 8/8)`}
+          : tier === "core_ready"
+            ? `База готова ${validation.passedCount}/${validation.totalCount} · 8/8 только для production gate`
+            : `Чеклист: ${validation.passedCount}/${validation.totalCount}`}
         {validation.coveragePercent != null
           ? ` · покрытие ${validation.coveragePercent}%`
           : ""}
       </Text>
       {!validation.ready ? (
         <Text className="mt-2 text-[10px] leading-4 text-slate-500">
-          Потяните вниз для обновления · FGS обновляется каждые 30 сек на этом экране
+          {tier === "core_ready"
+            ? "Приложением уже можно пользоваться. 8/8 — не обязательно каждый день: это gate для фона (FGS) и OTA signoff. Остальное — по мере реальных смен."
+            : "Потяните вниз для обновления · FGS обновляется каждые 30 сек на этом экране"}
         </Text>
       ) : null}
       {blockers ? (

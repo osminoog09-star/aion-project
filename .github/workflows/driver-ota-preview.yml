@@ -1,0 +1,58 @@
+# OTA preview для aion-driver (канал preview, runtime 1.0.6)
+name: Driver OTA Preview
+
+on:
+  push:
+    branches: [master, preview, preview-ota]
+    paths:
+      - "aion-driver/**"
+      - ".github/workflows/driver-ota-preview.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: driver-ota-preview
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aion-driver
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: aion-driver/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate
+        run: npm run validate
+
+      - uses: expo/expo-github-action@v8
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        with:
+          expo-version: latest
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: EAS Update (channel preview)
+        if: ${{ secrets.EXPO_TOKEN != '' }}
+        working-directory: aion-driver
+        env:
+          EXPO_PUBLIC_GIT_COMMIT: ${{ github.sha }}
+          EXPO_PUBLIC_AION_PORTAL_URL: https://aion-com.vercel.app
+        run: |
+          MSG="OTA preview: заправка вручную (сумма+литры), подсказки field validation 8/8"
+          npx eas-cli@latest update --channel preview --message "${MSG}" --non-interactive
+
+      - name: Skip (no EXPO_TOKEN)
+        if: ${{ secrets.EXPO_TOKEN == '' }}
+        run: echo "::warning::EXPO_TOKEN not set — OTA skipped"
