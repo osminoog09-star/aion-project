@@ -35,3 +35,31 @@ export async function appendPendingFuelEntry(entry: FuelEntry): Promise<void> {
 export async function clearPendingFuelEntries(): Promise<void> {
   await AsyncStorage.removeItem(STORAGE_KEYS.PENDING_FUEL_ENTRIES);
 }
+
+export async function replacePendingFuelEntries(entries: FuelEntry[]): Promise<void> {
+  await AsyncStorage.setItem(STORAGE_KEYS.PENDING_FUEL_ENTRIES, JSON.stringify(entries));
+}
+
+export async function updatePendingFuelEntry(
+  id: string,
+  patch: Partial<FuelEntry>,
+): Promise<FuelEntry | null> {
+  const prev = await loadPendingFuelEntries();
+  let updated: FuelEntry | null = null;
+  const next = prev.map((e) => {
+    if (e.id !== id) return e;
+    updated = { ...e, ...patch };
+    return updated;
+  });
+  if (!updated) return null;
+  await replacePendingFuelEntries(next);
+  return updated;
+}
+
+export async function removePendingFuelEntry(id: string): Promise<boolean> {
+  const prev = await loadPendingFuelEntries();
+  const next = prev.filter((e) => e.id !== id);
+  if (next.length === prev.length) return false;
+  await replacePendingFuelEntries(next);
+  return true;
+}

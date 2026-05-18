@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useUpdates } from "../contexts/UpdatesContext";
 import { useApkUpdates } from "../contexts/ApkUpdatesContext";
 import { deriveUpdateEngineView, type UpdateEngineView } from "../features/updates/updateSystemStateMachine";
+import { getApkManifestUrl } from "../lib/apkManifestUrl";
 
 export function useUpdateSystemState(): UpdateEngineView & {
   netOnline: boolean;
@@ -25,7 +26,7 @@ export function useUpdateSystemState(): UpdateEngineView & {
   }, []);
 
   const manifestUrlConfigured = Boolean(
-    typeof process !== "undefined" && process.env.EXPO_PUBLIC_APK_MANIFEST_URL?.trim(),
+    typeof process !== "undefined" && getApkManifestUrl().startsWith("http"),
   );
 
   return useMemo(() => {

@@ -1,22 +1,22 @@
 {
-  "latestVersion": "1.0.6",
+  "latestVersion": "1.0.7",
   "minimumSupported": "1.0.6",
-  "runtimeVersion": "1.0.6",
-  "buildNumber": "10",
+  "runtimeVersion": "1.0.7",
+  "buildNumber": "11",
   "compatibilityStatus": "compatible_with_portal_runtime",
   "portalMinRuntimeVersion": "1.0.6",
-  "releaseDate": "2026-05-17T05:36:30.921Z",
+  "releaseDate": "2026-05-18T17:43:14.859Z",
   "releaseType": "test",
-  "releaseNotes": "TEST — проверка цепочки APK/манифест (preview). apkUrl — плейсхолдер; после eas build FINISHED для 1.0.4 подставьте прямой URL артефакта (eas build:view --json → artifacts).\nSynced from EAS eb4250a2-8702-4c47-af49-0e5b75eb9724 (ccc2357ca9e6a7665ee37339932f1b1d8a7997fd).",
+  "releaseNotes": "TEST — проверка цепочки APK/манифест (preview). apkUrl — плейсхолдер; после eas build FINISHED для 1.0.4 подставьте прямой URL артефакта (eas build:view --json → artifacts).\nSynced from EAS eb4250a2-8702-4c47-af49-0e5b75eb9724 (ccc2357ca9e6a7665ee37339932f1b1d8a7997fd).\nSynced from EAS 6a775e51-7dcc-4c0f-9082-f3a3cc138442 (6683004fbf87c59429c9c63cf738050ce672bdba).",
   "changelog": [
-    "Текущий manifest: 1.0.6 (eb4250a2). В репо код 1.0.7: Google Sign-In + aion-driver:// intentFilters — нужен новый EAS preview build.",
-    "После FINISHED: npm run release:apk-manifest:sync <buildId>",
-    "Field validation 8/8 на устройстве → отчёт на /operations/live"
+    "1.0.7: Google Sign-In, aion-driver:// deep links, исправления OAuth.",
+    "Скачайте APK и установите поверх старой preview-сборки.",
+    "После установки доступны OTA-обновления интерфейса."
   ],
-  "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
+  "apkUrl": "https://expo.dev/artifacts/eas/e9wd1aoV93FZPAXR2Frguo.apk",
   "critical": false,
   "forceUpdate": false,
-  "easBuildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
+  "easBuildId": "6a775e51-7dcc-4c0f-9082-f3a3cc138442",
   "supportedFeatures": [
     "field_validation_8_8",
     "ota_smoke_from_validation",

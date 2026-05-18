@@ -14,6 +14,10 @@
     "preview": {
       "distribution": "internal",
       "channel": "preview",
+      "env": {
+        "EXPO_PUBLIC_APK_MANIFEST_URL": "https://aion-com.vercel.app/apk-manifest.preview.json",
+        "EXPO_PUBLIC_AION_PORTAL_URL": "https://aion-com.vercel.app"
+      },
       "android": {
         "buildType": "apk"
       }
@@ -22,7 +26,9 @@
       "distribution": "internal",
       "channel": "preview",
       "env": {
-        "EXPO_PUBLIC_OTA_PREVIEW_TEST": "1"
+        "EXPO_PUBLIC_OTA_PREVIEW_TEST": "1",
+        "EXPO_PUBLIC_APK_MANIFEST_URL": "https://aion-com.vercel.app/apk-manifest.preview.json",
+        "EXPO_PUBLIC_AION_PORTAL_URL": "https://aion-com.vercel.app"
       },
       "android": {
         "buildType": "apk"

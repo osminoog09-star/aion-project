@@ -29,6 +29,7 @@ import { BetaWatermark } from "../components/debug/BetaWatermark";
 import { QaDebugHud } from "../components/debug/QaDebugHud";
 import { featureFlags } from "../lib/featureFlags";
 import { initSentry } from "../lib/sentry";
+import { initDiagnosticLog } from "../lib/diagnosticLog";
 import { colors } from "../tokens";
 import { AionCoreProvider } from "../src/core/aion/system/AionCoreContext";
 import { AionBootSequence } from "../components/aion/AionBootSequence";
@@ -46,6 +47,7 @@ void SplashScreen.preventAutoHideAsync();
 void SystemUI.setBackgroundColorAsync(colors.canvas).catch(() => undefined);
 
 initSentry();
+void initDiagnosticLog();
 
 function SplashUnlock() {
   const { hydrated: deviceReady } = useDevice();
@@ -143,6 +145,8 @@ function ThemedAppTree() {
                       contentStyle: { backgroundColor: "transparent" },
                     }}
                   />
+                  <Stack.Screen name="fuel-journal" options={{ animation: "slide_from_right" }} />
+                  <Stack.Screen name="edit-fuel" options={{ animation: "slide_from_right" }} />
                   <Stack.Screen name="settings" />
                   <Stack.Screen name="update-center" options={{ animation: "slide_from_right" }} />
                   <Stack.Screen name="desktop" options={{ animation: "fade" }} />

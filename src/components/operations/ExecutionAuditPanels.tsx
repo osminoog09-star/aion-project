@@ -15,6 +15,7 @@ export function OperationsSubNav() {
     { href: ecosystemRoutes.operations, label: t("operations.subNav.overview") },
     { href: ecosystemRoutes.operationsExecution, label: t("operations.subNav.execution") },
     { href: ecosystemRoutes.operationsLive, label: t("operations.subNav.live") },
+    { href: ecosystemRoutes.operationsBugs, label: "Баг-репорты" },
     { href: ecosystemRoutes.operationsGovernance, label: "Governance" },
     { href: ecosystemRoutes.operationsTimeline, label: t("operations.subNav.timeline") },
     { href: ecosystemRoutes.operationsBlockers, label: t("operations.subNav.blockers") },

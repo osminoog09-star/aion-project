@@ -1,4 +1,4 @@
-﻿export type Json =
+export type Json =
   | string
   | number
   | boolean
@@ -359,6 +359,42 @@ export type Database = {
           platform?: string
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      driver_bug_reports: {
+        Row: {
+          app_version: string | null
+          category: string
+          created_at: string
+          description: string
+          diagnostics: Json
+          id: string
+          platform: string | null
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          app_version?: string | null
+          category?: string
+          created_at?: string
+          description: string
+          diagnostics?: Json
+          id?: string
+          platform?: string | null
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          app_version?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          diagnostics?: Json
+          id?: string
+          platform?: string | null
+          status?: string
+          user_id?: string | null
         }
         Relationships: []
       }

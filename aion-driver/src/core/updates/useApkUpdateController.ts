@@ -6,6 +6,8 @@ import { fetchApkUpdateManifestResilient, isManifestSemanticallyStale } from "./
 import { semverLess } from "./semverCompare";
 import { publishApkDiagnostics } from "./apkDiagnosticsSink";
 import type { ApkUpdateManifest } from "./apkManifest.types";
+import { getApkManifestUrl } from "../../../lib/apkManifestUrl";
+import { appendAionTimelineEvent } from "../../../storage/core/aionTimelineStorage";
 
 export type ApkUpdateReason =
   | "none"
@@ -52,9 +54,7 @@ export function evaluateApkUpdate(
 }
 
 const MANIFEST_URL =
-  typeof process !== "undefined"
-    ? process.env.EXPO_PUBLIC_APK_MANIFEST_URL?.trim() ?? ""
-    : "";
+  typeof process !== "undefined" ? getApkManifestUrl() : "";
 
 export function useApkUpdateController() {
   const [manifest, setManifest] = useState<ApkUpdateManifest | null>(null);
@@ -148,6 +148,20 @@ export function useApkUpdateController() {
     if (Date.now() < snoozeUntil && !evald.critical) return false;
     return true;
   }, [manifest, evald, snoozeUntil]);
+
+  const notifiedRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!manifest || !evald || evald.reason === "none" || !visible) return;
+    const key = `${manifest.latestVersion}:${manifest.easBuildId ?? manifest.apkUrl}`;
+    if (notifiedRef.current === key) return;
+    notifiedRef.current = key;
+    void appendAionTimelineEvent({
+      type: "apk_manifest_refresh",
+      title: "Доступна новая сборка",
+      detail: `Версия ${manifest.latestVersion} — откройте уведомление или Центр обновлений`,
+    });
+  }, [manifest, evald, visible]);
 
   const snooze = useCallback(() => {
     setSnoozeUntil(Date.now() + 45 * 60 * 1000);

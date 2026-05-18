@@ -14,6 +14,7 @@ import { requireSupabase } from "../../../lib/supabase";
 import { appendAionTimelineEvent } from "../../../storage/core/aionTimelineStorage";
 import { useAionEntityStore } from "../../../src/core/aion/entity/aionEntityStore";
 import { useRuntimePulse } from "../../../src/core/aion/runtime/runtimePulseBus";
+import { diagLog } from "../../../lib/diagnosticLog";
 
 const MAX_ATTEMPTS = 8;
 
@@ -86,12 +87,17 @@ export async function flushSyncQueue(userId: string | null): Promise<void> {
       if (ok) {
         await dequeueSucceeded(op.id);
         flushed += 1;
+        diagLog("info", "sync", `Операция ${op.type} выполнена`, { opId: op.id });
         if (op.type === "trip_upsert" || op.type === "cloud_backup_upsert") {
           useRuntimePulse.getState().pingUpload();
         }
       }
     } catch (e) {
       captureSyncError(e, { opType: op.type, opId: op.id, attempts: op.attempts });
+      diagLog("error", "sync", `Ошибка ${op.type}`, {
+        opId: op.id,
+        message: e instanceof Error ? e.message : String(e),
+      });
       useRuntimePulse.getState().pingError();
       await markAttempt(op.id);
     }
@@ -110,6 +116,7 @@ export async function flushSyncQueue(userId: string | null): Promise<void> {
         title: "Синхронизация",
         detail: "Очередь пуста",
       });
+      diagLog("info", "sync", "Очередь синхронизации пуста");
     }
     useAionEntityStore.getState().triggerSuccess(2200);
   }

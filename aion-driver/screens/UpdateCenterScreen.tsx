@@ -28,9 +28,10 @@ import {
   setWhatsNewSeenOtaUpdateId,
 } from "../features/updates/storage/whatsNewAckStorage";
 import { deriveRuntimeCompatibilityPanel } from "../services/runtimeCompatibility";
+import { getApkManifestUrl } from "../lib/apkManifestUrl";
 
 const MANIFEST_CONFIGURED = Boolean(
-  typeof process !== "undefined" && process.env.EXPO_PUBLIC_APK_MANIFEST_URL?.trim(),
+  typeof process !== "undefined" && getApkManifestUrl().startsWith("http"),
 );
 
 function buildNumber(): string {

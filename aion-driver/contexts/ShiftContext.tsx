@@ -18,7 +18,11 @@ import {
   appendPendingFuelEntry,
   clearPendingFuelEntries,
   loadPendingFuelEntries,
+  removePendingFuelEntry,
+  updatePendingFuelEntry,
 } from "../storage/driver/pendingFuelStorage";
+import { buildManualFuelEntry } from "../utils/fuelEntryFromManual";
+import { diagLog } from "../lib/diagnosticLog";
 import { pickCurrencyReconcileAction } from "../services/currencyReconcile";
 import { loadProfile, saveProfile } from "../storage/driver/profileStorage";
 import {
@@ -92,6 +96,13 @@ type ShiftContextValue = {
   endShift: () => Promise<void>;
   addIncome: (amount: number) => Promise<void>;
   addConfirmedFuelEntry: (entry: FuelEntry) => Promise<void>;
+  updateFuelEntry: (
+    id: string,
+    input: { totalCost: number; liters: number; fuelType: string },
+  ) => Promise<{ ok: boolean; error?: string }>;
+  removeFuelEntry: (id: string) => Promise<{ ok: boolean; error?: string }>;
+  pendingFuelEntries: FuelEntry[];
+  refreshPendingFuel: () => Promise<void>;
   setActiveFuelType: (kind: FuelKind) => Promise<void>;
   liveMetrics: LiveShiftMetrics | null;
   refreshHistory: () => Promise<void>;
@@ -105,6 +116,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [activeShift, setActiveShift] = useState<ActiveShift | null>(null);
   const [history, setHistory] = useState<Shift[]>([]);
+  const [pendingFuelEntries, setPendingFuelEntries] = useState<FuelEntry[]>([]);
   const [nowTick, setNowTick] = useState(() => Date.now());
   const [motionState, setMotionState] = useState<MotionState>("moving");
   const [postShiftHandoff, setPostShiftHandoff] = useState<Shift | null>(null);
@@ -148,17 +160,19 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
-      const [p, shift, hist, handoff] = await Promise.all([
+      const [p, shift, hist, handoff, pendingFuel] = await Promise.all([
         loadProfile(),
         loadActiveShift(),
         loadShiftHistory(),
         loadPostShiftHandoff(),
+        loadPendingFuelEntries(),
       ]);
       if (cancelled) return;
       setProfile(p);
       setActiveShift(shift);
       setHistory(hist);
       setPostShiftHandoff(handoff);
+      setPendingFuelEntries(pendingFuel);
       setHydrated(true);
     })();
     return () => {
@@ -692,11 +706,21 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const refreshPendingFuel = useCallback(async () => {
+    const pending = await loadPendingFuelEntries();
+    setPendingFuelEntries(pending);
+  }, []);
+
   const addConfirmedFuelEntry = useCallback(async (entry: FuelEntry) => {
     const prev = activeShiftRef.current;
     if (!prev) {
       await appendPendingFuelEntry(entry);
+      await refreshPendingFuel();
       scheduleCloudBackupPush();
+      diagLog("info", "fuel", "Заправка в очередь (без смены)", {
+        totalCost: entry.totalCost,
+        liters: entry.liters,
+      });
       return;
     }
     const next: ActiveShift = {
@@ -706,7 +730,86 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     await saveActiveShift(next);
     setActiveShift(next);
     scheduleCloudBackupPush();
-  }, []);
+    diagLog("info", "fuel", "Заправка добавлена в смену", {
+      totalCost: entry.totalCost,
+      liters: entry.liters,
+    });
+  }, [refreshPendingFuel]);
+
+  const updateFuelEntry = useCallback(
+    async (
+      id: string,
+      input: { totalCost: number; liters: number; fuelType: string },
+    ): Promise<{ ok: boolean; error?: string }> => {
+      const rebuilt = buildManualFuelEntry(input);
+      if (!rebuilt) {
+        return { ok: false, error: "Проверьте сумму и литры" };
+      }
+      const prev = activeShiftRef.current;
+      if (prev) {
+        const list = prev.fuelEntries ?? [];
+        const idx = list.findIndex((e) => e.id === id);
+        if (idx >= 0) {
+          const kept = list[idx];
+          const updated: FuelEntry = {
+            ...rebuilt,
+            id,
+            addedAtMs: kept.addedAtMs,
+            source: kept.source,
+          };
+          const nextEntries = [...list];
+          nextEntries[idx] = updated;
+          const next: ActiveShift = { ...prev, fuelEntries: nextEntries };
+          await saveActiveShift(next);
+          setActiveShift(next);
+          scheduleCloudBackupPush();
+          diagLog("info", "fuel", "Заправка исправлена", { id, totalCost: updated.totalCost });
+          return { ok: true };
+        }
+      }
+      const pendingUpdated = await updatePendingFuelEntry(id, {
+        fuelType: rebuilt.fuelType,
+        liters: rebuilt.liters,
+        totalCost: rebuilt.totalCost,
+        unitPrice: rebuilt.unitPrice,
+      });
+      if (pendingUpdated) {
+        await refreshPendingFuel();
+        diagLog("info", "fuel", "Ожидающая заправка исправлена", { id });
+        return { ok: true };
+      }
+      return { ok: false, error: "Запись не найдена" };
+    },
+    [refreshPendingFuel],
+  );
+
+  const removeFuelEntry = useCallback(
+    async (id: string): Promise<{ ok: boolean; error?: string }> => {
+      const prev = activeShiftRef.current;
+      if (prev) {
+        const list = prev.fuelEntries ?? [];
+        if (list.some((e) => e.id === id)) {
+          const next: ActiveShift = {
+            ...prev,
+            fuelEntries: list.filter((e) => e.id !== id),
+          };
+          await saveActiveShift(next);
+          setActiveShift(next);
+          scheduleCloudBackupPush();
+          diagLog("warn", "fuel", "Заправка удалена из смены", { id });
+          return { ok: true };
+        }
+      }
+      const removed = await removePendingFuelEntry(id);
+      if (removed) {
+        await refreshPendingFuel();
+        diagLog("warn", "fuel", "Ожидающая заправка удалена", { id });
+        return { ok: true };
+      }
+      return { ok: false, error: "Запись не найдена" };
+    },
+    [refreshPendingFuel],
+  );
 
   const setActiveFuelType = useCallback(async (kind: FuelKind) => {
     setActiveShift((prev) => {
@@ -842,6 +945,10 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       endShift,
       addIncome,
       addConfirmedFuelEntry,
+      updateFuelEntry,
+      removeFuelEntry,
+      pendingFuelEntries,
+      refreshPendingFuel,
       setActiveFuelType,
       liveMetrics,
       refreshHistory,
@@ -864,6 +971,10 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       endShift,
       addIncome,
       addConfirmedFuelEntry,
+      updateFuelEntry,
+      removeFuelEntry,
+      pendingFuelEntries,
+      refreshPendingFuel,
       setActiveFuelType,
       liveMetrics,
       refreshHistory,

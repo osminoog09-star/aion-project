@@ -26,6 +26,7 @@ export type ApkUpdateManifest = {
   changelog?: string[];
   /** Запасной URL, если основной недоступен. */
   fallbackApkUrl?: string;
+  easBuildId?: string;
 };
 
 export function isApkManifest(v: unknown): v is ApkUpdateManifest {

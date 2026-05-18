@@ -22,6 +22,7 @@ export const ecosystemRoutes = {
   operationsTimeline: "/operations/timeline",
   operationsExecution: "/operations/execution",
   operationsLive: "/operations/live",
+  operationsBugs: "/operations/bugs",
   operationsBlockers: "/operations/blockers",
   operationsRuntime: "/operations/runtime",
   operationsValidation: "/operations/validation",

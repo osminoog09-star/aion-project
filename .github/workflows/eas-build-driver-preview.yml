@@ -11,6 +11,8 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      build_id: ${{ steps.eas_build.outputs.build_id }}
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
     steps:
@@ -20,11 +22,9 @@ jobs:
       - name: Verify Driver module exists
         run: |
           if [ ! -f "${{ env.AION_DRIVER_MODULE }}/package.json" ]; then
-            echo "::error::Module ${{ env.AION_DRIVER_MODULE }}/ not in repo. AION = один проект: portal + aion-driver + …"
-            echo "Push модуль aion-driver в osminoog09-star/aion-project/${{ env.AION_DRIVER_MODULE }}/"
+            echo "::error::Module ${{ env.AION_DRIVER_MODULE }}/ not in repo."
             exit 1
           fi
-          echo "OK: module ${{ env.AION_DRIVER_MODULE }}"
 
       - uses: actions/setup-node@v4
         with:
@@ -48,6 +48,7 @@ jobs:
           token: ${{ env.EXPO_TOKEN }}
 
       - name: EAS Build preview APK
+        id: eas_build
         if: ${{ env.EXPO_TOKEN != '' }}
         working-directory: ${{ env.AION_DRIVER_MODULE }}
         run: |
@@ -61,6 +62,7 @@ jobs:
             fs.writeFileSync('../build-id.txt', b.id);
             console.log('build_id='+b.id);
           "
+          echo "build_id=$(cat ../build-id.txt)" >> "$GITHUB_OUTPUT"
 
       - name: Upload metadata
         if: ${{ env.EXPO_TOKEN != '' }}
@@ -71,15 +73,35 @@ jobs:
             eas-build.json
             build-id.txt
 
-      - name: Summary
-        if: ${{ env.EXPO_TOKEN != '' }}
-        run: |
-          BUILD_ID=$(cat build-id.txt)
-          echo "## EAS preview (module aion-driver)" >> "$GITHUB_STEP_SUMMARY"
-          echo "**BUILD_ID:** \`${BUILD_ID}\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "Expo: https://expo.dev/accounts/osminoog/projects/aion/builds" >> "$GITHUB_STEP_SUMMARY"
-          echo "Portal: \`npm run apk:complete-loop -- ${BUILD_ID}\`" >> "$GITHUB_STEP_SUMMARY"
+  sync-manifest:
+    needs: build
+    if: ${{ needs.build.outputs.build_id != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
 
-      - name: Fail — no EXPO_TOKEN
-        if: ${{ env.EXPO_TOKEN == '' }}
-        run: echo "::error::EXPO_TOKEN missing in aion-project secrets" && exit 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Wait FINISHED and sync apk-manifest.preview.json
+        run: node scripts/complete-apk-loop.mjs "${{ needs.build.outputs.build_id }}"
+
+      - name: Commit manifest (enables in-app update notification)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/apk-manifest.preview.json
+          if git diff --staged --quiet; then
+            echo "No manifest changes"
+            exit 0
+          fi
+          git commit -m "chore(release): sync preview APK manifest (${{ needs.build.outputs.build_id }})"
+          git push

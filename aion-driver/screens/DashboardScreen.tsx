@@ -22,6 +22,9 @@ import { MetricCard } from "../components/ui/MetricCard";
 import { SkeletonBlock } from "../components/ui/SkeletonBlock";
 import { DriverBriefTimeline } from "../components/driver/DriverBriefTimeline";
 import { DriverSyncStrip } from "../components/driver/DriverSyncStrip";
+import { FuelEntriesCard } from "../components/fuel/FuelEntriesCard";
+import { BugReportModal } from "../features/feedback/BugReportModal";
+import { ApkUpdateBanner } from "../components/update/ApkUpdateBanner";
 import { EfficiencyScoreRing } from "../components/driver/EfficiencyScoreRing";
 import { ShiftHudBar } from "../components/driver/ShiftHudBar";
 import { DriverIntelligenceStrip } from "../components/driver/DriverIntelligenceStrip";
@@ -96,6 +99,7 @@ export function DashboardScreen() {
   const [endShiftOpen, setEndShiftOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [errorText, setErrorText] = useState("");
+  const [bugOpen, setBugOpen] = useState(false);
 
   const bgVariant =
     settings.nightContrast === "nightDrive" ? "nightDrive" : "cockpit";
@@ -267,7 +271,13 @@ export function DashboardScreen() {
           </Animated.View>
 
           <Animated.View entering={fadeSection(24)}>
+            <ApkUpdateBanner />
             <DriverSyncStrip />
+            <Pressable onPress={() => setBugOpen(true)} className="mt-2 self-start">
+              <Text className="text-[11px] font-semibold text-rose-300/90">
+                Сообщить о проблеме →
+              </Text>
+            </Pressable>
           </Animated.View>
 
           <Animated.View entering={fadeSection(52)}>
@@ -519,6 +529,8 @@ export function DashboardScreen() {
             </GlowCard>
           ) : null}
 
+          <FuelEntriesCard />
+
           {!companion && m ? (
             <View className="mb-4 flex-row flex-wrap gap-3">
               <View className="min-w-[47%] flex-1">
@@ -756,6 +768,7 @@ export function DashboardScreen() {
         onConfirm={() => setErrorOpen(false)}
         onCancel={() => setErrorOpen(false)}
       />
+      <BugReportModal visible={bugOpen} onClose={() => setBugOpen(false)} />
     </CockpitBackground>
   );
 }
