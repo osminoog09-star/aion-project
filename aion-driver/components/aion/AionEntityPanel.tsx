@@ -15,6 +15,7 @@ import { useDevice } from "../../hooks/useDevice";
 import { useAuth } from "../../features/auth/hooks/useAuth";
 import { loadAionLinkLocalState } from "../../features/aion-link/storage/linkLocalState";
 import type { AionLinkLocalPersisted } from "../../features/aion-link/types";
+import { supabase } from "../../lib/supabase";
 import { useAionCore } from "../../src/core/aion/system/AionCoreContext";
 import type { AionEntityState } from "../../src/core/aion/diagnostics/types";
 import { useAionEntityStore } from "../../src/core/aion/entity/aionEntityStore";
@@ -79,11 +80,41 @@ export function AionEntityPanel() {
   const { session, isGuest, isConfigured } = useAuth();
   const { settings } = useDevice();
   const [linkLocal, setLinkLocal] = useState<AionLinkLocalPersisted | null>(null);
+  const [cloudPaired, setCloudPaired] = useState<{
+    count: number;
+    lastSeenAt: string | null;
+  } | null>(null);
 
   useEffect(() => {
     if (!open) return;
     void loadAionLinkLocalState().then(setLinkLocal);
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const uid = session?.user.id;
+    if (!uid || isGuest || !supabase) {
+      setCloudPaired(null);
+      return;
+    }
+    let cancelled = false;
+    void (async () => {
+      const { data } = await supabase
+        .from("devices")
+        .select("last_seen_at")
+        .eq("user_id", uid)
+        .order("last_seen_at", { ascending: false });
+      if (cancelled) return;
+      const rows = data ?? [];
+      setCloudPaired({
+        count: rows.length,
+        lastSeenAt: rows.length > 0 ? rows[0]?.last_seen_at ?? null : null,
+      });
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [open, session, isGuest]);
 
   const onClose = useCallback(() => closePanel(), [closePanel]);
 
@@ -157,11 +188,23 @@ export function AionEntityPanel() {
                   value={settings.aionLinkMode ? "Включён" : "Выключен"}
                 />
                 <Row
-                  label="Связанные"
+                  label="Связанные (локально)"
                   value={
                     linkLocal && linkLocal.remoteSlots.length > 0
                       ? linkLocal.remoteSlots.map((x) => x.label).join(", ")
-                      : "Пока нет — настройка на личном телефоне"
+                      : "Пока нет"
+                  }
+                />
+                <Row
+                  label="Связанные (облако)"
+                  value={
+                    cloudPaired == null
+                      ? "—"
+                      : cloudPaired.count === 0
+                        ? "Откройте «Подключение» → сгенерируйте код"
+                        : `${cloudPaired.count} устройств · ${formatRelative(
+                            cloudPaired.lastSeenAt ? Date.parse(cloudPaired.lastSeenAt) : null,
+                          )}`
                   }
                 />
 

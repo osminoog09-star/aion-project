@@ -96,14 +96,15 @@
       {
         "priority": 4,
         "id": "link-pair-ui",
-        "title": "AION Link Pair UI: QR issue/scan + claim toast",
+        "title": "AION Link Pair UI: issue/claim + entity panel",
+        "status": "shipped",
         "tasks": [
-          "Issue экран: pair code (текст + крупный) + countdown TTL",
-          "Claim экран: input code (или QR scanner) → claimPairToken",
-          "Realtime: подписка на собственный токен → при claimed показать toast",
-          "AionEntityPanel: список paired_devices + last_seen"
-        ],
-        "blocked": false
+          "Issue: pair code + countdown + copy/revoke + Realtime claimed toast — DONE",
+          "Claim: input code → claimPairToken — DONE",
+          "ensureCloudDevice upsert — DONE",
+          "AionEntityPanel cloud devices count + last_seen — DONE",
+          "QR scanner — NEXT"
+        ]
       },
       {
         "priority": 5,

@@ -177,7 +177,7 @@
     "highestValueImprovement": "Pair UI + интеграция pushLinkSnapshot в OcrQueue → realtime toast на personal phone.",
     "requiredDependencies": ["Supabase auth (выполнено)", "realtime (выполнено)", "expo-camera для QR scan"],
     "recommendedNextPhase": "AionLinkPairScreen: issue UI + scan UI; интегрировать pushLinkSnapshot в успешный OCR.",
-    "nextRecommendedStep": "Pair UI: 2 экрана (issue: показ pair code + копировать; claim: ввод кода → claimPairToken), + Realtime подписка для toast при claimed."
+    "nextRecommendedStep": "Интегрировать pushLinkSnapshot в успешный OCR + toast на personal phone через subscribeToLinkSnapshots; QR scanner (expo-camera) опционально."
   },
   "background-drive": {
     "whatWorks": ["ShiftContext вызывает адаптер; cold start через AsyncStorage", "Эксп. ветка: tasks/shiftLocationTask + expo-location foregroundService (только при EXPO_PUBLIC_EXPERIMENTAL_BG_LOCATION=1)"],
