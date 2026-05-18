@@ -69,4 +69,14 @@ class AionOverlayOrbModule(private val reactContext: ReactApplicationContext) :
       promise.reject("ORB_STATE", e.message, e)
     }
   }
+
+  @ReactMethod
+  fun pulseOrb(kind: String, promise: Promise) {
+    try {
+      AionOverlayOrbService.requestPulse(reactApplicationContext, kind)
+      promise.resolve(true)
+    } catch (e: Exception) {
+      promise.reject("ORB_PULSE", e.message, e)
+    }
+  }
 }

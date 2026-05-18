@@ -54,9 +54,90 @@
   "executionQueue": {
     "currentActiveEpic": "AION Runtime Sphere System: living core + intelligent auto-sync + native overlay orb",
     "currentSubsystemFocus": "aion-runtime-sphere",
-    "nextImplementationTarget": "PRIMARY: новый EAS preview APK 1.0.8 (native OrbView + magnetic snap + deep link /orb/status) → field validation на 2 OEM → переключить OVERLAY_ORB_NATIVE_PRODUCTION_READY=true. SECONDARY: 60fps benchmark sphere на low-end, прокинуть runtimePulse в OrbView (GPS/upload/error pulses вне приложения).",
+    "nextImplementationTarget": "WAVE 1 shipped (78b15c8): Runtime Sphere + sync engine + native overlay v1. WAVE 2 (autonomous): runtimePulse integrations (GPS/OCR/upload/error), native pulseOrb(kind) + JS bridge, AION Link phase 2 (link_pair_tokens + link_snapshots + Realtime). NEXT: Link pair flow UI (issue/scan QR), live profit pulse on sphere, smart auto-dim opacity overlay during driving.",
+    "autonomousSwimStack": [
+      {
+        "priority": 1,
+        "id": "runtime-pulse-integrations",
+        "title": "Прокинуть runtimePulse во все источники жизни",
+        "status": "shipped",
+        "tasks": [
+          "ShiftContext → pingGps() на каждом location update — DONE",
+          "OcrQueueProcessor → pingAiThink() при старте OCR — DONE",
+          "syncEngine: pingUpload (trip_upsert/cloud_backup_upsert) + pingError на throw — DONE",
+          "AionLink onSnapshotPushed → ждёт интеграции pushLinkSnapshot в реальные источники"
+        ]
+      },
+      {
+        "priority": 2,
+        "id": "overlay-orb-runtime-bridge",
+        "title": "OrbView через JS bridge получает runtime тики",
+        "status": "shipped",
+        "tasks": [
+          "Kotlin OrbView.applyPulse(kind) + pulseAnimator (200ms RadialGradient overlay) — DONE",
+          "OrbWindowManager.pulse(kind) + AionOverlayOrbService.ACTION_PULSE — DONE",
+          "JS orbNativePulse(kind) + AionOverlayOrbPulseBridge подписан на runtimePulse — DONE",
+          "auto-dim opacity overlay (GPS active + background) — NEXT"
+        ]
+      },
+      {
+        "priority": 3,
+        "id": "link-relay-realtime-contract",
+        "title": "AION Link Phase 2: cloud pairing + relay",
+        "status": "shipped_backend",
+        "tasks": [
+          "Migration: link_pair_tokens + link_snapshots + RLS owner-only + Realtime publication — DONE",
+          "linkPairTokens.ts: issue/claim/revoke/list — DONE",
+          "linkSnapshots.ts: pushLinkSnapshot + subscribeToLinkSnapshots (Realtime channel) — DONE",
+          "database.types.ts regenerated через MCP — DONE",
+          "Pair flow UI (QR issue/scan), AionLinkPairScreen integration — NEXT"
+        ]
+      },
+      {
+        "priority": 4,
+        "id": "link-pair-ui",
+        "title": "AION Link Pair UI: QR issue/scan + claim toast",
+        "tasks": [
+          "Issue экран: pair code (текст + крупный) + countdown TTL",
+          "Claim экран: input code (или QR scanner) → claimPairToken",
+          "Realtime: подписка на собственный токен → при claimed показать toast",
+          "AionEntityPanel: список paired_devices + last_seen"
+        ],
+        "blocked": false
+      },
+      {
+        "priority": 5,
+        "id": "live-profit-pulse",
+        "title": "Live profit pulse в сфере во время активной смены",
+        "tasks": [
+          "ShiftContext → каждые 30s emit pingUpload с delta profit",
+          "Sphere: добавить pulse 'profit' (зелёный shimmer overlay)",
+          "OrbView HUD строка profit/h уже есть — синхронизировать с тиком"
+        ],
+        "blocked": false
+      },
+      {
+        "priority": 6,
+        "id": "android-background-runtime-production",
+        "title": "Включить production background tracking gate",
+        "tasks": [
+          "computeRouteFieldValidation: 8/8 на одном устройстве",
+          "owner sign-off через /operations/live",
+          "BACKGROUND_TRACKING_PRODUCTION_READY=true"
+        ],
+        "blocked": true,
+        "blockedReason": "Ждёт physical device 8/8"
+      },
+      {
+        "priority": 7,
+        "id": "overlay-orb-production-gate",
+        "title": "Включить OVERLAY_ORB_NATIVE_PRODUCTION_READY=true",
+        "blocked": true,
+        "blockedReason": "Ждёт field validation на 2 OEM + battery profile"
+      }
+    ],
     "blockedTasks": [
-      "EAS preview APK 1.0.8: ждёт workflow_dispatch — несёт native OrbView, magnetic snap, deep link /orb/status",
+      "EAS preview APK 1.0.8: dispatched (master 78b15c8) — ждёт FINISHED для npm run release:apk-manifest:sync",
       "Field validation 8/8: ждёт физическое устройство с APK — owner paste отчёта в /operations/live",
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"

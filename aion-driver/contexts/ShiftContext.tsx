@@ -65,6 +65,7 @@ import { buildPostShiftAnalytics } from "../features/analytics/engine/buildPostS
 import { persistShiftAnalytics } from "../features/analytics/storage/shiftAnalyticsStorage";
 import { gpsIngestionGateway } from "../features/gps/ingestion/gpsIngestionGateway";
 import { loadGpsTripSession } from "../features/gps/tripStore/gpsTripStorage";
+import { useRuntimePulse } from "../src/core/aion/runtime/runtimePulseBus";
 
 function createShiftId(): string {
   return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
@@ -323,6 +324,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
         distanceIntervalMeters: timing.distanceIntervalMeters,
         onTick: (tick) => {
           gpsIngestionGateway.ingestForegroundTick(tick);
+          useRuntimePulse.getState().pingGps();
           setActiveShift((prev) => {
             if (!trackingEnabledRef.current || !prev) return prev;
             const newTotal = tick.totalDistanceMeters;

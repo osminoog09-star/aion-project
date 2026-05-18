@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { AppState } from "react-native";
 import { processNextOcrQueueItem } from "../../features/import/ocrQueue/ocrQueueEngine";
 import { subscribeOcrQueue } from "../../features/import/ocrQueue/ocrQueueEvents";
+import { useRuntimePulse } from "../../src/core/aion/runtime/runtimePulseBus";
 
 /**
  * Фоновый движок OCR-очереди: reconnect, backoff, stuck recovery, replay.
@@ -15,6 +16,7 @@ export function OcrQueueProcessor() {
     const drain = async () => {
       if (!alive || busy.current) return;
       busy.current = true;
+      useRuntimePulse.getState().pingAiThink();
       try {
         let more = true;
         let guard = 0;

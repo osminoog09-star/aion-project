@@ -147,21 +147,37 @@
     "nextRecommendedStep": "Инвентаризировать очереди по модулям и свести к одному интерфейсу flush/status."
   },
   "aion-link": {
-    "whatWorks": ["Локальный режим/очередь в клиенте"],
-    "whatDoesNotWork": ["Облачный pairing + стабильный realtime", "Автоскриншоты Bolt/Uber — stub (screenshotWatchStub.ts)"],
-    "cloudReady": [],
-    "otaImpact": "low",
-    "realtimeReadiness": 28,
-    "productionReadiness": 38,
-    "architectureState": "Локальный Link; облако не SoT для пары; relay phase 1 placeholder (linkRelayPlaceholder.ts).",
-    "missingUx": ["Статус пары и ошибок на обоих устройствах", "Work phone: убрать ручной Import после авто-OCR"],
-    "missingBackend": ["Pairing tokens, TTL, revoke", "Signed upload + dedupe + device roles (work/personal)"],
-    "missingRealtime": ["Надёжный duplex после пары"],
-    "biggestWeakness": "Нет доверенного pairing и живой цепочки work phone → relay → personal dashboard/profit.",
-    "highestValueImprovement": "MediaStore/bounded watcher + OCR queue + Supabase relay + realtime на личный телефон.",
-    "requiredDependencies": ["Supabase", "realtime", "background-drive (стабильный фон на личном устройстве)"],
-    "recommendedNextPhase": "Пилот двухтелефонного контура с field-тестами батареи.",
-    "nextRecommendedStep": "Заменить screenshotWatchStub на согласованный Android observer; расширить linkRelayPlaceholder до реального API контракта."
+    "whatWorks": [
+      "Локальный режим/очередь в клиенте",
+      "Cloud pairing tokens: link_pair_tokens (TTL 10min, status=pending/claimed/expired/revoked, RLS owner-only)",
+      "Cloud relay snapshots: link_snapshots (kind=ocr_snapshot/orb_state/sync_event/heartbeat, RLS owner-only, Realtime publication active)",
+      "JS API: issuePairToken / claimPairToken / revokePairToken / pushLinkSnapshot / subscribeToLinkSnapshots (Realtime postgres_changes channel)",
+      "Существующие devices/paired_devices/device_activity таблицы уже с RLS"
+    ],
+    "whatDoesNotWork": [
+      "UI для issue/scan QR-кода (pair flow ещё не реализован на экранах)",
+      "Автоскриншоты Bolt/Uber — stub (screenshotWatchStub.ts)",
+      "AionEntityPanel не показывает paired_devices last_seen",
+      "Push side: pushLinkSnapshot ещё не вызывается из реальных источников (ShiftContext/OcrQueue)"
+    ],
+    "cloudReady": ["link_pair_tokens", "link_snapshots", "devices", "paired_devices", "device_activity"],
+    "otaImpact": "medium",
+    "realtimeReadiness": 65,
+    "productionReadiness": 55,
+    "architectureState": "Phase 2: backend контракт (таблицы + RLS + Realtime + JS API) полностью готов; ждёт UI и интеграции с источниками снапшотов.",
+    "missingUx": [
+      "QR issue экран с countdown TTL",
+      "QR scan / paste-code экран с claim toast",
+      "Список paired_devices с last_seen в AionEntityPanel",
+      "Realtime toast «новый снапшот с work phone» на personal phone"
+    ],
+    "missingBackend": ["Signed upload URL для больших OCR изображений (currently payload jsonb only)"],
+    "missingRealtime": [],
+    "biggestWeakness": "Backend готов, UI ещё нет — двухтелефонный контур не работает end-to-end без экранов pair/claim.",
+    "highestValueImprovement": "Pair UI + интеграция pushLinkSnapshot в OcrQueue → realtime toast на personal phone.",
+    "requiredDependencies": ["Supabase auth (выполнено)", "realtime (выполнено)", "expo-camera для QR scan"],
+    "recommendedNextPhase": "AionLinkPairScreen: issue UI + scan UI; интегрировать pushLinkSnapshot в успешный OCR.",
+    "nextRecommendedStep": "Pair UI: 2 экрана (issue: показ pair code + копировать; claim: ввод кода → claimPairToken), + Realtime подписка для toast при claimed."
   },
   "background-drive": {
     "whatWorks": ["ShiftContext вызывает адаптер; cold start через AsyncStorage", "Эксп. ветка: tasks/shiftLocationTask + expo-location foregroundService (только при EXPO_PUBLIC_EXPERIMENTAL_BG_LOCATION=1)"],
@@ -189,13 +205,15 @@
     "whatWorks": [
       "AionRuntimeSphere в Control Room: 6 слоёв, orbital particles, energy ring, flow arcs, breath/glow по AionEntityState + runtimePulse",
       "Runtime Sync Engine (intelligent auto-sync): debounce + queue + AppState/NetInfo/shift/OCR/periodic триггеры — кнопка SYNC удалена",
-      "runtimePulseBus: syncBusy/phase, networkTick, gpsTick, uploadTick, errorTick, recoveryTick — единый канал для sphere + overlay",
+      "runtimePulseBus: syncBusy/phase, networkTick, gpsTick, uploadTick, errorTick, recoveryTick, aiThinkTick — единый канал для sphere + overlay",
+      "Live integrations: ShiftContext.onTick → pingGps, OcrQueueProcessor → pingAiThink, syncEngine flush → pingUpload/pingError",
       "Native overlay orb (Android): живой OrbView (ValueAnimator radial gradient + breath + orbit dots), magnetic snap-to-edge, long-press → /orb/status deep link → AionEntityPanel",
+      "Native pulseOrb(kind): 200ms RadialGradient вспых поверх постоянной анимации (upload/gps/error/recovery/ai_think/sync)",
+      "AionOverlayOrbPulseBridge: JS подписан на runtimePulse → пробрасывает в native overlay тики (вне приложения)",
       "FGS notification + persistence X/Y позиции + auto clamp с edge padding"
     ],
     "whatDoesNotWork": [
       "Авто-снижение opacity во время вождения (smart positioning v2)",
-      "Связь runtime state ↔ overlay orb на ходу (orb пока берёт состояние из ShiftContext, не из runtimePulse)",
       "iOS overlay (Apple запрещает system-wide overlay)"
     ],
     "mocked": [],

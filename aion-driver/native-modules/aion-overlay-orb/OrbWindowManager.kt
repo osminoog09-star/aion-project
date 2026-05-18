@@ -271,4 +271,10 @@ object OrbWindowManager {
       orbView?.applyState(state)
     }
   }
+
+  fun pulse(kind: String) {
+    main.post {
+      orbView?.applyPulse(kind)
+    }
+  }
 }

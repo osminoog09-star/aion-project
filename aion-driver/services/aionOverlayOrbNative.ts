@@ -9,7 +9,16 @@ type OrbNative = {
   hideOrb(): Promise<boolean>;
   updateOrbState(state: string): Promise<boolean>;
   updateOrbHud?(title: string, body: string): Promise<boolean>;
+  pulseOrb?(kind: string): Promise<boolean>;
 };
+
+export type OrbPulseKind =
+  | "upload"
+  | "gps"
+  | "error"
+  | "recovery"
+  | "ai_think"
+  | "sync";
 
 function getOrbNative(): OrbNative | null {
   if (Platform.OS !== "android") return null;
@@ -55,4 +64,11 @@ export async function orbNativeUpdateHud(title: string, body: string): Promise<v
   const m = getOrbNative();
   if (!m?.updateOrbHud) return;
   await m.updateOrbHud(title, body);
+}
+
+/** Короткий «вспых» цветным RadialGradient (200ms) поверх постоянной анимации. */
+export async function orbNativePulse(kind: OrbPulseKind): Promise<void> {
+  const m = getOrbNative();
+  if (!m?.pulseOrb) return;
+  await m.pulseOrb(kind);
 }

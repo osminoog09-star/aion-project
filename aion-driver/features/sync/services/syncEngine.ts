@@ -13,6 +13,7 @@ import {
 import { requireSupabase } from "../../../lib/supabase";
 import { appendAionTimelineEvent } from "../../../storage/core/aionTimelineStorage";
 import { useAionEntityStore } from "../../../src/core/aion/entity/aionEntityStore";
+import { useRuntimePulse } from "../../../src/core/aion/runtime/runtimePulseBus";
 
 const MAX_ATTEMPTS = 8;
 
@@ -85,9 +86,13 @@ export async function flushSyncQueue(userId: string | null): Promise<void> {
       if (ok) {
         await dequeueSucceeded(op.id);
         flushed += 1;
+        if (op.type === "trip_upsert" || op.type === "cloud_backup_upsert") {
+          useRuntimePulse.getState().pingUpload();
+        }
       }
     } catch (e) {
       captureSyncError(e, { opType: op.type, opId: op.id, attempts: op.attempts });
+      useRuntimePulse.getState().pingError();
       await markAttempt(op.id);
     }
   }

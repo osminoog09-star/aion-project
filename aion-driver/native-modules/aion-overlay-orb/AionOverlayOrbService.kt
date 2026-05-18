@@ -115,6 +115,11 @@ class AionOverlayOrbService : Service() {
         stopOverlayAndService()
         return START_NOT_STICKY
       }
+      ACTION_PULSE -> {
+        val kind = intent.getStringExtra(EXTRA_PULSE_KIND) ?: return START_STICKY
+        OrbWindowManager.pulse(kind)
+        return START_STICKY
+      }
     }
     return START_NOT_STICKY
   }
@@ -201,10 +206,12 @@ class AionOverlayOrbService : Service() {
     const val ACTION_UPDATE = "com.aion.driver.orb.action.UPDATE"
     const val ACTION_UPDATE_HUD = "com.aion.driver.orb.action.UPDATE_HUD"
     const val ACTION_HIDE = "com.aion.driver.orb.action.HIDE"
+    const val ACTION_PULSE = "com.aion.driver.orb.action.PULSE"
     const val EXTRA_STATE = "state"
     const val EXTRA_SHIFT_ID = "shift_id"
     const val EXTRA_HUD_TITLE = "hud_title"
     const val EXTRA_HUD_BODY = "hud_body"
+    const val EXTRA_PULSE_KIND = "pulse_kind"
     private const val CHANNEL_ID = "aion_orb_fgs_v1"
     private const val NOTIF_ID = 71042
 
@@ -240,6 +247,15 @@ class AionOverlayOrbService : Service() {
     fun requestHide(ctx: Context) {
       val app = ctx.applicationContext
       val i = Intent(app, AionOverlayOrbService::class.java).apply { action = ACTION_HIDE }
+      app.startService(i)
+    }
+
+    fun requestPulse(ctx: Context, kind: String) {
+      val app = ctx.applicationContext
+      val i = Intent(app, AionOverlayOrbService::class.java).apply {
+        action = ACTION_PULSE
+        putExtra(EXTRA_PULSE_KIND, kind)
+      }
       app.startService(i)
     }
   }

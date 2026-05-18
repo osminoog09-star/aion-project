@@ -31,6 +31,9 @@ class OrbView(context: Context) : View(context) {
 
   private var breathPhase: Float = 0f
   private var rotationPhase: Float = 0f
+  private var pulsePhase: Float = 0f
+  private var pulseColor: Int = 0
+  private var pulseAnimator: ValueAnimator? = null
 
   private val breathAnimator = ValueAnimator.ofFloat(0f, 1f).apply {
     duration = 2400L
@@ -118,6 +121,32 @@ class OrbView(context: Context) : View(context) {
     invalidate()
   }
 
+  /**
+   * Короткий «вспых» поверх постоянной анимации — для GPS / upload / error / recovery / ai-think.
+   * Не меняет основной цвет (applyState), только overlay 200ms.
+   */
+  fun applyPulse(kind: String) {
+    pulseAnimator?.cancel()
+    pulseColor = when (kind) {
+      "upload" -> 0xFF34D399.toInt()
+      "gps" -> 0xFF22D3EE.toInt()
+      "error" -> 0xFFFB7185.toInt()
+      "recovery" -> 0xFF60A5FA.toInt()
+      "ai_think" -> 0xFFA78BFA.toInt()
+      "sync" -> 0xFF818CF8.toInt()
+      else -> coreColor
+    }
+    pulseAnimator = ValueAnimator.ofFloat(1f, 0f).apply {
+      duration = 220L
+      interpolator = LinearInterpolator()
+      addUpdateListener {
+        pulsePhase = it.animatedValue as Float
+        invalidate()
+      }
+      start()
+    }
+  }
+
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     breathAnimator.start()
@@ -127,6 +156,8 @@ class OrbView(context: Context) : View(context) {
   override fun onDetachedFromWindow() {
     breathAnimator.cancel()
     rotationAnimator.cancel()
+    pulseAnimator?.cancel()
+    pulseAnimator = null
     super.onDetachedFromWindow()
   }
 
@@ -152,6 +183,21 @@ class OrbView(context: Context) : View(context) {
       )
     }
     canvas.drawCircle(cx, cy, haloR, haloPaint)
+
+    if (pulsePhase > 0f) {
+      val pulseR = maxR * (1f + 0.2f * (1f - pulsePhase))
+      val pulsePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        shader = RadialGradient(
+          cx,
+          cy,
+          pulseR,
+          intArrayOf(withAlpha(pulseColor, 0.7f * pulsePhase), withAlpha(pulseColor, 0f)),
+          floatArrayOf(0f, 1f),
+          Shader.TileMode.CLAMP,
+        )
+      }
+      canvas.drawCircle(cx, cy, pulseR, pulsePaint)
+    }
 
     rimPaint.color = rimColor
     canvas.drawCircle(cx, cy, rimR, rimPaint)

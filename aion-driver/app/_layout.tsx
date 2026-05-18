@@ -34,6 +34,7 @@ import { AionCoreProvider } from "../src/core/aion/system/AionCoreContext";
 import { AionBootSequence } from "../components/aion/AionBootSequence";
 import { AionHud } from "../components/aion/AionHud";
 import { AionEntityPanel } from "../components/aion/AionEntityPanel";
+import { AionOverlayOrbPulseBridge } from "../components/aion/AionOverlayOrbPulseBridge";
 
 import "../tasks/shiftLocationTask";
 import { ensureAndroidShiftRuntimeInstalled } from "../services/androidShiftRuntimeBootstrap";
@@ -101,6 +102,7 @@ function ThemedAppTree() {
               <OcrQueueProcessor />
               <PostShiftHandoffBanner />
               <CloudSyncBootstrap />
+              <AionOverlayOrbPulseBridge />
               <AuthDeepLinkListener />
               <GlobalSyncBanner />
               <UpdateGate />
