@@ -51,7 +51,8 @@
     "execution:autonomous-gha:full": "node --use-system-ca scripts/autonomous-github-eas.mjs --full",
     "release:orchestrate": "node scripts/release-orchestrator.mjs",
     "runtime:recover": "node scripts/runtime-recovery.mjs",
-    "governance:gate": "node scripts/execution-governance-gate.mjs"
+    "governance:gate": "node scripts/execution-governance-gate.mjs",
+    "driver:ota:preview": "node scripts/publish-driver-ota-preview.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
