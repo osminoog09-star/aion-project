@@ -21,6 +21,7 @@ import { OcrQueueProcessor } from "../components/import/OcrQueueProcessor";
 import { PostShiftHandoffBanner } from "../components/driver/PostShiftHandoffBanner";
 import { useTheme } from "../contexts/ThemeContext";
 import { CloudSyncBootstrap } from "../features/cloud/bootstrap/CloudSyncBootstrap";
+import { AuthDeepLinkListener } from "../features/auth/components/AuthDeepLinkListener";
 import { AppProviders } from "../platform/providers/AppProviders";
 import { useDevice } from "../hooks/useDevice";
 import { useShift } from "../hooks/useShift";
@@ -100,6 +101,7 @@ function ThemedAppTree() {
               <OcrQueueProcessor />
               <PostShiftHandoffBanner />
               <CloudSyncBootstrap />
+              <AuthDeepLinkListener />
               <GlobalSyncBanner />
               <UpdateGate />
               <ApkUpdateGate />

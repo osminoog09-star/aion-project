@@ -17,8 +17,9 @@ import {
   signInWithOAuthRedirect,
 } from "../services/supabaseOAuth";
 import { translateAuthError } from "../services/authErrorRu";
+import { getAuthRedirectUrl } from "../services/authRedirect";
+import { scheduleCloudBackupPush } from "../../cloud/services/scheduleCloudBackup";
 import { STORAGE_KEYS } from "../../../storage/core/keys";
-import * as Linking from "expo-linking";
 
 export type AuthActionResult = {
   error: string | null;
@@ -35,6 +36,8 @@ type AuthStatus = {
   isGuest: boolean;
   signInWithEmail: (email: string, password: string) => Promise<AuthActionResult>;
   signUpWithEmail: (email: string, password: string) => Promise<AuthActionResult>;
+  resendConfirmationEmail: (email: string) => Promise<AuthActionResult>;
+  resetPasswordForEmail: (email: string) => Promise<AuthActionResult>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<{ error: string | null }>;
   signInWithApple: () => Promise<{ error: string | null }>;
@@ -96,6 +99,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (event === "SIGNED_IN" && next?.user) {
         void AsyncStorage.removeItem(STORAGE_KEYS.AUTH_GUEST);
         setIsGuest(false);
+        scheduleCloudBackupPush();
       }
       if (event === "SIGNED_OUT") {
         void readGuestFlag().then((g) => setIsGuest(g));
@@ -159,11 +163,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!trimmed || password.length < 8) {
         return { error: "Email и пароль ≥ 8 символов" };
       }
-      const emailRedirectTo = Linking.createURL("auth/callback");
+      const emailRedirectTo = getAuthRedirectUrl();
       const { data, error } = await supabase.auth.signUp({
         email: trimmed,
         password,
-        options: { emailRedirectTo },
+        options: {
+          emailRedirectTo,
+          data: { app: "aion-driver" },
+        },
       });
       if (error) {
         return { error: translateAuthError(error.message) };
@@ -185,6 +192,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     [],
   );
+
+  const resendConfirmationEmail = useCallback(async (email: string) => {
+    if (!supabase) return { error: "Облако не настроено" };
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed) return { error: "Укажите email" };
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: trimmed,
+      options: { emailRedirectTo: getAuthRedirectUrl() },
+    });
+    if (error) return { error: translateAuthError(error.message) };
+    return {
+      error: null,
+      info: `Письмо повторно отправлено на ${trimmed}. Откройте ссылку и войдите с паролем.`,
+    };
+  }, []);
+
+  const resetPasswordForEmail = useCallback(async (email: string) => {
+    if (!supabase) return { error: "Облако не настроено" };
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed) return { error: "Укажите email" };
+    const { error } = await supabase.auth.resetPasswordForEmail(trimmed, {
+      redirectTo: getAuthRedirectUrl(),
+    });
+    if (error) return { error: translateAuthError(error.message) };
+    return {
+      error: null,
+      info: `Ссылка для сброса пароля отправлена на ${trimmed}.`,
+    };
+  }, []);
 
   const signOut = useCallback(async () => {
     if (supabase) {
@@ -238,6 +275,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isGuest,
       signInWithEmail,
       signUpWithEmail,
+      resendConfirmationEmail,
+      resetPasswordForEmail,
       signOut,
       signInWithGoogle,
       signInWithApple,
@@ -250,6 +289,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isGuest,
       signInWithEmail,
       signUpWithEmail,
+      resendConfirmationEmail,
+      resetPasswordForEmail,
       signOut,
       signInWithGoogle,
       signInWithApple,

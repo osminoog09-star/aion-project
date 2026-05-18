@@ -17,8 +17,10 @@ import { GradientButton } from "../components/ui/GradientButton";
 import { CockpitBackground } from "../components/ui/CockpitBackground";
 import { useTheme } from "../contexts/ThemeContext";
 import { useAuth } from "../features/auth/hooks/useAuth";
+import { useAuthScreenMessage } from "../features/auth/hooks/useAuthDeepLinkParams";
 import { isValidEmail } from "../features/cloud/validation/authFields";
 import { getOAuthRedirectUri } from "../features/auth/services/supabaseOAuth";
+import { supabase } from "../lib/supabase";
 import { radius } from "../tokens";
 
 function CloudStatusBanner({
@@ -72,6 +74,8 @@ export function LoginExperienceScreen() {
     isConfigured,
     signInWithEmail,
     signUpWithEmail,
+    resendConfirmationEmail,
+    resetPasswordForEmail,
     signOut,
     signInWithGoogle,
     signInWithApple,
@@ -81,15 +85,24 @@ export function LoginExperienceScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mode, setMode] = useState<"signIn" | "signUp">("signIn");
+  const { banner, setBanner, clearBanner } = useAuthScreenMessage();
   const [msg, setMsg] = useState<string | null>(null);
   const [msgIsInfo, setMsgIsInfo] = useState(false);
+  const [awaitingEmailConfirm, setAwaitingEmailConfirm] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [emailFocused, setEmailFocused] = useState(false);
   const [passFocused, setPassFocused] = useState(false);
 
+  const showMsg = (text: string, isInfo: boolean) => {
+    setMsg(text);
+    setMsgIsInfo(isInfo);
+    clearBanner();
+  };
+
   const onSubmit = async () => {
     setMsg(null);
     setMsgIsInfo(false);
+    clearBanner();
     if (!isConfigured) {
       setMsg(
         "Сервер авторизации недоступен. Обновите Driver (OTA) или напишите в поддержку.",
@@ -111,17 +124,45 @@ export function LoginExperienceScreen() {
         : await signUpWithEmail(email, password);
     setBusy(null);
     if (res.error) {
-      setMsg(res.error);
-      setMsgIsInfo(false);
+      showMsg(res.error, false);
       return;
     }
     if (res.info) {
-      setMsg(res.info);
-      setMsgIsInfo(true);
+      showMsg(res.info, true);
+      setAwaitingEmailConfirm(true);
       setMode("signIn");
       return;
     }
+    const sess = supabase ? (await supabase.auth.getSession()).data.session : null;
+    if (!sess) {
+      showMsg("Сессия не создана. Подтвердите email или попробуйте снова.", false);
+      return;
+    }
     router.replace("/home");
+  };
+
+  const onResend = async () => {
+    if (!isValidEmail(email)) {
+      showMsg("Укажите email для повторной отправки", false);
+      return;
+    }
+    setBusy("resend");
+    const res = await resendConfirmationEmail(email);
+    setBusy(null);
+    if (res.error) showMsg(res.error, false);
+    else if (res.info) showMsg(res.info, true);
+  };
+
+  const onForgotPassword = async () => {
+    if (!isValidEmail(email)) {
+      showMsg("Укажите email для сброса пароля", false);
+      return;
+    }
+    setBusy("reset");
+    const res = await resetPasswordForEmail(email);
+    setBusy(null);
+    if (res.error) showMsg(res.error, false);
+    else if (res.info) showMsg(res.info, true);
   };
 
   const onGoogle = async () => {
@@ -320,6 +361,22 @@ export function LoginExperienceScreen() {
                     disabled={busy !== null}
                   />
 
+                  {mode === "signIn" ? (
+                    <Pressable className="mt-3 py-2" onPress={() => void onForgotPassword()} disabled={busy !== null}>
+                      <Text className="text-center text-xs" style={{ color: semantic.textSecondary }}>
+                        {busy === "reset" ? "Отправка…" : "Забыли пароль?"}
+                      </Text>
+                    </Pressable>
+                  ) : null}
+
+                  {(mode === "signIn" && awaitingEmailConfirm) || mode === "signUp" ? (
+                    <Pressable className="mt-2 py-2" onPress={() => void onResend()} disabled={busy !== null}>
+                      <Text className="text-center text-xs" style={{ color: semantic.accent }}>
+                        {busy === "resend" ? "Отправка…" : "Отправить письмо подтверждения ещё раз"}
+                      </Text>
+                    </Pressable>
+                  ) : null}
+
                   <View className="my-6 flex-row items-center gap-3">
                     <View className="h-px flex-1" style={{ backgroundColor: semantic.border }} />
                     <Text className="text-xs uppercase" style={{ color: semantic.textTertiary }}>
@@ -377,23 +434,26 @@ export function LoginExperienceScreen() {
             </View>
           )}
 
-          {msg ? (
+          {banner || msg ? (
             <View
               className="mt-5 rounded-2xl border px-4 py-3"
               style={{
-                borderColor: msgIsInfo
-                  ? "rgba(52,211,153,0.35)"
-                  : resolved === "light"
-                    ? "rgba(225,29,72,0.28)"
-                    : "rgba(251,113,133,0.35)",
+                borderColor:
+                  banner?.isInfo || msgIsInfo
+                    ? "rgba(52,211,153,0.35)"
+                    : resolved === "light"
+                      ? "rgba(225,29,72,0.28)"
+                      : "rgba(251,113,133,0.35)",
                 backgroundColor: semantic.surfaceMuted,
               }}
             >
               <Text
                 className="text-sm leading-5"
-                style={{ color: msgIsInfo ? "#6ee7b7" : semantic.danger }}
+                style={{
+                  color: banner?.isInfo || msgIsInfo ? "#6ee7b7" : semantic.danger,
+                }}
               >
-                {msg}
+                {banner?.text ?? msg}
               </Text>
             </View>
           ) : null}

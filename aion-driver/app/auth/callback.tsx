@@ -3,6 +3,7 @@ import { ActivityIndicator, Text, View } from "react-native";
 import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 import * as Linking from "expo-linking";
 import { supabase } from "../../lib/supabase";
+import { establishSessionFromCallbackUrl } from "../../features/auth/services/establishSessionFromCallback";
 
 type Phase = "loading" | "done" | "error";
 
@@ -12,13 +13,15 @@ function firstParam(v: string | string[] | undefined): string | undefined {
 }
 
 /**
- * Deep link `aion-driver://auth/callback?code=…` после Google OAuth (PKCE).
+ * Deep link `aion-driver://auth/callback` — OAuth, подтверждение email, сброс пароля.
  */
 export default function AuthCallbackScreen() {
   const router = useRouter();
   const params = useLocalSearchParams<{
     code?: string | string[];
     error_description?: string | string[];
+    token_hash?: string | string[];
+    type?: string | string[];
   }>();
   const [phase, setPhase] = useState<Phase>("loading");
   const [message, setMessage] = useState<string | null>(null);
@@ -32,39 +35,48 @@ export default function AuthCallbackScreen() {
         return;
       }
       if (!supabase) {
-        setMessage("Supabase не настроен");
+        setMessage("Сервер авторизации недоступен");
         setPhase("error");
         return;
       }
-      let code = firstParam(params.code);
-      if (!code) {
-        const initial = await Linking.getInitialURL();
-        if (initial) {
-          const parsed = Linking.parse(initial);
-          const q = parsed.queryParams?.code;
-          code = Array.isArray(q) ? q[0] : q;
-        }
+
+      let url = Linking.createURL("auth/callback");
+      const q = new URLSearchParams();
+      const code = firstParam(params.code);
+      const tokenHash = firstParam(params.token_hash);
+      const type = firstParam(params.type);
+      if (code) q.set("code", code);
+      if (tokenHash) q.set("token_hash", tokenHash);
+      if (type) q.set("type", type);
+      const qs = q.toString();
+      if (qs) url = `${url}?${qs}`;
+
+      const initial = await Linking.getInitialURL();
+      if (initial?.includes("auth/callback")) {
+        url = initial;
       }
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-        if (error) {
-          setMessage(error.message);
-          setPhase("error");
-          return;
-        }
+
+      const res = await establishSessionFromCallbackUrl(supabase, url);
+      if (!res.ok) {
+        setMessage(res.message);
+        setPhase("error");
+        return;
       }
       setPhase("done");
     };
     void run();
-  }, [params.code, params.error_description]);
+  }, [params.code, params.error_description, params.token_hash, params.type]);
 
   useEffect(() => {
     if (phase !== "error") return;
     const t = setTimeout(() => {
-      router.replace("/(auth)/login");
+      router.replace({
+        pathname: "/(auth)/login",
+        params: { authError: message ?? "Ошибка входа" },
+      });
     }, 2800);
     return () => clearTimeout(t);
-  }, [phase, router]);
+  }, [phase, router, message]);
 
   if (phase === "loading") {
     return (

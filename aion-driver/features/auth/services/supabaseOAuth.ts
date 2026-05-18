@@ -1,17 +1,15 @@
 import * as AppleAuthentication from "expo-apple-authentication";
-import { makeRedirectUri } from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
 import { Platform } from "react-native";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "../../../lib/database.types";
+import { getAuthRedirectUrl } from "./authRedirect";
+import { translateAuthError } from "./authErrorRu";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export function getOAuthRedirectUri(): string {
-  return makeRedirectUri({
-    scheme: "aion-driver",
-    path: "auth/callback",
-  });
+  return getAuthRedirectUrl();
 }
 
 /**
@@ -30,7 +28,10 @@ export async function signInWithOAuthRedirect(
     },
   });
   if (error || !data?.url) {
-    return { ok: false, message: error?.message ?? "OAuth URL недоступен" };
+    return {
+      ok: false,
+      message: translateAuthError(error?.message ?? "OAuth URL недоступен"),
+    };
   }
   const result = await WebBrowser.openAuthSessionAsync(data.url, redirectTo);
   if (result.type !== "success" || !("url" in result) || !result.url) {
@@ -42,7 +43,7 @@ export async function signInWithOAuthRedirect(
     const code = parsed.searchParams.get("code");
     if (code) {
       const { error: ex } = await client.auth.exchangeCodeForSession(code);
-      if (ex) return { ok: false, message: ex.message };
+      if (ex) return { ok: false, message: translateAuthError(ex.message) };
       return { ok: true };
     }
     const hash = parsed.hash?.replace(/^#/, "");
