@@ -54,9 +54,10 @@
   "executionQueue": {
     "currentActiveEpic": "Always-on drive: background shift + live profit + two-phone Link relay",
     "currentSubsystemFocus": "background-drive",
-    "nextImplementationTarget": "PRIMARY: field validation 8/8 на APK 1.0.6 (Маршруты → отчёт в /operations/live). Параллельно: FGS field gate + time intelligence (route timeline rollups). APK loop: eb4250a2 FINISHED, manifest 1.0.6 на проде.",
+    "nextImplementationTarget": "PRIMARY: EAS preview APK 1.0.7 (Google OAuth native + intentFilters) → field validation 8/8 → /operations/live. Google auth в Supabase: готово. Параллельно: FGS + route intelligence.",
     "blockedTasks": [
-      "Field validation 8/8: ждёт физическое устройство с APK 1.0.6 — owner paste отчёта в /operations/live",
+      "EAS preview APK 1.0.7: workflow_dispatch «EAS Build Driver (preview)» → FINISHED → npm run release:apk-manifest:sync",
+      "Field validation 8/8: ждёт физическое устройство с APK 1.0.7 — owner paste отчёта в /operations/live",
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
     ],

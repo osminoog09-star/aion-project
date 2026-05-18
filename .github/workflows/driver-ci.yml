@@ -1,0 +1,43 @@
+# Driver: typecheck, expo-doctor, field-validation tests on every push to aion-driver/
+name: Driver CI
+
+on:
+  push:
+    branches: [master, main, preview]
+    paths:
+      - "aion-driver/**"
+      - ".github/workflows/driver-ci.yml"
+  pull_request:
+    paths:
+      - "aion-driver/**"
+      - ".github/workflows/driver-ci.yml"
+
+concurrency:
+  group: driver-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: aion-driver
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: aion-driver/package-lock.json
+
+      - run: npm ci
+
+      - name: Validate (typecheck + expo-doctor)
+        run: npm run validate
+
+      - name: Field validation unit tests
+        run: npm run validate:code
+
+      - name: Verify Expo config
+        run: npx expo config --json --type public > /dev/null

@@ -190,7 +190,7 @@ export function LoginExperienceScreen() {
     setBusy(null);
     if (!sess) {
       setMsg(
-        "Вход через Google не завершился. Убедитесь, что провайдер Google включён в Supabase (Client ID + Secret).",
+        "Вход через Google не завершился. Проверьте redirect URI в Google Cloud и Test users для вашего Gmail.",
       );
       return;
     }

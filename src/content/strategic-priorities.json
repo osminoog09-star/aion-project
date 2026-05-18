@@ -3,11 +3,33 @@
   "constitutionVersion": "2.0",
   "autonomousOrchestration": "Cursor executes roadmap/priorities/deps autonomously; owner observes /operations/command (Russian) and edits /operations/priorities — no ChatGPT relay.",
   "ownerLanguageRule": "Владелец видит только русский интерфейс. Английский — код и технические детали (свёрнуто).",
-  "ownerDirective": "PRIMARY: field validation 8/8 на APK 1.0.6. Параллельно: FGS gate + route/time intelligence.",
+  "ownerDirective": "PRIMARY: EAS APK 1.0.7 → field validation 8/8. Google auth готов. Параллельно: FGS + route intelligence. Долгосрок: Maps OS + Fuel Intelligence (roadmap only).",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
-  "nextImplementationTarget": "APK 1.0.6 установлен → Маршруты GPS · чеклист 8/8 → paste отчёт на /operations/live",
+  "nextImplementationTarget": "EAS Build Driver (preview) 1.0.7 → FINISHED → manifest → Маршруты 8/8 → /operations/live",
   "executionNotes": "Field validation 8/8 + portal report inbox (/operations/live paste). BG gate hint on device when 8/8. CI: test:field-validation-report in repo:verify. Device gate: owner paste report after 8/8.",
   "priorities": [
+    {
+      "id": "aion-maps-driver-runtime-os",
+      "title": "AION Maps & Driver Runtime OS",
+      "level": "strategic",
+      "subsystemIds": ["gps-route", "driver-intelligence"],
+      "status": "roadmap_only",
+      "rationale": "Core differentiation: реальный километраж, road matching, операционная карта смены, runtime routing. Сейчас — roadmap, ADR, dependency graph, self-host architecture planning.",
+      "nextAction": "Зафиксировать этапы GPS Intelligence → AI-native Maps; не начинать tile/routing engine до 8/8",
+      "setAt": "2026-05-17",
+      "setBy": "product-owner"
+    },
+    {
+      "id": "operational-fuel-cost-intelligence",
+      "title": "Operational Fuel & Cost Intelligence",
+      "level": "strategic",
+      "subsystemIds": ["ocr", "driver-intelligence", "gps-route"],
+      "status": "roadmap_only",
+      "rationale": "Реальные расходы водителя: умная заправка, ₽/100 км, прибыль после топлива, распределение топлива по классам km (связь с Maps). Сейчас — data model + milestones, без full allocation engine.",
+      "nextAction": "Roadmap: smart refuel → GPS allocation → AI economics → интеграция с AION Maps",
+      "setAt": "2026-05-17",
+      "setBy": "product-owner"
+    },
     {
       "id": "driver-intelligence-core",
       "title": "Driver Intelligence Core",
@@ -82,7 +104,6 @@
       "status": "in_progress",
       "rationale": "MASTER §6–8: observability, audit, priorities, validation.",
       "nextAction": "Auth hardening + Supabase write on Vercel prod",
-      "status": "done",
       "setAt": "2026-05-15",
       "setBy": "cursor"
     },
@@ -144,9 +165,52 @@
       "dependsOn": ["route-gps-store", "post-shift-analytics"],
       "status": "in_progress",
       "reason": "Route timeline + rollups + stop zones live; field validation 8/8 unlocks production FGS gate"
+    },
+    {
+      "id": "aion-maps-driver-runtime-os",
+      "title": "AION Maps & Driver Runtime OS",
+      "dependsOn": ["driver-intelligence-core", "route-gps-store", "time-intelligence"],
+      "status": "blocked",
+      "reason": "Стратегия · roadmap only: GPS Intelligence → Road Matching → Operational Map → Runtime Routing → AI-native Maps. Без map engine до architecture branch."
+    },
+    {
+      "id": "maps-gps-intelligence",
+      "title": "Maps: GPS Intelligence (этап 1)",
+      "dependsOn": ["aion-maps-driver-runtime-os", "route-gps-store"],
+      "status": "blocked",
+      "reason": "Классификация km: заказ / подача / порожняк / личное — после field validation 8/8"
+    },
+    {
+      "id": "maps-road-matching",
+      "title": "Maps: Road Matching (этап 2)",
+      "dependsOn": ["maps-gps-intelligence"],
+      "status": "blocked",
+      "reason": "Map-matching к road graph — spike + ADR, не production engine"
+    },
+    {
+      "id": "operational-fuel-cost-intelligence",
+      "title": "Operational Fuel & Cost Intelligence",
+      "dependsOn": ["driver-intelligence-core", "ocr-production-queue", "unified-shift-runtime"],
+      "status": "blocked",
+      "reason": "Стратегия · roadmap only: умная заправка → GPS allocation → AI Driver Economics → AION Maps"
+    },
+    {
+      "id": "fuel-gps-cost-allocation",
+      "title": "Fuel: распределение по классам km",
+      "dependsOn": ["operational-fuel-cost-intelligence", "maps-gps-intelligence"],
+      "status": "blocked",
+      "reason": "Топливо на заказ/подачу/порожняк — зависит от Maps GPS Intelligence"
+    },
+    {
+      "id": "fuel-maps-predictive",
+      "title": "Fuel: предиктивный расход на маршруте",
+      "dependsOn": ["fuel-gps-cost-allocation", "maps-road-matching"],
+      "status": "blocked",
+      "reason": "После Runtime Routing / road graph — не в текущем спринте"
     }
   ],
   "cursorAdaptationRules": [
+    "strategic + roadmap_only → document in feed, never start map/fuel engine without explicit owner go",
     "Execute critical + high before medium/low unless blocked by dependencyGraph",
     "blocked level or status=blocked → document in feed, pick next actionable node",
     "experimental → no fully_done without validation evidence",

@@ -1,8 +1,8 @@
 {
   "version": "1.0",
   "lastUpdated": "2026-05-17",
-  "apkVersion": "1.0.6",
-  "runtimeVersion": "1.0.6",
+  "apkVersion": "1.0.7",
+  "runtimeVersion": "1.0.7",
   "easBuildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
   "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
   "portalSafeMode": false,
@@ -15,5 +15,5 @@
   "reportText": null,
   "source": null,
   "gateStatus": "awaiting_owner_device",
-  "instructionsRu": "Установите preview APK 1.0.6 → Driver → Маршруты GPS · чеклист 8/8 → «Скопировать отчёт» → вставьте на /operations/live"
+  "instructionsRu": "Установите preview APK 1.0.7 (после EAS build) → Вход Google → Маршруты GPS · чеклист 8/8 → «Скопировать отчёт» → /operations/live"
 }

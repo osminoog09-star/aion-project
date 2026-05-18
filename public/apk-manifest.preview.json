@@ -9,9 +9,9 @@
   "releaseType": "test",
   "releaseNotes": "TEST — проверка цепочки APK/манифест (preview). apkUrl — плейсхолдер; после eas build FINISHED для 1.0.4 подставьте прямой URL артефакта (eas build:view --json → artifacts).\nSynced from EAS eb4250a2-8702-4c47-af49-0e5b75eb9724 (ccc2357ca9e6a7665ee37339932f1b1d8a7997fd).",
   "changelog": [
-    "Driver 1.0.4 / android versionCode 6 — ACCESS_BACKGROUND_LOCATION + experimental TaskManager path (off by default).",
-    "releaseType=test; не для production-канала.",
-    "OTA без смены runtime остаётся на канале preview; APK — при смене native/runtime."
+    "Текущий manifest: 1.0.6 (eb4250a2). В репо код 1.0.7: Google Sign-In + aion-driver:// intentFilters — нужен новый EAS preview build.",
+    "После FINISHED: npm run release:apk-manifest:sync <buildId>",
+    "Field validation 8/8 на устройстве → отчёт на /operations/live"
   ],
   "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
   "critical": false,

@@ -2,10 +2,11 @@
   "version": "1.0",
   "phase": "field_validation_gate",
   "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
-  "updatedAt": "2026-05-17T14:00:00.000Z",
-  "apkVersion": "1.0.6",
+  "updatedAt": "2026-05-18T19:30:00.000Z",
+  "apkVersion": "1.0.7",
   "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
   "roadmapSynced": true,
-  "humanBoundary": "field_validation_8_8_on_device",
-  "note": "Roadmap JSON synced to 1.0.6. CI tests green. Owner: Маршруты → paste /operations/live."
+  "strategicRoadmapSynced": true,
+  "humanBoundary": "eas_build_1_0_7_then_field_validation_8_8",
+  "note": "Код 1.0.7 (Google OAuth native). Запустить EAS Build Driver (preview) → manifest sync → Маршруты 8/8 → /operations/live."
 }

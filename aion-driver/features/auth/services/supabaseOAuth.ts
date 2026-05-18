@@ -73,7 +73,7 @@ export async function signInWithOAuthRedirect(
           access_token,
           refresh_token,
         });
-        if (se) return { ok: false, message: se.message };
+        if (se) return { ok: false, message: translateAuthError(se.message) };
         return { ok: true };
       }
     }

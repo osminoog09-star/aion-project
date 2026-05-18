@@ -35,7 +35,15 @@ export function translateAuthError(message: string | undefined | null): string {
     return "Вход через Google ещё не включён на сервере. Нужны Client ID и Secret в Supabase → Auth → Google.";
   }
   if (m.includes("redirect_uri_mismatch") || m.includes("redirect uri")) {
-    return "Неверный redirect URI в Google Cloud. Добавьте callback Supabase (см. npm run auth:google-setup).";
+    return "Неверный redirect в Google Cloud. Добавьте URI: https://eclrkusmwcrtnxqhzpky.supabase.co/auth/v1/callback";
+  }
+  if (
+    m.includes("access_denied") ||
+    m.includes("access blocked") ||
+    m.includes("app is blocked") ||
+    m.includes("has not completed the google verification")
+  ) {
+    return "Google отклонил вход. Добавьте свой Gmail в Google Cloud → OAuth consent screen → Test users.";
   }
   if (m.includes("invalid_client") || m.includes("unauthorized_client")) {
     return "Неверный Google Client ID или Secret в Supabase.";

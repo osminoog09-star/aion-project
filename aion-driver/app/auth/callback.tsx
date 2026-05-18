@@ -4,6 +4,7 @@ import { Redirect, useLocalSearchParams, useRouter } from "expo-router";
 import * as Linking from "expo-linking";
 import { supabase } from "../../lib/supabase";
 import { establishSessionFromCallbackUrl } from "../../features/auth/services/establishSessionFromCallback";
+import { translateAuthError } from "../../features/auth/services/authErrorRu";
 
 type Phase = "loading" | "done" | "error";
 
@@ -30,7 +31,9 @@ export default function AuthCallbackScreen() {
     const run = async () => {
       const oauthErr = firstParam(params.error_description);
       if (oauthErr) {
-        setMessage(decodeURIComponent(oauthErr.replace(/\+/g, " ")));
+        setMessage(
+          translateAuthError(decodeURIComponent(oauthErr.replace(/\+/g, " "))),
+        );
         setPhase("error");
         return;
       }

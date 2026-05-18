@@ -1,4 +1,4 @@
-# OTA preview для aion-driver (канал preview, runtime 1.0.6)
+# OTA preview для aion-driver (канал preview, runtime = app version)
 name: Driver OTA Preview
 
 on:

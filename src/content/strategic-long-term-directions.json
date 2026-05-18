@@ -2,7 +2,7 @@
   "lastUpdated": "2026-05-17",
   "aiStrategyRu": {
     "title": "Стратегия AI и дифференциация AION",
-    "immediateFocusRu": "Сейчас: field validation 8/8 на APK 1.0.6, единый shift runtime, честная экономика смены — без запуска map engine.",
+    "immediateFocusRu": "Сейчас: APK 1.0.7 (Google OAuth native) + field validation 8/8, единый shift runtime, честная экономика смены — без map engine.",
     "longTermFocusRu": "Долгосрок: собственная картографическая и runtime-платформа Driver + автоматический учёт топлива и себестоимости километра — core differentiation экосистемы.",
     "paragraphs": [
       "AION отличается не «ещё одним таксометром», а связкой: реальный километраж → классификация движения (заказ / подача / порожняк) → экономика после топлива → карта и маршрут как единая операционная ОС водителя.",

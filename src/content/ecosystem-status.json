@@ -32,8 +32,8 @@
     ]
   },
   "execution": {
-    "currentPriority": "PRIMARY: field validation 8/8 на APK 1.0.6 (Driver Intelligence Core). Параллельно: FGS production gate + time intelligence (route timeline).",
-    "nextPriority": "Owner: установить APK 1.0.6 → Маршруты → paste 8/8 отчёт в /operations/live; затем BACKGROUND_TRACKING_PRODUCTION_READY review + OTA smoke.",
+    "currentPriority": "PRIMARY: preview APK 1.0.7 (Google OAuth + deep link native) → field validation 8/8. Supabase Google: включён.",
+    "nextPriority": "GitHub: EAS Build Driver (preview) → FINISHED → manifest sync → установить APK 1.0.7 → Маршруты 8/8 → /operations/live → OTA smoke.",
     "blockedTasks": [
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
@@ -55,8 +55,8 @@
     "snapshotKinds": ["portal_ecosystem", "portal_roadmap_master", "portal_releases"]
   },
   "sprint": {
-    "label": "Ecosystem audit + live roadmap",
-    "focus": "Единый JSON-источник правды, страница статуса, операционная сетка, честные проценты по подсистемам."
+    "label": "Production gate + стратегический roadmap",
+    "focus": "Сейчас: APK 1.0.7 build + field validation 8/8. Долгосрок (roadmap only): Maps Runtime OS + Fuel Intelligence — без engine в этом спринте."
   },
   "readiness": {
     "mobile": 68,
@@ -88,8 +88,8 @@
       "label": "APK / manifest",
       "percent": 82,
       "status": "partially_done",
-      "summary": "Preview APK 1.0.6 (EAS eb4250a2) на проде; manifest synced; signoff YES. Осталось: device field validation 8/8 + owner report.",
-      "lastSignal": "public/apk-manifest.preview.json runtime 1.0.6 + stabilization signoff"
+      "summary": "APK 1.0.6 на проде (eb4250a2). Код 1.0.7: Google OAuth + Android intentFilters — нужен новый EAS preview build + manifest sync. Затем 8/8 на устройстве.",
+      "lastSignal": "app.config 1.0.7 / versionCode 11; auth:verify OK"
     },
     {
       "id": "releases-json",
@@ -633,11 +633,12 @@
   ],
   "epics": {
     "active": [
+      "Field validation 8/8 · APK 1.0.6",
+      "AION Maps & Driver Runtime OS (стратегия · roadmap only)",
+      "Operational Fuel & Cost Intelligence (стратегия · roadmap only)",
       "Master roadmap UI (/ecosystem, /operations)",
       "Live ecosystem status (/status)",
-      "Update transparency completion",
-      "Release DB + RLS",
-      "AION Link cloud pairing"
+      "Release DB + RLS"
     ],
     "completed": [
       "AION Core diagnostics baseline",
