@@ -40,6 +40,10 @@ jobs:
         working-directory: ${{ env.AION_DRIVER_MODULE }}
         run: npm run validate
 
+      - name: Verify Expo config (EAS reads app.config)
+        working-directory: ${{ env.AION_DRIVER_MODULE }}
+        run: npx expo config --json --type public > /dev/null
+
       - uses: expo/expo-github-action@v8
         if: ${{ env.EXPO_TOKEN != '' }}
         with:
