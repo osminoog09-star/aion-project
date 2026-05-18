@@ -8,6 +8,8 @@ type ReportPayload = {
   totalCount: number;
   submittedAt: string | null;
   reportText: string | null;
+  instructionsRu?: string;
+  apkVersion?: string;
 };
 
 export function OwnerFieldValidationReportPanel() {
@@ -45,7 +47,11 @@ export function OwnerFieldValidationReportPanel() {
       const data = (await res.json()) as { ok?: boolean; error?: string; report?: ReportPayload };
       if (!res.ok) {
         setStatus("err");
-        setMessage(data.error ?? `HTTP ${res.status}`);
+        setMessage(
+          res.status === 401
+            ? "Нужен вход владельца: откройте /operations/priorities и введите OPERATIONS_OWNER_SECRET"
+            : (data.error ?? `HTTP ${res.status}`),
+        );
         return;
       }
       setStatus("ok");
@@ -69,8 +75,17 @@ export function OwnerFieldValidationReportPanel() {
       </p>
       <p className="mt-2 text-sm text-slate-400">
         На телефоне: Маршруты → <span className="text-cyan-300">Скопировать отчёт</span> → вставьте
-        ниже (нужен вход владельца на портале).
+        ниже (нужен вход владельца на портале). Сейчас 8/8 не блокирует OTA — полный gate включим
+        позже.
       </p>
+      {report?.instructionsRu ? (
+        <p className="mt-2 rounded-lg border border-cyan-500/20 bg-cyan-500/5 px-3 py-2 text-xs text-cyan-100/90">
+          {report.instructionsRu}
+          {report.apkVersion ? (
+            <span className="mt-1 block text-slate-500">APK: {report.apkVersion}</span>
+          ) : null}
+        </p>
+      ) : null}
       {report?.submittedAt ? (
         <p className="mt-3 text-sm text-white">
           Последний снимок:{" "}

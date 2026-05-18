@@ -261,6 +261,7 @@ export type ImplementationFeedPayload = {
 
 /** Strategic priority control (MASTER §9). */
 export type StrategicPriorityLevel =
+  | "strategic"
   | "critical"
   | "high"
   | "medium"
@@ -272,7 +273,46 @@ export type StrategicPriorityStatus =
   | "not_started"
   | "in_progress"
   | "done"
-  | "blocked";
+  | "blocked"
+  | "roadmap_only";
+
+export type InfraComplexity = "low" | "medium" | "high" | "very_high";
+export type RiskLevel = "low" | "medium" | "high";
+
+export type LongTermDirectionPhase = {
+  id: string;
+  titleRu: string;
+  summaryRu: string;
+  status: "planned" | "in_progress" | "done";
+  infraComplexity: InfraComplexity;
+  riskLevel: RiskLevel;
+  etaWindowRu?: string;
+};
+
+export type StrategicLongTermDirection = {
+  id: string;
+  titleRu: string;
+  taglineRu: string;
+  horizon: "long_term";
+  implementationMode: "roadmap_only";
+  importanceRu: string;
+  driverIntelligenceLinkRu: string;
+  problemsSolvedRu: string[];
+  phases: LongTermDirectionPhase[];
+  dependencyPriorityIds: string[];
+  infraComplexityOverall: InfraComplexity;
+  riskLevelOverall: RiskLevel;
+  selfHostArchitectureRu: string;
+  futureCapabilitiesRu: string[];
+  notNowRu: string;
+};
+
+export type AiStrategySectionRu = {
+  title: string;
+  immediateFocusRu: string;
+  longTermFocusRu: string;
+  paragraphs: string[];
+};
 
 export type StrategicPriorityItem = {
   id: string;
@@ -320,6 +360,8 @@ export type StrategicPrioritiesPayload = {
   priorities: StrategicPriorityItem[];
   dependencyGraph: ExecutionDependencyNode[];
   cursorAdaptationRules: string[];
+  aiStrategyRu?: AiStrategySectionRu;
+  longTermDirections?: StrategicLongTermDirection[];
 };
 
 export type ExecutionQueue = {

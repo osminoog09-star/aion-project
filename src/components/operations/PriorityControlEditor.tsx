@@ -18,6 +18,7 @@ import {
 } from "@/lib/operations/priority-validation";
 
 const LEVELS: StrategicPriorityLevel[] = [
+  "strategic",
   "critical",
   "high",
   "medium",
@@ -31,6 +32,7 @@ const STATUSES: StrategicPriorityStatus[] = [
   "in_progress",
   "done",
   "blocked",
+  "roadmap_only",
 ];
 
 type Props = {

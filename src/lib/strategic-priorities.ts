@@ -1,4 +1,5 @@
 import strategicPrioritiesJson from "@/content/strategic-priorities.json";
+import strategicLongTermJson from "@/content/strategic-long-term-directions.json";
 import { createPortalSupabase } from "@/lib/supabase/portal-client";
 import type {
   ExecutionDependencyNode,
@@ -10,6 +11,7 @@ import type {
 export const SNAPSHOT_KIND_STRATEGIC_PRIORITIES = "portal_strategic_priorities";
 
 const LEVEL_ORDER: Record<StrategicPriorityLevel, number> = {
+  strategic: -1,
   critical: 0,
   high: 1,
   medium: 2,
@@ -18,15 +20,29 @@ const LEVEL_ORDER: Record<StrategicPriorityLevel, number> = {
   experimental: 5,
 };
 
+function mergeLongTerm(
+  base: StrategicPrioritiesPayload,
+): StrategicPrioritiesPayload {
+  const lt = strategicLongTermJson as {
+    aiStrategyRu: StrategicPrioritiesPayload["aiStrategyRu"];
+    longTermDirections: StrategicPrioritiesPayload["longTermDirections"];
+  };
+  return {
+    ...base,
+    aiStrategyRu: lt.aiStrategyRu,
+    longTermDirections: lt.longTermDirections,
+  };
+}
+
 export function getLocalStrategicPriorities(): StrategicPrioritiesPayload {
-  return strategicPrioritiesJson as StrategicPrioritiesPayload;
+  return mergeLongTerm(strategicPrioritiesJson as StrategicPrioritiesPayload);
 }
 
 function parsePayload(raw: unknown): StrategicPrioritiesPayload | null {
   if (!raw || typeof raw !== "object") return null;
   const o = raw as StrategicPrioritiesPayload;
   if (!Array.isArray(o.priorities) || !Array.isArray(o.dependencyGraph)) return null;
-  return o;
+  return mergeLongTerm(o);
 }
 
 export async function fetchCloudStrategicPriorities(
@@ -87,7 +103,11 @@ export function getBlockedDependencies(graph: ExecutionDependencyNode[]): Execut
 
 export function buildAutonomousNextTargets(payload: StrategicPrioritiesPayload): string[] {
   const sorted = sortPriorities(payload.priorities).filter(
-    (p) => p.level !== "blocked" && p.status !== "done" && p.status !== "blocked",
+    (p) =>
+      p.level !== "blocked" &&
+      p.status !== "done" &&
+      p.status !== "blocked" &&
+      p.status !== "roadmap_only",
   );
   const targets: string[] = [];
   if (payload.ownerDirective) targets.push(`Owner: ${payload.ownerDirective}`);
@@ -115,6 +135,8 @@ export function priorityLevelBadgeClass(level: StrategicPriorityLevel): string {
       return "border-rose-500/30 bg-rose-950/40 text-rose-200/80";
     case "experimental":
       return "border-violet-500/40 bg-violet-500/10 text-violet-200";
+    case "strategic":
+      return "border-fuchsia-500/45 bg-fuchsia-500/12 text-fuchsia-100";
     default:
       return "border-white/10 bg-white/5 text-slate-300";
   }

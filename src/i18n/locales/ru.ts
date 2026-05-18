@@ -96,6 +96,7 @@ export const ru = {
       unknown: "неизвестно",
     },
     priorityLevel: {
+      strategic: "стратегический",
       critical: "критический",
       high: "высокий",
       medium: "средний",
@@ -108,6 +109,7 @@ export const ru = {
       in_progress: "в работе",
       done: "готово",
       blocked: "заблокировано",
+      roadmap_only: "только roadmap",
     },
     confidence: {
       high: "высокая",

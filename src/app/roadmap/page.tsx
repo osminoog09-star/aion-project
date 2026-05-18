@@ -13,6 +13,10 @@ import {
 import { RoadmapHubLinks } from "@/components/ecosystem/MasterRoadmapPanels";
 import type { EcosystemSubsystem } from "@/lib/ecosystem-types";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
+import { StrategicLongTermPanel } from "@/components/operations/StrategicLongTermPanel";
+import { getStrategicPriorities } from "@/lib/strategic-priorities";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Roadmap — модульная платформа AION",
@@ -41,7 +45,7 @@ function SubsystemRoadmapCard({ s }: { s: EcosystemSubsystem }) {
 }
 
 export default async function RoadmapPage() {
-  const eco = await getEcosystemStatus();
+  const [eco, strategic] = await Promise.all([getEcosystemStatus(), getStrategicPriorities()]);
   const avgPillar = averageReadiness(eco.readiness);
   const avgSub = averageSubsystemPercent(eco.subsystems);
 
@@ -62,6 +66,18 @@ export default async function RoadmapPage() {
         <div>
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Подсистемы Ø</p>
           <p className="text-2xl font-bold text-violet-200">{avgSub}%</p>
+        </div>
+      </section>
+
+      <section className="mt-10 rounded-2xl border border-fuchsia-500/25 bg-fuchsia-950/10 p-6 md:p-8">
+        <h2 className="text-sm font-bold uppercase tracking-widest text-fuchsia-400/90">
+          Стратегические направления (долгосрок)
+        </h2>
+        <p className="mt-2 text-sm text-slate-500">
+          Roadmap priority и architecture direction — без запуска map engine в текущем спринте.
+        </p>
+        <div className="mt-6">
+          <StrategicLongTermPanel payload={strategic} embedded />
         </div>
       </section>
 

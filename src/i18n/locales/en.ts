@@ -95,6 +95,7 @@ export const en = {
       unknown: "unknown",
     },
     priorityLevel: {
+      strategic: "strategic",
       critical: "critical",
       high: "high",
       medium: "medium",
@@ -107,6 +108,7 @@ export const en = {
       in_progress: "in progress",
       done: "done",
       blocked: "blocked",
+      roadmap_only: "roadmap only",
     },
     confidence: {
       high: "high",

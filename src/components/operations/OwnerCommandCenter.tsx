@@ -8,6 +8,8 @@ import { LiveExecutionPanel } from "./LiveExecutionPanel";
 import { ReadinessMetricsGrid } from "./ReadinessMetricsGrid";
 import { DependencyGraphPanel } from "./DependencyGraphPanel";
 import { ValidationDeployCenter } from "./ValidationDeployCenter";
+import { StrategicLongTermPanel } from "./StrategicLongTermPanel";
+import { getLocalStrategicPriorities } from "@/lib/strategic-priorities";
 
 function TaskQueue({ items }: { items: OwnerCommandCenterView["taskQueue"] }) {
   const statusStyle = {
@@ -71,6 +73,7 @@ function NarrationStream({ items }: { items: OwnerCommandCenterView["narration"]
 
 export function OwnerCommandCenter({ view }: { view: OwnerCommandCenterView }) {
   const heal = selfHealOwnerCard(view.runtime);
+  const strategicPayload = getLocalStrategicPriorities();
 
   return (
     <div className="space-y-12">
@@ -148,6 +151,12 @@ export function OwnerCommandCenter({ view }: { view: OwnerCommandCenterView }) {
           <div className="flex flex-col gap-2 sm:flex-row xl:flex-col">
             <Link
               href={ecosystemRoutes.operationsLive}
+              className="rounded-xl border border-emerald-500/45 bg-emerald-500/15 px-4 py-2.5 text-center text-sm font-semibold text-emerald-100 hover:bg-emerald-500/25"
+            >
+              Чеклист 8/8 · вставить отчёт →
+            </Link>
+            <Link
+              href={ecosystemRoutes.operationsLive}
               className="rounded-xl border border-cyan-500/40 bg-cyan-500/15 px-4 py-2.5 text-center text-sm font-semibold text-cyan-100 hover:bg-cyan-500/25"
             >
               Живой поток AI →
@@ -184,6 +193,10 @@ export function OwnerCommandCenter({ view }: { view: OwnerCommandCenterView }) {
         ) : null}
 
         <p className="mt-4 text-xs leading-relaxed text-slate-600">{view.primaryObjectiveRu}</p>
+      </section>
+
+      <section className="rounded-3xl border border-fuchsia-500/20 bg-fuchsia-950/15 p-6 md:p-8">
+        <StrategicLongTermPanel payload={strategicPayload} />
       </section>
 
       <section>

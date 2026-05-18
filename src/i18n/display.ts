@@ -16,6 +16,7 @@ const deployStatusKeys = ["ok", "in_progress", "failed", "stale"] as const;
 const validationKeys = ["passed", "failed", "pending", "unknown"] as const;
 
 const priorityLevelKeys = [
+  "strategic",
   "critical",
   "high",
   "medium",
@@ -24,7 +25,13 @@ const priorityLevelKeys = [
   "experimental",
 ] as const;
 
-const priorityStatusKeys = ["not_started", "in_progress", "done", "blocked"] as const;
+const priorityStatusKeys = [
+  "not_started",
+  "in_progress",
+  "done",
+  "blocked",
+  "roadmap_only",
+] as const;
 
 const confidenceKeys = ["high", "medium", "low", "unknown"] as const;
 

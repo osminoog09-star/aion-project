@@ -1,0 +1,165 @@
+{
+  "lastUpdated": "2026-05-17",
+  "aiStrategyRu": {
+    "title": "Стратегия AI и дифференциация AION",
+    "immediateFocusRu": "Сейчас: field validation 8/8 на APK 1.0.6, единый shift runtime, честная экономика смены — без запуска map engine.",
+    "longTermFocusRu": "Долгосрок: собственная картографическая и runtime-платформа Driver + автоматический учёт топлива и себестоимости километра — core differentiation экосистемы.",
+    "paragraphs": [
+      "AION отличается не «ещё одним таксометром», а связкой: реальный километраж → классификация движения (заказ / подача / порожняк) → экономика после топлива → карта и маршрут как единая операционная ОС водителя.",
+      "Driver Intelligence — фундамент: смена, OCR, rollups, stop zones. Maps & Runtime OS и Fuel & Cost Intelligence — стратегические ветки с отдельным roadmap и architecture planning; реализация map engine не начинается до закрытия текущего production gate.",
+      "AI-native слой строится поверх честных данных GPS и расходов, а не подменяет их синтетическими heatmap."
+    ]
+  },
+  "longTermDirections": [
+    {
+      "id": "aion-maps-driver-runtime-os",
+      "titleRu": "AION Maps & Driver Runtime OS",
+      "taglineRu": "Собственная операционная карта водителя — не клон навигатора, а runtime для километража, подач и прибыли.",
+      "horizon": "long_term",
+      "implementationMode": "roadmap_only",
+      "importanceRu": "Это главное долгосрочное конкурентное преимущество AION: контроль над тем, как считаются километры, как матчится GPS к дороге и как водитель видит операционную карту смены в реальном времени. Без своего road graph и routing engine мы навсегда зависим от чужих карт и не можем честно разделить «км в заказе» vs «км в порожняке».",
+      "driverIntelligenceLinkRu": "Driver Intelligence даёт смену, прибыль и GPS-снимки. Maps & Runtime OS превращает эти снимки в точный road-matched километраж, визуальную операционную карту и будущий движок маршрутизации — единый runtime, а не разрозненные экраны.",
+      "problemsSolvedRu": [
+        "Реальный километраж вместо «прямой линии» и шума GPS",
+        "Порожняк и подача как отдельные классы движения с влиянием на прибыль",
+        "Операционная карта смены: где водитель теряет время и деньги",
+        "Основа для предиктивного расхода топлива и AI-зон прибыльности",
+        "Self-host карта и граф без vendor lock-in навигации"
+      ],
+      "phases": [
+        {
+          "id": "maps-phase-gps-intelligence",
+          "titleRu": "GPS Intelligence",
+          "summaryRu": "Качество сырого трека: фильтрация, сегментация смены, классы движения (заказ / подача / порожняк / личное).",
+          "status": "planned",
+          "infraComplexity": "medium",
+          "riskLevel": "medium",
+          "etaWindowRu": "после field validation 8/8"
+        },
+        {
+          "id": "maps-phase-road-matching",
+          "titleRu": "Road Matching",
+          "summaryRu": "Map-matching GPS к дорожному графу; честные км по типам движения.",
+          "status": "planned",
+          "infraComplexity": "high",
+          "riskLevel": "high",
+          "etaWindowRu": "архитектура + spike"
+        },
+        {
+          "id": "maps-phase-operational-driver-map",
+          "titleRu": "Operational Driver Map",
+          "summaryRu": "Карта смены для водителя: трек, зоны, подача/порожняк, stop zones — не consumer navigation clone.",
+          "status": "planned",
+          "infraComplexity": "high",
+          "riskLevel": "medium",
+          "etaWindowRu": "после road matching v0"
+        },
+        {
+          "id": "maps-phase-runtime-routing-engine",
+          "titleRu": "Runtime Routing Engine",
+          "summaryRu": "Маршрутизация в контексте смены: ETA сегментов, пересчёт при отклонении, связь с экономикой.",
+          "status": "planned",
+          "infraComplexity": "very_high",
+          "riskLevel": "high",
+          "etaWindowRu": "H2 2026+"
+        },
+        {
+          "id": "maps-phase-ai-native-maps-platform",
+          "titleRu": "AI-native Maps Platform",
+          "summaryRu": "AI-слой поверх графа: рекомендации зон, предупреждения, предиктивный пробег и расход — только на verified km.",
+          "status": "planned",
+          "infraComplexity": "very_high",
+          "riskLevel": "high",
+          "etaWindowRu": "2027+"
+        }
+      ],
+      "dependencyPriorityIds": [
+        "driver-intelligence-core",
+        "unified-shift-runtime",
+        "route-gps-store",
+        "time-intelligence"
+      ],
+      "infraComplexityOverall": "very_high",
+      "riskLevelOverall": "high",
+      "selfHostArchitectureRu": "Целевая архитектура: self-host tile/graph pipeline (OSM-derived или лицензированный graph), ingestion workers, matching service, routing service API, mobile SDK слой в Driver. Портал — observability и rollout картографических версий. Без обязательной зависимости от Google/Mapbox для core km truth; внешние провайдеры — опциональный fallback на этапе spike.",
+      "futureCapabilitiesRu": [
+        "Точный km по дороге",
+        "Классификация подача/порожняк/заказ",
+        "Операционная карта смены",
+        "Runtime routing в контексте прибыли",
+        "Предиктивный расход топлива на маршруте"
+      ],
+      "notNowRu": "Не начинать map engine, tile server и routing сейчас. Только roadmap, ADR, data model, dependency graph."
+    },
+    {
+      "id": "operational-fuel-cost-intelligence",
+      "titleRu": "Operational Fuel & Cost Intelligence",
+      "taglineRu": "AION понимает реальные расходы водителя автоматически — не только доход, но себестоимость каждого километра.",
+      "horizon": "long_term",
+      "implementationMode": "roadmap_only",
+      "importanceRu": "Водитель принимает решения по «чистой» прибыли. Без автоматического учёта топлива, литров и стоимости 100 км все зоны «прибыльные» на карте — иллюзия. Это стратегическое направление связывает OCR/ручной ввод заправок с GPS-классами и будущей картой.",
+      "driverIntelligenceLinkRu": "Driver Intelligence уже считает доход смены. Fuel & Cost Intelligence добавляет operationalCosts: расход, ₽/100 км, прибыль после топлива по дням/неделям/месяцам и разрез по типам движения (когда Maps даст классификацию km).",
+      "problemsSolvedRu": [
+        "Умная заправка: сумма + литры + тип топлива → расход и себестоимость",
+        "Связь топлива с GPS: сколько ушло на заказы, подачу, порожняк, поиск, домой",
+        "AI Driver Economics: где теряются деньги (пробки, холостой пробег, стиль)",
+        "Прибыльные зоны на основе реальных затрат, не только gross",
+        "Интеграция с AION Maps для предиктивного расхода на маршруте"
+      ],
+      "phases": [
+        {
+          "id": "fuel-phase-smart-refuel",
+          "titleRu": "Умная заправка",
+          "summaryRu": "Ввод суммы/литров/типа топлива; автоматический ₽/100 км, расход, прибыль после топлива по периодам.",
+          "status": "planned",
+          "infraComplexity": "medium",
+          "riskLevel": "low",
+          "etaWindowRu": "после OCR v1 + shift economics"
+        },
+        {
+          "id": "fuel-phase-gps-cost-allocation",
+          "titleRu": "Связь с GPS и маршрутами",
+          "summaryRu": "Распределение топлива по классам km: заказ, подача, порожняк, поиск, личное.",
+          "status": "planned",
+          "infraComplexity": "high",
+          "riskLevel": "medium",
+          "etaWindowRu": "зависит от Maps phase 1–2"
+        },
+        {
+          "id": "fuel-phase-ai-driver-economics",
+          "titleRu": "AI Driver Economics",
+          "summaryRu": "Зоны прибыли/потерь, пробки, неэффективные маршруты, стиль вождения, расход.",
+          "status": "planned",
+          "infraComplexity": "high",
+          "riskLevel": "medium",
+          "etaWindowRu": "после allocation v0"
+        },
+        {
+          "id": "fuel-phase-maps-integration",
+          "titleRu": "Интеграция с AION Maps",
+          "summaryRu": "Runtime routing + road graph + predictive fuel на маршруте смены.",
+          "status": "planned",
+          "infraComplexity": "very_high",
+          "riskLevel": "high",
+          "etaWindowRu": "после Maps Runtime Routing"
+        }
+      ],
+      "dependencyPriorityIds": [
+        "driver-intelligence-core",
+        "ocr-production-queue",
+        "unified-shift-runtime",
+        "aion-maps-driver-runtime-os"
+      ],
+      "infraComplexityOverall": "high",
+      "riskLevelOverall": "medium",
+      "selfHostArchitectureRu": "Данные: fuel_events (OCR + manual), shift_economics aggregates, позже road_matched_segments из Maps pipeline. Postgres/Supabase + edge-кэш в Driver. Без отдельного fuel SaaS — всё в экосистемном graph событий смены.",
+      "futureCapabilitiesRu": [
+        "Автоматический ₽/100 км и прибыль после топлива",
+        "Расход по типам движения",
+        "AI-зоны реальной прибыли",
+        "Предиктивный расход на маршруте"
+      ],
+      "notNowRu": "Не делать full fuel ML и allocation engine сейчас. Roadmap, модель данных, milestones, связь с приоритетами."
+    }
+  ]
+}

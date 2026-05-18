@@ -11,6 +11,7 @@ import { PriorityControlEditor } from "@/components/operations/PriorityControlEd
 import { t } from "@/i18n";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
 import { isOwnerAuthenticated, isOwnerAuthConfigured } from "@/lib/operations/owner-auth";
+import { StrategicLongTermPanel } from "@/components/operations/StrategicLongTermPanel";
 import { buildAutonomousNextTargets, getStrategicPriorities } from "@/lib/strategic-priorities";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
@@ -59,6 +60,10 @@ export default async function OperationsPrioritiesPage() {
       <div className="mt-10">
         <OwnerDirectivePanel payload={payload} />
       </div>
+
+      <section className="mt-12 rounded-2xl border border-fuchsia-500/25 bg-fuchsia-950/10 p-6 md:p-8">
+        <StrategicLongTermPanel payload={payload} />
+      </section>
 
       <section className="mt-10">
         <h2 className="text-xs font-bold uppercase tracking-widest text-cyan-400/90">
