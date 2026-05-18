@@ -21,6 +21,7 @@ import { useAuth } from "../features/auth/hooks/useAuth";
 import { BugReportModal } from "../features/feedback/BugReportModal";
 import { syncLocalUserProfileToCloud } from "../features/cloud/repositories/profileRepository";
 import { enqueueSyncOperation, peekSyncQueue } from "../features/sync/services/offlineQueue";
+import { flushSyncQueue } from "../features/sync/services/syncEngine";
 import { useTheme } from "../contexts/ThemeContext";
 import type { MotionIntensity, VisualStyleId } from "../src/theme";
 import { VISUAL_STYLE_IDS } from "../src/theme";
@@ -37,7 +38,7 @@ import type { UserProfile } from "../types";
 import type { RentalPeriod } from "../types/rental";
 
 export function SettingsScreen() {
-  const { session } = useAuth();
+  const { session, isGuest } = useAuth();
   const {
     settings,
     setCompanionMode,
@@ -63,6 +64,7 @@ export function SettingsScreen() {
   const [fixedOpsPerDay, setFixedOpsPerDay] = useState("");
   const [saving, setSaving] = useState(false);
   const [syncQueueLen, setSyncQueueLen] = useState(0);
+  const [syncBusy, setSyncBusy] = useState(false);
   const [otaBusy, setOtaBusy] = useState(false);
   const [otaDialog, setOtaDialog] = useState<string | null>(null);
   const [bugOpen, setBugOpen] = useState(false);
@@ -109,6 +111,21 @@ export function SettingsScreen() {
     const q = await peekSyncQueue();
     setSyncQueueLen(q.length);
   }, []);
+
+  const runSyncNow = useCallback(async () => {
+    const uid = session?.user?.id;
+    if (!uid || isGuest || !isSupabaseConfigured()) {
+      await refreshSyncQueue();
+      return;
+    }
+    setSyncBusy(true);
+    try {
+      await flushSyncQueue(uid);
+    } finally {
+      await refreshSyncQueue();
+      setSyncBusy(false);
+    }
+  }, [session?.user?.id, isGuest, refreshSyncQueue]);
 
   useFocusEffect(
     useCallback(() => {
@@ -312,15 +329,27 @@ export function SettingsScreen() {
                 Очередь офлайн-операций:{" "}
                 <Text className="font-semibold text-cyan-200">{syncQueueLen}</Text>
                 {syncQueueLen > 0
-                  ? " — будут отправлены при сети и входе в аккаунт."
+                  ? session && !isGuest
+                    ? " — смены и профиль ждут отправки в облако."
+                    : " — войдите в аккаунт, чтобы отправить."
                   : " — всё синхронизировано."}
               </Text>
-              <GradientButton
-                title="Обновить статус"
-                variant="ghost"
-                className="mt-4"
-                onPress={() => void refreshSyncQueue()}
-              />
+              <View className="mt-4 flex-row flex-wrap gap-2">
+                <GradientButton
+                  title={syncBusy ? "Синхронизация…" : "Синхронизировать сейчас"}
+                  variant="glass"
+                  className="min-w-[48%] flex-1"
+                  loading={syncBusy}
+                  disabled={syncBusy || !session || isGuest || syncQueueLen === 0}
+                  onPress={() => void runSyncNow()}
+                />
+                <GradientButton
+                  title="Обновить статус"
+                  variant="ghost"
+                  className="min-w-[48%] flex-1"
+                  onPress={() => void refreshSyncQueue()}
+                />
+              </View>
             </GlowCard>
 
             <GlowCard glow="neutral" className="mb-4">

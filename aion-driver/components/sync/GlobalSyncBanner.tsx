@@ -77,7 +77,9 @@ export function GlobalSyncBanner() {
         <Text style={{ color: s.textPrimary, fontSize: 12, fontWeight: "600" }}>
           {!online
             ? "Офлайн — данные на устройстве"
-            : `Синхронизация · в очереди ${queueLen} ${queueLen === 1 ? "операция" : "операций"}`}
+            : isGuest || !session
+              ? `В очереди ${queueLen} — войдите в аккаунт для отправки`
+              : `Синхронизация · в очереди ${queueLen} ${queueLen === 1 ? "операция" : "операций"}`}
         </Text>
         <Text style={{ color: s.textTertiary, fontSize: 10, marginTop: 2 }}>{cloudLine}</Text>
       </View>
