@@ -1,8 +1,129 @@
 {
-  "lastUpdated": "2026-05-17",
+  "lastUpdated": "2026-05-18",
   "maintainedInRepository": true,
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
+    {
+      "id": "evt-2026-05-18-e6a51x",
+      "occurredAt": "2026-05-18",
+      "title": "Roadmap sync: APK 1.0.8 + driver ops feedback",
+      "summary": "Обновлены roadmap-execution, ecosystem-status, releases, strategic-priorities, subsystem extensions. APK 1.0.8 FINISHED и manifest на Vercel. Shipped: bug reports (driver_bug_reports), diagnostic log, fuel journal edit/delete, /operations/bugs, ApkUpdate notification chain, OrbView Gradle fix.",
+      "subsystemIds": [
+        "mobile-app",
+        "apk-channel",
+        "operations-center",
+        "updates"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": "a97e4bf",
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "evt-2026-05-18-isdr2o",
+      "occurredAt": "2026-05-18",
+      "title": "Стратегический roadmap: Maps + Fuel",
+      "summary": "Owner-facing RU: AION Maps & Driver Runtime OS и Operational Fuel & Cost Intelligence — этапы, dependency graph, AI strategy; /operations/command, /operations/priorities, /roadmap. Без map/fuel engine.",
+      "subsystemIds": [
+        "operations-center",
+        "web-portal"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "confidence": "high",
+      "changedFiles": [
+        "src/content/strategic-long-term-directions.json",
+        "src/content/strategic-priorities.json",
+        "src/components/operations/StrategicLongTermPanel.tsx"
+      ]
+    },
+    {
+      "id": "evt-2026-05-18-exec-n1tl6r",
+      "occurredAt": "2026-05-18",
+      "title": "AI пишет и улучшает код",
+      "summary": "AI пишет и улучшает код: Route intelligence UX + field validation",
+      "subsystemIds": [
+        "operations-center",
+        "web-portal"
+      ],
+      "eventType": "execution_resumed",
+      "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
+      "confidence": "high",
+      "repository": "aion-project",
+      "changedFiles": [
+        "src/app/operations/command/page.tsx",
+        "src/lib/operations/owner-command-center.ts",
+        "src/components/operations/OwnerCommandCenter.tsx"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ AI пишет и улучшает код"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "none",
+        "backend": "low",
+        "realtime": "high",
+        "ux": "high",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      }
+    },
     {
       "id": "evt-2026-05-17-ekfey9",
       "occurredAt": "2026-05-17",
@@ -1957,9 +2078,9 @@
     {
       "id": "eas_apk_manifest_sync",
       "label": "EAS → apk-manifest.preview.json sync",
-      "lastKnown": "pending",
-      "lastSignalAt": "2026-05-14",
-      "evidence": "scripts/sync-apk-manifest-from-eas.mjs + workflow apk-manifest-from-eas.yml (требует EXPO_TOKEN; auto-deploy нет)"
+      "lastKnown": "passed",
+      "lastSignalAt": "2026-05-18",
+      "evidence": "1.0.8 build 3e8d2c54 synced; eas-build-driver-preview.yml sync-manifest job; Vercel manifest latestVersion 1.0.8"
     },
     {
       "id": "typecheck",
@@ -1984,8 +2105,9 @@
     {
       "id": "apk_build",
       "label": "APK / native pipeline",
-      "lastKnown": "unknown",
-      "evidence": "Вне aion-project (aion-driver / EAS)"
+      "lastKnown": "passed",
+      "lastSignalAt": "2026-05-18",
+      "evidence": "EAS Android preview 1.0.8 FINISHED a97e4bf (OrbView.kt plugin fix)"
     },
     {
       "id": "ota_publish",

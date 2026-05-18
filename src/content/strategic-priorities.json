@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-05-17",
+  "lastUpdated": "2026-05-18",
   "constitutionVersion": "2.0",
   "autonomousOrchestration": "Cursor executes roadmap/priorities/deps autonomously; owner observes /operations/command (Russian) and edits /operations/priorities — no ChatGPT relay.",
   "ownerLanguageRule": "Владелец видит только русский интерфейс. Английский — код и технические детали (свёрнуто).",
-  "ownerDirective": "PRIMARY: EAS APK 1.0.7 → field validation 8/8. Google auth готов. Параллельно: FGS + route intelligence. Долгосрок: Maps OS + Fuel Intelligence (roadmap only).",
+  "ownerDirective": "PRIMARY: APK 1.0.8 установить и smoke (обновления, баг-репорт, топливо). Field validation 8/8 — отложено. Параллельно: Link OCR relay + live profit pulse. Долгосрок: Maps OS + Fuel Intelligence (roadmap only).",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
-  "nextImplementationTarget": "EAS Build Driver (preview) 1.0.7 → FINISHED → manifest → Маршруты 8/8 → /operations/live",
+  "nextImplementationTarget": "Device smoke 1.0.8 → Link pushLinkSnapshot из OCR → live profit pulse → QR pair scanner",
   "executionNotes": "Field validation 8/8 + portal report inbox (/operations/live paste). BG gate hint on device when 8/8. CI: test:field-validation-report in repo:verify. Device gate: owner paste report after 8/8.",
   "priorities": [
     {
@@ -68,9 +68,9 @@
       "title": "APK release loop (device-verified)",
       "level": "high",
       "subsystemIds": ["updates", "apk-channel", "release-ops"],
-      "status": "in_progress",
-      "rationale": "EAS eb4250a2 FINISHED; manifest 1.0.6 на Vercel; signoff YES — осталось device 8/8 + paste отчёта.",
-      "nextAction": "Установить preview APK 1.0.6 → Маршруты → 8/8 → /operations/live",
+      "status": "partially_done",
+      "rationale": "1.0.8 FINISHED + manifest на Vercel; auto-notify в приложении; CI sync после EAS. Device smoke владельца — не 8/8 gate.",
+      "nextAction": "Установить 1.0.8 APK → проверить модалку обновления и /operations/bugs",
       "setAt": "2026-05-17",
       "setBy": "cursor"
     },

@@ -1,6 +1,6 @@
 {
   "mobile-app": {
-    "whatWorks": ["Смена end-to-end", "Garage/карта/OCR happy path", "OTA каналы EAS", "Desktop shell"],
+    "whatWorks": ["Смена end-to-end", "Garage/карта/OCR happy path", "OTA каналы EAS", "Desktop shell", "Журнал заправок edit/delete", "BugReportModal → driver_bug_reports", "diagnosticLog в отчётах"],
     "whatDoesNotWork": ["Не все edge-состояния UI", "Паритет web/mobile не везде"],
     "mocked": [],
     "localOnly": ["Локальная timeline без облачного SoT"],
@@ -23,7 +23,7 @@
     "nextRecommendedStep": "Выбрать один поток (например post-OCR confirm) и довести UX+errors до releaseQualityBar."
   },
   "updates": {
-    "whatWorks": ["Update Center", "OTA check/apply", "APK manifest fetch", "Post-update flow частично"],
+    "whatWorks": ["Update Center", "OTA check/apply", "APK manifest fetch", "ApkUpdateBanner + ApkUpdateModal", "Default manifest URL из portal base", "CI sync manifest после EAS FINISHED"],
     "whatDoesNotWork": ["Полная история и единый engine на всех экранах"],
     "mocked": [],
     "localOnly": ["Локальная история OTA"],
@@ -33,7 +33,7 @@
     "otaImpact": "high",
     "realtimeReadiness": 20,
     "backendReadiness": 35,
-    "productionReadiness": 48,
+    "productionReadiness": 62,
     "architectureState": "Клиентский update engine + портальный mirror; нет единой БД истории.",
     "missingUx": ["История OTA на всех поверхностях", "Единый экран объяснения blocked update"],
     "missingBackend": ["Персистентная история применений в облаке (после release DB)"],
@@ -62,7 +62,7 @@
     "nextRecommendedStep": "Задокументировать и отобразить на /control канал→runtime→последняя известная ревизия из клиента/манифеста."
   },
   "apk-channel": {
-    "whatWorks": ["Манифест JSON", "force/minRuntime в типах", "com/driver fetch"],
+    "whatWorks": ["Манифест JSON 1.0.8 на Vercel", "force/minRuntime в типах", "com/driver fetch", "sync-apk-manifest-from-eas + CI job после EAS"],
     "whatDoesNotWork": ["Центральный signed download hub на com"],
     "requiresApk": ["Всегда для native bump"],
     "otaImpact": "medium",
@@ -76,7 +76,7 @@
     "highestValueImprovement": "Подключить публичный manifest URL и проверку minRuntime на портале.",
     "requiredDependencies": ["deploy", "releases-json"],
     "recommendedNextPhase": "Signed artifacts + политика кэша.",
-    "nextRecommendedStep": "Зафиксировать NEXT_PUBLIC_APK_MANIFEST_URL в проде и проверить паритет полей с клиентом."
+    "nextRecommendedStep": "Device smoke: модалка «1.0.8 доступна» на 1.0.6/1.0.7; затем signed CDN (опционально)."
   },
   "web-portal": {
     "whatWorks": ["Next.js страницы", "Roadmap/status/control", "Supabase merge"],
@@ -226,7 +226,7 @@
     "productionReadiness": 55,
     "subsystemDebt": [
       "OVERLAY_ORB_NATIVE_PRODUCTION_READY=false до полевой приёмки на 2–3 OEM",
-      "Пробросить runtimePulse в OrbView для GPS/upload/error импульсов вне приложения"
+      "auto-dim overlay во время активного GPS — не реализован"
     ],
     "architectureState": "Living sphere + intelligent sync + native overlay orb v1: рендер и интеракция готовы; промо-готовность ждёт field validation (батарея/OEM/lifecycle).",
     "missingUx": [
@@ -276,7 +276,7 @@
     "nextRecommendedStep": "Owner: запустить новый APK, открыть Control Room, оценить sphere idle/syncing/updating; зафиксировать впечатление."
   },
   "operations-center": {
-    "whatWorks": ["/control", "/status", "/operations", "rollout read"],
+    "whatWorks": ["/control", "/status", "/operations", "/operations/bugs", "rollout read"],
     "whatDoesNotWork": ["Signed-in ops", "CI→snapshot writer"],
     "cloudReady": ["Чтение public таблиц"],
     "otaImpact": "none",

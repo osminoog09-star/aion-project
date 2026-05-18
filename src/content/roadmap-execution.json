@@ -52,9 +52,9 @@
     ]
   },
   "executionQueue": {
-    "currentActiveEpic": "AION Runtime Sphere System: living core + intelligent auto-sync + native overlay orb",
-    "currentSubsystemFocus": "aion-runtime-sphere",
-    "nextImplementationTarget": "WAVE 1 shipped (78b15c8): Runtime Sphere + sync engine + native overlay v1. WAVE 2 (autonomous): runtimePulse integrations (GPS/OCR/upload/error), native pulseOrb(kind) + JS bridge, AION Link phase 2 (link_pair_tokens + link_snapshots + Realtime). NEXT: Link pair flow UI (issue/scan QR), live profit pulse on sphere, smart auto-dim opacity overlay during driving.",
+    "currentActiveEpic": "Driver production polish: Link relay + live profit + ops feedback loop",
+    "currentSubsystemFocus": "mobile-app",
+    "nextImplementationTarget": "Автономно: OCR → pushLinkSnapshot + realtime toast; live profit pulse (30s); auto-dim overlay orb. APK 1.0.8 FINISHED + manifest на Vercel — device smoke владельца. Field validation 8/8 — ОТЛОЖЕНО.",
     "autonomousSwimStack": [
       {
         "priority": 1,
@@ -90,7 +90,7 @@
           "linkPairTokens.ts: issue/claim/revoke/list — DONE",
           "linkSnapshots.ts: pushLinkSnapshot + subscribeToLinkSnapshots (Realtime channel) — DONE",
           "database.types.ts regenerated через MCP — DONE",
-          "Pair flow UI (QR issue/scan), AionLinkPairScreen integration — NEXT"
+          "Pair flow UI issue/claim — DONE; QR scanner — NEXT"
         ]
       },
       {
@@ -121,27 +121,56 @@
         "priority": 6,
         "id": "android-background-runtime-production",
         "title": "Включить production background tracking gate",
+        "status": "deferred",
         "tasks": [
-          "computeRouteFieldValidation: 8/8 на одном устройстве",
-          "owner sign-off через /operations/live",
-          "BACKGROUND_TRACKING_PRODUCTION_READY=true"
+          "computeRouteFieldValidation 8/8 + paste в /operations/live — отложено владельцем",
+          "BACKGROUND_TRACKING_PRODUCTION_READY=true — после отдельного sign-off"
         ],
-        "blocked": true,
-        "blockedReason": "Ждёт physical device 8/8"
+        "blocked": false
       },
       {
         "priority": 7,
         "id": "overlay-orb-production-gate",
         "title": "Включить OVERLAY_ORB_NATIVE_PRODUCTION_READY=true",
-        "blocked": true,
-        "blockedReason": "Ждёт field validation на 2 OEM + battery profile"
+        "status": "deferred",
+        "tasks": [
+          "Battery/OEM field profile — без обязательного 8/8 gate",
+          "OVERLAY_ORB_NATIVE_PRODUCTION_READY=true — по готовности, не блокирует текущий swim"
+        ],
+        "blocked": false
+      },
+      {
+        "priority": 8,
+        "id": "apk-release-loop-108",
+        "title": "APK 1.0.8 release loop (manifest + notify)",
+        "status": "shipped",
+        "tasks": [
+          "EAS FINISHED a97e4bf (OrbView.kt в plugin) — DONE",
+          "manifest sync 3e8d2c54 → Vercel 1.0.8 — DONE",
+          "ApkUpdateBanner + default manifest URL + CI auto-sync workflow — DONE",
+          "Device smoke: установка 1.0.8 + модалка обновления — owner"
+        ]
+      },
+      {
+        "priority": 9,
+        "id": "driver-feedback-fuel-ops",
+        "title": "Баг-репорты + журнал заправок + ops inbox",
+        "status": "shipped",
+        "tasks": [
+          "driver_bug_reports (Supabase) + BugReportModal submit — DONE",
+          "diagnosticLog ring buffer + sync/fuel hooks — DONE",
+          "fuel journal edit/delete + profit recalc — DONE",
+          "/operations/bugs portal list — DONE",
+          "Push/email alert owner on new bug — NEXT"
+        ]
       }
     ],
     "blockedTasks": [
-      "EAS preview APK 1.0.8: dispatched (master 78b15c8) — ждёт FINISHED для npm run release:apk-manifest:sync",
-      "Field validation 8/8: ждёт физическое устройство с APK — owner paste отчёта в /operations/live",
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
+    ],
+    "deferredByOwner": [
+      "Field validation 8/8 на устройстве и отчёт на /operations/live — не требуется сейчас"
     ],
     "releaseBlockers": [
       "Release DB + RLS undecided — blocks device registry and signed rollout truth"
@@ -152,7 +181,7 @@
     ],
     "backendBlockers": [
       "Typed repos for roadmap write path from CI not landed",
-      "Link cloud pairing lacks stable realtime contract"
+      "Link OCR relay: pushLinkSnapshot не подключён к OCR pipeline"
     ]
   }
 }

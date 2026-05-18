@@ -9,9 +9,9 @@
   "releaseType": "test",
   "releaseNotes": "TEST — проверка цепочки APK/манифест (preview). apkUrl — плейсхолдер; после eas build FINISHED для 1.0.4 подставьте прямой URL артефакта (eas build:view --json → artifacts).\nSynced from EAS eb4250a2-8702-4c47-af49-0e5b75eb9724 (ccc2357ca9e6a7665ee37339932f1b1d8a7997fd).\nSynced from EAS 6a775e51-7dcc-4c0f-9082-f3a3cc138442 (6683004fbf87c59429c9c63cf738050ce672bdba).\nSynced from EAS 3e8d2c54-1049-4d9b-8373-a9183d1b2aee (a97e4bf18e7edcac69879fafe5612d2108d4cb8b).",
   "changelog": [
-    "1.0.7: Google Sign-In, aion-driver:// deep links, исправления OAuth.",
-    "Скачайте APK и установите поверх старой preview-сборки.",
-    "После установки доступны OTA-обновления интерфейса."
+    "1.0.8: Runtime Sphere, auto-sync, живой overlay orb (OrbView), Link Pair UI.",
+    "1.0.8: баг-репорты в облако, журнал заправок (исправить/удалить).",
+    "Установите поверх preview 1.0.6/1.0.7 — дальше OTA на runtime 1.0.8."
   ],
   "apkUrl": "https://expo.dev/artifacts/eas/8HZWCz19K4FxTx7eCE5LiC.apk",
   "critical": false,

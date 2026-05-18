@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2026-05-14",
+  "lastUpdated": "2026-05-18",
   "maintainedInRepository": true,
   "channels": [
     {
       "id": "preview",
       "label": "Preview",
       "description": "Тестовый канал OTA и preview APK из EAS.",
-      "appVersion": "1.0.4",
-      "notes": "Тестовый bump проверки APK-контура (aion-driver package.json). Production-канал ниже остаётся на 1.0.3 до отдельного релиза."
+      "appVersion": "1.0.8",
+      "notes": "Preview APK 1.0.8 (runtime 1.0.8, versionCode 12). OTA на том же runtime. Манифест: apk-manifest.preview.json."
     },
     {
       "id": "production",
@@ -18,12 +18,24 @@
     }
   ],
   "apk": {
-    "latestKnownVersion": "1.0.4",
+    "latestKnownVersion": "1.0.8",
     "policy": "Новый APK только при изменении нативного слоя, SDK или versionCode; JS/UI — через OTA.",
     "publicManifestUrl": "https://aion-com.vercel.app/apk-manifest.preview.json",
-    "note": "Активный preview build b9d3c90a-7566-425a-bdb9-53d68f59593a (1.0.4 / versionCode 6, commit 9baa6bb) — после FINISHED: npm run release:apk-manifest:sync <id>. Скрипт/workflow: см. ранее. Старые очереди f71cec0a / 9fa827ce не блокируют, если отменены."
+    "note": "Активный preview: EAS 3e8d2c54 (1.0.8 / vc 12, a97e4bf OrbView fix). CI: eas-build-driver-preview → sync-manifest job → push. Красные 1.0.8 до a97e4bf — Gradle без OrbView.kt."
   },
   "history": [
+    {
+      "date": "2026-05-18",
+      "type": "apk",
+      "title": "EAS preview 1.0.8 FINISHED (3e8d2c54)",
+      "detail": "OrbView.kt в withAionOverlayOrb; manifest sync + Vercel; ApkUpdateBanner + default manifest URL. APK: expo.dev/artifacts/eas/8HZWCz19K4FxTx7eCE5LiC.apk"
+    },
+    {
+      "date": "2026-05-18",
+      "type": "feature",
+      "title": "Driver: баг-репорты, diagnostic log, журнал заправок",
+      "detail": "driver_bug_reports + /operations/bugs; fuel edit/delete; BugReportModal cloud submit."
+    },
     {
       "date": "2026-05-14",
       "type": "apk",

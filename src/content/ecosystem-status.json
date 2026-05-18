@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-17",
+  "lastUpdated": "2026-05-18",
   "maintainedInRepository": true,
   "methodology": "Проценты — ручная оценка по коду и продукту на дату lastUpdated: UI/фичи, бэкенд, realtime, прод-UX, граничные случаи, паритет web/mobile, дизайн, тесты, релизная готовность. Автоматического сбора метрик нет; числа не нормируются к «красивым» значениям. Supabase snapshot при наличии может переопределить поля через ecosystem_public_snapshots.",
   "definitionOfDone": [
@@ -32,8 +32,8 @@
     ]
   },
   "execution": {
-    "currentPriority": "PRIMARY: preview APK 1.0.7 (Google OAuth + deep link native) → field validation 8/8. Supabase Google: включён.",
-    "nextPriority": "GitHub: EAS Build Driver (preview) → FINISHED → manifest sync → установить APK 1.0.7 → Маршруты 8/8 → /operations/live → OTA smoke.",
+    "currentPriority": "PRIMARY: preview APK 1.0.8 на Vercel (a97e4bf / 3e8d2c54) → установка на устройство → smoke (обновления, баг-репорт, топливо). Field validation 8/8 — отложено владельцем.",
+    "nextPriority": "Link OCR relay + live profit pulse; QR pair scanner; auto-dim overlay. Ops: /operations/bugs для входящих отчётов.",
     "blockedTasks": [
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
@@ -56,7 +56,7 @@
   },
   "sprint": {
     "label": "Production gate + стратегический roadmap",
-    "focus": "Сейчас: APK 1.0.7 build + field validation 8/8. Долгосрок (roadmap only): Maps Runtime OS + Fuel Intelligence — без engine в этом спринте."
+    "focus": "Сейчас: APK 1.0.8 device smoke + Link relay + ops feedback. Долгосрок (roadmap only): Maps Runtime OS + Fuel Intelligence — без engine в этом спринте."
   },
   "readiness": {
     "mobile": 68,
@@ -64,9 +64,9 @@
     "webPortal": 28,
     "ocr": 70,
     "cloud": 44,
-    "updates": 52,
+    "updates": 68,
     "aionEntity": 58,
-    "aionLink": 38,
+    "aionLink": 52,
     "performance": 46,
     "sync": 64,
     "realtime": 32,
@@ -88,8 +88,8 @@
       "label": "APK / manifest",
       "percent": 82,
       "status": "partially_done",
-      "summary": "APK 1.0.6 на проде (eb4250a2). Код 1.0.7: Google OAuth + Android intentFilters — нужен новый EAS preview build + manifest sync. Затем 8/8 на устройстве.",
-      "lastSignal": "app.config 1.0.7 / versionCode 11; auth:verify OK"
+      "summary": "APK 1.0.8 FINISHED (3e8d2c54, a97e4bf OrbView fix). Манифест на Vercel: latest 1.0.8, min 1.0.6. In-app: ApkUpdateBanner + default manifest URL + CI auto-sync после EAS.",
+      "lastSignal": "public/apk-manifest.preview.json 1.0.8; eas build a97e4bf FINISHED"
     },
     {
       "id": "releases-json",
