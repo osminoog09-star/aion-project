@@ -156,6 +156,7 @@ export function AionRuntimeSphere({ state, size = 188 }: Props) {
   const uploadTick = useRuntimePulse((s) => s.uploadTick);
   const errorTick = useRuntimePulse((s) => s.errorTick);
   const recoveryTick = useRuntimePulse((s) => s.recoveryTick);
+  const profitTick = useRuntimePulse((s) => s.profitTick);
 
   const breath = useSharedValue(1);
   const haloOpacity = useSharedValue(0.55);
@@ -248,6 +249,14 @@ export function AionRuntimeSphere({ state, size = 188 }: Props) {
       );
     }
   }, [burst, state, syncBusy, uploadTick]);
+
+  useEffect(() => {
+    if (profitTick <= 0 || reduced) return;
+    burst.value = withSequence(
+      withTiming(1.12, { duration: 160, easing: Easing.out(Easing.quad) }),
+      withTiming(1, { duration: 480, easing: Easing.out(Easing.cubic) }),
+    );
+  }, [burst, profitTick, reduced]);
 
   useEffect(() => {
     if (state !== "warning" && state !== "critical") {

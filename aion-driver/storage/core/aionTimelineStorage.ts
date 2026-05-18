@@ -25,7 +25,8 @@ export type AionTimelineEventType =
   | "ota_reload_scheduled"
   | "apk_manifest_refresh"
   | "efficiency_improved"
-  | "fuel_ocr_attached";
+  | "fuel_ocr_attached"
+  | "link_snapshot";
 
 export type AionTimelineEvent = {
   id: string;

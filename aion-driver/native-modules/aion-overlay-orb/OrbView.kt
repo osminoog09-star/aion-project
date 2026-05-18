@@ -134,6 +134,7 @@ class OrbView(context: Context) : View(context) {
       "recovery" -> 0xFF60A5FA.toInt()
       "ai_think" -> 0xFFA78BFA.toInt()
       "sync" -> 0xFF818CF8.toInt()
+      "profit" -> 0xFF34D399.toInt()
       else -> coreColor
     }
     pulseAnimator = ValueAnimator.ofFloat(1f, 0f).apply {

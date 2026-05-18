@@ -1,6 +1,11 @@
 import type { OcrParseResult } from "../types";
 import type { OcrQueueItem, OcrQueueJobPayload } from "./ocrQueueTypes";
 import { loadOcrQueue, saveOcrQueue, updateOcrQueue } from "./ocrQueueStorage";
+import { pulseSyncOk } from "../../../src/core/aion/runtime/runtimePulseBus";
+import {
+  getLinkRelayUserId,
+  relayOcrSnapshotToLink,
+} from "../../aion-link/relay/linkSnapshotRelay";
 
 const BASE_BACKOFF_MS = 4_000;
 const MAX_BACKOFF_MS = 5 * 60_000;
@@ -175,6 +180,10 @@ export async function processNextOcrQueueItem(onProgress?: ProgressCb): Promise<
         nextRetryAtMs: undefined,
       };
       return u;
+    });
+    pulseSyncOk(1);
+    void getLinkRelayUserId().then((uid) => {
+      if (uid) void relayOcrSnapshotToLink(uid, out);
     });
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);

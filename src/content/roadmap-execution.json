@@ -54,7 +54,7 @@
   "executionQueue": {
     "currentActiveEpic": "Driver production polish: Link relay + live profit + ops feedback loop",
     "currentSubsystemFocus": "mobile-app",
-    "nextImplementationTarget": "Автономно: OCR → pushLinkSnapshot + realtime toast; live profit pulse (30s); auto-dim overlay orb. APK 1.0.8 FINISHED + manifest на Vercel — device smoke владельца. Field validation 8/8 — ОТЛОЖЕНО.",
+    "nextImplementationTarget": "Автономно: QR pair scanner; auto-dim overlay orb; push/email owner на новый bug-report. APK 1.0.8 device smoke. Field validation 8/8 — ОТЛОЖЕНО.",
     "autonomousSwimStack": [
       {
         "priority": 1,
@@ -77,20 +77,21 @@
           "Kotlin OrbView.applyPulse(kind) + pulseAnimator (200ms RadialGradient overlay) — DONE",
           "OrbWindowManager.pulse(kind) + AionOverlayOrbService.ACTION_PULSE — DONE",
           "JS orbNativePulse(kind) + AionOverlayOrbPulseBridge подписан на runtimePulse — DONE",
-          "auto-dim opacity overlay (GPS active + background) — NEXT"
+          "auto-dim opacity overlay (GPS active + background) — NEXT (native)"
         ]
       },
       {
         "priority": 3,
         "id": "link-relay-realtime-contract",
         "title": "AION Link Phase 2: cloud pairing + relay",
-        "status": "shipped_backend",
+        "status": "shipped",
         "tasks": [
           "Migration: link_pair_tokens + link_snapshots + RLS owner-only + Realtime publication — DONE",
           "linkPairTokens.ts: issue/claim/revoke/list — DONE",
-          "linkSnapshots.ts: pushLinkSnapshot + subscribeToLinkSnapshots (Realtime channel) — DONE",
-          "database.types.ts regenerated через MCP — DONE",
-          "Pair flow UI issue/claim — DONE; QR scanner — NEXT"
+          "linkSnapshots.ts: pushLinkSnapshot + subscribeToLinkSnapshots — DONE",
+          "OCR queue → relayOcrSnapshotToLink после успеха — DONE",
+          "LinkSnapshotRelayBridge: Realtime toast в timeline — DONE",
+          "QR scanner — NEXT"
         ]
       },
       {
@@ -110,10 +111,12 @@
         "priority": 5,
         "id": "live-profit-pulse",
         "title": "Live profit pulse в сфере во время активной смены",
+        "status": "shipped",
         "tasks": [
-          "ShiftContext → каждые 30s emit pingUpload с delta profit",
-          "Sphere: добавить pulse 'profit' (зелёный shimmer overlay)",
-          "OrbView HUD строка profit/h уже есть — синхронизировать с тиком"
+          "ShiftContext → каждые 30s pingProfit + diagnosticLog — DONE",
+          "AionRuntimeSphere burst на profitTick — DONE",
+          "OrbView.applyPulse('profit') + overlay bridge — DONE",
+          "OrbView HUD profit/h — уже синхронизирован с runtime"
         ],
         "blocked": false
       },

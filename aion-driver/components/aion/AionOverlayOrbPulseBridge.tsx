@@ -20,6 +20,7 @@ export function AionOverlayOrbPulseBridge() {
     recovery: number;
     aiThink: number;
     sync: number;
+    profit: number;
   } | null>(null);
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export function AionOverlayOrbPulseBridge() {
         recovery: s.recoveryTick,
         aiThink: s.aiThinkTick,
         sync: s.networkTick,
+        profit: s.profitTick,
       };
       const prev = lastRef.current;
       lastRef.current = next;
@@ -58,6 +60,10 @@ export function AionOverlayOrbPulseBridge() {
       }
       if (next.sync > prev.sync) {
         void orbNativePulse("sync");
+        return;
+      }
+      if (next.profit > prev.profit) {
+        void orbNativePulse("profit");
       }
     });
     return () => {

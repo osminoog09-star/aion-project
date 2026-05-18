@@ -4,6 +4,44 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-05-18-zblxld",
+      "occurredAt": "2026-05-18",
+      "title": "Autonomous: Link OCR relay + live profit pulse",
+      "summary": "OCR queue pushes link_snapshots after success; LinkSnapshotRelayBridge shows peer events in AION timeline. profitTick every 30s during active shift drives sphere burst and native orb pulse (profit). Roadmap swim stack updated.",
+      "subsystemIds": [
+        "mobile-app",
+        "aion-link",
+        "aion-runtime-sphere"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "confidence": "high"
+    },
+    {
       "id": "evt-2026-05-18-e6a51x",
       "occurredAt": "2026-05-18",
       "title": "Roadmap sync: APK 1.0.8 + driver ops feedback",

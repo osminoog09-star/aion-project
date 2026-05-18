@@ -139,6 +139,10 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   const orbVisualRef = useRef<{ shiftId: string; visual: string } | null>(null);
 
   activeShiftRef.current = activeShift;
+  const profileRef = useRef<UserProfile | null>(null);
+  profileRef.current = profile;
+  const syncMetaRef = useRef(syncMeta);
+  syncMetaRef.current = syncMeta;
 
   useEffect(() => {
     motionStateRef.current = motionState;
@@ -912,6 +916,29 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       ),
     [history, activeShiftRuntime, activeShift, profile?.rentalEconomics],
   );
+
+  /** Live profit pulse на сфере/орбе каждые 30 с во время активной смены. */
+  useEffect(() => {
+    if (!hydrated || !activeShift || activeShift.paused) return;
+    const id = setInterval(() => {
+      const shift = activeShiftRef.current;
+      const p = profileRef.current;
+      if (!shift || shift.paused || !p) return;
+      const live = buildLiveShiftMetrics(p, shift, Date.now());
+      const meta = syncMetaRef.current;
+      const runtime = buildActiveShiftRuntime({
+        activeShift: shift,
+        live,
+        syncPending: meta.pending,
+        syncLastFlush: meta.lastFlush,
+        motionState: motionStateRef.current,
+      });
+      const { profit } = pickProfitFromRuntime(runtime);
+      useRuntimePulse.getState().pingProfit();
+      diagLog("info", "profit_pulse", "Тик прибыли смены", { profit: Math.round(profit) });
+    }, 30_000);
+    return () => clearInterval(id);
+  }, [hydrated, activeShift?.id, activeShift?.paused]);
 
   useEffect(() => {
     if (!hydrated || Platform.OS !== "android") return;

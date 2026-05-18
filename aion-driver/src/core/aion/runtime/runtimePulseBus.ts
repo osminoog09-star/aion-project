@@ -25,6 +25,7 @@ type RuntimePulseStore = {
   errorTick: number;
   recoveryTick: number;
   aiThinkTick: number;
+  profitTick: number;
   setSyncBusy: (busy: boolean, phase?: RuntimeSyncPhase) => void;
   noteSyncResult: (phase: RuntimeSyncPhase, delta?: number) => void;
   pingNetwork: () => void;
@@ -33,6 +34,7 @@ type RuntimePulseStore = {
   pingError: () => void;
   pingRecovery: () => void;
   pingAiThink: () => void;
+  pingProfit: () => void;
 };
 
 export const useRuntimePulse = create<RuntimePulseStore>((set) => ({
@@ -46,6 +48,7 @@ export const useRuntimePulse = create<RuntimePulseStore>((set) => ({
   errorTick: 0,
   recoveryTick: 0,
   aiThinkTick: 0,
+  profitTick: 0,
   setSyncBusy: (busy, phase) =>
     set((s) => ({
       syncBusy: busy,
@@ -66,6 +69,7 @@ export const useRuntimePulse = create<RuntimePulseStore>((set) => ({
   pingError: () => set((s) => ({ errorTick: s.errorTick + 1 })),
   pingRecovery: () => set((s) => ({ recoveryTick: s.recoveryTick + 1 })),
   pingAiThink: () => set((s) => ({ aiThinkTick: s.aiThinkTick + 1 })),
+  pingProfit: () => set((s) => ({ profitTick: s.profitTick + 1 })),
 }));
 
 /** Тригнуть короткий «вспых» успеха в сфере извне (например после OCR). */

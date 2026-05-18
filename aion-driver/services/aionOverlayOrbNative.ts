@@ -18,7 +18,8 @@ export type OrbPulseKind =
   | "error"
   | "recovery"
   | "ai_think"
-  | "sync";
+  | "sync"
+  | "profit";
 
 function getOrbNative(): OrbNative | null {
   if (Platform.OS !== "android") return null;
