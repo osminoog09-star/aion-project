@@ -13,6 +13,7 @@ export type PriorityValidationIssue = {
 };
 
 const LEVEL_RANK: Record<StrategicPriorityLevel, number> = {
+  strategic: -1,
   critical: 0,
   high: 1,
   medium: 2,
@@ -99,6 +100,14 @@ export function validateStrategicPriorities(
         severity: "error",
         priorityId: p.id,
         message: `«${p.title}»: level critical несовместим со status blocked.`,
+      });
+    }
+    if (p.level === "strategic" && p.status !== "roadmap_only" && p.status !== "not_started") {
+      issues.push({
+        id: `strategic-status-${p.id}`,
+        severity: "warning",
+        priorityId: p.id,
+        message: `«${p.title}»: стратегический приоритет должен оставаться roadmap_only до явного go владельца.`,
       });
     }
   }
