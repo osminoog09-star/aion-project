@@ -34,6 +34,8 @@
     "git:remote": "node scripts/setup-git-remote.mjs",
     "owner:unblock-check": "node scripts/owner-unblock-check.mjs",
     "supabase:auth-redirects": "node scripts/configure-supabase-auth-redirects.mjs",
+    "supabase:google-auth": "node scripts/configure-supabase-google-auth.mjs",
+    "auth:google-wizard": "node scripts/setup-google-auth-wizard.mjs",
     "release:apk-manifest:sync": "node scripts/sync-apk-manifest-from-eas.mjs",
     "release:safety": "node scripts/release-safety-pipeline.mjs",
     "test:runtime-compatibility": "node scripts/ci/test-runtime-compatibility.mjs",
