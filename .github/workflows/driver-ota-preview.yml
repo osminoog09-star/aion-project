@@ -46,6 +46,11 @@ jobs:
           eas-version: latest
           token: ${{ env.EXPO_TOKEN }}
 
+      - name: EAS whoami
+        if: ${{ env.EXPO_TOKEN != '' }}
+        working-directory: ${{ env.AION_DRIVER_MODULE }}
+        run: npx eas-cli@latest whoami
+
       - name: EAS Update (channel preview)
         if: ${{ env.EXPO_TOKEN != '' }}
         working-directory: ${{ env.AION_DRIVER_MODULE }}
