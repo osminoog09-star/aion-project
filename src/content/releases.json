@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2026-05-18",
+  "lastUpdated": "2026-05-19",
   "maintainedInRepository": true,
   "channels": [
     {
       "id": "preview",
       "label": "Preview",
       "description": "Тестовый канал OTA и preview APK из EAS.",
-      "appVersion": "1.0.8",
-      "notes": "Preview APK 1.0.8 (runtime 1.0.8, versionCode 12). OTA на том же runtime. Манифест: apk-manifest.preview.json."
+      "appVersion": "1.0.9",
+      "notes": "Preview APK 1.0.9 (runtime 1.0.9, versionCode 13). OrbView dim + Link QR. Манифест после EAS FINISHED."
     },
     {
       "id": "production",
@@ -18,12 +18,18 @@
     }
   ],
   "apk": {
-    "latestKnownVersion": "1.0.8",
+    "latestKnownVersion": "1.0.9",
     "policy": "Новый APK только при изменении нативного слоя, SDK или versionCode; JS/UI — через OTA.",
     "publicManifestUrl": "https://aion-com.vercel.app/apk-manifest.preview.json",
-    "note": "Активный preview: EAS 3e8d2c54 (1.0.8 / vc 12, a97e4bf OrbView fix). CI: eas-build-driver-preview → sync-manifest job → push. Красные 1.0.8 до a97e4bf — Gradle без OrbView.kt."
+    "note": "1.0.9 в очереди/сборке (ec67153+): OrbView dimAlpha, versionCode 13. Активный на устройствах пока 1.0.8 (3e8d2c54). CI push → eas-build-driver-preview на native bump."
   },
   "history": [
+    {
+      "date": "2026-05-19",
+      "type": "apk",
+      "title": "EAS preview 1.0.9 queued (auto on master push)",
+      "detail": "versionCode 13, OrbView dim; workflow push paths on app.config/native-modules."
+    },
     {
       "date": "2026-05-18",
       "type": "apk",

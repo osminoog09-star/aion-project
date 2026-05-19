@@ -4,9 +4,21 @@ name: EAS Build Driver (preview)
 
 on:
   workflow_dispatch:
+  push:
+    branches: [master]
+    paths:
+      - "aion-driver/app.config.ts"
+      - "aion-driver/package.json"
+      - "aion-driver/native-modules/**"
+      - "aion-driver/plugins/**"
+      - ".github/workflows/eas-build-driver-preview.yml"
 
 env:
   AION_DRIVER_MODULE: ${{ vars.AION_DRIVER_MODULE || 'aion-driver' }}
+
+concurrency:
+  group: eas-preview-driver-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:

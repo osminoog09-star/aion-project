@@ -4,7 +4,8 @@
 
 | Variable | Purpose |
 |----------|---------|
-| `BUG_REPORT_NOTIFY_WEBHOOK_URL` | Discord/Slack/Telegram-compatible JSON webhook |
+| `BUG_REPORT_NOTIFY_WEBHOOK_URL` | Discord embed, Slack `hooks.slack.com`, or Telegram `api.telegram.org/bot…/sendMessage` |
+| `BUG_REPORT_TELEGRAM_CHAT_ID` | Required for Telegram when using bot sendMessage URL |
 | `RESEND_API_KEY` + `OWNER_ALERT_EMAIL` | Optional email via Resend |
 | `BUG_REPORT_WEBHOOK_SECRET` | Auth for Supabase Database Webhook → portal |
 | `CRON_SECRET` | Auth for Vercel cron `GET /api/cron/bug-report-alerts` (every 5 min backup) |

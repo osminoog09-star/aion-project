@@ -13,6 +13,7 @@ import {
 } from "@/lib/operations/operational-continuation";
 import { semverGte } from "@/lib/shared/runtime-compatibility";
 import { resolveDeviceHeartbeatRecord } from "@/lib/operations/device-heartbeat-persist";
+import { bugReportNotifyConfigured, bugReportNotifyStatus } from "@/lib/operations/notify-bug-report-owner";
 
 function getSignoffStatus() {
   try {
@@ -40,6 +41,8 @@ export async function GET() {
     supabaseServiceRole: Boolean(process.env.OPERATIONS_SUPABASE_SERVICE_ROLE_KEY?.trim()),
     supabaseAnon: Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()),
     supabaseUrl: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL?.trim()),
+    bugReportNotify: bugReportNotifyConfigured(),
+    bugReportNotifyChannels: bugReportNotifyStatus(),
   };
 
   let hbFresh = false;

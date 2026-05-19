@@ -185,8 +185,7 @@
       "Portal lacks authenticated account center — public-only ops"
     ],
     "backendBlockers": [
-      "Typed repos for roadmap write path from CI not landed",
-      "Link OCR relay: pushLinkSnapshot не подключён к OCR pipeline"
+      "Typed repos for roadmap write path from CI not landed"
     ]
   }
 }

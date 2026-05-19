@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { OperationsSubNav } from "@/components/operations/ExecutionAuditPanels";
+import { OperationsBugAlertsStatus } from "@/components/operations/OperationsBugAlertsStatus";
 import { OperationsBugReportsLive } from "@/components/operations/OperationsBugReportsLive";
 import { fetchDriverBugReports } from "@/lib/operations/fetch-driver-bug-reports";
 
@@ -24,6 +25,7 @@ export default async function OperationsBugsPage() {
         обновляется автоматически каждые 45 секунд; можно включить уведомления в браузере.
       </p>
       <OperationsSubNav />
+      <OperationsBugAlertsStatus />
 
       {reports.length === 0 ? (
         <p className="mt-10 rounded-2xl border border-white/10 bg-white/5 px-4 py-8 text-center text-sm text-slate-500">

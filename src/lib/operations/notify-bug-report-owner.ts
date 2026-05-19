@@ -35,24 +35,11 @@ export async function notifyOwnerOfBugReport(report: DriverBugReportRow): Promis
   const hookUrl = process.env.BUG_REPORT_NOTIFY_WEBHOOK_URL?.trim();
   if (hookUrl) {
     try {
+      const payload = buildWebhookPayload(hookUrl, { title, bodyText, report, bugsUrl });
       const res = await fetch(hookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          content: `🐛 **${title}**`,
-          embeds: [
-            {
-              title: report.category,
-              description: report.description.slice(0, 1800),
-              color: 0xf43f5e,
-              fields: [
-                { name: "App", value: `${report.app_version ?? "?"} / ${report.platform ?? "?"}`, inline: true },
-                { name: "ID", value: report.id, inline: false },
-              ],
-              url: bugsUrl,
-            },
-          ],
-        }),
+        body: JSON.stringify(payload),
       });
       if (res.ok) webhook = true;
       else errors.push(`webhook HTTP ${res.status}`);
@@ -97,4 +84,61 @@ export function bugReportNotifyConfigured(): boolean {
     process.env.BUG_REPORT_NOTIFY_WEBHOOK_URL?.trim() ||
       (process.env.RESEND_API_KEY?.trim() && process.env.OWNER_ALERT_EMAIL?.trim()),
   );
+}
+
+export function bugReportNotifyStatus(): {
+  webhook: boolean;
+  email: boolean;
+  cron: boolean;
+  supabaseWebhook: boolean;
+  serviceRole: boolean;
+} {
+  return {
+    webhook: Boolean(process.env.BUG_REPORT_NOTIFY_WEBHOOK_URL?.trim()),
+    email: Boolean(process.env.RESEND_API_KEY?.trim() && process.env.OWNER_ALERT_EMAIL?.trim()),
+    cron: Boolean(process.env.CRON_SECRET?.trim()),
+    supabaseWebhook: Boolean(process.env.BUG_REPORT_WEBHOOK_SECRET?.trim()),
+    serviceRole: Boolean(process.env.OPERATIONS_SUPABASE_SERVICE_ROLE_KEY?.trim()),
+  };
+}
+
+function buildWebhookPayload(
+  hookUrl: string,
+  ctx: {
+    title: string;
+    bodyText: string;
+    report: DriverBugReportRow;
+    bugsUrl: string;
+  },
+): Record<string, unknown> {
+  const { title, bodyText, report, bugsUrl } = ctx;
+  if (hookUrl.includes("api.telegram.org")) {
+    const chatId = process.env.BUG_REPORT_TELEGRAM_CHAT_ID?.trim();
+    if (!chatId) {
+      return { text: `🐛 ${title}\n\n${bodyText.slice(0, 3500)}` };
+    }
+    return {
+      chat_id: chatId,
+      text: `🐛 ${title}\n\n${bodyText.slice(0, 3500)}`,
+      disable_web_page_preview: false,
+    };
+  }
+  if (hookUrl.includes("hooks.slack.com")) {
+    return { text: `🐛 ${title}\n${bodyText.slice(0, 3000)}` };
+  }
+  return {
+    content: `🐛 **${title}**`,
+    embeds: [
+      {
+        title: report.category,
+        description: report.description.slice(0, 1800),
+        color: 0xf43f5e,
+        fields: [
+          { name: "App", value: `${report.app_version ?? "?"} / ${report.platform ?? "?"}`, inline: true },
+          { name: "ID", value: report.id, inline: false },
+        ],
+        url: bugsUrl,
+      },
+    ],
+  };
 }
