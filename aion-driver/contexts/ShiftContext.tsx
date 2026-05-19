@@ -70,7 +70,8 @@ import { persistShiftAnalytics } from "../features/analytics/storage/shiftAnalyt
 import { gpsIngestionGateway } from "../features/gps/ingestion/gpsIngestionGateway";
 import { loadGpsTripSession } from "../features/gps/tripStore/gpsTripStorage";
 import { useRuntimePulse } from "../src/core/aion/runtime/runtimePulseBus";
-import { resetDriverStatistics } from "../storage/driver/resetDriverStatistics";
+import { resetStatisticsElement } from "../features/statistics/resetStatisticsElement";
+import type { StatResetResult, StatResetTarget } from "../features/statistics/types";
 
 function createShiftId(): string {
   return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
@@ -111,7 +112,13 @@ type ShiftContextValue = {
   resetStatistics: (opts?: { includeCloud?: boolean; userId?: string | null }) => Promise<{
     ok: boolean;
     error?: string;
+    message?: string;
   }>;
+  /** Точечный сброс одного блока (см. экран «Статистика»). */
+  resetStatisticElement: (
+    target: StatResetTarget,
+    opts?: { userId?: string | null },
+  ) => Promise<StatResetResult>;
 };
 
 const ShiftContext = createContext<ShiftContextValue | undefined>(undefined);
@@ -835,34 +842,73 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     setHistory(hist);
   }, []);
 
+  const applyStatisticsStateFromDisk = useCallback(async () => {
+    const [hist, shift, pending, handoff] = await Promise.all([
+      loadShiftHistory(),
+      loadActiveShift(),
+      loadPendingFuelEntries(),
+      loadPostShiftHandoff(),
+    ]);
+    setHistory(hist);
+    setActiveShift(shift);
+    setPendingFuelEntries(pending);
+    setPostShiftHandoff(handoff);
+  }, []);
+
+  const resetStatisticElementFn = useCallback(
+    async (
+      target: StatResetTarget,
+      opts?: { userId?: string | null },
+    ): Promise<StatResetResult> => {
+      const needsStop =
+        target.id === "active_shift" ||
+        target.id === "everything_local" ||
+        (target.id === "shift_one" && activeShiftRef.current?.id === target.shiftId);
+      if (needsStop) {
+        stopTracking();
+        bgTrackingRef.current?.dispose();
+        bgTrackingRef.current = null;
+        trackingEnabledRef.current = false;
+      }
+      const result = await resetStatisticsElement(target, {
+        hasActiveShift: Boolean(activeShiftRef.current),
+        userId: opts?.userId ?? null,
+      });
+      if (result.ok) {
+        await applyStatisticsStateFromDisk();
+        diagLog("info", "stats_reset", `Элемент: ${target.id}`, { message: result.message });
+      }
+      return result;
+    },
+    [applyStatisticsStateFromDisk, stopTracking],
+  );
+
   const resetStatistics = useCallback(
     async (opts?: { includeCloud?: boolean; userId?: string | null }) => {
       if (activeShiftRef.current) {
         return {
           ok: false,
-          error: "Сначала завершите активную смену, затем сбросьте статистику.",
+          error: "Сначала завершите активную смену или сбросьте её в «Статистика».",
         };
       }
       stopTracking();
       bgTrackingRef.current?.dispose();
       bgTrackingRef.current = null;
       trackingEnabledRef.current = false;
-      const result = await resetDriverStatistics({
-        includeCloudTrips: opts?.includeCloud === true,
-        userId: opts?.userId ?? null,
-      });
-      if (!result.ok) {
-        return { ok: false, error: result.error ?? "Не удалось сбросить" };
+      const local = await resetStatisticElementFn({ id: "everything_local" });
+      if (!local.ok) {
+        return { ok: false, error: local.error };
       }
-      setHistory([]);
-      setActiveShift(null);
-      setPendingFuelEntries([]);
-      setPostShiftHandoff(null);
-      await savePostShiftHandoff(null);
-      diagLog("info", "stats_reset", "Статистика обнулена", result.cleared);
-      return { ok: true };
+      if (opts?.includeCloud && opts.userId) {
+        const cloud = await resetStatisticElementFn({ id: "cloud_trips" });
+        if (!cloud.ok) {
+          return { ok: false, error: cloud.error, message: local.message };
+        }
+        return { ok: true, message: `${local.message ?? ""} · ${cloud.message ?? ""}` };
+      }
+      return { ok: true, message: local.message };
     },
-    [stopTracking],
+    [resetStatisticElementFn, stopTracking],
   );
 
   const dismissPostShiftHandoff = useCallback(async () => {
@@ -1016,6 +1062,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       liveMetrics,
       refreshHistory,
       resetStatistics,
+      resetStatisticElement: resetStatisticElementFn,
     }),
     [
       hydrated,
@@ -1043,6 +1090,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       liveMetrics,
       refreshHistory,
       resetStatistics,
+      resetStatisticElementFn,
     ]
   );
 

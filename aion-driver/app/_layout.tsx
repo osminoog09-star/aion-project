@@ -150,6 +150,7 @@ function ThemedAppTree() {
                   <Stack.Screen name="fuel-journal" options={{ animation: "slide_from_right" }} />
                   <Stack.Screen name="edit-fuel" options={{ animation: "slide_from_right" }} />
                   <Stack.Screen name="settings" />
+                  <Stack.Screen name="statistics-manage" options={{ animation: "slide_from_right" }} />
                   <Stack.Screen name="update-center" options={{ animation: "slide_from_right" }} />
                   <Stack.Screen name="desktop" options={{ animation: "fade" }} />
                   <Stack.Screen name="link" options={{ animation: "fade" }} />

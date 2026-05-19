@@ -763,21 +763,22 @@ export function SettingsScreen() {
                 Статистика и история
               </Text>
               <Text className="mt-2 text-sm text-slate-400">
-                Обнуляет завершённые смены, графики на главной, GPS-маршруты, OCR-импорты и журнал
-                заправок вне смены. Профиль, валюта и настройки сохраняются.
+                Управление по блокам: смены за день/неделю/месяц, GPS, OCR, облако, отдельные смены.
+                Профиль и настройки не меняются.
               </Text>
-              {activeShift ? (
-                <Text className="mt-2 text-xs text-amber-300">
-                  Сейчас идёт смена — сначала завершите её на главном экране.
-                </Text>
-              ) : null}
               {resetResult ? (
                 <Text className="mt-2 text-xs text-cyan-300">{resetResult}</Text>
               ) : null}
+              <GradientButton
+                title="Открыть управление статистикой"
+                variant="glass"
+                className="mt-4"
+                onPress={() => router.push("/statistics-manage")}
+              />
               {session?.user?.id && !isGuest && isSupabaseConfigured() ? (
                 <View className="mt-4 flex-row items-center justify-between">
                   <Text className="flex-1 pr-3 text-sm text-slate-300">
-                    Также удалить смены в облаке
+                    Быстрый сброс: также облако
                   </Text>
                   <Switch
                     value={resetCloudToo}
@@ -788,13 +789,19 @@ export function SettingsScreen() {
                 </View>
               ) : null}
               <GradientButton
-                title="Сбросить статистику"
+                title="Сбросить всё локально"
                 variant="ghost"
-                className="mt-4"
+                className="mt-3"
                 disabled={Boolean(activeShift) || resetBusy}
                 loading={resetBusy}
                 onPress={() => setResetStatsOpen(true)}
               />
+              {activeShift ? (
+                <Text className="mt-2 text-xs text-amber-300">
+                  Активная смена: полный сброс недоступен — завершите смену или сбросьте в
+                  управлении статистикой.
+                </Text>
+              ) : null}
             </GlowCard>
 
             <GlowCard glow="violet" className="mb-4">
@@ -915,8 +922,8 @@ export function SettingsScreen() {
         title="Сбросить всю статистику?"
         message={
           resetCloudToo && session?.user?.id
-            ? "Локальные смены, маршруты и аналитика будут удалены без восстановления. Смены в облаке Supabase тоже будут удалены."
-            : "Локальные смены, маршруты и аналитика будут удалены без восстановления. Облако не затрагивается."
+            ? "Все локальные блоки статистики и смены в облаке будут удалены без восстановления."
+            : "Все локальные блоки статистики будут удалены. Облако не затрагивается."
         }
         confirmLabel="Да, сбросить"
         cancelLabel="Отмена"
@@ -932,7 +939,7 @@ export function SettingsScreen() {
           }).then((res) => {
             setResetBusy(false);
             if (res.ok) {
-              setResetResult("Статистика обнулена. Главный экран обновится автоматически.");
+              setResetResult(res.message ?? "Статистика обнулена.");
             } else {
               setResetResult(res.error ?? "Ошибка сброса");
             }

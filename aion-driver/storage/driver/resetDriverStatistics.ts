@@ -11,7 +11,6 @@ import { savePostShiftHandoff } from "./postShiftHandoffStorage";
 const TIMELINE_KEY = "@aion/core/timeline_v1";
 
 export type ResetDriverStatisticsOptions = {
-  /** Удалить смены в облаке Supabase (только при входе). */
   includeCloudTrips?: boolean;
   userId?: string | null;
 };
@@ -41,13 +40,12 @@ async function removeIndexedKeys(
   return ids.length;
 }
 
-/**
- * Обнуляет локальную статистику: история смен, GPS, аналитика, заправки вне смены, OCR.
- * Профиль и настройки устройства не трогает.
- */
-export async function resetLocalDriverStatistics(): Promise<
-  Omit<ResetDriverStatisticsResult, "ok" | "error">
-> {
+/** Полный локальный сброс (включая активную смену). */
+export async function executeFullLocalStatisticsReset(): Promise<{
+  shifts: number;
+  gpsSessions: number;
+  analyticsSnapshots: number;
+}> {
   const [gpsIds, analyticsIds, histRaw] = await Promise.all([
     listGpsTripShiftIds(),
     listShiftAnalyticsIds(),
@@ -87,12 +85,17 @@ export async function resetLocalDriverStatistics(): Promise<
   ]);
 
   return {
-    cleared: {
-      shifts: shiftCount,
-      gpsSessions: gpsRemoved,
-      analyticsSnapshots: analyticsRemoved,
-    },
+    shifts: shiftCount,
+    gpsSessions: gpsRemoved,
+    analyticsSnapshots: analyticsRemoved,
   };
+}
+
+export async function resetLocalDriverStatistics(): Promise<
+  Omit<ResetDriverStatisticsResult, "ok" | "error">
+> {
+  const cleared = await executeFullLocalStatisticsReset();
+  return { cleared };
 }
 
 export async function deleteCloudTripsForUser(userId: string): Promise<number> {
