@@ -70,6 +70,7 @@ import { persistShiftAnalytics } from "../features/analytics/storage/shiftAnalyt
 import { gpsIngestionGateway } from "../features/gps/ingestion/gpsIngestionGateway";
 import { loadGpsTripSession } from "../features/gps/tripStore/gpsTripStorage";
 import { useRuntimePulse } from "../src/core/aion/runtime/runtimePulseBus";
+import { resetDriverStatistics } from "../storage/driver/resetDriverStatistics";
 
 function createShiftId(): string {
   return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
@@ -106,6 +107,11 @@ type ShiftContextValue = {
   setActiveFuelType: (kind: FuelKind) => Promise<void>;
   liveMetrics: LiveShiftMetrics | null;
   refreshHistory: () => Promise<void>;
+  /** Сброс истории смен и связанной статистики (профиль сохраняется). */
+  resetStatistics: (opts?: { includeCloud?: boolean; userId?: string | null }) => Promise<{
+    ok: boolean;
+    error?: string;
+  }>;
 };
 
 const ShiftContext = createContext<ShiftContextValue | undefined>(undefined);
@@ -829,6 +835,36 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     setHistory(hist);
   }, []);
 
+  const resetStatistics = useCallback(
+    async (opts?: { includeCloud?: boolean; userId?: string | null }) => {
+      if (activeShiftRef.current) {
+        return {
+          ok: false,
+          error: "Сначала завершите активную смену, затем сбросьте статистику.",
+        };
+      }
+      stopTracking();
+      bgTrackingRef.current?.dispose();
+      bgTrackingRef.current = null;
+      trackingEnabledRef.current = false;
+      const result = await resetDriverStatistics({
+        includeCloudTrips: opts?.includeCloud === true,
+        userId: opts?.userId ?? null,
+      });
+      if (!result.ok) {
+        return { ok: false, error: result.error ?? "Не удалось сбросить" };
+      }
+      setHistory([]);
+      setActiveShift(null);
+      setPendingFuelEntries([]);
+      setPostShiftHandoff(null);
+      await savePostShiftHandoff(null);
+      diagLog("info", "stats_reset", "Статистика обнулена", result.cleared);
+      return { ok: true };
+    },
+    [stopTracking],
+  );
+
   const dismissPostShiftHandoff = useCallback(async () => {
     await savePostShiftHandoff(null);
     setPostShiftHandoff(null);
@@ -979,6 +1015,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       setActiveFuelType,
       liveMetrics,
       refreshHistory,
+      resetStatistics,
     }),
     [
       hydrated,
@@ -1005,6 +1042,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       setActiveFuelType,
       liveMetrics,
       refreshHistory,
+      resetStatistics,
     ]
   );
 

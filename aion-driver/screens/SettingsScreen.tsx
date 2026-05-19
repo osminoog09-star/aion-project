@@ -27,6 +27,7 @@ import type { MotionIntensity, VisualStyleId } from "../src/theme";
 import { VISUAL_STYLE_IDS } from "../src/theme";
 import { useDevice } from "../hooks/useDevice";
 import { useShift } from "../hooks/useShift";
+import { AppConfirmModal } from "../components/feedback/AppConfirmModal";
 import { isSupabaseConfigured, requireSupabase } from "../lib/supabase";
 import { featureFlags } from "../lib/featureFlags";
 import { useUpdates } from "../hooks/useUpdates";
@@ -48,7 +49,7 @@ export function SettingsScreen() {
     setNightContrast,
     updateSettings,
   } = useDevice();
-  const { profile, saveUserProfile } = useShift();
+  const { profile, saveUserProfile, activeShift, resetStatistics } = useShift();
   const [currencyModalOpen, setCurrencyModalOpen] = useState(false);
   const [currencyQuery, setCurrencyQuery] = useState("");
   const [name, setName] = useState("");
@@ -69,6 +70,10 @@ export function SettingsScreen() {
   const [otaDialog, setOtaDialog] = useState<string | null>(null);
   const [bugOpen, setBugOpen] = useState(false);
   const [secretTap, setSecretTap] = useState(0);
+  const [resetStatsOpen, setResetStatsOpen] = useState(false);
+  const [resetCloudToo, setResetCloudToo] = useState(false);
+  const [resetBusy, setResetBusy] = useState(false);
+  const [resetResult, setResetResult] = useState<string | null>(null);
 
   const otaInfo = getOtaDebugInfo();
   const updates = useUpdates();
@@ -753,6 +758,45 @@ export function SettingsScreen() {
               />
             </GlowCard>
 
+            <GlowCard glow="neutral" className="mb-4">
+              <Text className="text-xs uppercase tracking-[0.25em] text-slate-500">
+                Статистика и история
+              </Text>
+              <Text className="mt-2 text-sm text-slate-400">
+                Обнуляет завершённые смены, графики на главной, GPS-маршруты, OCR-импорты и журнал
+                заправок вне смены. Профиль, валюта и настройки сохраняются.
+              </Text>
+              {activeShift ? (
+                <Text className="mt-2 text-xs text-amber-300">
+                  Сейчас идёт смена — сначала завершите её на главном экране.
+                </Text>
+              ) : null}
+              {resetResult ? (
+                <Text className="mt-2 text-xs text-cyan-300">{resetResult}</Text>
+              ) : null}
+              {session?.user?.id && !isGuest && isSupabaseConfigured() ? (
+                <View className="mt-4 flex-row items-center justify-between">
+                  <Text className="flex-1 pr-3 text-sm text-slate-300">
+                    Также удалить смены в облаке
+                  </Text>
+                  <Switch
+                    value={resetCloudToo}
+                    onValueChange={setResetCloudToo}
+                    trackColor={{ false: "#334155", true: "#f43f5e" }}
+                    thumbColor="#f8fafc"
+                  />
+                </View>
+              ) : null}
+              <GradientButton
+                title="Сбросить статистику"
+                variant="ghost"
+                className="mt-4"
+                disabled={Boolean(activeShift) || resetBusy}
+                loading={resetBusy}
+                onPress={() => setResetStatsOpen(true)}
+              />
+            </GlowCard>
+
             <GlowCard glow="violet" className="mb-4">
               <Text className="text-xs uppercase tracking-[0.28em] text-amber-200/90">
                 Бензин
@@ -866,6 +910,35 @@ export function SettingsScreen() {
         </View>
       </Modal>
       <BugReportModal visible={bugOpen} onClose={() => setBugOpen(false)} />
+      <AppConfirmModal
+        visible={resetStatsOpen}
+        title="Сбросить всю статистику?"
+        message={
+          resetCloudToo && session?.user?.id
+            ? "Локальные смены, маршруты и аналитика будут удалены без восстановления. Смены в облаке Supabase тоже будут удалены."
+            : "Локальные смены, маршруты и аналитика будут удалены без восстановления. Облако не затрагивается."
+        }
+        confirmLabel="Да, сбросить"
+        cancelLabel="Отмена"
+        destructive
+        onCancel={() => setResetStatsOpen(false)}
+        onConfirm={() => {
+          setResetStatsOpen(false);
+          setResetBusy(true);
+          setResetResult(null);
+          void resetStatistics({
+            includeCloud: resetCloudToo,
+            userId: session?.user?.id ?? null,
+          }).then((res) => {
+            setResetBusy(false);
+            if (res.ok) {
+              setResetResult("Статистика обнулена. Главный экран обновится автоматически.");
+            } else {
+              setResetResult(res.error ?? "Ошибка сброса");
+            }
+          });
+        }}
+      />
     </CockpitBackground>
   );
 }

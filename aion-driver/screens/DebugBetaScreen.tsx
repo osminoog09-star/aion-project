@@ -7,6 +7,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { GradientButton } from "../components/ui/GradientButton";
 import { useUpdates } from "../hooks/useUpdates";
 import { clearSyncQueue } from "../features/sync/services/offlineQueue";
+import { resetLocalDriverStatistics } from "../storage/driver/resetDriverStatistics";
 import { STORAGE_KEYS } from "../storage/core/keys";
 import { captureMessage, isSentryEnabled, refreshSentryAppContext } from "../lib/sentry";
 import { getOtaDebugInfo } from "../services/updateService";
@@ -71,11 +72,13 @@ export function DebugBetaScreen() {
             size="cockpit"
           />
           <GradientButton
-            title="Сбросить историю смен (локально)"
+            title="Сбросить всю статистику (локально)"
             variant="ghost"
             onPress={async () => {
-              await AsyncStorage.removeItem(STORAGE_KEYS.HISTORY);
-              toast("История смен очищена");
+              const r = await resetLocalDriverStatistics();
+              toast(
+                `Сброшено: ${r.cleared.shifts} смен, GPS ${r.cleared.gpsSessions}, аналитика ${r.cleared.analyticsSnapshots}`,
+              );
             }}
             size="cockpit"
           />
