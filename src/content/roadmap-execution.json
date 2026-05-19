@@ -54,7 +54,7 @@
   "executionQueue": {
     "currentActiveEpic": "Driver production polish: Link relay + live profit + ops feedback loop",
     "currentSubsystemFocus": "mobile-app",
-    "nextImplementationTarget": "APK 1.0.9 (OrbView dim native) device smoke; push/email owner на bug-report. Field validation 8/8 — ОТЛОЖЕНО.",
+    "nextImplementationTarget": "APK 1.0.9 EAS FINISHED + manifest sync; Vercel env для bug webhooks. Field validation 8/8 — ОТЛОЖЕНО.",
     "autonomousSwimStack": [
       {
         "priority": 1,
@@ -144,14 +144,15 @@
       },
       {
         "priority": 8,
-        "id": "apk-release-loop-108",
-        "title": "APK 1.0.8 release loop (manifest + notify)",
-        "status": "shipped",
+        "id": "apk-release-loop-109",
+        "title": "APK 1.0.9 release loop (OrbView dim + version bump)",
+        "status": "in_progress",
         "tasks": [
           "EAS FINISHED a97e4bf (OrbView.kt в plugin) — DONE",
           "manifest sync 3e8d2c54 → Vercel 1.0.8 — DONE",
           "ApkUpdateBanner + default manifest URL + CI auto-sync workflow — DONE",
-          "Device smoke: установка 1.0.8 + модалка обновления — owner"
+          "Device smoke: установка 1.0.8 + модалка обновления — owner",
+          "1.0.9 versionCode 13 + OrbView dimAlpha — code DONE; EAS preview build — NEXT"
         ]
       },
       {
@@ -165,7 +166,7 @@
           "fuel journal edit/delete + profit recalc — DONE",
           "/operations/bugs portal list — DONE",
           "Portal /operations/bugs poll 45s + browser Notification — DONE",
-          "Push/email alert owner on new bug — NEXT"
+          "Owner webhook/email + Vercel cron + Supabase INSERT webhook route — DONE (needs env on Vercel)"
         ]
       }
     ],
