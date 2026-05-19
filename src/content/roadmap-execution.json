@@ -152,7 +152,8 @@
           "manifest sync 3e8d2c54 → Vercel 1.0.8 — DONE",
           "ApkUpdateBanner + default manifest URL + CI auto-sync workflow — DONE",
           "Device smoke: установка 1.0.8 + модалка обновления — owner",
-          "1.0.9 versionCode 13 + OrbView dimAlpha — code DONE; EAS preview build — NEXT"
+          "1.0.9 versionCode 13 + OrbView dimAlpha — code DONE",
+          "EAS preview build — CI auto on push (workflow paths) — IN_PROGRESS"
         ]
       },
       {

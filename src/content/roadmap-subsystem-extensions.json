@@ -1,6 +1,6 @@
 {
   "mobile-app": {
-    "whatWorks": ["Смена end-to-end", "Garage/карта/OCR happy path", "OTA каналы EAS", "Desktop shell", "Журнал заправок edit/delete", "BugReportModal → driver_bug_reports", "diagnosticLog в отчётах"],
+    "whatWorks": ["Смена end-to-end", "Garage/карта/OCR happy path", "OTA каналы EAS", "Desktop shell", "Журнал заправок edit/delete", "BugReportModal → driver_bug_reports", "diagnosticLog в отчётах", "Link QR pair + OCR relay", "OrbView dim (native 1.0.9)"],
     "whatDoesNotWork": ["Не все edge-состояния UI", "Паритет web/mobile не везде"],
     "mocked": [],
     "localOnly": ["Локальная timeline без облачного SoT"],
@@ -62,7 +62,7 @@
     "nextRecommendedStep": "Задокументировать и отобразить на /control канал→runtime→последняя известная ревизия из клиента/манифеста."
   },
   "apk-channel": {
-    "whatWorks": ["Манифест JSON 1.0.8 на Vercel", "force/minRuntime в типах", "com/driver fetch", "sync-apk-manifest-from-eas + CI job после EAS"],
+    "whatWorks": ["Манифест JSON 1.0.8 на Vercel (→1.0.9 после EAS)", "force/minRuntime в типах", "com/driver fetch", "sync-apk-manifest-from-eas + CI auto на native push"],
     "whatDoesNotWork": ["Центральный signed download hub на com"],
     "requiresApk": ["Всегда для native bump"],
     "otaImpact": "medium",

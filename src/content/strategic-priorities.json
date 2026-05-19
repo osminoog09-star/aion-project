@@ -1,11 +1,11 @@
 {
-  "lastUpdated": "2026-05-18",
+  "lastUpdated": "2026-05-19",
   "constitutionVersion": "2.0",
   "autonomousOrchestration": "Cursor executes roadmap/priorities/deps autonomously; owner observes /operations/command (Russian) and edits /operations/priorities — no ChatGPT relay.",
   "ownerLanguageRule": "Владелец видит только русский интерфейс. Английский — код и технические детали (свёрнуто).",
-  "ownerDirective": "PRIMARY: APK 1.0.8 установить и smoke (обновления, баг-репорт, топливо). Field validation 8/8 — отложено. Параллельно: Link OCR relay + live profit pulse. Долгосрок: Maps OS + Fuel Intelligence (roadmap only).",
+  "ownerDirective": "PRIMARY: APK 1.0.9 (OrbView dim) — EAS auto на push; manifest после FINISHED. Vercel: BUG_REPORT_NOTIFY_WEBHOOK_URL. Field validation 8/8 — отложено.",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
-  "nextImplementationTarget": "Device smoke 1.0.8 → Link pushLinkSnapshot из OCR → live profit pulse → QR pair scanner",
+  "nextImplementationTarget": "EAS 1.0.9 FINISHED → manifest sync → device smoke; Vercel bug webhook env",
   "executionNotes": "Field validation 8/8 + portal report inbox (/operations/live paste). BG gate hint on device when 8/8. CI: test:field-validation-report in repo:verify. Device gate: owner paste report after 8/8.",
   "priorities": [
     {
