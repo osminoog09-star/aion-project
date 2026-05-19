@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-18",
+  "lastUpdated": "2026-05-19",
   "maintainedInRepository": true,
   "methodology": "Проценты — ручная оценка по коду и продукту на дату lastUpdated: UI/фичи, бэкенд, realtime, прод-UX, граничные случаи, паритет web/mobile, дизайн, тесты, релизная готовность. Автоматического сбора метрик нет; числа не нормируются к «красивым» значениям. Supabase snapshot при наличии может переопределить поля через ecosystem_public_snapshots.",
   "definitionOfDone": [
@@ -32,8 +32,8 @@
     ]
   },
   "execution": {
-    "currentPriority": "PRIMARY: preview APK 1.0.8 на Vercel (a97e4bf / 3e8d2c54) → установка на устройство → smoke (обновления, баг-репорт, топливо). Field validation 8/8 — отложено владельцем.",
-    "nextPriority": "Link OCR relay + live profit pulse; QR pair scanner; auto-dim overlay. Ops: /operations/bugs для входящих отчётов.",
+    "currentPriority": "PRIMARY: EAS preview APK 1.0.9 (vc13, OrbView dim) — auto CI на push native paths; manifest sync после FINISHED. Vercel env: bug-report webhooks.",
+    "nextPriority": "Device smoke 1.0.9; OWNER_ALERT webhook на Vercel. Field validation 8/8 — отложено владельцем.",
     "blockedTasks": [
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"

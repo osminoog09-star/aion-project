@@ -1,8 +1,24 @@
 {
-  "lastUpdated": "2026-05-18",
+  "lastUpdated": "2026-05-19",
   "maintainedInRepository": true,
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
+    {
+      "id": "evt-2026-05-19-autonomous",
+      "occurredAt": "2026-05-19",
+      "title": "Autonomous: bug owner alerts + APK 1.0.9 CI + Supabase SoT",
+      "summary": "Owner webhook/cron/email for driver_bug_reports; ops status panel; EAS workflow auto-trigger on native bump; migration SoT applied; Telegram/Slack payloads; QR Link + orb dim in 1.0.9.",
+      "subsystemIds": ["mobile-app", "operations-center", "apk-channel", "updates"],
+      "eventType": "implementation_finished",
+      "commitHash": "845f4b9",
+      "repository": "aion-project",
+      "rollup": { "fullyDone": [], "partiallyDone": ["Bug notify needs Vercel env"], "notStarted": [], "technicalDebt": [] },
+      "stillMissing": ["Vercel BUG_REPORT_NOTIFY_WEBHOOK_URL", "EAS 1.0.9 FINISHED"],
+      "blocked": [],
+      "impacts": { "release": "medium", "otaApk": "medium", "backend": "medium", "realtime": "low", "ux": "medium", "cloud": "medium" },
+      "validation": { "web_build": "pending" },
+      "confidence": "high"
+    },
     {
       "id": "evt-2026-05-18-zblxld",
       "occurredAt": "2026-05-18",
