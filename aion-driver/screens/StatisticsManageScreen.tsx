@@ -9,7 +9,12 @@ import { GradientButton } from "../components/ui/GradientButton";
 import { useAuth } from "../features/auth/hooks/useAuth";
 import { buildStatisticsInventory } from "../features/statistics/buildStatisticsInventory";
 import { STAT_GROUP_LABELS } from "../features/statistics/catalog";
-import type { StatElementInventoryItem, StatResetTarget, StatisticsInventory } from "../features/statistics/types";
+import type {
+  StatElementId,
+  StatElementInventoryItem,
+  StatResetTarget,
+  StatisticsInventory,
+} from "../features/statistics/types";
 import { useShift } from "../hooks/useShift";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { colors } from "../tokens";
@@ -65,9 +70,10 @@ export function StatisticsManageScreen() {
     }
   };
 
-  const groups = inventory
-    ? groupElements(inventory.elements, session?.user?.id && !isGuest && isSupabaseConfigured())
-    : [];
+  const cloudResetOk = Boolean(
+    session?.user?.id && !isGuest && isSupabaseConfigured(),
+  );
+  const groups = inventory ? groupElements(inventory.elements, cloudResetOk) : [];
 
   return (
     <CockpitBackground variant="cockpit">
@@ -118,7 +124,7 @@ export function StatisticsManageScreen() {
                       onReset={() =>
                         setPending({
                           kind: "element",
-                          target: { id: item.id },
+                          target: elementToResetTarget(item.id),
                           title: item.title,
                         })
                       }
@@ -178,6 +184,13 @@ export function StatisticsManageScreen() {
       </SafeAreaView>
     </CockpitBackground>
   );
+}
+
+function elementToResetTarget(id: StatElementId): StatResetTarget {
+  if (id === "shift_one") {
+    throw new Error("shift_one is reset from the shift list");
+  }
+  return { id };
 }
 
 function groupElements(
