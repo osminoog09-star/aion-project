@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-19T21:05:11.000Z",
+  "lastUpdated": "2026-06-19T21:25:18.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. Update Center различает fresh memory reuse и настоящий offline storage fallback, сохраняя реальный возраст manifest.",
-  "currentStatus": "Driver APK cache provenance; release stack live",
+  "currentFocus": "Release stack live. APK manifest fetch объединяет обязательный timeout и caller cancellation без зависающих запросов.",
+  "currentStatus": "Driver APK fetch cancellation; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -35,7 +35,8 @@
     "APK manifest memory/AsyncStorage cache привязан к нормализованному endpoint URL; старый endpoint больше не протекает в новое окружение.",
     "Preview APK build 0d3dd137 FINISHED; manifest получил новый direct URL, releaseNotes очищены от placeholder и старых EAS build ID.",
     "EAS preview workflow получил deterministic path gate: sync/status/client TS больше не запускают полный APK build.",
-    "APK cache provenance исправлен: memory reuse не показывает ложный offline warning, storage fallback сохраняет исходный fetchedAt для stale diagnostics."
+    "APK cache provenance исправлен: memory reuse не показывает ложный offline warning, storage fallback сохраняет исходный fetchedAt для stale diagnostics.",
+    "APK manifest fetch больше не теряет 12s timeout при внешнем AbortSignal; caller cancel проксируется через внутренний controller с cleanup listener/timer."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -70,6 +71,7 @@
     "EAS preview APK run 27847164060 — SUCCESS; manifest bot commit d49837b",
     "APK release notes generator — OK (6 assertions)",
     "Driver APK build path gate — OK (7 cases)",
-    "Driver APK cache provenance — OK (10 assertions)"
+    "Driver APK cache provenance — OK (10 assertions)",
+    "Driver APK fetch timeout/caller cancellation — OK (17 assertions total)"
   ]
 }
