@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-19T15:31:00.000Z",
+  "lastUpdated": "2026-06-19T15:35:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "EAS preview APK 1.0.9 run 27834179469: build завершён успешно, sync-manifest выполняется. Параллельно закрыта защита от сохранения устаревшего OCR result после смены источника.",
-  "currentStatus": "Driver release loop: ждёт manifest sync; stale OCR result protection shipped",
+  "currentFocus": "EAS preview APK 1.0.9 run 27834179469: build завершён успешно, sync-manifest выполняется. OCR dedupe теперь различает платформу и валюту для одного изображения.",
+  "currentStatus": "Driver release loop: ждёт manifest sync; OCR dedupe context fixed",
   "latestRun": {
     "label": "EAS Build Driver preview",
     "status": "sync_manifest_in_progress",
@@ -18,7 +18,8 @@
     "Expo GraphQL query исправлен по схеме eas-cli: builds.byId(buildId).",
     "Post-OCR confirm валидирует выплату и суммы поездок до записи в историю; добавлены 4 CI-сценария.",
     "OCR queue при старте возвращает прерванные processing jobs в pending без сброса attempt count; добавлены 5 CI-сценариев.",
-    "Изменение текста, платформы или изображения сбрасывает старый OCR result; источник заблокирован на время parsing."
+    "Изменение текста, платформы или изображения сбрасывает старый OCR result; источник заблокирован на время parsing.",
+    "OCR image dedupe key включает platform + currency и не возвращает Bolt/EUR result для Uber/USD."
   ],
   "next": [
     "Дождаться sync-manifest run 27834179469 и проверить bot commit для apk-manifest.preview.json.",
@@ -34,6 +35,6 @@
     "EAS run 27827368751: build OK, manifest sync OK, release safety OK, commit-step failed на unstaged changes после partial stash",
     "EAS run 27833843484: отменён concurrency после следующего Driver push",
     "EAS run 27834179469: build OK; sync-manifest IN_PROGRESS",
-    "Driver npm run validate:code — OK, включая OCR confirm (4 cases) и queue recovery (5 cases)"
+    "Driver npm run validate:code — OK, включая OCR confirm (4), queue recovery (5), dedupe context (4)"
   ]
 }

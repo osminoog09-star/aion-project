@@ -54,3 +54,23 @@ assert.equal(recovered.items[0].nextRetryAtMs, now);
 assert.equal(recovered.items[1], queue[1]);
 
 console.log("test-ocr-queue-recovery: ok (5 cases)");
+
+const { buildOcrDedupeKey } = compileTsModule(
+  "features/import/ocrQueue/buildOcrDedupeKey.ts",
+);
+const imagePayload = {
+  imageUris: ["file:///receipt.jpg"],
+  pastedText: null,
+  platform: "bolt",
+  currencyCode: "eur",
+};
+const imageKey = buildOcrDedupeKey(imagePayload);
+assert.equal(imageKey, buildOcrDedupeKey({ ...imagePayload, currencyCode: "EUR" }));
+assert.notEqual(imageKey, buildOcrDedupeKey({ ...imagePayload, platform: "uber" }));
+assert.notEqual(imageKey, buildOcrDedupeKey({ ...imagePayload, currencyCode: "USD" }));
+assert.notEqual(
+  imageKey,
+  buildOcrDedupeKey({ ...imagePayload, imageUris: ["file:///other.jpg"] }),
+);
+
+console.log("test-ocr-dedupe-key: ok (4 cases)");

@@ -2,6 +2,7 @@ import type { OcrParseResult } from "../types";
 import type { OcrQueueItem, OcrQueueJobPayload } from "./ocrQueueTypes";
 import { loadOcrQueue, saveOcrQueue, updateOcrQueue } from "./ocrQueueStorage";
 import { recoverInterruptedOcrItems } from "./recoverInterruptedOcrItems";
+import { buildOcrDedupeKey } from "./buildOcrDedupeKey";
 import { pulseSyncOk } from "../../../src/core/aion/runtime/runtimePulseBus";
 import {
   getLinkRelayUserId,
@@ -19,16 +20,7 @@ function backoffMs(attemptCount: number): number {
   return Math.min(MAX_BACKOFF_MS, BASE_BACKOFF_MS * 2 ** Math.max(0, attemptCount - 1));
 }
 
-export function buildOcrDedupeKey(payload: OcrQueueJobPayload): string {
-  if (payload.imageUris.length === 1) return `uri:${payload.imageUris[0]}`;
-  if (payload.imageUris.length > 1) {
-    return `uris:${payload.imageUris.slice().sort().join("|")}`;
-  }
-  const t = (payload.pastedText ?? "").trim().slice(0, 4000);
-  let h = 0;
-  for (let i = 0; i < t.length; i += 1) h = (h * 31 + t.charCodeAt(i)) | 0;
-  return `paste:${h}:${t.length}:${payload.platform}`;
-}
+export { buildOcrDedupeKey } from "./buildOcrDedupeKey";
 
 export async function getOcrJob(jobId: string): Promise<OcrQueueItem | null> {
   const cur = await loadOcrQueue();

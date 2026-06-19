@@ -205,6 +205,18 @@
           "Блокировать source controls во время parsing — DONE",
           "Driver validate:code — DONE"
         ]
+      },
+      {
+        "priority": 13,
+        "id": "ocr-dedupe-context",
+        "title": "OCR queue: platform/currency-aware dedupe",
+        "status": "shipped",
+        "tasks": [
+          "Добавить platform и currency во все dedupe keys — DONE",
+          "Нормализовать currency к uppercase — DONE",
+          "Сохранить batch URI order-independent dedupe — DONE",
+          "Детерминированный dedupe test (4 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
