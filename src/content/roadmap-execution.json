@@ -301,13 +301,14 @@
         "priority": 20,
         "id": "vercel-hobby-cron-deploy-recovery",
         "title": "Vercel production: Hobby-compatible cron",
-        "status": "in_progress",
+        "status": "shipped",
         "tasks": [
           "Диагностировать Vercel failure check — DONE",
           "Подтвердить официальный Hobby limit once/day — DONE",
           "Перевести backup cron на 06:00 UTC daily — DONE",
           "Сохранить Supabase INSERT webhook как immediate path — DONE",
-          "Production deploy + live validation — IN_PROGRESS"
+          "Production deploy 2a676ab — SUCCESS",
+          "Live /operations + manifest 1.0.9 + 11 routes — VERIFIED"
         ]
       }
     ],

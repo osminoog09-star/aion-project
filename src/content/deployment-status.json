@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-18",
+  "lastUpdated": "2026-06-19",
   "productionUrl": "https://aion-com.vercel.app",
   "expectedGitRemote": "https://github.com/osminoog09-star/aion-project.git",
   "vercelProjectId": "prj_ep8i1CoHfHdZKwto8gkF5XStzonK",
@@ -22,18 +22,18 @@
   },
   "lastProductionDeploy": {
     "status": "ok",
-    "deployedAt": null,
-    "commit": "d8a2146",
-    "commitFull": "d8a2146",
-    "deploymentUrl": null,
-    "deploymentId": "81A6hrWhq",
-    "trigger": "git push master",
+    "deployedAt": "2026-06-19T16:41:36Z",
+    "commit": "2a676ab",
+    "commitFull": "2a676ab11041629f3639117d0e7dd7ed40f3ec36",
+    "deploymentUrl": "https://aion-c2abtcxvx-osminoog09-3913s-projects.vercel.app",
+    "deploymentId": "5125875624",
+    "trigger": "git push main",
     "durationMs": null,
-    "rollbackTarget": "GsrxHVBiU",
-    "notes": "All operations routes validated."
+    "rollbackTarget": "880c276e7e003a64345fa2535b9afcf6707a8600",
+    "notes": "Hobby-compatible daily cron; all 11 operations routes validated."
   },
   "routeValidation": {
-    "checkedAt": "2026-05-18T12:46:45.588Z",
+    "checkedAt": "2026-06-19T16:42:59.494Z",
     "baseUrl": "https://aion-com.vercel.app",
     "routes": {
       "/operations": {
@@ -95,6 +95,12 @@
     "allPassed": true
   },
   "deploymentTimeline": [
+    {
+      "at": "2026-06-19T16:42:59.494Z",
+      "kind": "validation_passed",
+      "summary": "All 11 routes passed (10543ms)",
+      "durationMs": 10543
+    },
     {
       "at": "2026-05-18T12:46:45.588Z",
       "kind": "validation_passed",
@@ -208,12 +214,6 @@
       "kind": "validation_failed",
       "summary": "Production validation failed — stale or broken deploy",
       "durationMs": 1680
-    },
-    {
-      "at": "2026-05-15T10:47:50.275Z",
-      "kind": "validation_failed",
-      "summary": "Production validation failed — stale or broken deploy",
-      "durationMs": 2343
     }
   ],
   "pipelineBlockers": [],
