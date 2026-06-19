@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-19T12:56:00.000Z",
+  "lastUpdated": "2026-06-19T13:40:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "EAS preview APK 1.0.9: build и release safety прошли, sync-manifest собрал новый apk-manifest.preview.json; чиню push-race бота перед повторным прогоном.",
-  "currentStatus": "Driver release loop: чиню push-race manifest",
+  "currentFocus": "EAS preview APK 1.0.9: build, manifest sync, compatibility и release safety прошли; чиню rebase step, где runner оставил дополнительные unstaged изменения.",
+  "currentStatus": "Driver release loop: чиню rebase unstaged changes",
   "latestRun": {
     "label": "EAS Build Driver preview",
     "status": "failed_on_push_race",
@@ -18,7 +18,7 @@
     "Expo GraphQL query исправлен по схеме eas-cli: builds.byId(buildId)."
   ],
   "next": [
-    "Закоммитить fix: EAS manifest bot делает stash + rebase на свежий master перед push.",
+    "Закоммитить fix: EAS manifest bot stash-ит весь dirty working tree перед rebase.",
     "Перезапустить Driver preview workflow и проверить, что apk-manifest.preview.json коммитится ботом без fetch-first отказа.",
     "После успешного APK manifest: device smoke Driver 1.0.9, затем уже field validation 8/8."
   ],
@@ -28,6 +28,6 @@
     "Portal build / repo:verify — OK",
     "Live Vercel пока не обновился: VERCEL_TOKEN и VERCEL_DEPLOY_HOOK не настроены в Actions",
     "EAS run 27826017815: build OK, release safety OK, manifest sync OK, push rejected из-за stale master",
-    "EAS workflow fix: готовится повторный прогон"
+    "EAS run 27827368751: build OK, manifest sync OK, release safety OK, commit-step failed на unstaged changes после partial stash"
   ]
 }

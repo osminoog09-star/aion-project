@@ -124,7 +124,7 @@ jobs:
             echo "No manifest changes"
             exit 0
           fi
-          git stash push -m "apk-manifest-preview-sync" -- public/apk-manifest.preview.json
+          git stash push --include-untracked -m "apk-manifest-preview-sync"
           git fetch origin master
           git rebase origin/master
           git stash pop
