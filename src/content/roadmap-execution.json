@@ -310,6 +310,18 @@
           "Production deploy 2a676ab — SUCCESS",
           "Live /operations + manifest 1.0.9 + 11 routes — VERIFIED"
         ]
+      },
+      {
+        "priority": 21,
+        "id": "update-center-manifest-single-flight",
+        "title": "Update Center: single-flight APK manifest refresh",
+        "status": "shipped",
+        "tasks": [
+          "Не запускать параллельные manifest refresh — DONE",
+          "Публиковать error timestamp при unexpected failure — DONE",
+          "Показывать loading и блокировать повторную кнопку — DONE",
+          "Driver validate:code — DONE"
+        ]
       }
     ],
     "blockedTasks": [

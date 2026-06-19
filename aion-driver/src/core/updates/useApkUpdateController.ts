@@ -66,8 +66,10 @@ export function useApkUpdateController() {
   const manifestRef = useRef<ApkUpdateManifest | null>(null);
   const lastSuccessRef = useRef<number | null>(null);
   const lastErrorRef = useRef<number | null>(null);
+  const refreshInFlightRef = useRef(false);
 
   const refresh = useCallback(async () => {
+    if (refreshInFlightRef.current) return;
     if (!MANIFEST_URL || __DEV__) {
       publishApkDiagnostics({
         manifest: null,
@@ -79,6 +81,7 @@ export function useApkUpdateController() {
       });
       return;
     }
+    refreshInFlightRef.current = true;
     setLoading(true);
     publishApkDiagnostics({
       loading: true,
@@ -120,7 +123,21 @@ export function useApkUpdateController() {
           manifestStale: false,
         });
       }
+    } catch {
+      const errAt = Date.now();
+      lastErrorRef.current = errAt;
+      setLastErrorAtMs(errAt);
+      setFromCache(false);
+      publishApkDiagnostics({
+        manifest: manifestRef.current,
+        evald: manifestRef.current ? evaluateApkUpdate(manifestRef.current) : null,
+        loading: false,
+        lastSuccessAtMs: lastSuccessRef.current,
+        lastErrorAtMs: errAt,
+        manifestStale: false,
+      });
     } finally {
+      refreshInFlightRef.current = false;
       setLoading(false);
     }
   }, []);

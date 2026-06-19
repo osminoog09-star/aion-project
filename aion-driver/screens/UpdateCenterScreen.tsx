@@ -391,7 +391,14 @@ export function UpdateCenterScreen() {
                 ) : null}
               </View>
             ) : null}
-            <GradientButton title="Обновить проверку манифеста" variant="ghost" className="mt-3" onPress={() => void apk.refresh()} />
+            <GradientButton
+              title={apk.loading ? "Проверяю манифест…" : "Обновить проверку манифеста"}
+              variant="ghost"
+              className="mt-3"
+              loading={apk.loading}
+              disabled={apk.loading}
+              onPress={() => void apk.refresh()}
+            />
           </GlowCard>
 
           <GlowCard glow="cyan" className="mb-4">
