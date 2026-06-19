@@ -5,6 +5,7 @@ import { Alert, Pressable, Text, View } from "react-native";
 import {
   formatFieldValidationBlockersRu,
   formatFieldValidationReportRu,
+  getNextFieldValidationActionRu,
   getFieldValidationTier,
   isFieldValidationProductionGateEnabled,
   type RouteFieldValidationStatus,
@@ -30,6 +31,7 @@ export function RouteTimelineFieldValidationCard({ validation, loading }: Props)
   const bgGate = backgroundTrackingProductionGate(validation.ready);
   const tier = getFieldValidationTier(validation);
   const showOtaSmoke = gateOn ? validation.ready : true;
+  const nextAction = getNextFieldValidationActionRu(validation);
 
   const copyReport = useCallback(async () => {
     await Clipboard.setStringAsync(formatFieldValidationReportRu(validation));
@@ -77,6 +79,9 @@ export function RouteTimelineFieldValidationCard({ validation, loading }: Props)
       {blockers ? (
         <Text className="mt-2 text-[10px] leading-4 text-amber-200/75">{blockers}</Text>
       ) : null}
+      <Text className="mt-2 text-[10px] leading-4 text-cyan-200/85">
+        Следующее: {nextAction}
+      </Text>
       <Text className="mt-2 text-[10px] leading-4 text-slate-400">
         Фон: {bgGate.reasonRu}
       </Text>

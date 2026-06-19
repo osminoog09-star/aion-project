@@ -195,16 +195,24 @@ export function formatFieldValidationBlockersRu(
   return failed.map((c) => `${c.labelRu} — ${c.detailRu}`).join(" · ");
 }
 
+/** One owner-facing next action for the Route Intelligence card. */
+export function getNextFieldValidationActionRu(status: RouteFieldValidationStatus): string {
+  const next = status.checks.find((c) => !c.passed);
+  if (!next) return "Все пункты пройдены — скопируйте отчёт и переходите к OTA smoke.";
+  return `${next.labelRu}: ${next.actionRu}`;
+}
+
 /** Полный отчёт для OTA smoke / owner (многострочный). */
 export function formatFieldValidationReportRu(status: RouteFieldValidationStatus): string {
   const header = status.ready
     ? "FIELD VALIDATION: ГОТОВО (8/8) — OTA smoke"
     : `FIELD VALIDATION: ${status.passedCount}/${status.totalCount}`;
+  const nextAction = `NEXT: ${getNextFieldValidationActionRu(status)}`;
   const lines = status.checks.map(
     (c) =>
       `${c.passed ? "✓" : "○"} ${c.labelRu}: ${c.detailRu}${
         !c.passed && c.actionRu ? ` → ${c.actionRu}` : ""
       }`,
   );
-  return [header, ...lines].join("\n");
+  return [header, nextAction, ...lines].join("\n");
 }

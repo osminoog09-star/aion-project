@@ -11,8 +11,8 @@
     "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-19T11:23:13.004Z",
-    "heartbeatAt": "2026-06-19T11:23:13.004Z",
+    "updatedAt": "2026-06-19T11:32:11.069Z",
+    "heartbeatAt": "2026-06-19T11:32:11.069Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -33,15 +33,22 @@
     "lastFailure": null,
     "lastCompletedAction": "AI заблокирован: Release failed",
     "retryCount": 0,
-    "validationProgress": "Усилены CI-проверки field validation и коррекции смен: убраны skip из локальных TS-тестов",
+    "validationProgress": "Route field validation получил явный следующий шаг и отчёт NEXT",
     "progressPercent": 68,
     "etaMinutes": 45,
-    "autonomousDepth": 4,
+    "autonomousDepth": 5,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "aion-driver/scripts/ci/lib/compileTsModule.mjs",
+    "currentFile": "aion-driver/features/route/computeRouteFieldValidation.ts",
     "recentActions": [
+      {
+        "at": "2026-06-19T11:32:11.069Z",
+        "tag": "CODE",
+        "message": "Route field validation получил явный следующий шаг и отчёт NEXT",
+        "file": "aion-driver/features/route/computeRouteFieldValidation.ts",
+        "repo": "aion-project"
+      },
       {
         "at": "2026-06-19T11:23:13.004Z",
         "tag": "CODE",
@@ -256,17 +263,26 @@
         "message": "Связка live-execution с owner-visible-work",
         "file": ".cursor/rules/aion-live-execution.mdc",
         "repo": "aion-project"
-      },
-      {
-        "at": "2026-05-15T13:17:43.549Z",
-        "tag": "CODE",
-        "message": "Правило owner-visible-work + hooks после save/shell",
-        "file": ".cursor/rules/aion-owner-visible-work.mdc",
-        "repo": "aion-project"
       }
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-19T11:32:11.069Z",
+      "phase": "coding",
+      "summary": "[CODE] Route field validation получил явный следующий шаг и отчёт NEXT"
+    },
+    {
+      "at": "2026-06-19T11:30:38.501Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Route intelligence UX + field validation",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Проверка backfill и stop-zone на реальном устройстве",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-06-19T11:23:13.004Z",
       "phase": "coding",
@@ -919,21 +935,15 @@
       "phase": "coding",
       "summary": "coding: Driver field validation — backfill stats on route timeline",
       "feedEventId": "evt-2026-05-15-exec-dz3umf"
-    },
-    {
-      "at": "2026-05-15T11:43:34.711Z",
-      "phase": "completed",
-      "summary": "completed: Live orchestration system operational",
-      "feedEventId": "evt-2026-05-15-exec-wt4fzy"
-    },
-    {
-      "at": "2026-05-15T11:43:23.275Z",
-      "phase": "validating",
-      "summary": "validating: Build + route manifests OK",
-      "feedEventId": "evt-2026-05-15-exec-t5jvou"
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-19T11:32:11.069Z"
+    },
+    {
+      "at": "2026-06-19T11:30:38.501Z"
+    },
     {
       "at": "2026-06-19T11:23:13.004Z"
     },
@@ -1071,12 +1081,6 @@
     },
     {
       "at": "2026-05-15T15:34:27.570Z"
-    },
-    {
-      "at": "2026-05-15T15:34:17.577Z"
-    },
-    {
-      "at": "2026-05-15T15:34:07.554Z"
     }
   ]
 }

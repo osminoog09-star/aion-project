@@ -3,6 +3,7 @@
  * Run: node scripts/ci/test-route-field-validation.mjs
  */
 import assert from "node:assert/strict";
+import { compileTsModule } from "./lib/compileTsModule.mjs";
 
 const summaryBase = {
   totalSessions: 2,
@@ -37,22 +38,15 @@ const historicalOk = {
   hourOfDayPatterns: [],
 };
 
-async function loadCompute() {
-  try {
-    const mod = await import("../../features/route/computeRouteFieldValidation.ts");
-    return mod;
-  } catch (err) {
-    console.log("skip TS import — run npm run typecheck:", err?.message ?? err);
-    process.exit(0);
-  }
-}
+const routeFieldValidation = compileTsModule("features/route/computeRouteFieldValidation.ts");
 
 async function main() {
   const {
     computeRouteFieldValidation,
     formatFieldValidationBlockersRu,
     formatFieldValidationReportRu,
-  } = await loadCompute();
+    getNextFieldValidationActionRu,
+  } = routeFieldValidation;
 
   const empty = computeRouteFieldValidation({
     summary: {
@@ -102,13 +96,16 @@ async function main() {
   const blockers = formatFieldValidationBlockersRu(empty);
   assert.ok(blockers.includes("Есть GPS-смены"));
   assert.equal(formatFieldValidationBlockersRu(full), "");
+  assert.ok(getNextFieldValidationActionRu(empty).includes("Смена"));
+  assert.ok(getNextFieldValidationActionRu(full).includes("OTA smoke"));
   assert.ok(empty.checks.every((c) => c.passed === false ? c.actionRu.length > 0 : true));
   assert.ok(full.checks.every((c) => c.actionRu.length > 0));
 
   const report = formatFieldValidationReportRu(full);
   assert.ok(report.includes("ГОТОВО"));
+  assert.ok(report.includes("NEXT:"));
 
-  console.log("test-route-field-validation: ok (5 cases)");
+  console.log("test-route-field-validation: ok (6 cases)");
 }
 
 main().catch((e) => {
