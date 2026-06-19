@@ -91,3 +91,59 @@ assert.equal(summary.failed, 1);
 assert.equal(summary.done, 1);
 
 console.log("test-ocr-queue-summary: ok (4 counters)");
+
+const { validateFuelOcrConfirmation } = compileTsModule(
+  "features/import/confirmation/validateFuelOcrConfirmation.ts",
+);
+assert.equal(
+  validateFuelOcrConfirmation({
+    total: 45,
+    liters: 25,
+    unitPrice: 1.8,
+    confidence: 0.9,
+    totalEditedByUser: false,
+  }).valid,
+  true,
+);
+assert.equal(
+  validateFuelOcrConfirmation({
+    total: 0,
+    liters: 25,
+    unitPrice: 1.8,
+    confidence: 0.9,
+    totalEditedByUser: true,
+  }).valid,
+  false,
+);
+assert.equal(
+  validateFuelOcrConfirmation({
+    total: 45,
+    liters: -1,
+    unitPrice: 1.8,
+    confidence: 0.9,
+    totalEditedByUser: true,
+  }).valid,
+  false,
+);
+assert.equal(
+  validateFuelOcrConfirmation({
+    total: 45,
+    liters: 25,
+    unitPrice: -1,
+    confidence: 0.9,
+    totalEditedByUser: true,
+  }).valid,
+  false,
+);
+assert.equal(
+  validateFuelOcrConfirmation({
+    total: 45,
+    liters: 25,
+    unitPrice: 1.8,
+    confidence: 0.3,
+    totalEditedByUser: false,
+  }).valid,
+  false,
+);
+
+console.log("test-fuel-ocr-confirmation: ok (5 cases)");

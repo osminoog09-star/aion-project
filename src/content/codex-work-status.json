@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-19T15:47:00.000Z",
+  "lastUpdated": "2026-06-19T15:54:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "EAS preview APK 1.0.9 run 27834179469: sync-manifest выполняется. Исправлена web-ошибка NativeWind color scheme, найденная browser smoke экрана импорта.",
-  "currentStatus": "Driver release loop: ждёт manifest sync; web theme runtime fixed",
+  "currentFocus": "EAS build d7baa96a ждёт FINISHED внутри run 27834179469. Fuel OCR confirm теперь валидирует сумму, литры и цену и показывает водителю точную ошибку.",
+  "currentStatus": "Driver release loop: EAS build pending; fuel OCR confirm hardened",
   "latestRun": {
     "label": "EAS Build Driver preview",
     "status": "sync_manifest_in_progress",
@@ -21,7 +21,8 @@
     "Изменение текста, платформы или изображения сбрасывает старый OCR result; источник заблокирован на время parsing.",
     "OCR image dedupe key включает platform + currency и не возвращает Bolt/EUR result для Uber/USD.",
     "Экран импорта показывает pending/processing/failed OCR jobs и позволяет повторить failed; AION Link ведёт на типизированный auth route.",
-    "react-native-css-interop patch больше не вызывает manual colorScheme.set для darkMode media на web."
+    "react-native-css-interop patch больше не вызывает manual colorScheme.set для darkMode media на web.",
+    "Fuel OCR confirm блокирует пустую сумму, отрицательные литры/цену и требует ручной проверки при низкой confidence."
   ],
   "next": [
     "Дождаться sync-manifest run 27834179469 и проверить bot commit для apk-manifest.preview.json.",
@@ -38,6 +39,7 @@
     "EAS run 27833843484: отменён concurrency после следующего Driver push",
     "EAS run 27834179469: build OK; sync-manifest IN_PROGRESS",
     "Driver npm run validate:code — OK, включая OCR confirm (4), queue recovery (5), dedupe context (4), queue summary (4)",
-    "Driver web smoke: экран импорта рендерится; NativeWind darkMode media runtime error исправлен patch-package"
+    "Driver web smoke: экран импорта рендерится; NativeWind darkMode media runtime error исправлен patch-package",
+    "Fuel OCR confirmation tests — OK (5 cases)"
   ]
 }

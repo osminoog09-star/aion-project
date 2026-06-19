@@ -242,6 +242,19 @@
           "Сохранить существующий Babel compatibility patch — DONE",
           "Metro web bundle + Driver validate:code — DONE"
         ]
+      },
+      {
+        "priority": 16,
+        "id": "fuel-ocr-confirmation-validation",
+        "title": "Fuel OCR confirm: явная валидация чека",
+        "status": "shipped",
+        "tasks": [
+          "Блокировать пустую/нулевую сумму — DONE",
+          "Блокировать отрицательные литры и цену за единицу — DONE",
+          "Требовать ручную сумму при низкой OCR confidence — DONE",
+          "Показывать точную ошибку в fuel modal — DONE",
+          "Детерминированный validation test (5 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

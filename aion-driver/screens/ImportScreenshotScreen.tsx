@@ -36,6 +36,7 @@ import type { OcrParseResult, OcrTripRow, PayoutPlatform } from "../features/imp
 import type { FuelReceiptExtraction } from "../features/import/extraction/fuelReceiptTypes";
 import { recomputeOcrParseTotals } from "../features/import/services/ocrParseMapper";
 import { validateOcrConfirmation } from "../features/import/confirmation/validateOcrConfirmation";
+import { validateFuelOcrConfirmation } from "../features/import/confirmation/validateFuelOcrConfirmation";
 import { captureOcrError } from "../lib/sentry";
 import { appendOcrImport } from "../storage/driver/ocrImportStorage";
 import {
@@ -118,6 +119,7 @@ export function ImportScreenshotScreen() {
   const [confirmationError, setConfirmationError] = useState<string | null>(null);
   const [queueStats, setQueueStats] = useState<OcrQueueStats | null>(null);
   const [replayingFailed, setReplayingFailed] = useState(false);
+  const [fuelConfirmationError, setFuelConfirmationError] = useState<string | null>(null);
   const [fuelModal, setFuelModal] = useState<{
     open: boolean;
     extraction: FuelReceiptExtraction | null;
@@ -144,6 +146,7 @@ export function ImportScreenshotScreen() {
     setProgressPhase(0);
     setAdded(false);
     setConfirmationError(null);
+    setFuelConfirmationError(null);
     setFuelModal({
       open: false,
       extraction: null,
@@ -159,6 +162,7 @@ export function ImportScreenshotScreen() {
     setEditedTrips(null);
     setAdded(false);
     setConfirmationError(null);
+    setFuelConfirmationError(null);
     setProgress("");
     setFuelModal((current) => ({ ...current, open: false }));
   }, []);
@@ -281,6 +285,7 @@ export function ImportScreenshotScreen() {
           editFuelType:
             f.fuelFamily && f.fuelFamily !== "unknown" ? f.fuelFamily.toUpperCase() : "",
         });
+        setFuelConfirmationError(null);
       }
     } catch (e) {
       captureOcrError(e, { platform, currency });
@@ -329,12 +334,24 @@ export function ImportScreenshotScreen() {
     const fr = fuelModal.extraction;
     if (!fr || !activeShift) return;
     const parsedTotal = parseAmountInput(fuelModal.editTotal);
-    const total = parsedTotal ?? fr.fields.totalPrice;
-    if (total == null || total <= 0) return;
-    if (fr.confidence < 0.55 && parsedTotal == null) return;
+    const total = parsedTotal ?? fr.fields.totalPrice ?? null;
     const liters = parseAmountInput(fuelModal.editLiters) ?? fr.fields.liters ?? 0;
     let unitPrice = parseAmountInput(fuelModal.editUnit) ?? fr.fields.pricePerLiter ?? 0;
-    if (unitPrice <= 0 && liters > 0) unitPrice = Math.round((total / liters) * 1000) / 1000;
+    const validation = validateFuelOcrConfirmation({
+      total,
+      liters,
+      unitPrice,
+      confidence: fr.confidence,
+      totalEditedByUser: parsedTotal != null,
+    });
+    if (!validation.valid) {
+      setFuelConfirmationError(validation.message);
+      return;
+    }
+    const confirmedTotal = total as number;
+    if (unitPrice <= 0 && liters > 0) {
+      unitPrice = Math.round((confirmedTotal / liters) * 1000) / 1000;
+    }
     const fuelType =
       fuelModal.editFuelType.trim() ||
       (fr.fields.fuelFamily && fr.fields.fuelFamily !== "unknown"
@@ -345,8 +362,8 @@ export function ImportScreenshotScreen() {
       addedAtMs: Date.now(),
       fuelType,
       liters,
-      totalCost: total,
-      unitPrice: unitPrice > 0 ? unitPrice : total,
+      totalCost: confirmedTotal,
+      unitPrice: unitPrice > 0 ? unitPrice : confirmedTotal,
       confidence: fr.confidence,
       source: "ocr",
     };
@@ -354,10 +371,11 @@ export function ImportScreenshotScreen() {
     void appendAionTimelineEvent({
       type: "fuel_ocr_attached",
       title: "Топливо из OCR",
-      detail: `${fuelType} · ${total.toFixed(2)} · OCR ${Math.round(fr.confidence * 100)}%`,
+      detail: `${fuelType} · ${confirmedTotal.toFixed(2)} · OCR ${Math.round(fr.confidence * 100)}%`,
       moduleId: "driver",
     });
     setFuelModal((s) => ({ ...s, open: false }));
+    setFuelConfirmationError(null);
   }, [fuelModal, activeShift, addConfirmedFuelEntry]);
 
   const bgVariant =
@@ -921,6 +939,11 @@ export function ImportScreenshotScreen() {
                       onPress={() => void confirmFuelToShift()}
                     />
                   </View>
+                  {fuelConfirmationError ? (
+                    <Text className="mt-3 text-center text-sm text-amber-300">
+                      {fuelConfirmationError}
+                    </Text>
+                  ) : null}
                 </>
               )}
             </Pressable>
