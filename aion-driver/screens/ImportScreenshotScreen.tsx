@@ -896,14 +896,20 @@ export function ImportScreenshotScreen() {
                 <>
                   <TextInput
                     value={fuelModal.editFuelType}
-                    onChangeText={(t) => setFuelModal((s) => ({ ...s, editFuelType: t }))}
+                    onChangeText={(t) => {
+                      setFuelConfirmationError(null);
+                      setFuelModal((s) => ({ ...s, editFuelType: t }));
+                    }}
                     placeholder="Тип топлива"
                     placeholderTextColor="#64748b"
                     className="mt-4 rounded-xl border border-white/10 bg-slate-900/90 px-3 py-2 text-sm text-white"
                   />
                   <TextInput
                     value={fuelModal.editLiters}
-                    onChangeText={(t) => setFuelModal((s) => ({ ...s, editLiters: t }))}
+                    onChangeText={(t) => {
+                      setFuelConfirmationError(null);
+                      setFuelModal((s) => ({ ...s, editLiters: t }));
+                    }}
                     placeholder="Литры"
                     keyboardType="decimal-pad"
                     placeholderTextColor="#64748b"
@@ -911,7 +917,10 @@ export function ImportScreenshotScreen() {
                   />
                   <TextInput
                     value={fuelModal.editTotal}
-                    onChangeText={(t) => setFuelModal((s) => ({ ...s, editTotal: t }))}
+                    onChangeText={(t) => {
+                      setFuelConfirmationError(null);
+                      setFuelModal((s) => ({ ...s, editTotal: t }));
+                    }}
                     placeholder="Сумма"
                     keyboardType="decimal-pad"
                     placeholderTextColor="#64748b"
@@ -919,7 +928,10 @@ export function ImportScreenshotScreen() {
                   />
                   <TextInput
                     value={fuelModal.editUnit}
-                    onChangeText={(t) => setFuelModal((s) => ({ ...s, editUnit: t }))}
+                    onChangeText={(t) => {
+                      setFuelConfirmationError(null);
+                      setFuelModal((s) => ({ ...s, editUnit: t }));
+                    }}
                     placeholder="Цена за единицу (опционально)"
                     keyboardType="decimal-pad"
                     placeholderTextColor="#64748b"
