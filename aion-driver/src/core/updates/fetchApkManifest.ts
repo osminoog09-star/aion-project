@@ -79,25 +79,27 @@ export async function fetchApkUpdateManifest(
  */
 export async function fetchApkUpdateManifestResilient(url: string): Promise<{
   manifest: ApkUpdateManifest | null;
+  /** True only when a failed network refresh fell back to persistent storage. */
   fromCache: boolean;
   attempts: number;
+  fetchedAtMs: number | null;
 }> {
   const normalizedUrl = url.trim();
-  if (!/^https?:\/\//i.test(normalizedUrl)) return { manifest: null, fromCache: false, attempts: 0 };
-
-  if (memory && memory.url === normalizedUrl && Date.now() - memory.at < 60_000) {
-    return { manifest: memory.manifest, fromCache: true, attempts: 0 };
+  if (!/^https?:\/\//i.test(normalizedUrl)) {
+    return { manifest: null, fromCache: false, attempts: 0, fetchedAtMs: null };
   }
 
-  let last: ApkUpdateManifest | null = null;
+  if (memory && memory.url === normalizedUrl && Date.now() - memory.at < 60_000) {
+    return { manifest: memory.manifest, fromCache: false, attempts: 0, fetchedAtMs: memory.at };
+  }
+
   for (let attempt = 0; attempt < 3; attempt += 1) {
     const m = await fetchApkUpdateManifest(normalizedUrl);
     if (m) {
-      last = m;
       const fetchedAt = Date.now();
       memory = { url: normalizedUrl, manifest: m, at: fetchedAt };
       await writeCache(normalizedUrl, fetchedAt, m);
-      return { manifest: m, fromCache: false, attempts: attempt + 1 };
+      return { manifest: m, fromCache: false, attempts: attempt + 1, fetchedAtMs: fetchedAt };
     }
     if (attempt < 2) await sleep(600 * 2 ** attempt);
   }
@@ -105,8 +107,8 @@ export async function fetchApkUpdateManifestResilient(url: string): Promise<{
   const row = await readCache(normalizedUrl);
   if (row?.json && isApkManifest(row.json)) {
     memory = { url: normalizedUrl, manifest: row.json, at: row.at };
-    return { manifest: row.json, fromCache: true, attempts: 3 };
+    return { manifest: row.json, fromCache: true, attempts: 3, fetchedAtMs: row.at };
   }
 
-  return { manifest: null, fromCache: false, attempts: 3 };
+  return { manifest: null, fromCache: false, attempts: 3, fetchedAtMs: null };
 }
