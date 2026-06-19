@@ -9,6 +9,7 @@ export type OwnerFieldValidationReport = {
   ready: boolean;
   passedCount: number | null;
   totalCount: number;
+  nextActionRu?: string | null;
   reportText: string | null;
   source: "owner_paste" | "cursor" | null;
 };
@@ -30,6 +31,7 @@ export function getLocalFieldValidationReport(): OwnerFieldValidationReport {
       ready: false,
       passedCount: null,
       totalCount: 8,
+      nextActionRu: null,
       reportText: null,
       source: null,
     };
@@ -41,8 +43,10 @@ export function parseFieldValidationReport(text: string): {
   ready: boolean;
   passedCount: number | null;
   totalCount: number;
+  nextActionRu: string | null;
 } {
-  const header = text.split("\n")[0]?.trim() ?? "";
+  const lines = text.split("\n").map((line) => line.trim()).filter(Boolean);
+  const header = lines[0] ?? "";
   const ready =
     /8\/8/i.test(header) ||
     /ГОТОВО/i.test(header) ||
@@ -50,10 +54,13 @@ export function parseFieldValidationReport(text: string): {
   const frac = header.match(/(\d+)\/(\d+)/);
   const passedCount = frac ? Number.parseInt(frac[1]!, 10) : ready ? 8 : null;
   const totalCount = frac ? Number.parseInt(frac[2]!, 10) : 8;
+  const nextLine = lines.find((line) => /^NEXT\s*:/i.test(line));
+  const nextActionRu = nextLine ? nextLine.replace(/^NEXT\s*:\s*/i, "").trim() || null : null;
   return {
     ready: ready || (passedCount != null && passedCount >= 8),
     passedCount,
     totalCount,
+    nextActionRu,
   };
 }
 
@@ -72,6 +79,7 @@ export function saveFieldValidationReport(input: {
     ready: parsed.ready,
     passedCount: parsed.passedCount,
     totalCount: parsed.totalCount,
+    nextActionRu: parsed.nextActionRu,
     reportText: input.reportText.trim(),
     source: input.source ?? "owner_paste",
   };

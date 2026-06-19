@@ -6,6 +6,7 @@ type ReportPayload = {
   ready: boolean;
   passedCount: number | null;
   totalCount: number;
+  nextActionRu?: string | null;
   submittedAt: string | null;
   reportText: string | null;
   instructionsRu?: string;
@@ -84,6 +85,11 @@ export function OwnerFieldValidationReportPanel() {
           {report.apkVersion ? (
             <span className="mt-1 block text-slate-500">APK: {report.apkVersion}</span>
           ) : null}
+        </p>
+      ) : null}
+      {report?.nextActionRu ? (
+        <p className="mt-2 rounded-lg border border-amber-500/20 bg-amber-500/5 px-3 py-2 text-xs text-amber-100/90">
+          Следующее: {report.nextActionRu}
         </p>
       ) : null}
       {report?.submittedAt ? (

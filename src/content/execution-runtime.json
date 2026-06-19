@@ -11,8 +11,8 @@
     "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-19T11:38:31.564Z",
-    "heartbeatAt": "2026-06-19T11:38:31.564Z",
+    "updatedAt": "2026-06-19T11:42:17.659Z",
+    "heartbeatAt": "2026-06-19T11:42:17.659Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -33,15 +33,22 @@
     "lastFailure": null,
     "lastCompletedAction": "AI заблокирован: Release failed",
     "retryCount": 0,
-    "validationProgress": "EAS wait теперь ретраит transient build:view failures",
+    "validationProgress": "Портал распознаёт NEXT из field validation отчёта",
     "progressPercent": 68,
     "etaMinutes": 45,
-    "autonomousDepth": 5,
+    "autonomousDepth": 6,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "scripts/wait-eas-build.mjs",
+    "currentFile": "src/lib/operations/field-validation-report.ts",
     "recentActions": [
+      {
+        "at": "2026-06-19T11:42:17.659Z",
+        "tag": "CODE",
+        "message": "Портал распознаёт NEXT из field validation отчёта",
+        "file": "src/lib/operations/field-validation-report.ts",
+        "repo": "aion-project"
+      },
       {
         "at": "2026-06-19T11:38:31.564Z",
         "tag": "CODE",
@@ -256,17 +263,26 @@
         "message": "Driver: CI тест field validation + refresh FGS при фокусе экрана",
         "file": "aion-driver/features/route/computeRouteFieldValidation.ts",
         "repo": "aion-driver"
-      },
-      {
-        "at": "2026-05-15T13:20:53.736Z",
-        "tag": "CODE",
-        "message": "Правка: hooks.json",
-        "file": "c:/Users/osmin/Desktop/???????/aion-com/.cursor/hooks.json",
-        "repo": "aion-project"
       }
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-19T11:42:17.659Z",
+      "phase": "coding",
+      "summary": "[CODE] Портал распознаёт NEXT из field validation отчёта"
+    },
+    {
+      "at": "2026-06-19T11:41:12.843Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Route intelligence UX + field validation",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Проверка backfill и stop-zone на реальном устройстве",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-06-19T11:38:31.564Z",
       "phase": "coding",
@@ -912,31 +928,15 @@
       "resultRu": "Этап выполнен",
       "icon": "✨",
       "confidence": 0.93
-    },
-    {
-      "at": "2026-05-15T11:51:21.016Z",
-      "phase": "coding",
-      "summary": "AI пишет и улучшает код: Проверка backfill и stop-zone на устройстве",
-      "feedEventId": "evt-2026-05-15-exec-pury9v",
-      "titleRu": "AI пишет и улучшает код",
-      "explanationRu": "Русский режим владельца на portal готов; следующий шаг — field validation в Driver",
-      "resultRu": "В процессе",
-      "icon": "⚡",
-      "confidence": 0.88
-    },
-    {
-      "at": "2026-05-15T11:51:13.667Z",
-      "phase": "completed",
-      "summary": "AI завершил этап: Режим владельца: русский AI-оператор",
-      "feedEventId": "evt-2026-05-15-exec-0smubs",
-      "titleRu": "AI завершил этап",
-      "explanationRu": "Человекочитаемые карточки, хронология AI, [AION АКТИВЕН] в Cursor, абстракция diff",
-      "resultRu": "Этап выполнен",
-      "icon": "✨",
-      "confidence": 0.94
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-19T11:42:17.659Z"
+    },
+    {
+      "at": "2026-06-19T11:41:12.843Z"
+    },
     {
       "at": "2026-06-19T11:38:31.564Z"
     },
@@ -1074,12 +1074,6 @@
     },
     {
       "at": "2026-05-15T15:34:57.592Z"
-    },
-    {
-      "at": "2026-05-15T15:34:47.554Z"
-    },
-    {
-      "at": "2026-05-15T15:34:37.692Z"
     }
   ]
 }
