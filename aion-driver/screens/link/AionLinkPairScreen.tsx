@@ -60,7 +60,7 @@ export function AionLinkPairScreen() {
                 Войдите через Google или Email, чтобы связать устройства через облако.
               </Text>
               <View className="mt-4">
-                <GradientButton title="Войти" variant="primary" onPress={() => router.push("/auth/login")} />
+                <GradientButton title="Войти" variant="primary" onPress={() => router.push("/(auth)/login")} />
               </View>
             </GlowCard>
           ) : (

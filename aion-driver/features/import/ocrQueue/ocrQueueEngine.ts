@@ -3,6 +3,7 @@ import type { OcrQueueItem, OcrQueueJobPayload } from "./ocrQueueTypes";
 import { loadOcrQueue, saveOcrQueue, updateOcrQueue } from "./ocrQueueStorage";
 import { recoverInterruptedOcrItems } from "./recoverInterruptedOcrItems";
 import { buildOcrDedupeKey } from "./buildOcrDedupeKey";
+import { summarizeOcrQueue, type OcrQueueStats } from "./summarizeOcrQueue";
 import { pulseSyncOk } from "../../../src/core/aion/runtime/runtimePulseBus";
 import {
   getLinkRelayUserId,
@@ -27,19 +28,9 @@ export async function getOcrJob(jobId: string): Promise<OcrQueueItem | null> {
   return cur.find((x) => x.id === jobId) ?? null;
 }
 
-export async function getOcrQueueStats(): Promise<{
-  pending: number;
-  processing: number;
-  failed: number;
-  done: number;
-}> {
+export async function getOcrQueueStats(): Promise<OcrQueueStats> {
   const cur = await loadOcrQueue();
-  return {
-    pending: cur.filter((x) => x.status === "pending").length,
-    processing: cur.filter((x) => x.status === "processing").length,
-    failed: cur.filter((x) => x.status === "failed").length,
-    done: cur.filter((x) => x.status === "done").length,
-  };
+  return summarizeOcrQueue(cur);
 }
 
 export type EnqueueOcrResult = {

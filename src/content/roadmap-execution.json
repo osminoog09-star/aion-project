@@ -217,6 +217,19 @@
           "Сохранить batch URI order-independent dedupe — DONE",
           "Детерминированный dedupe test (4 cases) — DONE"
         ]
+      },
+      {
+        "priority": 14,
+        "id": "ocr-queue-retry-ux",
+        "title": "OCR queue: видимый статус и ручной retry",
+        "status": "shipped",
+        "tasks": [
+          "Показывать pending/processing/failed на экране импорта — DONE",
+          "Повтор failed jobs одной командой — DONE",
+          "Обновлять счётчики по queue events — DONE",
+          "Исправить typed auth route в AION Link — DONE",
+          "Queue summary test + Driver validate:code — DONE"
+        ]
       }
     ],
     "blockedTasks": [

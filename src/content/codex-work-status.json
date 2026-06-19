@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-19T15:35:00.000Z",
+  "lastUpdated": "2026-06-19T15:41:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "EAS preview APK 1.0.9 run 27834179469: build завершён успешно, sync-manifest выполняется. OCR dedupe теперь различает платформу и валюту для одного изображения.",
-  "currentStatus": "Driver release loop: ждёт manifest sync; OCR dedupe context fixed",
+  "currentFocus": "EAS preview APK 1.0.9 run 27834179469: sync-manifest выполняется. На экране импорта добавлен live-статус OCR queue и ручной retry failed jobs; исправлен Link login route.",
+  "currentStatus": "Driver release loop: ждёт manifest sync; OCR retry UX ready",
   "latestRun": {
     "label": "EAS Build Driver preview",
     "status": "sync_manifest_in_progress",
@@ -19,11 +19,12 @@
     "Post-OCR confirm валидирует выплату и суммы поездок до записи в историю; добавлены 4 CI-сценария.",
     "OCR queue при старте возвращает прерванные processing jobs в pending без сброса attempt count; добавлены 5 CI-сценариев.",
     "Изменение текста, платформы или изображения сбрасывает старый OCR result; источник заблокирован на время parsing.",
-    "OCR image dedupe key включает platform + currency и не возвращает Bolt/EUR result для Uber/USD."
+    "OCR image dedupe key включает platform + currency и не возвращает Bolt/EUR result для Uber/USD.",
+    "Экран импорта показывает pending/processing/failed OCR jobs и позволяет повторить failed; AION Link ведёт на типизированный auth route."
   ],
   "next": [
     "Дождаться sync-manifest run 27834179469 и проверить bot commit для apk-manifest.preview.json.",
-    "Проверить runtime retry OCR queue и сброс stale result на preview APK.",
+    "Проверить runtime retry OCR queue, queue-status card и сброс stale result на preview APK.",
     "После успешного APK manifest: device smoke Driver 1.0.9, затем уже field validation 8/8."
   ],
   "checks": [
@@ -35,6 +36,7 @@
     "EAS run 27827368751: build OK, manifest sync OK, release safety OK, commit-step failed на unstaged changes после partial stash",
     "EAS run 27833843484: отменён concurrency после следующего Driver push",
     "EAS run 27834179469: build OK; sync-manifest IN_PROGRESS",
-    "Driver npm run validate:code — OK, включая OCR confirm (4), queue recovery (5), dedupe context (4)"
+    "Driver npm run validate:code — OK, включая OCR confirm (4), queue recovery (5), dedupe context (4), queue summary (4)",
+    "Driver web smoke: экран импорта рендерится; найден отдельный ThemeContext darkMode warning/error для следующего среза"
   ]
 }

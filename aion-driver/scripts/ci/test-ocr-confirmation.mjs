@@ -74,3 +74,20 @@ assert.notEqual(
 );
 
 console.log("test-ocr-dedupe-key: ok (4 cases)");
+
+const { summarizeOcrQueue } = compileTsModule(
+  "features/import/ocrQueue/summarizeOcrQueue.ts",
+);
+const summary = summarizeOcrQueue([
+  { status: "pending" },
+  { status: "pending" },
+  { status: "processing" },
+  { status: "failed" },
+  { status: "done" },
+]);
+assert.equal(summary.pending, 2);
+assert.equal(summary.processing, 1);
+assert.equal(summary.failed, 1);
+assert.equal(summary.done, 1);
+
+console.log("test-ocr-queue-summary: ok (4 counters)");

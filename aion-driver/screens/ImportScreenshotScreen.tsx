@@ -38,7 +38,13 @@ import { recomputeOcrParseTotals } from "../features/import/services/ocrParseMap
 import { validateOcrConfirmation } from "../features/import/confirmation/validateOcrConfirmation";
 import { captureOcrError } from "../lib/sentry";
 import { appendOcrImport } from "../storage/driver/ocrImportStorage";
-import { runOcrThroughQueue } from "../features/import/ocrQueue/ocrQueueEngine";
+import {
+  getOcrQueueStats,
+  replayFailedOcrJobs,
+  runOcrThroughQueue,
+} from "../features/import/ocrQueue/ocrQueueEngine";
+import { subscribeOcrQueue } from "../features/import/ocrQueue/ocrQueueEvents";
+import type { OcrQueueStats } from "../features/import/ocrQueue/summarizeOcrQueue";
 import { appendAionTimelineEvent } from "../storage/core/aionTimelineStorage";
 import { useAionEntityStore } from "../src/core/aion/entity/aionEntityStore";
 import { useShift } from "../hooks/useShift";
@@ -110,6 +116,8 @@ export function ImportScreenshotScreen() {
   const [editedTrips, setEditedTrips] = useState<OcrTripRow[] | null>(null);
   const [added, setAdded] = useState(false);
   const [confirmationError, setConfirmationError] = useState<string | null>(null);
+  const [queueStats, setQueueStats] = useState<OcrQueueStats | null>(null);
+  const [replayingFailed, setReplayingFailed] = useState(false);
   const [fuelModal, setFuelModal] = useState<{
     open: boolean;
     extraction: FuelReceiptExtraction | null;
@@ -154,6 +162,26 @@ export function ImportScreenshotScreen() {
     setProgress("");
     setFuelModal((current) => ({ ...current, open: false }));
   }, []);
+
+  const refreshQueueStats = useCallback(async () => {
+    setQueueStats(await getOcrQueueStats());
+  }, []);
+
+  useEffect(() => {
+    void refreshQueueStats();
+    return subscribeOcrQueue(() => void refreshQueueStats());
+  }, [refreshQueueStats]);
+
+  const replayFailed = useCallback(async () => {
+    if (replayingFailed) return;
+    setReplayingFailed(true);
+    try {
+      await replayFailedOcrJobs();
+      await refreshQueueStats();
+    } finally {
+      setReplayingFailed(false);
+    }
+  }, [refreshQueueStats, replayingFailed]);
 
   const pickGallery = async () => {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -458,6 +486,37 @@ export function ImportScreenshotScreen() {
               disabled={parsing}
             />
           </View>
+
+          {queueStats &&
+          (queueStats.pending > 0 || queueStats.processing > 0 || queueStats.failed > 0) ? (
+            <GlowCard glow={queueStats.failed > 0 ? "violet" : "neutral"} className="mb-4">
+              <View className="flex-row items-center justify-between gap-3">
+                <View className="flex-1">
+                  <Text className="text-xs uppercase tracking-widest text-slate-500">
+                    Очередь OCR
+                  </Text>
+                  <Text className="mt-1 text-sm text-slate-200">
+                    Ожидают: {queueStats.pending} · в работе: {queueStats.processing} · ошибок:{" "}
+                    {queueStats.failed}
+                  </Text>
+                </View>
+                {queueStats.failed > 0 ? (
+                  <Pressable
+                    onPress={() => void replayFailed()}
+                    disabled={replayingFailed}
+                    accessibilityRole="button"
+                    accessibilityLabel="Повторить задачи OCR с ошибкой"
+                    className={`h-10 flex-row items-center gap-1.5 rounded-xl border border-violet-400/30 bg-violet-500/10 px-3 ${
+                      replayingFailed ? "opacity-50" : ""
+                    }`}
+                  >
+                    <MaterialIcons name="refresh" size={18} color="#c4b5fd" />
+                    <Text className="text-xs font-semibold text-violet-200">Повторить</Text>
+                  </Pressable>
+                ) : null}
+              </View>
+            </GlowCard>
+          ) : null}
 
           {(images.length > 0 || pastedText.trim()) ? (
             <Animated.View entering={FadeInDown.duration(400)}>
