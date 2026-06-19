@@ -116,6 +116,7 @@ export function ImportScreenshotScreen() {
   const [result, setResult] = useState<OcrParseResult | null>(null);
   const [editedTrips, setEditedTrips] = useState<OcrTripRow[] | null>(null);
   const [added, setAdded] = useState(false);
+  const [savingHistory, setSavingHistory] = useState(false);
   const [confirmationError, setConfirmationError] = useState<string | null>(null);
   const [queueStats, setQueueStats] = useState<OcrQueueStats | null>(null);
   const [replayingFailed, setReplayingFailed] = useState(false);
@@ -145,6 +146,7 @@ export function ImportScreenshotScreen() {
     setProgress("");
     setProgressPhase(0);
     setAdded(false);
+    setSavingHistory(false);
     setConfirmationError(null);
     setFuelConfirmationError(null);
     setFuelModal({
@@ -161,6 +163,7 @@ export function ImportScreenshotScreen() {
     setResult(null);
     setEditedTrips(null);
     setAdded(false);
+    setSavingHistory(false);
     setConfirmationError(null);
     setFuelConfirmationError(null);
     setProgress("");
@@ -302,7 +305,7 @@ export function ImportScreenshotScreen() {
 
   const onAddToHistory = async () => {
     const parse = displayResult;
-    if (!parse) return;
+    if (!parse || savingHistory || added) return;
     const validation = validateOcrConfirmation({
       earnings: parse.earnings,
       trips: parse.trips,
@@ -311,23 +314,31 @@ export function ImportScreenshotScreen() {
       setConfirmationError(validation.message);
       return;
     }
-    const rec = {
-      id: `ocr_${Date.now()}_${Math.random().toString(16).slice(2)}`,
-      createdAt: new Date().toISOString(),
-      platform: parse.platform,
-      parse,
-      sourceUri: images[0] ?? undefined,
-      shiftId: activeShift?.id,
-    };
-    await appendOcrImport(rec);
-    void appendAionTimelineEvent({
-      type: "ocr_imported",
-      title: "OCR в историю",
-      detail: `${parse.platform.toUpperCase()} · ${formatCurrencyDisplay(parse.netProfit, currency)}`,
-      moduleId: "driver",
-    });
-    setAdded(true);
+    setSavingHistory(true);
     setConfirmationError(null);
+    try {
+      const rec = {
+        id: `ocr_${Date.now()}_${Math.random().toString(16).slice(2)}`,
+        createdAt: new Date().toISOString(),
+        platform: parse.platform,
+        parse,
+        sourceUri: images[0] ?? undefined,
+        shiftId: activeShift?.id,
+      };
+      await appendOcrImport(rec);
+      void appendAionTimelineEvent({
+        type: "ocr_imported",
+        title: "OCR в историю",
+        detail: `${parse.platform.toUpperCase()} · ${formatCurrencyDisplay(parse.netProfit, currency)}`,
+        moduleId: "driver",
+      });
+      setAdded(true);
+    } catch (error) {
+      captureOcrError(error, { platform: parse.platform, currency });
+      setConfirmationError("Не удалось сохранить импорт. Проверьте хранилище и повторите.");
+    } finally {
+      setSavingHistory(false);
+    }
   };
 
   const confirmFuelToShift = useCallback(async () => {
@@ -380,6 +391,7 @@ export function ImportScreenshotScreen() {
 
   const bgVariant =
     settings.nightContrast === "nightDrive" ? "nightDrive" : "cockpit";
+  const sourceLocked = parsing || savingHistory;
 
   return (
     <CockpitBackground variant={bgVariant}>
@@ -430,7 +442,7 @@ export function ImportScreenshotScreen() {
                     setPlatform(p.id);
                     invalidateParsedResult();
                   }}
-                  disabled={parsing}
+                  disabled={sourceLocked}
                   className={`rounded-2xl border px-4 py-2.5 ${
                     platform === p.id
                       ? "border-cyan-400/60 bg-cyan-500/20"
@@ -455,9 +467,9 @@ export function ImportScreenshotScreen() {
                     invalidateParsedResult();
                   })
                 }
-                disabled={parsing}
+                disabled={sourceLocked}
                 className={`rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 ${
-                  parsing ? "opacity-50" : ""
+                  sourceLocked ? "opacity-50" : ""
                 }`}
               >
                 <Text className="text-xs font-semibold text-cyan-200">Вставить из буфера</Text>
@@ -469,7 +481,7 @@ export function ImportScreenshotScreen() {
                 setPastedText(text);
                 invalidateParsedResult();
               }}
-              editable={!parsing}
+              editable={!sourceLocked}
               placeholder="Вставьте сюда текст со скриншота (Bolt / Uber / …)"
               placeholderTextColor="#64748b"
               multiline
@@ -487,21 +499,21 @@ export function ImportScreenshotScreen() {
               title="Галерея"
               subtitle="PNG / JPEG"
               onPress={() => void pickGallery()}
-              disabled={parsing}
+              disabled={sourceLocked}
             />
             <ActionTile
               icon="folder-open"
               title="Файл"
               subtitle="Документ"
               onPress={() => void pickFile()}
-              disabled={parsing}
+              disabled={sourceLocked}
             />
             <ActionTile
               icon="photo-camera"
               title="Камера"
               subtitle="Снимок"
               onPress={() => setCameraOpen(true)}
-              disabled={parsing}
+              disabled={sourceLocked}
             />
           </View>
 
@@ -542,7 +554,7 @@ export function ImportScreenshotScreen() {
                 <Text className="text-xs uppercase tracking-widest text-slate-500">
                   Снимки ({images.length})
                 </Text>
-                <Pressable onPress={reset} hitSlop={12} disabled={parsing}>
+                <Pressable onPress={reset} hitSlop={12} disabled={sourceLocked}>
                   <Text className="text-sm font-semibold text-rose-300">Сбросить</Text>
                 </Pressable>
               </View>
@@ -582,7 +594,7 @@ export function ImportScreenshotScreen() {
                 title={parsing ? "Разбор…" : "Запустить AI-разбор"}
                 onPress={() => void onParse()}
                 loading={parsing}
-                disabled={parsing}
+                disabled={sourceLocked}
                 size="cockpit"
                 className="mb-2"
               />
@@ -853,10 +865,11 @@ export function ImportScreenshotScreen() {
                 </GlowCard>
               ) : null}
               <GradientButton
-                title={added ? "Добавлено в ленту" : "Добавить в историю"}
+                title={added ? "Добавлено в ленту" : savingHistory ? "Сохраняю…" : "Добавить в историю"}
                 variant={added ? "ghost" : "glass"}
                 onPress={() => void onAddToHistory()}
-                disabled={added || confirmation?.valid === false}
+                loading={savingHistory}
+                disabled={added || savingHistory || confirmation?.valid === false}
                 size="cockpit"
               />
               {confirmation?.valid === false || confirmationError ? (

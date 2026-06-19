@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-19T16:09:00.000Z",
+  "lastUpdated": "2026-06-19T16:14:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Preview APK 1.0.9 build 13 готов: EAS, manifest sync, compatibility и release checks прошли. Следующий внешний шаг — установка APK и device smoke.",
-  "currentStatus": "Driver APK 1.0.9 ready; awaiting device smoke",
+  "currentFocus": "Preview APK 1.0.9 build 13 готов и ждёт device smoke. OCR history save защищён от double-submit и показывает ошибку локального хранилища.",
+  "currentStatus": "Driver APK ready; OCR history save hardened",
   "latestRun": {
     "label": "EAS Build Driver preview",
     "status": "success",
@@ -23,7 +23,8 @@
     "Экран импорта показывает pending/processing/failed OCR jobs и позволяет повторить failed; AION Link ведёт на типизированный auth route.",
     "react-native-css-interop patch больше не вызывает manual colorScheme.set для darkMode media на web.",
     "Fuel OCR confirm блокирует пустую сумму, отрицательные литры/цену и требует ручной проверки при низкой confidence.",
-    "EAS run 27834179469 завершён success; manifest bot опубликовал APK 1.0.9 build 13 без rebase/push ошибки."
+    "EAS run 27834179469 завершён success; manifest bot опубликовал APK 1.0.9 build 13 без rebase/push ошибки.",
+    "OCR history использует single-flight save: double-submit заблокирован, source controls locked, storage error видим пользователю."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",

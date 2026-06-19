@@ -257,6 +257,19 @@
           "Показывать точную ошибку в fuel modal — DONE",
           "Детерминированный validation test (5 cases) — DONE"
         ]
+      },
+      {
+        "priority": 17,
+        "id": "ocr-history-single-flight-save",
+        "title": "OCR history: single-flight сохранение",
+        "status": "shipped",
+        "tasks": [
+          "Блокировать повторный submit до завершения AsyncStorage — DONE",
+          "Блокировать смену source и повторный parse во время save — DONE",
+          "Показывать loading state на кнопке истории — DONE",
+          "Показывать ошибку сохранения вместо unhandled rejection — DONE",
+          "Driver validate:code — DONE"
+        ]
       }
     ],
     "blockedTasks": [
