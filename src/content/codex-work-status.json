@@ -2,11 +2,11 @@
   "lastUpdated": "2026-06-19T12:56:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "EAS preview APK 1.0.9: build стартует, sync-manifest ждёт FINISHED и должен обновить apk-manifest.preview.json.",
-  "currentStatus": "Запушено, live ждёт Vercel deploy key",
+  "currentFocus": "EAS preview APK 1.0.9: build и release safety прошли, sync-manifest собрал новый apk-manifest.preview.json; чиню push-race бота перед повторным прогоном.",
+  "currentStatus": "Driver release loop: чиню push-race manifest",
   "latestRun": {
     "label": "EAS Build Driver preview",
-    "status": "in_progress",
+    "status": "failed_on_push_race",
     "url": "https://github.com/osminoog09-star/aion-project/actions/runs/27826017815"
   },
   "completed": [
@@ -18,9 +18,8 @@
     "Expo GraphQL query исправлен по схеме eas-cli: builds.byId(buildId)."
   ],
   "next": [
-    "Дождаться результата EAS run 27826017815.",
-    "Если sync-manifest пройдёт: проверить обновлённый apk-manifest.preview.json, запушенный ботом, и статус Vercel.",
-    "Если sync-manifest упадёт: разобрать новый лог и чинить только этот release-loop участок.",
+    "Закоммитить fix: EAS manifest bot делает stash + rebase на свежий master перед push.",
+    "Перезапустить Driver preview workflow и проверить, что apk-manifest.preview.json коммитится ботом без fetch-first отказа.",
     "После успешного APK manifest: device smoke Driver 1.0.9, затем уже field validation 8/8."
   ],
   "checks": [
@@ -28,6 +27,7 @@
     "npm run build — OK",
     "Portal build / repo:verify — OK",
     "Live Vercel пока не обновился: VERCEL_TOKEN и VERCEL_DEPLOY_HOOK не настроены в Actions",
-    "EAS preview workflow — проверяется"
+    "EAS run 27826017815: build OK, release safety OK, manifest sync OK, push rejected из-за stale master",
+    "EAS workflow fix: готовится повторный прогон"
   ]
 }

@@ -11,6 +11,10 @@ on:
       - "aion-driver/package.json"
       - "aion-driver/native-modules/**"
       - "aion-driver/plugins/**"
+      - "scripts/complete-apk-loop.mjs"
+      - "scripts/expo-build-api.mjs"
+      - "scripts/sync-apk-manifest-from-eas.mjs"
+      - "scripts/wait-eas-build.mjs"
       - ".github/workflows/eas-build-driver-preview.yml"
 
 env:
@@ -116,10 +120,18 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- public/apk-manifest.preview.json; then
+            echo "No manifest changes"
+            exit 0
+          fi
+          git stash push -m "apk-manifest-preview-sync" -- public/apk-manifest.preview.json
+          git fetch origin master
+          git rebase origin/master
+          git stash pop
           git add public/apk-manifest.preview.json
           if git diff --staged --quiet; then
             echo "No manifest changes"
             exit 0
           fi
           git commit -m "chore(release): sync preview APK manifest (${{ needs.build.outputs.build_id }})"
-          git push
+          git push origin HEAD:master
