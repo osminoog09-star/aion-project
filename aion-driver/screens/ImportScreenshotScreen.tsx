@@ -121,6 +121,7 @@ export function ImportScreenshotScreen() {
   const [queueStats, setQueueStats] = useState<OcrQueueStats | null>(null);
   const [replayingFailed, setReplayingFailed] = useState(false);
   const [fuelConfirmationError, setFuelConfirmationError] = useState<string | null>(null);
+  const [savingFuel, setSavingFuel] = useState(false);
   const [fuelModal, setFuelModal] = useState<{
     open: boolean;
     extraction: FuelReceiptExtraction | null;
@@ -149,6 +150,7 @@ export function ImportScreenshotScreen() {
     setSavingHistory(false);
     setConfirmationError(null);
     setFuelConfirmationError(null);
+    setSavingFuel(false);
     setFuelModal({
       open: false,
       extraction: null,
@@ -166,6 +168,7 @@ export function ImportScreenshotScreen() {
     setSavingHistory(false);
     setConfirmationError(null);
     setFuelConfirmationError(null);
+    setSavingFuel(false);
     setProgress("");
     setFuelModal((current) => ({ ...current, open: false }));
   }, []);
@@ -289,6 +292,7 @@ export function ImportScreenshotScreen() {
             f.fuelFamily && f.fuelFamily !== "unknown" ? f.fuelFamily.toUpperCase() : "",
         });
         setFuelConfirmationError(null);
+        setSavingFuel(false);
       }
     } catch (e) {
       captureOcrError(e, { platform, currency });
@@ -343,7 +347,7 @@ export function ImportScreenshotScreen() {
 
   const confirmFuelToShift = useCallback(async () => {
     const fr = fuelModal.extraction;
-    if (!fr || !activeShift) return;
+    if (!fr || !activeShift || savingFuel) return;
     const parsedTotal = parseAmountInput(fuelModal.editTotal);
     const total = parsedTotal ?? fr.fields.totalPrice ?? null;
     const liters = parseAmountInput(fuelModal.editLiters) ?? fr.fields.liters ?? 0;
@@ -378,16 +382,24 @@ export function ImportScreenshotScreen() {
       confidence: fr.confidence,
       source: "ocr",
     };
-    await addConfirmedFuelEntry(entry);
-    void appendAionTimelineEvent({
-      type: "fuel_ocr_attached",
-      title: "Топливо из OCR",
-      detail: `${fuelType} · ${confirmedTotal.toFixed(2)} · OCR ${Math.round(fr.confidence * 100)}%`,
-      moduleId: "driver",
-    });
-    setFuelModal((s) => ({ ...s, open: false }));
+    setSavingFuel(true);
     setFuelConfirmationError(null);
-  }, [fuelModal, activeShift, addConfirmedFuelEntry]);
+    try {
+      await addConfirmedFuelEntry(entry);
+      void appendAionTimelineEvent({
+        type: "fuel_ocr_attached",
+        title: "Топливо из OCR",
+        detail: `${fuelType} · ${confirmedTotal.toFixed(2)} · OCR ${Math.round(fr.confidence * 100)}%`,
+        moduleId: "driver",
+      });
+      setFuelModal((s) => ({ ...s, open: false }));
+    } catch (error) {
+      captureOcrError(error, { platform, currency });
+      setFuelConfirmationError("Не удалось добавить заправку к смене. Повторите ещё раз.");
+    } finally {
+      setSavingFuel(false);
+    }
+  }, [fuelModal, activeShift, addConfirmedFuelEntry, savingFuel, platform, currency]);
 
   const bgVariant =
     settings.nightContrast === "nightDrive" ? "nightDrive" : "cockpit";
@@ -884,11 +896,15 @@ export function ImportScreenshotScreen() {
           visible={fuelModal.open}
           transparent
           animationType="fade"
-          onRequestClose={() => setFuelModal((s) => ({ ...s, open: false }))}
+          onRequestClose={() => {
+            if (!savingFuel) setFuelModal((s) => ({ ...s, open: false }));
+          }}
         >
           <Pressable
             className="flex-1 justify-end bg-black/70"
-            onPress={() => setFuelModal((s) => ({ ...s, open: false }))}
+            onPress={() => {
+              if (!savingFuel) setFuelModal((s) => ({ ...s, open: false }));
+            }}
           >
             <Pressable
               className="rounded-t-3xl border border-white/10 bg-slate-950 px-4 pb-8 pt-4"
@@ -914,6 +930,7 @@ export function ImportScreenshotScreen() {
                       setFuelModal((s) => ({ ...s, editFuelType: t }));
                     }}
                     placeholder="Тип топлива"
+                    editable={!savingFuel}
                     placeholderTextColor="#64748b"
                     className="mt-4 rounded-xl border border-white/10 bg-slate-900/90 px-3 py-2 text-sm text-white"
                   />
@@ -925,6 +942,7 @@ export function ImportScreenshotScreen() {
                     }}
                     placeholder="Литры"
                     keyboardType="decimal-pad"
+                    editable={!savingFuel}
                     placeholderTextColor="#64748b"
                     className="mt-2 rounded-xl border border-white/10 bg-slate-900/90 px-3 py-2 text-sm text-white"
                   />
@@ -936,6 +954,7 @@ export function ImportScreenshotScreen() {
                     }}
                     placeholder="Сумма"
                     keyboardType="decimal-pad"
+                    editable={!savingFuel}
                     placeholderTextColor="#64748b"
                     className="mt-2 rounded-xl border border-white/10 bg-slate-900/90 px-3 py-2 text-sm text-white"
                   />
@@ -947,6 +966,7 @@ export function ImportScreenshotScreen() {
                     }}
                     placeholder="Цена за единицу (опционально)"
                     keyboardType="decimal-pad"
+                    editable={!savingFuel}
                     placeholderTextColor="#64748b"
                     className="mt-2 rounded-xl border border-white/10 bg-slate-900/90 px-3 py-2 text-sm text-white"
                   />
@@ -955,12 +975,15 @@ export function ImportScreenshotScreen() {
                       title="Отмена"
                       variant="ghost"
                       className="flex-1"
+                      disabled={savingFuel}
                       onPress={() => setFuelModal((s) => ({ ...s, open: false }))}
                     />
                     <GradientButton
-                      title="Подтвердить"
+                      title={savingFuel ? "Сохраняю…" : "Подтвердить"}
                       variant="glass"
                       className="flex-1"
+                      loading={savingFuel}
+                      disabled={savingFuel}
                       onPress={() => void confirmFuelToShift()}
                     />
                   </View>

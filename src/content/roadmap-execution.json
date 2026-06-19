@@ -270,6 +270,19 @@
           "Показывать ошибку сохранения вместо unhandled rejection — DONE",
           "Driver validate:code — DONE"
         ]
+      },
+      {
+        "priority": 18,
+        "id": "fuel-ocr-single-flight-save",
+        "title": "Fuel OCR: single-flight запись в смену",
+        "status": "shipped",
+        "tasks": [
+          "Блокировать повторное подтверждение до завершения записи — DONE",
+          "Блокировать поля и закрытие modal во время save — DONE",
+          "Показывать loading state — DONE",
+          "Показывать ошибку Shift storage — DONE",
+          "Driver validate:code — DONE"
+        ]
       }
     ],
     "blockedTasks": [
