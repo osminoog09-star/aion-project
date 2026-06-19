@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-19T16:18:00.000Z",
+  "lastUpdated": "2026-06-19T16:23:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Preview APK 1.0.9 build 13 готов и ждёт device smoke. OCR history и fuel attachment теперь используют single-flight сохранение без дублей.",
-  "currentStatus": "Driver APK ready; OCR save flows hardened",
+  "currentFocus": "APK 1.0.9 готов. Восстанавливаю OTA для последних Driver-фиксов: patch-package parse error исправлен и подтверждён настоящим npm ci.",
+  "currentStatus": "Driver OTA recovery: dependency install fixed",
   "latestRun": {
     "label": "EAS Build Driver preview",
     "status": "success",
@@ -25,9 +25,11 @@
     "Fuel OCR confirm блокирует пустую сумму, отрицательные литры/цену и требует ручной проверки при низкой confidence.",
     "EAS run 27834179469 завершён success; manifest bot опубликовал APK 1.0.9 build 13 без rebase/push ошибки.",
     "OCR history использует single-flight save: double-submit заблокирован, source controls locked, storage error видим пользователю.",
-    "Fuel OCR attachment блокирует повторный submit/закрытие modal во время записи и показывает ошибку Shift storage."
+    "Fuel OCR attachment блокирует повторный submit/закрытие modal во время записи и показывает ошибку Shift storage.",
+    "OTA npm ci blocker найден в malformed css-interop patch; patch пересоздан штатно и успешно применяется локальным npm ci."
   ],
   "next": [
+    "Дождаться зелёного Driver OTA Preview после исправления patch-package.",
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
     "Проверить runtime retry OCR queue, queue-status card и fuel confirmation на preview APK.",
     "Восстановить Vercel deploy token/hook, чтобы свежий статус появился на live /operations."
@@ -45,6 +47,8 @@
     "Driver web smoke: экран импорта рендерится; NativeWind darkMode media runtime error исправлен patch-package",
     "Fuel OCR confirmation tests — OK (5 cases)",
     "APK manifest 1.0.9 build 13 validation — OK",
-    "Runtime compatibility 1.0.9 >= 1.0.6 — OK"
+    "Runtime compatibility 1.0.9 >= 1.0.6 — OK",
+    "Driver OTA run 27836531412: failed на npm ci из-за parse error patch-package",
+    "Local npm ci + patch-package apply — OK после пересоздания patch"
   ]
 }

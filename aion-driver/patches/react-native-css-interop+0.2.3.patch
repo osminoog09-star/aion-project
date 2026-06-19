@@ -15,7 +15,7 @@ diff --git a/node_modules/react-native-css-interop/src/runtime/web/color-scheme.
 index 3e64d9f..ddc4235 100644
 --- a/node_modules/react-native-css-interop/src/runtime/web/color-scheme.ts
 +++ b/node_modules/react-native-css-interop/src/runtime/web/color-scheme.ts
-@@ -41,13 +41,15 @@ if (darkModeFlag) {
+@@ -41,12 +41,14 @@ if (darkModeFlag) {
      const flags = darkModeFlag.split(" ");
      darkMode = flags[0];
      darkModeValue = flags[1];
