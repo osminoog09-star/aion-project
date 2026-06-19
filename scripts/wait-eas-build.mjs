@@ -12,6 +12,7 @@ loadDotenvLocal();
 const buildId = process.env.EAS_APK_BUILD_ID?.trim() || process.argv[2]?.trim();
 const intervalMs = Number(process.env.EAS_POLL_MS ?? 30_000);
 const maxWaitMs = Number(process.env.EAS_MAX_WAIT_MS ?? 90 * 60_000);
+const maxViewFailures = Number(process.env.EAS_MAX_VIEW_FAILURES ?? 20);
 
 if (!buildId) {
   console.error("Usage: wait-eas-build.mjs <BUILD_ID>");
@@ -25,15 +26,26 @@ function view() {
 }
 
 const started = Date.now();
+let viewFailures = 0;
 console.log(`[EAS] Waiting for build ${buildId} (max ${Math.round(maxWaitMs / 60000)} min)\n`);
 
 while (Date.now() - started < maxWaitMs) {
   let build;
   try {
     build = view();
+    viewFailures = 0;
   } catch (e) {
-    console.error("[EAS] build:view failed:", e.message ?? e);
-    process.exit(1);
+    viewFailures += 1;
+    console.warn(
+      `[EAS] build:view failed (${viewFailures}/${maxViewFailures}):`,
+      e.message ?? e,
+    );
+    if (viewFailures >= maxViewFailures) {
+      console.error("\n[EAS] Too many build:view failures — aborting.\n");
+      process.exit(1);
+    }
+    await new Promise((r) => setTimeout(r, intervalMs));
+    continue;
   }
   const status = build.status;
   console.log(`[EAS] ${new Date().toISOString()} status=${status}`);

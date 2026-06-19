@@ -11,8 +11,8 @@
     "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-19T11:32:11.069Z",
-    "heartbeatAt": "2026-06-19T11:32:11.069Z",
+    "updatedAt": "2026-06-19T11:38:31.564Z",
+    "heartbeatAt": "2026-06-19T11:38:31.564Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -33,15 +33,22 @@
     "lastFailure": null,
     "lastCompletedAction": "AI заблокирован: Release failed",
     "retryCount": 0,
-    "validationProgress": "Route field validation получил явный следующий шаг и отчёт NEXT",
+    "validationProgress": "EAS wait теперь ретраит transient build:view failures",
     "progressPercent": 68,
     "etaMinutes": 45,
     "autonomousDepth": 5,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "aion-driver/features/route/computeRouteFieldValidation.ts",
+    "currentFile": "scripts/wait-eas-build.mjs",
     "recentActions": [
+      {
+        "at": "2026-06-19T11:38:31.564Z",
+        "tag": "CODE",
+        "message": "EAS wait теперь ретраит transient build:view failures",
+        "file": "scripts/wait-eas-build.mjs",
+        "repo": "aion-project"
+      },
       {
         "at": "2026-06-19T11:32:11.069Z",
         "tag": "CODE",
@@ -256,17 +263,15 @@
         "message": "Правка: hooks.json",
         "file": "c:/Users/osmin/Desktop/???????/aion-com/.cursor/hooks.json",
         "repo": "aion-project"
-      },
-      {
-        "at": "2026-05-15T13:17:52.037Z",
-        "tag": "CODE",
-        "message": "Связка live-execution с owner-visible-work",
-        "file": ".cursor/rules/aion-live-execution.mdc",
-        "repo": "aion-project"
       }
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-19T11:38:31.564Z",
+      "phase": "coding",
+      "summary": "[CODE] EAS wait теперь ретраит transient build:view failures"
+    },
     {
       "at": "2026-06-19T11:32:11.069Z",
       "phase": "coding",
@@ -929,15 +934,12 @@
       "resultRu": "Этап выполнен",
       "icon": "✨",
       "confidence": 0.94
-    },
-    {
-      "at": "2026-05-15T11:44:10.330Z",
-      "phase": "coding",
-      "summary": "coding: Driver field validation — backfill stats on route timeline",
-      "feedEventId": "evt-2026-05-15-exec-dz3umf"
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-19T11:38:31.564Z"
+    },
     {
       "at": "2026-06-19T11:32:11.069Z"
     },
@@ -1078,9 +1080,6 @@
     },
     {
       "at": "2026-05-15T15:34:37.692Z"
-    },
-    {
-      "at": "2026-05-15T15:34:27.570Z"
     }
   ]
 }
