@@ -95,7 +95,7 @@ export function useApkUpdateController() {
       const res = await fetchApkUpdateManifestResilient(MANIFEST_URL);
       setFromCache(res.fromCache);
       if (res.manifest) {
-        const at = Date.now();
+        const at = res.fetchedAtMs ?? Date.now();
         lastSuccessRef.current = at;
         setLastSuccessAtMs(at);
         manifestRef.current = res.manifest;

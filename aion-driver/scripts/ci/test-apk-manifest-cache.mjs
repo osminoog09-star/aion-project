@@ -45,10 +45,12 @@ const online = compileFetcher(async (url) => {
 const firstA = await online.fetchApkUpdateManifestResilient(urlA);
 assert.equal(firstA.manifest?.latestVersion, "1.0.9");
 assert.equal(firstA.fromCache, false);
+assert.equal(typeof firstA.fetchedAtMs, "number");
 
 const memoryA = await online.fetchApkUpdateManifestResilient(urlA);
 assert.equal(memoryA.manifest?.latestVersion, "1.0.9");
-assert.equal(memoryA.fromCache, true);
+assert.equal(memoryA.fromCache, false, "fresh memory reuse must not be reported as an offline fallback");
+assert.equal(memoryA.fetchedAtMs, firstA.fetchedAtMs, "memory reuse must preserve the original fetch time");
 assert.equal(networkCalls, 1, "same URL should reuse the fresh memory cache");
 
 const firstB = await online.fetchApkUpdateManifestResilient(urlB);
@@ -60,9 +62,11 @@ const offline = compileFetcher(async () => ({ ok: false, json: async () => null 
 const cachedB = await offline.fetchApkUpdateManifestResilient(urlB);
 assert.equal(cachedB.manifest?.latestVersion, "1.1.0");
 assert.equal(cachedB.fromCache, true, "matching persistent cache should remain available offline");
+assert.equal(cachedB.fetchedAtMs, firstB.fetchedAtMs, "offline fallback must preserve cache age");
 
 const mismatchedC = await offline.fetchApkUpdateManifestResilient(urlC);
 assert.equal(mismatchedC.manifest, null, "cache from another manifest URL must not leak across endpoints");
 assert.equal(mismatchedC.fromCache, false);
+assert.equal(mismatchedC.fetchedAtMs, null);
 
-console.log("test-apk-manifest-cache: ok (5 cases)");
+console.log("test-apk-manifest-cache: ok (10 assertions)");

@@ -371,6 +371,18 @@
           "Сохранять manual workflow_dispatch как принудительную сборку — DONE",
           "Root CI test (7 cases) — DONE"
         ]
+      },
+      {
+        "priority": 26,
+        "id": "apk-cache-provenance",
+        "title": "Update Center: точный источник и возраст APK cache",
+        "status": "shipped",
+        "tasks": [
+          "Не показывать offline fallback для fresh memory reuse — DONE",
+          "Возвращать исходный fetchedAt для memory/storage — DONE",
+          "Считать stale от возраста cached manifest, не от времени чтения — DONE",
+          "Детерминированный CI test (10 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
