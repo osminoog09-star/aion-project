@@ -11,8 +11,8 @@
     "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-19T11:46:53.872Z",
-    "heartbeatAt": "2026-06-19T11:46:53.872Z",
+    "updatedAt": "2026-06-19T12:01:05.550Z",
+    "heartbeatAt": "2026-06-19T12:01:05.550Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -33,15 +33,29 @@
     "lastFailure": null,
     "lastCompletedAction": "AI заблокирован: Release failed",
     "retryCount": 0,
-    "validationProgress": "Driver OTA manifest summary покрыт CI и читает nested commit",
+    "validationProgress": "Правка: eas-build-driver-preview.yml",
     "progressPercent": 68,
     "etaMinutes": 45,
-    "autonomousDepth": 7,
+    "autonomousDepth": 8,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "aion-driver/services/updateService.ts",
+    "currentFile": ".github/workflows/eas-build-driver-preview.yml",
     "recentActions": [
+      {
+        "at": "2026-06-19T12:01:05.550Z",
+        "tag": "CODE",
+        "message": "Правка: eas-build-driver-preview.yml",
+        "file": ".github/workflows/eas-build-driver-preview.yml",
+        "repo": "aion-project"
+      },
+      {
+        "at": "2026-06-19T11:59:28.665Z",
+        "tag": "CODE",
+        "message": "Bug report webhook payload покрыт CI",
+        "file": "src/lib/operations/notify-bug-report-owner.ts",
+        "repo": "aion-project"
+      },
       {
         "at": "2026-06-19T11:46:53.872Z",
         "tag": "CODE",
@@ -250,23 +264,31 @@
         "message": "Driver: единая прибыль на timeline через shiftDisplayEconomics",
         "file": "aion-driver/utils/shiftDisplayEconomics.ts",
         "repo": "aion-driver"
-      },
-      {
-        "at": "2026-05-15T13:25:51.122Z",
-        "tag": "CODE",
-        "message": "Правило: чат обязателен при автономе; подсказка в карточке validation",
-        "file": "aion-driver/components/route/RouteTimelineFieldValidationCard.tsx",
-        "repo": "aion-driver"
-      },
-      {
-        "at": "2026-05-15T13:24:23.844Z",
-        "tag": "VALIDATE",
-        "message": "driver: typecheck + test:field-validation ok",
-        "repo": "aion-project"
       }
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-19T12:01:05.550Z",
+      "phase": "coding",
+      "summary": "[CODE] Правка: eas-build-driver-preview.yml"
+    },
+    {
+      "at": "2026-06-19T11:59:28.665Z",
+      "phase": "coding",
+      "summary": "[CODE] Bug report webhook payload покрыт CI"
+    },
+    {
+      "at": "2026-06-19T11:54:41.631Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Route intelligence UX + field validation",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Проверка backfill и stop-zone на реальном устройстве",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-06-19T11:46:53.872Z",
       "phase": "coding",
@@ -889,42 +911,18 @@
       "resultRu": "В процессе",
       "icon": "⚡",
       "confidence": 0.88
-    },
-    {
-      "at": "2026-05-15T12:15:18.044Z",
-      "phase": "coding",
-      "summary": "AI пишет и улучшает код: Stop-zone validation на устройстве",
-      "feedEventId": null,
-      "titleRu": "AI пишет и улучшает код",
-      "explanationRu": "Подтвердить GPS cluster insights после 2+ смен",
-      "resultRu": "В процессе",
-      "icon": "⚡",
-      "confidence": 0.88
-    },
-    {
-      "at": "2026-05-15T12:03:35.443Z",
-      "phase": "coding",
-      "summary": "AI пишет и улучшает код: Route intelligence UX + field validation",
-      "feedEventId": "evt-2026-05-15-exec-mtfmvm",
-      "titleRu": "AI пишет и улучшает код",
-      "explanationRu": "Проверка backfill и stop-zone на реальном устройстве",
-      "resultRu": "В процессе",
-      "icon": "⚡",
-      "confidence": 0.88
-    },
-    {
-      "at": "2026-05-15T12:03:32.245Z",
-      "phase": "completed",
-      "summary": "AI завершил этап: Финальный UX центра управления — русский-first",
-      "feedEventId": "evt-2026-05-15-exec-qakkka",
-      "titleRu": "AI завершил этап",
-      "explanationRu": "MVP/production кольца, 5 метрик готовности, граф зависимостей, матрица проверок, полная русификация",
-      "resultRu": "Этап выполнен",
-      "icon": "✨",
-      "confidence": 0.95
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-19T12:01:05.550Z"
+    },
+    {
+      "at": "2026-06-19T11:59:28.665Z"
+    },
+    {
+      "at": "2026-06-19T11:54:41.631Z"
+    },
     {
       "at": "2026-06-19T11:46:53.872Z"
     },
@@ -1059,15 +1057,6 @@
     },
     {
       "at": "2026-05-15T15:35:47.593Z"
-    },
-    {
-      "at": "2026-05-15T15:35:37.602Z"
-    },
-    {
-      "at": "2026-05-15T15:35:27.608Z"
-    },
-    {
-      "at": "2026-05-15T15:35:17.579Z"
     }
   ]
 }

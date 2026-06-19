@@ -35,7 +35,7 @@ export async function notifyOwnerOfBugReport(report: DriverBugReportRow): Promis
   const hookUrl = process.env.BUG_REPORT_NOTIFY_WEBHOOK_URL?.trim();
   if (hookUrl) {
     try {
-      const payload = buildWebhookPayload(hookUrl, { title, bodyText, report, bugsUrl });
+      const payload = buildBugReportWebhookPayload(hookUrl, { title, bodyText, report, bugsUrl });
       const res = await fetch(hookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -102,7 +102,7 @@ export function bugReportNotifyStatus(): {
   };
 }
 
-function buildWebhookPayload(
+export function buildBugReportWebhookPayload(
   hookUrl: string,
   ctx: {
     title: string;

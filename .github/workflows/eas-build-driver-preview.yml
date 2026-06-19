@@ -101,6 +101,12 @@ jobs:
           node-version: "22"
           cache: npm
 
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ env.EXPO_TOKEN }}
+
       - run: npm ci
 
       - name: Wait FINISHED and sync apk-manifest.preview.json
