@@ -5,7 +5,7 @@ import ts from "typescript";
 
 export const driverRoot = path.resolve(import.meta.dirname, "../../..");
 
-export function compileTsModule(relativePath, requireMap = {}) {
+export function compileTsModule(relativePath, requireMap = {}, globals = {}) {
   const filename = path.join(driverRoot, relativePath);
   const source = fs.readFileSync(filename, "utf8");
   const js = ts.transpileModule(source, {
@@ -19,6 +19,7 @@ export function compileTsModule(relativePath, requireMap = {}) {
 
   const module = { exports: {} };
   const context = {
+    ...globals,
     exports: module.exports,
     module,
     process,

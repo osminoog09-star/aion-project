@@ -45,3 +45,5 @@ assert.equal(
 );
 
 console.log("test-apk-manifest-validation: ok (7 cases)");
+
+await import("./test-apk-manifest-cache.mjs");
