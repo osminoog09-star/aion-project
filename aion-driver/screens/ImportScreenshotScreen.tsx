@@ -35,6 +35,7 @@ import { useResolvedCurrency } from "../hooks/useResolvedCurrency";
 import type { OcrParseResult, OcrTripRow, PayoutPlatform } from "../features/import/types";
 import type { FuelReceiptExtraction } from "../features/import/extraction/fuelReceiptTypes";
 import { recomputeOcrParseTotals } from "../features/import/services/ocrParseMapper";
+import { validateOcrConfirmation } from "../features/import/confirmation/validateOcrConfirmation";
 import { captureOcrError } from "../lib/sentry";
 import { appendOcrImport } from "../storage/driver/ocrImportStorage";
 import { runOcrThroughQueue } from "../features/import/ocrQueue/ocrQueueEngine";
@@ -108,6 +109,7 @@ export function ImportScreenshotScreen() {
   const [result, setResult] = useState<OcrParseResult | null>(null);
   const [editedTrips, setEditedTrips] = useState<OcrTripRow[] | null>(null);
   const [added, setAdded] = useState(false);
+  const [confirmationError, setConfirmationError] = useState<string | null>(null);
   const [fuelModal, setFuelModal] = useState<{
     open: boolean;
     extraction: FuelReceiptExtraction | null;
@@ -133,6 +135,7 @@ export function ImportScreenshotScreen() {
     setProgress("");
     setProgressPhase(0);
     setAdded(false);
+    setConfirmationError(null);
     setFuelModal({
       open: false,
       extraction: null,
@@ -185,7 +188,19 @@ export function ImportScreenshotScreen() {
     return recomputeOcrParseTotals(result, editedTrips);
   }, [result, editedTrips]);
 
+  const confirmation = useMemo(
+    () =>
+      displayResult
+        ? validateOcrConfirmation({
+            earnings: displayResult.earnings,
+            trips: displayResult.trips,
+          })
+        : null,
+    [displayResult],
+  );
+
   const patchTripAmount = useCallback((tripId: string, amount: number) => {
+    setConfirmationError(null);
     setEditedTrips((rows) =>
       rows?.map((row) => (row.id === tripId ? { ...row, amount } : row)) ?? null,
     );
@@ -250,6 +265,14 @@ export function ImportScreenshotScreen() {
   const onAddToHistory = async () => {
     const parse = displayResult;
     if (!parse) return;
+    const validation = validateOcrConfirmation({
+      earnings: parse.earnings,
+      trips: parse.trips,
+    });
+    if (!validation.valid) {
+      setConfirmationError(validation.message);
+      return;
+    }
     const rec = {
       id: `ocr_${Date.now()}_${Math.random().toString(16).slice(2)}`,
       createdAt: new Date().toISOString(),
@@ -266,6 +289,7 @@ export function ImportScreenshotScreen() {
       moduleId: "driver",
     });
     setAdded(true);
+    setConfirmationError(null);
   };
 
   const confirmFuelToShift = useCallback(async () => {
@@ -731,9 +755,14 @@ export function ImportScreenshotScreen() {
                 title={added ? "Добавлено в ленту" : "Добавить в историю"}
                 variant={added ? "ghost" : "glass"}
                 onPress={() => void onAddToHistory()}
-                disabled={added}
+                disabled={added || confirmation?.valid === false}
                 size="cockpit"
               />
+              {confirmation?.valid === false || confirmationError ? (
+                <Text className="mt-2 text-center text-sm text-amber-300">
+                  {confirmationError ?? confirmation?.message}
+                </Text>
+              ) : null}
             </Animated.View>
           ) : null}
         </ScrollView>

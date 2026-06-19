@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2026-06-19T13:40:00.000Z",
+  "lastUpdated": "2026-06-19T15:19:08.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "EAS preview APK 1.0.9: build, manifest sync, compatibility и release safety прошли; чиню rebase step, где runner оставил дополнительные unstaged изменения.",
-  "currentStatus": "Driver release loop: чиню rebase unstaged changes",
+  "currentFocus": "EAS preview APK 1.0.9: build завершён успешно, sync-manifest выполняется. Параллельно закрыт edge state post-OCR confirm: пустые, нулевые и отрицательные выплаты больше нельзя сохранить.",
+  "currentStatus": "Driver release loop: ждёт manifest sync; OCR confirm hardened",
   "latestRun": {
     "label": "EAS Build Driver preview",
-    "status": "failed_on_push_race",
-    "url": "https://github.com/osminoog09-star/aion-project/actions/runs/27826017815"
+    "status": "sync_manifest_in_progress",
+    "url": "https://github.com/osminoog09-star/aion-project/actions/runs/27833843484"
   },
   "completed": [
     "Портал /operations теперь должен показывать явный статус работы Codex, а не только длинный runtime JSON.",
@@ -15,11 +15,12 @@
     "Driver OTA manifest summary покрыт CI; nested commit из Expo manifest читается корректно.",
     "Bug report webhook payload для Telegram, Slack и Discord покрыт root CI.",
     "EAS sync-manifest получил Setup EAS, подробный лог и fallback с eas-cli на Expo GraphQL API.",
-    "Expo GraphQL query исправлен по схеме eas-cli: builds.byId(buildId)."
+    "Expo GraphQL query исправлен по схеме eas-cli: builds.byId(buildId).",
+    "Post-OCR confirm валидирует выплату и суммы поездок до записи в историю; добавлены 4 CI-сценария."
   ],
   "next": [
-    "Закоммитить fix: EAS manifest bot stash-ит весь dirty working tree перед rebase.",
-    "Перезапустить Driver preview workflow и проверить, что apk-manifest.preview.json коммитится ботом без fetch-first отказа.",
+    "Дождаться sync-manifest run 27833843484 и проверить bot commit для apk-manifest.preview.json.",
+    "Закоммитить и запушить post-OCR confirmation hardening после успешного release sync.",
     "После успешного APK manifest: device smoke Driver 1.0.9, затем уже field validation 8/8."
   ],
   "checks": [
@@ -28,6 +29,8 @@
     "Portal build / repo:verify — OK",
     "Live Vercel пока не обновился: VERCEL_TOKEN и VERCEL_DEPLOY_HOOK не настроены в Actions",
     "EAS run 27826017815: build OK, release safety OK, manifest sync OK, push rejected из-за stale master",
-    "EAS run 27827368751: build OK, manifest sync OK, release safety OK, commit-step failed на unstaged changes после partial stash"
+    "EAS run 27827368751: build OK, manifest sync OK, release safety OK, commit-step failed на unstaged changes после partial stash",
+    "EAS run 27833843484: build OK; sync-manifest IN_PROGRESS",
+    "Driver npm run validate:code — OK, включая test-ocr-confirmation (4 cases)"
   ]
 }

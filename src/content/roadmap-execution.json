@@ -153,7 +153,7 @@
           "ApkUpdateBanner + default manifest URL + CI auto-sync workflow — DONE",
           "Device smoke: установка 1.0.8 + модалка обновления — owner",
           "1.0.9 versionCode 13 + OrbView dimAlpha — code DONE",
-          "EAS preview build — CI auto on push (workflow paths) — IN_PROGRESS"
+          "EAS preview build run 27833843484 — build DONE, manifest sync IN_PROGRESS"
         ]
       },
       {
@@ -168,6 +168,18 @@
           "/operations/bugs portal list — DONE",
           "Portal /operations/bugs poll 45s + browser Notification — DONE",
           "Owner webhook/email + Vercel cron + Supabase INSERT webhook route — DONE (needs env on Vercel)"
+        ]
+      },
+      {
+        "priority": 10,
+        "id": "post-ocr-confirmation-hardening",
+        "title": "Post-OCR confirm: защита истории от невалидных выплат",
+        "status": "shipped",
+        "tasks": [
+          "Блокировать пустую, нулевую и нечисловую выплату — DONE",
+          "Блокировать нулевые и отрицательные суммы поездок — DONE",
+          "Показать водителю точную причину и действие — DONE",
+          "Детерминированный CI test-ocr-confirmation (4 cases) — DONE"
         ]
       }
     ],
