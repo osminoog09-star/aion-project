@@ -155,7 +155,8 @@
           "1.0.9 versionCode 13 + OrbView dimAlpha — code DONE",
           "EAS preview build d7baa96a — FINISHED",
           "Manifest 1.0.9 build 13 + direct APK URL — DONE",
-          "GitHub run 27834179469 + bot commit 3271c84 — SUCCESS"
+          "GitHub run 27834179469 + bot commit 3271c84 — SUCCESS",
+          "APK manifest semver/order/URL validation + 7-case CI gate — DONE"
         ]
       },
       {
@@ -321,6 +322,18 @@
           "Публиковать error timestamp при unexpected failure — DONE",
           "Показывать loading и блокировать повторную кнопку — DONE",
           "Driver validate:code — DONE"
+        ]
+      },
+      {
+        "priority": 22,
+        "id": "apk-manifest-contract-validation",
+        "title": "APK manifest: строгая валидация release bounds",
+        "status": "shipped",
+        "tasks": [
+          "Отклонять malformed latestVersion/minimumSupported — DONE",
+          "Отклонять minimumSupported выше latestVersion — DONE",
+          "Сохранять HTTP(S) URL safety contract — DONE",
+          "Детерминированный CI test (7 cases) — DONE"
         ]
       }
     ],
