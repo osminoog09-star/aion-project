@@ -53,6 +53,13 @@ object OrbWindowManager {
   @Volatile
   private var snapAnimator: ValueAnimator? = null
 
+  /** Уже прикреплённый визуал — не снимать окно при повторном SHOW с теми же параметрами. */
+  @Volatile
+  private var attachedVisualState: String? = null
+
+  @Volatile
+  private var attachedShiftKey: String? = null
+
   private fun dp(ctx: Context, d: Int): Int =
     (d * ctx.resources.displayMetrics.density).roundToInt()
 
@@ -69,11 +76,22 @@ object OrbWindowManager {
     main.post { showInternal(context.applicationContext, state, shiftId) }
   }
 
+  private fun normalizeShiftKey(id: String?): String? =
+    id?.takeIf { it.isNotEmpty() }
+
   private fun showInternal(appCtx: Context, state: String, shiftId: String?) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
       !Settings.canDrawOverlays(appCtx)
     ) {
       throw IllegalStateException("SYSTEM_ALERT_WINDOW not granted")
+    }
+    val shiftKey = normalizeShiftKey(shiftId)
+    if (orbView != null && container != null && windowManager != null &&
+      attachedVisualState == state && normalizeShiftKey(attachedShiftKey) == shiftKey
+    ) {
+      orbView?.applyState(state)
+      OrbPersistence.saveRuntime(appCtx, true, state, shiftId)
+      return
     }
     detachViewOnly()
     val snap = OrbPersistence.load(appCtx)
@@ -122,6 +140,8 @@ object OrbWindowManager {
     container = frame
     orbView = child
     params = p
+    attachedVisualState = state
+    attachedShiftKey = shiftKey
     OrbPersistence.saveRuntime(appCtx, true, state, shiftId)
   }
 
@@ -264,11 +284,14 @@ object OrbWindowManager {
     orbView = null
     params = null
     windowManager = null
+    attachedVisualState = null
+    attachedShiftKey = null
   }
 
   fun updateState(state: String) {
     main.post {
       orbView?.applyState(state)
+      attachedVisualState = state
     }
   }
 

@@ -7,6 +7,7 @@ import { pushDriverCloudBackup } from "../../cloud/services/driverCloudSync";
 import {
   dequeueSucceeded,
   markAttempt,
+  moveToDeadLetter,
   peekSyncQueue,
   type SyncOperation,
 } from "./offlineQueue";
@@ -29,14 +30,13 @@ function sleep(ms: number): Promise<void> {
 async function processOperation(
   op: SyncOperation,
   userId: string,
-): Promise<boolean> {
+): Promise<{ ok: boolean; terminal?: boolean; reason?: string }> {
   switch (op.type) {
     case "link_ocr_snapshot":
-      /** Фаза 1: relay в Supabase — позже; не трогаем requireSupabase, очередь просто очищается */
-      return true;
+      return { ok: false, terminal: true, reason: "link_ocr_snapshot_not_implemented" };
     case "vehicle_upsert":
     case "analytics_event":
-      return true;
+      return { ok: false, terminal: true, reason: `${op.type}_not_implemented` };
     case "trip_upsert": {
       const client = requireSupabase();
       await upsertTripFromShift(
@@ -45,20 +45,20 @@ async function processOperation(
         op.payload as Shift,
         null,
       );
-      return true;
+      return { ok: true };
     }
     case "profile_upsert": {
       const client = requireSupabase();
       const p = op.payload as UserProfile;
       await syncLocalUserProfileToCloud(client, userId, p);
-      return true;
+      return { ok: true };
     }
     case "cloud_backup_upsert": {
       await pushDriverCloudBackup(userId);
-      return true;
+      return { ok: true };
     }
     default:
-      return true;
+      return { ok: false, terminal: true, reason: "unknown_operation_type" };
   }
 }
 
@@ -76,21 +76,33 @@ export async function flushSyncQueue(userId: string | null): Promise<void> {
         opId: op.id,
         attempts: op.attempts,
       });
-      await dequeueSucceeded(op.id);
+      await moveToDeadLetter(op, "max_attempts", "Exceeded retry budget");
+      diagLog("warn", "sync_dead_letter", "Операция перемещена в dead-letter (max attempts)", {
+        opId: op.id,
+        opType: op.type,
+        attempts: op.attempts,
+      });
       continue;
     }
     if (op.attempts > 0) {
       await sleep(backoffMs(op.attempts - 1));
     }
     try {
-      const ok = await processOperation(op, userId);
-      if (ok) {
+      const res = await processOperation(op, userId);
+      if (res.ok) {
         await dequeueSucceeded(op.id);
         flushed += 1;
         diagLog("info", "sync", `Операция ${op.type} выполнена`, { opId: op.id });
         if (op.type === "trip_upsert" || op.type === "cloud_backup_upsert") {
           useRuntimePulse.getState().pingUpload();
         }
+      } else if (res.terminal) {
+        await moveToDeadLetter(op, "not_implemented", res.reason ?? "terminal");
+        diagLog("warn", "sync_dead_letter", "Операция перемещена в dead-letter (terminal)", {
+          opId: op.id,
+          opType: op.type,
+          reason: res.reason ?? null,
+        });
       }
     } catch (e) {
       captureSyncError(e, { opType: op.type, opId: op.id, attempts: op.attempts });

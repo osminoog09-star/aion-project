@@ -30,3 +30,17 @@ export async function appendShift(shift: Shift): Promise<Shift[]> {
 export async function replaceHistory(shifts: Shift[]): Promise<void> {
   await AsyncStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(shifts));
 }
+
+/** Заменить одну смену в истории (тот же порядок). Возвращает новый массив или null, если id не найден. */
+export async function updateShiftInHistory(
+  shiftId: string,
+  next: Shift,
+): Promise<Shift[] | null> {
+  const history = await loadShiftHistory();
+  const idx = history.findIndex((s) => s.id === shiftId);
+  if (idx < 0) return null;
+  const merged = [...history];
+  merged[idx] = next;
+  await replaceHistory(merged);
+  return merged;
+}

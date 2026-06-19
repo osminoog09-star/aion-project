@@ -764,7 +764,8 @@ export function SettingsScreen() {
               </Text>
               <Text className="mt-2 text-sm text-slate-400">
                 Управление по блокам: смены за день/неделю/месяц, GPS, OCR, облако, отдельные смены.
-                Профиль и настройки не меняются.
+                Чтобы поправить цифры одной смены (доход, топливо, км), откройте «Исправить» в этом
+                экране или тап по смене в «История». Профиль и настройки не меняются.
               </Text>
               {resetResult ? (
                 <Text className="mt-2 text-xs text-cyan-300">{resetResult}</Text>

@@ -1,4 +1,4 @@
-import { router, useFocusEffect } from "expo-router";
+import { router, useFocusEffect, type Href } from "expo-router";
 import { useCallback, useState } from "react";
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -95,7 +95,8 @@ export function StatisticsManageScreen() {
 
           <Text className="text-2xl font-bold text-white">Статистика</Text>
           <Text className="mt-2 text-sm leading-5 text-slate-400">
-            Каждый блок можно сбросить отдельно: смены по периоду, GPS, OCR, облако. Профиль и
+            Ошиблись в сумме или заправке — «Исправить» у смены ниже или тап по смене в ленте
+            «История». Сброс целых блоков (GPS, OCR, период) — кнопками в группах. Профиль и
             настройки не меняются.
           </Text>
 
@@ -147,19 +148,32 @@ export function StatisticsManageScreen() {
                             {s.id.slice(0, 12)}…
                           </Text>
                         </View>
-                        <Pressable
-                          disabled={busy || inventory.hasActiveShift}
-                          onPress={() =>
-                            setPending({
-                              kind: "shift",
-                              shiftId: s.id,
-                              label: s.label,
-                            })
-                          }
-                          className="rounded-lg border border-rose-400/30 bg-rose-500/10 px-3 py-2"
-                        >
-                          <Text className="text-xs font-semibold text-rose-200">Сбросить</Text>
-                        </Pressable>
+                        <View className="flex-row flex-wrap justify-end gap-2">
+                          <Pressable
+                            disabled={busy}
+                            onPress={() =>
+                              router.push(
+                                `/edit-shift-history?shiftId=${encodeURIComponent(s.id)}` as Href,
+                              )
+                            }
+                            className="rounded-lg border border-cyan-400/35 bg-cyan-500/10 px-3 py-2"
+                          >
+                            <Text className="text-xs font-semibold text-cyan-200">Исправить</Text>
+                          </Pressable>
+                          <Pressable
+                            disabled={busy || inventory.hasActiveShift}
+                            onPress={() =>
+                              setPending({
+                                kind: "shift",
+                                shiftId: s.id,
+                                label: s.label,
+                              })
+                            }
+                            className="rounded-lg border border-rose-400/30 bg-rose-500/10 px-3 py-2"
+                          >
+                            <Text className="text-xs font-semibold text-rose-200">Сбросить</Text>
+                          </Pressable>
+                        </View>
                       </View>
                     </GlowCard>
                   ))}
@@ -208,7 +222,6 @@ function groupElements(
 }
 
 function isBlocked(item: StatElementInventoryItem, inv: StatisticsInventory): boolean {
-  if (item.empty && item.id !== "active_shift" && item.id !== "cloud_trips") return true;
   if (item.blockedWhenActiveShift && inv.hasActiveShift && item.id !== "active_shift") {
     return true;
   }

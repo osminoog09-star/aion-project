@@ -9,6 +9,8 @@ export const OWNER_LANGUAGE_RULE =
 export const SUBSYSTEM_TITLES_RU: Record<string, string> = {
   "driver-intelligence": "Интеллект водителя",
   "gps-route": "GPS и маршруты",
+  "aion-maps": "AION Maps & Runtime OS",
+  "fuel-cost": "Топливо и себестоимость",
   ocr: "OCR и чеки",
   "overlay-hud": "Оверлей HUD",
   "runtime-apk": "Смена и APK",

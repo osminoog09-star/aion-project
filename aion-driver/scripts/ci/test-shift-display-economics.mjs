@@ -3,16 +3,15 @@
  * Run: node scripts/ci/test-shift-display-economics.mjs
  */
 import assert from "node:assert/strict";
+import { compileTsModule } from "./lib/compileTsModule.mjs";
 
-async function loadPick() {
-  try {
-    const mod = await import("../../utils/shiftDisplayEconomics.ts");
-    return mod.pickProfitFromRouteRow;
-  } catch (err) {
-    console.log("skip TS import — run npm run typecheck:", err?.message ?? err);
-    process.exit(0);
-  }
-}
+const { pickProfitFromRouteRow } = compileTsModule("utils/shiftDisplayEconomics.ts", {
+  "./formatting": {
+    formatCurrencyDisplay(value, currency = "RUB") {
+      return `${Math.round(value)} ${currency}`;
+    },
+  },
+});
 
 function profitSnapshot(overrides = {}) {
   return {
@@ -30,8 +29,6 @@ function profitSnapshot(overrides = {}) {
 }
 
 async function main() {
-  const pickProfitFromRouteRow = await loadPick();
-
   const afterCosts = pickProfitFromRouteRow({
     analytics: { profit: profitSnapshot() },
   });

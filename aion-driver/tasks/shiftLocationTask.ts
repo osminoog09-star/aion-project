@@ -18,6 +18,38 @@ export async function clearBackgroundShiftLocationRuntimeState(): Promise<void> 
   ]);
 }
 
+export async function stopShiftLocationTaskIfRunning(): Promise<void> {
+  try {
+    if (await Location.hasStartedLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK)) {
+      await Location.stopLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK);
+    }
+  } catch {
+    // ignore: OEM/Expo can throw in background restrictions
+  }
+}
+
+export async function getShiftLocationTaskDiagnostics(): Promise<{
+  taskRunning: boolean | null;
+  lastHeartbeatJson: string | null;
+  lastMergeStateJson: string | null;
+}> {
+  const [hb, st] = await Promise.all([
+    AsyncStorage.getItem(STORAGE_KEYS.SHIFT_LOC_TASK_HEARTBEAT),
+    AsyncStorage.getItem(STORAGE_KEYS.SHIFT_BG_MERGE_STATE),
+  ]);
+  let running: boolean | null = null;
+  try {
+    running = await Location.hasStartedLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK);
+  } catch {
+    running = null;
+  }
+  return {
+    taskRunning: running,
+    lastHeartbeatJson: hb ?? null,
+    lastMergeStateJson: st ?? null,
+  };
+}
+
 /**
  * Фоновая доставка точек: сериализованный merge в ActiveShift.
  * Foreground watch только в AppState active; FGS только вне active — один владелец GPS-дельты.

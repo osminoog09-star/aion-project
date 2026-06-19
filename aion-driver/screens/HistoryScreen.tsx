@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter, type Href } from "expo-router";
-import { useCallback, useState, memo } from "react";
-import { FlatList, Pressable, Text, View } from "react-native";
+import { useCallback, useMemo, useState, memo } from "react";
+import { Alert, FlatList, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { GlowCard } from "../components/ui/GlowCard";
 import { CockpitBackground } from "../components/ui/CockpitBackground";
@@ -39,7 +39,7 @@ export function HistoryScreen() {
   const distanceUnits = useResolvedDistanceUnits();
   const { merged: history, isLoading } = useMergedShiftHistory();
   const { entries, refreshOcr } = useTimelineEntries(history);
-  const { refreshHistory } = useShift();
+  const { refreshHistory, history: localShiftHistory } = useShift();
   const { settings } = useDevice();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -53,6 +53,27 @@ export function HistoryScreen() {
     }
     setRefreshing(false);
   }, [refreshHistory, refreshOcr, queryClient, session?.user.id]);
+
+  const localShiftIds = useMemo(
+    () => new Set(localShiftHistory.map((s) => s.id)),
+    [localShiftHistory],
+  );
+
+  const openEditShift = useCallback(
+    (shift: Shift) => {
+      if (!localShiftIds.has(shift.id)) {
+        Alert.alert(
+          "Правка недоступна",
+          "Эта смена есть только в облаке. Подождите синхронизации или откройте приложение на устройстве, где смена сохранена локально.",
+        );
+        return;
+      }
+      router.push(
+        `/edit-shift-history?shiftId=${encodeURIComponent(shift.id)}` as Href,
+      );
+    },
+    [localShiftIds, router],
+  );
 
   const bgVariant =
     settings.nightContrast === "nightDrive" ? "nightDrive" : "cockpit";
@@ -85,6 +106,7 @@ export function HistoryScreen() {
               item={item}
               currency={currency}
               distanceUnits={distanceUnits}
+              onEditShift={openEditShift}
             />
           )}
           contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 110 }}
@@ -106,10 +128,12 @@ const TimelineRow = memo(function TimelineRow({
   item,
   currency,
   distanceUnits,
+  onEditShift,
 }: {
   item: TimelineEntry;
   currency: AppCurrencyCode;
   distanceUnits: DistanceUnits;
+  onEditShift: (s: Shift) => void;
 }) {
   if (item.kind === "shift") {
     return (
@@ -117,6 +141,7 @@ const TimelineRow = memo(function TimelineRow({
         shift={item.shift}
         currency={currency}
         distanceUnits={distanceUnits}
+        onEditShift={onEditShift}
       />
     );
   }
@@ -130,10 +155,12 @@ function ShiftRow({
   shift,
   currency,
   distanceUnits,
+  onEditShift,
 }: {
   shift: Shift;
   currency: AppCurrencyCode;
   distanceUnits: DistanceUnits;
+  onEditShift: (s: Shift) => void;
 }) {
   const date = new Date(shift.endedAt);
   const dateLabel = date.toLocaleString("ru-RU", {
@@ -145,7 +172,12 @@ function ShiftRow({
   const profit = pickProfitFromRouteRow({ shift });
   const profitValue = profit.profit ?? shift.netProfit;
   return (
-    <GlowCard className="mb-3" glow="neutral">
+    <Pressable
+      accessibilityRole="button"
+      onPress={() => onEditShift(shift)}
+      className="mb-3 active:opacity-90"
+    >
+      <GlowCard className="mb-0" glow="neutral">
       <View className="flex-row items-center justify-between">
         <View>
           <Text className="text-[10px] uppercase tracking-widest text-cyan-400/80">
@@ -201,7 +233,11 @@ function ShiftRow({
           value={formatCurrencyDisplay(shift.gasSavingsRub, currency)}
         />
       </View>
-    </GlowCard>
+        <Text className="mt-3 text-[10px] text-slate-600">
+          Нажмите, чтобы исправить доход, топливо, км или длительность
+        </Text>
+      </GlowCard>
+    </Pressable>
   );
 }
 

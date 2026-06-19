@@ -49,4 +49,4 @@ export const DRIVER_FIELD_VALIDATION_STEPS: DriverFieldValidationGuideStep[] = [
 ];
 
 export const DRIVER_FIELD_VALIDATION_APP_PATH =
-  "AION Driver → Главная → «Маршруты GPS · чеклист 8/8»";
+  "AION Driver → Главная → «Маршруты GPS · аналитика» (чеклист 8/8 — информационно, gate выключен)";

@@ -12,10 +12,9 @@ function mergeShifts(local: Shift[], cloud: Shift[]): Shift[] {
   for (const s of cloud) {
     map.set(s.id, s);
   }
+  /** Локальная история (в т.ч. ручные правки) перекрывает снимок из облака до прихода синка. */
   for (const s of local) {
-    if (!map.has(s.id)) {
-      map.set(s.id, s);
-    }
+    map.set(s.id, s);
   }
   return Array.from(map.values()).sort(
     (a, b) =>

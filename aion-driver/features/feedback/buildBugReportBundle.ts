@@ -2,7 +2,11 @@ import Constants from "expo-constants";
 import * as Updates from "expo-updates";
 import { Platform } from "react-native";
 import { formatDiagnosticLogText, getDiagnosticEntries } from "../../lib/diagnosticLog";
-import { peekSyncQueue } from "../sync/services/offlineQueue";
+import {
+  getSyncQueueDiagnostics,
+  peekSyncDeadLetters,
+  peekSyncQueue,
+} from "../sync/services/offlineQueue";
 import { getOtaDebugInfo } from "../../services/updateService";
 import { loadActiveShift } from "../../storage/driver/activeShiftStorage";
 import { loadPendingFuelEntries } from "../../storage/driver/pendingFuelStorage";
@@ -13,7 +17,11 @@ export type BugReportCategory = "bug" | "fuel" | "sync" | "ui" | "crash" | "othe
 
 export async function buildBugReportDiagnostics(): Promise<Record<string, unknown>> {
   const ota = getOtaDebugInfo();
-  const queue = await peekSyncQueue();
+  const [queue, deadLetters, queueDiag] = await Promise.all([
+    peekSyncQueue(),
+    peekSyncDeadLetters(),
+    getSyncQueueDiagnostics(),
+  ]);
   const activeShift = await loadActiveShift();
   const pendingFuel = await loadPendingFuelEntries();
   let lastSync: number | null = null;
@@ -40,8 +48,12 @@ export async function buildBugReportDiagnostics(): Promise<Record<string, unknow
     },
     sync: {
       queueLength: queue.length,
+      deadLetterLength: deadLetters.length,
       lastFlushAtMs: lastSync,
       queueTypes: queue.map((q) => q.type),
+      deadLetterTypes: deadLetters.map((d) => d.op.type),
+      deadLetterReasons: deadLetters.map((d) => d.reason),
+      diagnostics: queueDiag,
     },
     shift: activeShift
       ? {

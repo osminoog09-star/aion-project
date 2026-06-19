@@ -2,25 +2,25 @@
   "version": "2.0",
   "orchestrationVersion": "3.0",
   "agentId": "cursor-autonomous",
-  "lastUpdated": "2026-05-16",
+  "lastUpdated": "2026-06-19",
   "runtime": {
-    "status": "blocked",
-    "phase": "blocked",
-    "currentTask": "SAFE MODE: APK 1.0.4 incompatible — need EAS build 1.0.6+",
-    "subsystem": "operations-center",
-    "reasoning": "Подтвердить GPS cluster insights после 2+ смен",
+    "status": "coding",
+    "phase": "coding",
+    "currentTask": "Route intelligence UX + field validation",
+    "subsystem": "driver-intelligence",
+    "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
     "confidence": 0.88,
-    "startedAt": "2026-05-16T13:56:04.603Z",
-    "updatedAt": "2026-05-17T05:06:28.041Z",
-    "heartbeatAt": "2026-05-17T05:06:28.041Z",
+    "startedAt": "2026-06-19T11:22:11.429Z",
+    "updatedAt": "2026-06-19T11:23:13.004Z",
+    "heartbeatAt": "2026-06-19T11:23:13.004Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
       "src/components/operations/OwnerCommandCenter.tsx"
     ],
     "commitCandidate": "pending",
-    "blocker": "Mobile build desync — apk-manifest 1.0.4 < portal min 1.0.6",
-    "nextStep": "eas build preview + release:apk-manifest:sync + device heartbeat",
+    "blocker": null,
+    "nextStep": "OTA тест Driver",
     "branch": "main",
     "dependencyTarget": "Live execution observability + self-healing",
     "pendingReviewCount": 0,
@@ -31,17 +31,31 @@
       "routes": "passed"
     },
     "lastFailure": null,
-    "lastCompletedAction": "AI пишет и улучшает код: Исправление live: Supabase + честный stale UI",
+    "lastCompletedAction": "AI заблокирован: Release failed",
     "retryCount": 0,
-    "validationProgress": "operationalCosts в ShiftHudBar и истории смен",
-    "progressPercent": 99,
-    "etaMinutes": 60,
-    "autonomousDepth": 2,
+    "validationProgress": "Усилены CI-проверки field validation и коррекции смен: убраны skip из локальных TS-тестов",
+    "progressPercent": 68,
+    "etaMinutes": 45,
+    "autonomousDepth": 4,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "aion-driver/utils/shiftDisplayEconomics.ts",
+    "currentFile": "aion-driver/scripts/ci/lib/compileTsModule.mjs",
     "recentActions": [
+      {
+        "at": "2026-06-19T11:23:13.004Z",
+        "tag": "CODE",
+        "message": "Усилены CI-проверки field validation и коррекции смен: убраны skip из локальных TS-тестов",
+        "file": "aion-driver/scripts/ci/lib/compileTsModule.mjs",
+        "repo": "aion-project"
+      },
+      {
+        "at": "2026-06-19T11:21:59.366Z",
+        "tag": "CODE",
+        "message": "Добавлен regression-тест ручной коррекции истории смен",
+        "file": "aion-driver/scripts/ci/test-historical-shift-correction.mjs",
+        "repo": "aion-project"
+      },
       {
         "at": "2026-05-17T05:06:28.041Z",
         "tag": "CODE",
@@ -249,17 +263,295 @@
         "message": "Правило owner-visible-work + hooks после save/shell",
         "file": ".cursor/rules/aion-owner-visible-work.mdc",
         "repo": "aion-project"
-      },
-      {
-        "at": "2026-05-15T13:13:31.857Z",
-        "tag": "CODE",
-        "message": "Поток действий в терминале и на live",
-        "file": "src/components/operations/LiveActionStream.tsx",
-        "repo": "aion-project"
       }
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-19T11:23:13.004Z",
+      "phase": "coding",
+      "summary": "[CODE] Усилены CI-проверки field validation и коррекции смен: убраны skip из локальных TS-тестов"
+    },
+    {
+      "at": "2026-06-19T11:22:11.429Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Route intelligence UX + field validation",
+      "feedEventId": "evt-2026-06-19-exec-6gfwyp",
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Проверка backfill и stop-zone на реальном устройстве",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-06-19T11:21:59.366Z",
+      "phase": "blocked",
+      "summary": "[CODE] Добавлен regression-тест ручной коррекции истории смен"
+    },
+    {
+      "at": "2026-05-19T00:53:32.476Z",
+      "phase": "blocked",
+      "summary": "AI заблокирован: Release failed",
+      "feedEventId": null,
+      "titleRu": "AI заблокирован",
+      "explanationRu": "OTA: полная регистрация; gate 8/8 off; далее fuel/maps roadmap без engine",
+      "resultRu": "Нужна помощь владельца",
+      "icon": "🛑",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-19T00:53:05.293Z",
+      "phase": "blocked",
+      "summary": "AI заблокирован: Release failed",
+      "feedEventId": null,
+      "titleRu": "AI заблокирован",
+      "explanationRu": "OTA: полная регистрация; gate 8/8 off; далее fuel/maps roadmap без engine",
+      "resultRu": "Нужна помощь владельца",
+      "icon": "🛑",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-18T12:45:45.085Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Route intelligence UX + field validation",
+      "feedEventId": "evt-2026-05-18-exec-n1tl6r",
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Проверка backfill и stop-zone на реальном устройстве",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T13:04:42.829Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "autonomous 20m cycle",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:55:29.987Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "autonomous 20m cycle",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:55:18.067Z",
+      "phase": "completed",
+      "summary": "AI переходит к следующей задаче: APK 1.0.6 live — SAFE MODE off, signoff YES",
+      "feedEventId": "evt-2026-05-17-exec-qg6k5w",
+      "titleRu": "AI переходит к следующей задаче",
+      "explanationRu": "autonomous 20m cycle",
+      "resultRu": "Переход к следующей задаче",
+      "icon": "🔄",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:53:23.213Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Release orchestration complete",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:53:22.942Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:52:40.282Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Release orchestration complete",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:52:40.074Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:52:17.388Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Release orchestration complete",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:52:17.158Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:50:47.989Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:50:20.941Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T12:49:33.004Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T05:43:47.053Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T05:38:54.024Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: APK 1.0.6 manifest synced — portal deploy pending",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T05:38:48.656Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T05:38:31.619Z",
+      "phase": "validating",
+      "summary": "AI проверяет качество: Release safety gates passed",
+      "feedEventId": null,
+      "titleRu": "AI проверяет качество",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "✅",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T05:30:08.232Z",
+      "phase": "executing",
+      "summary": "executing: Ожидание EAS 1.0.6 (eb4250a2)",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T05:13:45.409Z",
+      "phase": "blocked",
+      "summary": "AI заблокирован: Release failed",
+      "feedEventId": null,
+      "titleRu": "AI заблокирован",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "Нужна помощь владельца",
+      "icon": "🛑",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T05:11:54.224Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: EAS preview build запущен на GitHub Actions",
+      "feedEventId": "evt-2026-05-17-exec-vx5u0w",
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "GHA run 25982075448",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T05:11:01.146Z",
+      "phase": "blocked",
+      "summary": "AI заблокирован: Release failed",
+      "feedEventId": null,
+      "titleRu": "AI заблокирован",
+      "explanationRu": "Подтвердить GPS cluster insights после 2+ смен",
+      "resultRu": "Нужна помощь владельца",
+      "icon": "🛑",
+      "confidence": 0.88
+    },
+    {
+      "at": "2026-05-17T05:10:30.551Z",
+      "phase": "blocked",
+      "summary": "AI заблокирован: Release failed",
+      "feedEventId": null,
+      "titleRu": "AI заблокирован",
+      "explanationRu": "Подтвердить GPS cluster insights после 2+ смен",
+      "resultRu": "Нужна помощь владельца",
+      "icon": "🛑",
+      "confidence": 0.88
+    },
     {
       "at": "2026-05-17T05:06:28.041Z",
       "phase": "blocked",
@@ -639,45 +931,93 @@
       "phase": "validating",
       "summary": "validating: Build + route manifests OK",
       "feedEventId": "evt-2026-05-15-exec-t5jvou"
-    },
-    {
-      "at": "2026-05-15T11:43:12.059Z",
-      "phase": "analyzing",
-      "summary": "analyzing: Finalize live orchestration",
-      "feedEventId": "evt-2026-05-15-exec-pw21cl"
-    },
-    {
-      "at": "2026-05-15T11:40:09.817Z",
-      "phase": "coding",
-      "summary": "coding: Route timeline intelligence UX shipped (driver local)"
-    },
-    {
-      "at": "2026-05-15T11:38:39.168Z",
-      "phase": "completed",
-      "summary": "completed: Live runtime v2 deployed; /operations/live 200"
-    },
-    {
-      "at": "2026-05-15T11:36:26.702Z",
-      "phase": "deploying",
-      "summary": "deploying: Push runtime v2 + self-healing"
-    },
-    {
-      "at": "2026-05-15T12:45:00.000Z",
-      "phase": "recovering",
-      "summary": "Self-healing: runtime v2 + contracts + heal script"
-    },
-    {
-      "at": "2026-05-15T12:30:00.000Z",
-      "phase": "blocked",
-      "summary": "route_validation: /operations/live 404"
-    },
-    {
-      "at": "2026-05-15T12:28:00.000Z",
-      "phase": "validating",
-      "summary": "Live execution visibility — portal build"
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-19T11:23:13.004Z"
+    },
+    {
+      "at": "2026-06-19T11:22:11.429Z"
+    },
+    {
+      "at": "2026-06-19T11:21:59.366Z"
+    },
+    {
+      "at": "2026-05-19T00:53:32.476Z"
+    },
+    {
+      "at": "2026-05-19T00:53:05.293Z"
+    },
+    {
+      "at": "2026-05-18T12:46:56.887Z"
+    },
+    {
+      "at": "2026-05-18T12:45:45.085Z"
+    },
+    {
+      "at": "2026-05-17T13:04:42.829Z"
+    },
+    {
+      "at": "2026-05-17T12:55:29.987Z"
+    },
+    {
+      "at": "2026-05-17T12:55:18.067Z"
+    },
+    {
+      "at": "2026-05-17T12:53:23.213Z"
+    },
+    {
+      "at": "2026-05-17T12:53:22.942Z"
+    },
+    {
+      "at": "2026-05-17T12:52:40.282Z"
+    },
+    {
+      "at": "2026-05-17T12:52:40.074Z"
+    },
+    {
+      "at": "2026-05-17T12:52:17.388Z"
+    },
+    {
+      "at": "2026-05-17T12:52:17.158Z"
+    },
+    {
+      "at": "2026-05-17T12:50:47.989Z"
+    },
+    {
+      "at": "2026-05-17T12:50:20.941Z"
+    },
+    {
+      "at": "2026-05-17T12:49:33.004Z"
+    },
+    {
+      "at": "2026-05-17T05:43:47.053Z"
+    },
+    {
+      "at": "2026-05-17T05:38:54.024Z"
+    },
+    {
+      "at": "2026-05-17T05:38:48.656Z"
+    },
+    {
+      "at": "2026-05-17T05:38:31.619Z"
+    },
+    {
+      "at": "2026-05-17T05:30:08.232Z"
+    },
+    {
+      "at": "2026-05-17T05:13:45.409Z"
+    },
+    {
+      "at": "2026-05-17T05:11:54.224Z"
+    },
+    {
+      "at": "2026-05-17T05:11:01.146Z"
+    },
+    {
+      "at": "2026-05-17T05:10:30.551Z"
+    },
     {
       "at": "2026-05-17T05:06:28.041Z"
     },
@@ -737,90 +1077,6 @@
     },
     {
       "at": "2026-05-15T15:34:07.554Z"
-    },
-    {
-      "at": "2026-05-15T15:34:02.638Z"
-    },
-    {
-      "at": "2026-05-15T15:34:01.662Z"
-    },
-    {
-      "at": "2026-05-15T15:33:57.532Z"
-    },
-    {
-      "at": "2026-05-15T15:33:47.584Z"
-    },
-    {
-      "at": "2026-05-15T15:33:37.537Z"
-    },
-    {
-      "at": "2026-05-15T15:33:27.512Z"
-    },
-    {
-      "at": "2026-05-15T15:33:17.553Z"
-    },
-    {
-      "at": "2026-05-15T15:33:07.506Z"
-    },
-    {
-      "at": "2026-05-15T15:32:57.602Z"
-    },
-    {
-      "at": "2026-05-15T15:32:57.512Z"
-    },
-    {
-      "at": "2026-05-15T15:32:56.795Z"
-    },
-    {
-      "at": "2026-05-15T15:32:47.474Z"
-    },
-    {
-      "at": "2026-05-15T15:32:37.493Z"
-    },
-    {
-      "at": "2026-05-15T15:32:27.486Z"
-    },
-    {
-      "at": "2026-05-15T15:32:17.503Z"
-    },
-    {
-      "at": "2026-05-15T15:32:07.464Z"
-    },
-    {
-      "at": "2026-05-15T15:31:57.493Z"
-    },
-    {
-      "at": "2026-05-15T15:31:47.406Z"
-    },
-    {
-      "at": "2026-05-15T15:31:37.442Z"
-    },
-    {
-      "at": "2026-05-15T15:31:27.409Z"
-    },
-    {
-      "at": "2026-05-15T15:31:17.407Z"
-    },
-    {
-      "at": "2026-05-15T15:31:07.414Z"
-    },
-    {
-      "at": "2026-05-15T15:30:58.142Z"
-    },
-    {
-      "at": "2026-05-15T15:30:57.515Z"
-    },
-    {
-      "at": "2026-05-15T15:30:47.388Z"
-    },
-    {
-      "at": "2026-05-15T15:30:37.358Z"
-    },
-    {
-      "at": "2026-05-15T15:30:27.442Z"
-    },
-    {
-      "at": "2026-05-15T15:30:17.374Z"
     }
   ]
 }

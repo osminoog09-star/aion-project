@@ -3,10 +3,14 @@ import Constants from "expo-constants";
 import type { UseUpdatesResult } from "../../../../hooks/useUpdatesController";
 import { getOtaChannelTier } from "../../../../lib/otaTestMode";
 import { getOtaDebugInfo } from "../../../../services/updateService";
-import { peekSyncQueue } from "../../../../features/sync/services/offlineQueue";
+import {
+  peekSyncDeadLetters,
+  peekSyncQueue,
+} from "../../../../features/sync/services/offlineQueue";
 import { getLastSyncFlushAt } from "../../../../storage/core/syncDebugMeta";
 import { getApkDiagnosticsSnapshot } from "../../updates/apkDiagnosticsSink";
 import type { AionDiagnosticsSnapshot, AionOtaPhase } from "./types";
+import { getShiftLocationTaskDiagnostics } from "../../../../tasks/shiftLocationTask";
 
 export type AionAuthSnapshotInput = {
   sessionPresent: boolean;
@@ -23,7 +27,11 @@ export async function collectAionDiagnosticsSnapshot(
   auth: AionAuthSnapshotInput,
 ): Promise<AionDiagnosticsSnapshot> {
   const net = await NetInfo.fetch();
-  const queue = await peekSyncQueue();
+  const [queue, deadLetters, shiftLoc] = await Promise.all([
+    peekSyncQueue(),
+    peekSyncDeadLetters(),
+    getShiftLocationTaskDiagnostics(),
+  ]);
   const flush = await getLastSyncFlushAt();
   const ota = getOtaDebugInfo();
   const apkUrl =
@@ -35,7 +43,8 @@ export async function collectAionDiagnosticsSnapshot(
     capturedAt: Date.now(),
     networkOnline: net.isConnected === true,
     networkType: net.type ?? "unknown",
-    syncQueueLength: queue.length,
+    syncQueueLength: queue.length + deadLetters.length,
+    shiftLocationTask: shiftLoc,
     lastSyncFlushAt: flush,
     auth: {
       sessionPresent: auth.sessionPresent,

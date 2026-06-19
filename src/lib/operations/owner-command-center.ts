@@ -131,16 +131,46 @@ const SUBSYSTEM_REGISTRY: {
     id: "gps-route",
     titleRu: SUBSYSTEM_TITLES_RU["gps-route"],
     icon: "🛰",
-    priorityIds: ["route-heatmap-future"],
-    dependencyIds: ["route-gps-store", "time-intelligence", "heatmap-analytics"],
+    priorityIds: ["route-heatmap-future", "aion-maps-driver-runtime-os"],
+    dependencyIds: [
+      "route-gps-store",
+      "time-intelligence",
+      "heatmap-analytics",
+      "aion-maps-driver-runtime-os",
+      "maps-gps-intelligence",
+    ],
     feedKeywords: ["gps", "route", "timeline", "маршрут", "headless", "trip"],
+  },
+  {
+    id: "aion-maps",
+    titleRu: SUBSYSTEM_TITLES_RU["aion-maps"],
+    icon: "🗺",
+    priorityIds: ["aion-maps-driver-runtime-os"],
+    dependencyIds: [
+      "aion-maps-driver-runtime-os",
+      "maps-gps-intelligence",
+      "maps-road-matching",
+    ],
+    feedKeywords: ["maps", "road matching", "routing", "runtime os", "kilomet"],
+  },
+  {
+    id: "fuel-cost",
+    titleRu: SUBSYSTEM_TITLES_RU["fuel-cost"],
+    icon: "⛽",
+    priorityIds: ["operational-fuel-cost-intelligence"],
+    dependencyIds: [
+      "operational-fuel-cost-intelligence",
+      "fuel-gps-cost-allocation",
+      "fuel-maps-predictive",
+    ],
+    feedKeywords: ["fuel", "топлив", "refuel", "operationalcost", "себестоим"],
   },
   {
     id: "ocr",
     titleRu: SUBSYSTEM_TITLES_RU.ocr,
     icon: "📷",
-    priorityIds: ["ocr-production-queue"],
-    dependencyIds: [],
+    priorityIds: ["ocr-production-queue", "operational-fuel-cost-intelligence"],
+    dependencyIds: ["operational-fuel-cost-intelligence"],
     feedKeywords: ["ocr", "fuel", "queue", "чек"],
   },
   {
@@ -184,6 +214,7 @@ function statusRu(status: string): string {
     blocked: "Заблокировано",
     not_started: "Не начато",
     experimental: "Эксперимент",
+    roadmap_only: "Только roadmap",
   };
   return map[status] ?? status;
 }
@@ -195,6 +226,8 @@ function priorityProgress(p: StrategicPriorityItem | undefined): number {
       return 100;
     case "in_progress":
       return 65;
+    case "roadmap_only":
+      return 12;
     case "blocked":
       return 15;
     default:

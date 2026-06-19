@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-15",
+  "lastUpdated": "2026-05-18",
   "productionUrl": "https://aion-com.vercel.app",
   "expectedGitRemote": "https://github.com/osminoog09-star/aion-project.git",
   "vercelProjectId": "prj_ep8i1CoHfHdZKwto8gkF5XStzonK",
@@ -33,7 +33,7 @@
     "notes": "All operations routes validated."
   },
   "routeValidation": {
-    "checkedAt": "2026-05-15T14:56:58.954Z",
+    "checkedAt": "2026-05-18T12:46:45.588Z",
     "baseUrl": "https://aion-com.vercel.app",
     "routes": {
       "/operations": {
@@ -95,6 +95,18 @@
     "allPassed": true
   },
   "deploymentTimeline": [
+    {
+      "at": "2026-05-18T12:46:45.588Z",
+      "kind": "validation_passed",
+      "summary": "All 11 routes passed (11010ms)",
+      "durationMs": 11010
+    },
+    {
+      "at": "2026-05-17T12:55:42.747Z",
+      "kind": "validation_passed",
+      "summary": "All 11 routes passed (11201ms)",
+      "durationMs": 11201
+    },
     {
       "at": "2026-05-15T14:56:58.955Z",
       "kind": "validation_passed",
@@ -202,18 +214,6 @@
       "kind": "validation_failed",
       "summary": "Production validation failed — stale or broken deploy",
       "durationMs": 2343
-    },
-    {
-      "at": "2026-05-15T12:00:00Z",
-      "kind": "git_connected",
-      "summary": "Vercel aion-com connected to osminoog09-star/aion-project; GitHub App access granted.",
-      "commit": "d8a2146"
-    },
-    {
-      "at": "2026-05-15T10:00:00Z",
-      "kind": "investigation_complete",
-      "summary": "Root cause: stale CLI deploy GsrxHVBiU; Git not connected.",
-      "commit": "94f96d0"
     }
   ],
   "pipelineBlockers": [],

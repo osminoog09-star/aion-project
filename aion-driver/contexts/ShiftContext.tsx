@@ -28,6 +28,7 @@ import { loadProfile, saveProfile } from "../storage/driver/profileStorage";
 import {
   appendShift,
   loadShiftHistory,
+  updateShiftInHistory,
 } from "../storage/driver/shiftHistoryStorage";
 import { appendAionTimelineEvent } from "../storage/core/aionTimelineStorage";
 import { getLastSyncFlushAt } from "../storage/core/syncDebugMeta";
@@ -72,6 +73,8 @@ import { loadGpsTripSession } from "../features/gps/tripStore/gpsTripStorage";
 import { useRuntimePulse } from "../src/core/aion/runtime/runtimePulseBus";
 import { resetStatisticsElement } from "../features/statistics/resetStatisticsElement";
 import type { StatResetResult, StatResetTarget } from "../features/statistics/types";
+import { applyHistoricalShiftCorrection, type HistoricalShiftPatch } from "../utils/historicalShiftCorrection";
+import { stopShiftLocationTaskIfRunning } from "../tasks/shiftLocationTask";
 
 function createShiftId(): string {
   return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
@@ -119,6 +122,11 @@ type ShiftContextValue = {
     target: StatResetTarget,
     opts?: { userId?: string | null },
   ) => Promise<StatResetResult>;
+  /** Ручная правка агрегатов завершённой смены (доход, топливо, км, время). */
+  correctHistoryShift: (
+    shiftId: string,
+    patch: HistoricalShiftPatch,
+  ) => Promise<{ ok: boolean; error?: string }>;
 };
 
 const ShiftContext = createContext<ShiftContextValue | undefined>(undefined);
@@ -150,6 +158,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     () => AppState.currentState === "active",
   );
   const orbVisualRef = useRef<{ shiftId: string; visual: string } | null>(null);
+  const lastOrbHudRef = useRef<{ title: string; body: string } | null>(null);
 
   activeShiftRef.current = activeShift;
   const profileRef = useRef<UserProfile | null>(null);
@@ -338,6 +347,8 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   const beginLocationSession = useCallback(
     (shift: ActiveShift) => {
       stopTracking();
+      // Hard guard: если background task не успел остановиться — выключаем перед foreground watch
+      void stopShiftLocationTaskIfRunning();
       const resume =
         shift.lastAcceptedLat != null && shift.lastAcceptedLng != null
           ? {
@@ -469,6 +480,9 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
           : "background";
       const last = orbVisualRef.current;
       const sameShift = last != null && last.shiftId === shift.id;
+      if (sameShift && last.visual === visual) {
+        return;
+      }
       const visualOnly = sameShift && last.visual !== visual;
       orbVisualRef.current = { shiftId: shift.id, visual };
       try {
@@ -842,6 +856,39 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     setHistory(hist);
   }, []);
 
+  const correctHistoryShift = useCallback(
+    async (shiftId: string, patch: HistoricalShiftPatch) => {
+      try {
+        const hist = await loadShiftHistory();
+        const cur = hist.find((s) => s.id === shiftId);
+        if (!cur) {
+          return { ok: false as const, error: "Смена не найдена в истории" };
+        }
+        const next = applyHistoricalShiftCorrection(cur, profileRef.current, patch);
+        const updated = await updateShiftInHistory(shiftId, next);
+        if (!updated) {
+          return { ok: false as const, error: "Не удалось сохранить историю" };
+        }
+        setHistory(updated);
+        const ho = await loadPostShiftHandoff();
+        if (ho?.id === shiftId) {
+          await savePostShiftHandoff(next);
+          setPostShiftHandoff(next);
+        }
+        emitShiftRecorded(next);
+        scheduleCloudBackupPush();
+        diagLog("info", "shift_correct", "Исправлена смена в истории", { shiftId });
+        return { ok: true as const };
+      } catch (e) {
+        return {
+          ok: false as const,
+          error: e instanceof Error ? e.message : String(e),
+        };
+      }
+    },
+    [],
+  );
+
   const applyStatisticsStateFromDisk = useCallback(async () => {
     const [hist, shift, pending, handoff] = await Promise.all([
       loadShiftHistory(),
@@ -1025,12 +1072,19 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated || Platform.OS !== "android") return;
     if (!deviceSettings.androidOverlayOrbEnabled || !isAionOverlayOrbNativeAvailable()) return;
-    if (!activeShiftRuntime) return;
+    if (!activeShiftRuntime) {
+      lastOrbHudRef.current = null;
+      return;
+    }
     const km = (activeShiftRuntime.distanceMeters / 1000).toFixed(1);
     const min = Math.round(activeShiftRuntime.durationMs / 60_000);
     const title = activeShiftRuntime.paused ? "Пауза" : "Смена AION";
     const { profit, profitPerHour: pph } = pickProfitFromRuntime(activeShiftRuntime);
     const body = `Чистая ${Math.round(profit)} · ${Math.round(pph)}/ч · ${km} км · ${min} мин`;
+    const next = { title, body };
+    const prev = lastOrbHudRef.current;
+    if (prev?.title === next.title && prev?.body === next.body) return;
+    lastOrbHudRef.current = next;
     void orbNativeUpdateHud(title, body);
   }, [hydrated, activeShiftRuntime, deviceSettings.androidOverlayOrbEnabled]);
 
@@ -1063,6 +1117,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       refreshHistory,
       resetStatistics,
       resetStatisticElement: resetStatisticElementFn,
+      correctHistoryShift,
     }),
     [
       hydrated,
@@ -1091,6 +1146,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       refreshHistory,
       resetStatistics,
       resetStatisticElementFn,
+      correctHistoryShift,
     ]
   );
 

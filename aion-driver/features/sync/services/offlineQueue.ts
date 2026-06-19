@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const QUEUE_KEY = "aion-offline-sync-queue-v1";
+const DEAD_LETTER_KEY = "aion-offline-sync-dead-letter-v1";
 
 let queueChain: Promise<unknown> = Promise.resolve();
 
@@ -32,6 +33,19 @@ export type SyncOperation = {
   dedupeKey?: string;
 };
 
+export type SyncDeadLetterReason =
+  | "max_attempts"
+  | "not_implemented"
+  | "terminal_error";
+
+export type SyncDeadLetter = {
+  id: string;
+  op: SyncOperation;
+  failedAt: number;
+  reason: SyncDeadLetterReason;
+  message?: string;
+};
+
 async function readQueue(): Promise<SyncOperation[]> {
   const raw = await AsyncStorage.getItem(QUEUE_KEY);
   if (!raw) return [];
@@ -45,6 +59,21 @@ async function readQueue(): Promise<SyncOperation[]> {
 
 async function writeQueue(items: SyncOperation[]): Promise<void> {
   await AsyncStorage.setItem(QUEUE_KEY, JSON.stringify(items));
+}
+
+async function readDeadLetters(): Promise<SyncDeadLetter[]> {
+  const raw = await AsyncStorage.getItem(DEAD_LETTER_KEY);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw) as SyncDeadLetter[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+async function writeDeadLetters(items: SyncDeadLetter[]): Promise<void> {
+  await AsyncStorage.setItem(DEAD_LETTER_KEY, JSON.stringify(items.slice(-200)));
 }
 
 export async function enqueueSyncOperation(
@@ -90,6 +119,53 @@ export async function markAttempt(id: string): Promise<void> {
       x.id === id ? { ...x, attempts: x.attempts + 1 } : x,
     );
     await writeQueue(queue);
+  });
+}
+
+export async function moveToDeadLetter(
+  op: SyncOperation,
+  reason: SyncDeadLetterReason,
+  message?: string,
+): Promise<void> {
+  return runSerializedQueue(async () => {
+    const queue = (await readQueue()).filter((x) => x.id !== op.id);
+    await writeQueue(queue);
+    const dead = await readDeadLetters();
+    dead.push({
+      id: `${Date.now()}_${Math.random().toString(16).slice(2)}`,
+      op,
+      failedAt: Date.now(),
+      reason,
+      message,
+    });
+    await writeDeadLetters(dead);
+  });
+}
+
+export async function peekSyncDeadLetters(): Promise<SyncDeadLetter[]> {
+  return runSerializedQueue(() => readDeadLetters());
+}
+
+export async function clearSyncDeadLetters(): Promise<void> {
+  return runSerializedQueue(async () => {
+    await AsyncStorage.removeItem(DEAD_LETTER_KEY);
+  });
+}
+
+export async function getSyncQueueDiagnostics(): Promise<{
+  queueLength: number;
+  deadLetterLength: number;
+  queueTypes: SyncOperationType[];
+  deadLetterReasons: SyncDeadLetterReason[];
+}> {
+  return runSerializedQueue(async () => {
+    const [queue, dead] = await Promise.all([readQueue(), readDeadLetters()]);
+    return {
+      queueLength: queue.length,
+      deadLetterLength: dead.length,
+      queueTypes: queue.map((x) => x.type),
+      deadLetterReasons: dead.map((x) => x.reason),
+    };
   });
 }
 

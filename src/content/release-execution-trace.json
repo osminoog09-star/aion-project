@@ -1,4 +1,298 @@
 {
   "version": "1.0",
-  "events": []
+  "events": [
+    {
+      "id": "tr-1779152012237",
+      "at": "2026-05-19T00:53:32.237Z",
+      "stage": "release_failed",
+      "message": "fetch failed",
+      "level": "error"
+    },
+    {
+      "id": "tr-1779152012086",
+      "at": "2026-05-19T00:53:32.086Z",
+      "stage": "preflight",
+      "message": "Checking workflow eas-build-driver-preview.yml",
+      "level": "info"
+    },
+    {
+      "id": "tr-1779151985099",
+      "at": "2026-05-19T00:53:05.099Z",
+      "stage": "release_failed",
+      "message": "fetch failed",
+      "level": "error"
+    },
+    {
+      "id": "tr-1779151984951",
+      "at": "2026-05-19T00:53:04.951Z",
+      "stage": "preflight",
+      "message": "Checking workflow eas-build-driver-preview.yml",
+      "level": "info"
+    },
+    {
+      "id": "tr-1778995546555",
+      "at": "2026-05-17T05:25:46.555Z",
+      "stage": "expo_verify",
+      "message": "Skip — no EXPO_TOKEN for build:view",
+      "level": "warn"
+    },
+    {
+      "id": "tr-1778995546554",
+      "at": "2026-05-17T05:25:46.554Z",
+      "stage": "build_id",
+      "message": "Resolved BUILD_ID=eb4250a2-8702-4c47-af49-0e5b75eb9724",
+      "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
+      "level": "info"
+    },
+    {
+      "id": "tr-1778995544889",
+      "at": "2026-05-17T05:25:44.889Z",
+      "stage": "gha_poll",
+      "message": "run=25982310696 status=completed conclusion=success",
+      "runId": 25982310696,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778995529450",
+      "at": "2026-05-17T05:25:29.450Z",
+      "stage": "gha_poll",
+      "message": "run=25982310696 status=in_progress conclusion=—",
+      "runId": 25982310696,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778995513947",
+      "at": "2026-05-17T05:25:13.947Z",
+      "stage": "gha_poll",
+      "message": "run=25982310696 status=in_progress conclusion=—",
+      "runId": 25982310696,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778995498415",
+      "at": "2026-05-17T05:24:58.415Z",
+      "stage": "gha_poll",
+      "message": "run=25982310696 status=in_progress conclusion=—",
+      "runId": 25982310696,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778995482986",
+      "at": "2026-05-17T05:24:42.986Z",
+      "stage": "gha_poll",
+      "message": "run=25982310696 status=in_progress conclusion=—",
+      "runId": 25982310696,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778995463415",
+      "at": "2026-05-17T05:24:23.415Z",
+      "stage": "gha_started",
+      "message": "Run 25982310696 status=in_progress",
+      "runId": 25982310696,
+      "runUrl": "https://github.com/osminoog09-star/aion-project/actions/runs/25982310696",
+      "level": "info"
+    },
+    {
+      "id": "tr-1778995457909",
+      "at": "2026-05-17T05:24:17.909Z",
+      "stage": "gha_trigger",
+      "message": "Dispatched eas-build-driver-preview.yml @ master",
+      "workflowId": 277895512,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778995456492",
+      "at": "2026-05-17T05:24:16.492Z",
+      "stage": "preflight",
+      "message": "Workflow OK id=277895512",
+      "workflowId": 277895512,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778995456097",
+      "at": "2026-05-17T05:24:16.097Z",
+      "stage": "preflight",
+      "message": "Checking workflow eas-build-driver-preview.yml",
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994825201",
+      "at": "2026-05-17T05:13:45.201Z",
+      "stage": "release_failed",
+      "message": "Command failed: node scripts/complete-apk-loop.mjs dbbba114-5904-426d-ab51-61bf72655cb4",
+      "level": "error"
+    },
+    {
+      "id": "tr-1778994824725",
+      "at": "2026-05-17T05:13:44.725Z",
+      "stage": "expo_verify",
+      "message": "Skip — no EXPO_TOKEN for build:view",
+      "level": "warn"
+    },
+    {
+      "id": "tr-1778994824723",
+      "at": "2026-05-17T05:13:44.723Z",
+      "stage": "build_id",
+      "message": "Resolved BUILD_ID=dbbba114-5904-426d-ab51-61bf72655cb4",
+      "buildId": "dbbba114-5904-426d-ab51-61bf72655cb4",
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994822980",
+      "at": "2026-05-17T05:13:42.980Z",
+      "stage": "gha_poll",
+      "message": "run=25982081046 status=completed conclusion=success",
+      "runId": 25982081046,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994807524",
+      "at": "2026-05-17T05:13:27.524Z",
+      "stage": "gha_poll",
+      "message": "run=25982081046 status=in_progress conclusion=—",
+      "runId": 25982081046,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994791907",
+      "at": "2026-05-17T05:13:11.907Z",
+      "stage": "gha_poll",
+      "message": "run=25982081046 status=in_progress conclusion=—",
+      "runId": 25982081046,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994776426",
+      "at": "2026-05-17T05:12:56.426Z",
+      "stage": "gha_poll",
+      "message": "run=25982081046 status=in_progress conclusion=—",
+      "runId": 25982081046,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994760967",
+      "at": "2026-05-17T05:12:40.967Z",
+      "stage": "gha_poll",
+      "message": "run=25982081046 status=in_progress conclusion=—",
+      "runId": 25982081046,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994745467",
+      "at": "2026-05-17T05:12:25.467Z",
+      "stage": "gha_poll",
+      "message": "run=25982081046 status=in_progress conclusion=—",
+      "runId": 25982081046,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994729647",
+      "at": "2026-05-17T05:12:09.647Z",
+      "stage": "gha_poll",
+      "message": "run=25982081046 status=in_progress conclusion=—",
+      "runId": 25982081046,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994729275",
+      "at": "2026-05-17T05:12:09.275Z",
+      "stage": "gha_started",
+      "message": "Run 25982081046 status=in_progress",
+      "runId": 25982081046,
+      "runUrl": "https://github.com/osminoog09-star/aion-project/actions/runs/25982081046",
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994723625",
+      "at": "2026-05-17T05:12:03.625Z",
+      "stage": "gha_trigger",
+      "message": "Dispatched eas-build-driver-preview.yml @ master",
+      "workflowId": 277895512,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994722111",
+      "at": "2026-05-17T05:12:02.111Z",
+      "stage": "preflight",
+      "message": "Workflow OK id=277895512",
+      "workflowId": 277895512,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994721699",
+      "at": "2026-05-17T05:12:01.699Z",
+      "stage": "preflight",
+      "message": "Checking workflow eas-build-driver-preview.yml",
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994706693",
+      "at": "2026-05-17T05:11:46.693Z",
+      "stage": "gha_started",
+      "message": "Run 25982075448 status=in_progress",
+      "runId": 25982075448,
+      "runUrl": "https://github.com/osminoog09-star/aion-project/actions/runs/25982075448",
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994701236",
+      "at": "2026-05-17T05:11:41.236Z",
+      "stage": "gha_trigger",
+      "message": "Dispatched eas-build-driver-preview.yml @ master",
+      "workflowId": 277895512,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994699765",
+      "at": "2026-05-17T05:11:39.765Z",
+      "stage": "preflight",
+      "message": "Workflow OK id=277895512",
+      "workflowId": 277895512,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994699251",
+      "at": "2026-05-17T05:11:39.251Z",
+      "stage": "preflight",
+      "message": "Checking workflow eas-build-driver-preview.yml",
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994660955",
+      "at": "2026-05-17T05:11:00.955Z",
+      "stage": "release_failed",
+      "message": "GitHub API 422: {\"message\":\"Invalid Argument - failed to parse workflow: (Line: 42, Col: 13): Unrecognized named-value: 'secrets'. Located at position 1 within expression: secrets.EXPO_TOKEN != '', (Line: 49, Col: 13): Unrecognized named-value: 'secrets'. Located at position 1 within expression: secrets.EXPO_TOKEN != '', (Line: 64, Col: 13): Unrecognized named-value: 'secrets'. Located at position 1 within expres",
+      "level": "error"
+    },
+    {
+      "id": "tr-1778994659636",
+      "at": "2026-05-17T05:10:59.636Z",
+      "stage": "preflight",
+      "message": "Workflow OK id=277895512",
+      "workflowId": 277895512,
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994659003",
+      "at": "2026-05-17T05:10:59.003Z",
+      "stage": "preflight",
+      "message": "Checking workflow eas-build-driver-preview.yml",
+      "level": "info"
+    },
+    {
+      "id": "tr-1778994630357",
+      "at": "2026-05-17T05:10:30.357Z",
+      "stage": "release_failed",
+      "message": "fetch failed",
+      "level": "error"
+    },
+    {
+      "id": "tr-1778994630204",
+      "at": "2026-05-17T05:10:30.204Z",
+      "stage": "preflight",
+      "message": "Checking workflow eas-build-driver-preview.yml",
+      "level": "info"
+    }
+  ]
 }

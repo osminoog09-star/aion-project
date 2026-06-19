@@ -1,12 +1,28 @@
 {
   "version": "1.0",
-  "phase": "field_validation_gate",
+  "phase": "release_failed",
   "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
-  "updatedAt": "2026-05-18T19:30:00.000Z",
+  "updatedAt": "2026-05-19T00:53:32.238Z",
   "apkVersion": "1.0.7",
   "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
   "roadmapSynced": true,
   "strategicRoadmapSynced": true,
   "humanBoundary": "eas_build_1_0_7_then_field_validation_8_8",
-  "note": "Код 1.0.7 (Google OAuth native). Запустить EAS Build Driver (preview) → manifest sync → Маршруты 8/8 → /operations/live."
+  "note": "Код 1.0.7 (Google OAuth native). Запустить EAS Build Driver (preview) → manifest sync → Маршруты 8/8 → /operations/live.",
+  "error": "fetch failed",
+  "telemetry": "build_absent_or_gha_failed",
+  "history": [
+    {
+      "at": "2026-05-19T00:53:32.238Z",
+      "phase": "release_failed",
+      "error": "fetch failed",
+      "telemetry": "build_absent_or_gha_failed"
+    },
+    {
+      "at": "2026-05-19T00:53:05.100Z",
+      "phase": "release_failed",
+      "error": "fetch failed",
+      "telemetry": "build_absent_or_gha_failed"
+    }
+  ]
 }

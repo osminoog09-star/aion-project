@@ -1,8 +1,8 @@
 {
   "version": "1.0",
-  "updatedAt": null,
-  "step": "idle",
-  "status": "idle",
+  "updatedAt": "2026-05-17T12:53:23.524Z",
+  "step": "runtime_activation",
+  "status": "passed",
   "detail": "",
-  "activateRuntimeRequested": false
+  "activateRuntimeRequested": true
 }

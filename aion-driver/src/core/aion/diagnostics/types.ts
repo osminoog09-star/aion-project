@@ -27,6 +27,11 @@ export type AionDiagnosticsSnapshot = {
   networkOnline: boolean;
   networkType: string;
   syncQueueLength: number;
+  shiftLocationTask?: {
+    taskRunning: boolean | null;
+    lastHeartbeatJson: string | null;
+    lastMergeStateJson: string | null;
+  };
   lastSyncFlushAt: number | null;
   auth: {
     sessionPresent: boolean;

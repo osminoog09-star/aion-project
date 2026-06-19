@@ -237,6 +237,11 @@ export function pickNextTask(priorities, loopState) {
       .map((p) => (p.id ?? p.title ?? "").toLowerCase()),
   );
 
+  const roadmapOnlyIds = (priorities.priorities ?? [])
+    .filter((p) => p.status === "roadmap_only" || p.level === "strategic")
+    .map((p) => (p.id ?? "").toLowerCase())
+    .filter(Boolean);
+
   let pick =
     AUTONOMOUS_QUEUE.find((q) => target.includes(q.key.replace(/-/g, " ").slice(0, 8))) ??
     AUTONOMOUS_QUEUE.find((q) => target.includes(q.task.slice(0, 14).toLowerCase())) ??
@@ -248,6 +253,14 @@ export function pickNextTask(priorities, loopState) {
       pick = q;
       break;
     }
+  }
+
+  if (roadmapOnlyIds.some((id) => target.includes(id) || target.includes(id.replace(/-/g, " ")))) {
+    logAction(
+      ACTION_TAGS.AUDIT,
+      "Стратегический roadmap-only приоритет — удерживаем field validation / production gate",
+    );
+    pick = AUTONOMOUS_QUEUE[0];
   }
 
   const key = pick.key;
