@@ -146,6 +146,15 @@ export function ImportScreenshotScreen() {
     });
   }, []);
 
+  const invalidateParsedResult = useCallback(() => {
+    setResult(null);
+    setEditedTrips(null);
+    setAdded(false);
+    setConfirmationError(null);
+    setProgress("");
+    setFuelModal((current) => ({ ...current, open: false }));
+  }, []);
+
   const pickGallery = async () => {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!perm.granted) return;
@@ -157,9 +166,7 @@ export function ImportScreenshotScreen() {
     if (!res.canceled && res.assets[0]?.uri) {
       const uri = res.assets[0].uri;
       setImages((prev) => [...prev, uri]);
-      setResult(null);
-      setEditedTrips(null);
-      setAdded(false);
+      invalidateParsedResult();
     }
   };
 
@@ -170,9 +177,7 @@ export function ImportScreenshotScreen() {
     });
     if (res.canceled || !res.assets?.[0]?.uri) return;
     setImages((prev) => [...prev, res.assets[0].uri]);
-    setResult(null);
-    setEditedTrips(null);
-    setAdded(false);
+    invalidateParsedResult();
   };
 
   useEffect(() => {
@@ -375,7 +380,11 @@ export function ImportScreenshotScreen() {
               {PLATFORMS.map((p) => (
                 <Pressable
                   key={p.id}
-                  onPress={() => setPlatform(p.id)}
+                  onPress={() => {
+                    setPlatform(p.id);
+                    invalidateParsedResult();
+                  }}
+                  disabled={parsing}
                   className={`rounded-2xl border px-4 py-2.5 ${
                     platform === p.id
                       ? "border-cyan-400/60 bg-cyan-500/20"
@@ -394,15 +403,27 @@ export function ImportScreenshotScreen() {
                 Текст выплаты
               </Text>
               <Pressable
-                onPress={() => void Clipboard.getStringAsync().then((t) => setPastedText(t))}
-                className="rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5"
+                onPress={() =>
+                  void Clipboard.getStringAsync().then((text) => {
+                    setPastedText(text);
+                    invalidateParsedResult();
+                  })
+                }
+                disabled={parsing}
+                className={`rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5 ${
+                  parsing ? "opacity-50" : ""
+                }`}
               >
                 <Text className="text-xs font-semibold text-cyan-200">Вставить из буфера</Text>
               </Pressable>
             </View>
             <TextInput
               value={pastedText}
-              onChangeText={setPastedText}
+              onChangeText={(text) => {
+                setPastedText(text);
+                invalidateParsedResult();
+              }}
+              editable={!parsing}
               placeholder="Вставьте сюда текст со скриншота (Bolt / Uber / …)"
               placeholderTextColor="#64748b"
               multiline
@@ -420,18 +441,21 @@ export function ImportScreenshotScreen() {
               title="Галерея"
               subtitle="PNG / JPEG"
               onPress={() => void pickGallery()}
+              disabled={parsing}
             />
             <ActionTile
               icon="folder-open"
               title="Файл"
               subtitle="Документ"
               onPress={() => void pickFile()}
+              disabled={parsing}
             />
             <ActionTile
               icon="photo-camera"
               title="Камера"
               subtitle="Снимок"
               onPress={() => setCameraOpen(true)}
+              disabled={parsing}
             />
           </View>
 
@@ -441,7 +465,7 @@ export function ImportScreenshotScreen() {
                 <Text className="text-xs uppercase tracking-widest text-slate-500">
                   Снимки ({images.length})
                 </Text>
-                <Pressable onPress={reset} hitSlop={12}>
+                <Pressable onPress={reset} hitSlop={12} disabled={parsing}>
                   <Text className="text-sm font-semibold text-rose-300">Сбросить</Text>
                 </Pressable>
               </View>
@@ -848,9 +872,7 @@ export function ImportScreenshotScreen() {
           onClose={() => setCameraOpen(false)}
           onCaptured={(uri) => {
             setImages((prev) => [...prev, uri]);
-            setResult(null);
-            setEditedTrips(null);
-            setAdded(false);
+            invalidateParsedResult();
           }}
         />
       </SafeAreaView>
@@ -898,16 +920,21 @@ function ActionTile({
   title,
   subtitle,
   onPress,
+  disabled = false,
 }: {
   icon: keyof typeof MaterialIcons.glyphMap;
   title: string;
   subtitle: string;
   onPress: () => void;
+  disabled?: boolean;
 }) {
   return (
     <Pressable
       onPress={onPress}
-      className="min-w-[31%] flex-1 rounded-2xl border border-white/10 bg-slate-900/80 px-3 py-4 active:opacity-85"
+      disabled={disabled}
+      className={`min-w-[31%] flex-1 rounded-2xl border border-white/10 bg-slate-900/80 px-3 py-4 active:opacity-85 ${
+        disabled ? "opacity-50" : ""
+      }`}
     >
       <MaterialIcons name={icon} size={28} color="#67e8f9" />
       <Text className="mt-2 text-sm font-semibold text-white">{title}</Text>

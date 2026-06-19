@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-19T15:25:00.000Z",
+  "lastUpdated": "2026-06-19T15:31:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "EAS preview APK 1.0.9 run 27834179469: build завершён успешно, sync-manifest выполняется. Параллельно Driver теперь сразу восстанавливает прерванные OCR jobs после перезапуска.",
-  "currentStatus": "Driver release loop: ждёт manifest sync; OCR queue recovery shipped",
+  "currentFocus": "EAS preview APK 1.0.9 run 27834179469: build завершён успешно, sync-manifest выполняется. Параллельно закрыта защита от сохранения устаревшего OCR result после смены источника.",
+  "currentStatus": "Driver release loop: ждёт manifest sync; stale OCR result protection shipped",
   "latestRun": {
     "label": "EAS Build Driver preview",
     "status": "sync_manifest_in_progress",
@@ -17,11 +17,12 @@
     "EAS sync-manifest получил Setup EAS, подробный лог и fallback с eas-cli на Expo GraphQL API.",
     "Expo GraphQL query исправлен по схеме eas-cli: builds.byId(buildId).",
     "Post-OCR confirm валидирует выплату и суммы поездок до записи в историю; добавлены 4 CI-сценария.",
-    "OCR queue при старте возвращает прерванные processing jobs в pending без сброса attempt count; добавлены 5 CI-сценариев."
+    "OCR queue при старте возвращает прерванные processing jobs в pending без сброса attempt count; добавлены 5 CI-сценариев.",
+    "Изменение текста, платформы или изображения сбрасывает старый OCR result; источник заблокирован на время parsing."
   ],
   "next": [
     "Дождаться sync-manifest run 27834179469 и проверить bot commit для apk-manifest.preview.json.",
-    "Проверить runtime retry OCR queue после ошибки и перезапуска на preview APK.",
+    "Проверить runtime retry OCR queue и сброс stale result на preview APK.",
     "После успешного APK manifest: device smoke Driver 1.0.9, затем уже field validation 8/8."
   ],
   "checks": [

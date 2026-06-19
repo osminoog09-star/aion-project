@@ -193,6 +193,18 @@
           "Не менять pending/failed/done jobs — DONE",
           "Детерминированный recovery test (5 cases) — DONE"
         ]
+      },
+      {
+        "priority": 12,
+        "id": "ocr-stale-result-protection",
+        "title": "OCR import: защита от сохранения результата старого источника",
+        "status": "shipped",
+        "tasks": [
+          "Сбрасывать result при изменении текста, платформы или изображения — DONE",
+          "Закрывать устаревший fuel confirm при смене источника — DONE",
+          "Блокировать source controls во время parsing — DONE",
+          "Driver validate:code — DONE"
+        ]
       }
     ],
     "blockedTasks": [
