@@ -347,6 +347,30 @@
           "Не отдавать manifest старого окружения после endpoint switch — DONE",
           "Детерминированный CI test (5 cases) — DONE"
         ]
+      },
+      {
+        "priority": 24,
+        "id": "apk-release-notes-current-build",
+        "title": "APK manifest: метаданные только текущего EAS build",
+        "status": "shipped",
+        "tasks": [
+          "Убрать append-only накопление старых EAS build ID — DONE",
+          "Удалить placeholder после появления direct artifact URL — DONE",
+          "Генерировать детерминированную сводку version/build/runtime — DONE",
+          "Root CI test (6 assertions) — DONE"
+        ]
+      },
+      {
+        "priority": 25,
+        "id": "driver-apk-native-input-gate",
+        "title": "EAS preview: строить APK только для native inputs",
+        "status": "shipped",
+        "tasks": [
+          "Выделить deterministic path classifier — DONE",
+          "Пропускать EAS build для OTA-safe sync/status/client TS — DONE",
+          "Сохранять manual workflow_dispatch как принудительную сборку — DONE",
+          "Root CI test (7 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

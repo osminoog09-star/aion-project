@@ -4,6 +4,100 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-19-9y97r9",
+      "occurredAt": "2026-06-19",
+      "title": "Driver APK native input gate",
+      "summary": "EAS preview now performs a deterministic changed-path preflight and skips full APK builds for OTA-safe sync, status and client TypeScript changes; manual dispatch still forces a build.",
+      "subsystemIds": [
+        "apk-channel",
+        "ota-eas",
+        "operations-center"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 См. reasoning в audit"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "reasoning": "The previous path trigger rebuilt APK 1.0.9 after a test-script-only package change and would rebuild again for release metadata tooling.",
+      "task": "driver-apk-native-input-gate",
+      "confidence": "high",
+      "changedFiles": [
+        ".github/workflows/eas-build-driver-preview.yml",
+        "scripts/should-build-driver-apk.mjs",
+        "scripts/lib/driver-apk-build-paths.mjs",
+        "scripts/ci/test-driver-apk-build-paths.mjs"
+      ],
+      "apkImpact": "Prevents redundant APK builds while preserving native and manual release paths"
+    },
+    {
+      "id": "evt-2026-06-19-qhvq17",
+      "occurredAt": "2026-06-19",
+      "title": "APK release metadata cleanup",
+      "summary": "Manifest sync now replaces releaseNotes with deterministic metadata for the current FINISHED EAS artifact instead of appending stale build IDs and placeholder text.",
+      "subsystemIds": [
+        "apk-channel",
+        "updates",
+        "operations-center"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 См. reasoning в audit"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "reasoning": "Append-only notes contradicted the real direct APK URL and accumulated obsolete build identifiers on every release.",
+      "task": "apk-release-notes-current-build",
+      "confidence": "high",
+      "changedFiles": [
+        "scripts/sync-apk-manifest-from-eas.mjs",
+        "scripts/lib/apk-release-notes.mjs",
+        "scripts/ci/test-apk-release-notes.mjs",
+        "public/apk-manifest.preview.json"
+      ],
+      "apkImpact": "Release metadata only; current APK artifact unchanged"
+    },
+    {
       "id": "evt-2026-06-19-srmws2",
       "occurredAt": "2026-06-19",
       "title": "Driver APK manifest cache isolation",

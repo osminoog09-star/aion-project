@@ -55,5 +55,13 @@ execSync("node scripts/ci/test-runtime-compatibility.mjs", {
   cwd: root,
   stdio: "inherit",
 });
+execSync("node scripts/ci/test-apk-release-notes.mjs", {
+  cwd: root,
+  stdio: "inherit",
+});
+execSync("node scripts/ci/test-driver-apk-build-paths.mjs", {
+  cwd: root,
+  stdio: "inherit",
+});
 
 console.log("Portal deploy safety OK.");

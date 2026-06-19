@@ -10,6 +10,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
 import { easBuildViewJson } from "./eas-exec.mjs";
+import { buildSyncedApkReleaseNotes } from "./lib/apk-release-notes.mjs";
 import { loadDotenvLocal } from "./load-dotenv-local.mjs";
 import { resolveAionDriverPath } from "./resolve-aion-driver-path.mjs";
 
@@ -89,10 +90,13 @@ const next = {
   portalMinRuntimeVersion: req?.minRuntimeVersion ?? existing.portalMinRuntimeVersion,
   supportedFeatures: driverManifest?.supportedFeatures ?? existing.supportedFeatures,
   supportedRoutes: driverManifest?.supportedRoutes ?? existing.supportedRoutes,
-  releaseNotes:
-    typeof existing.releaseNotes === "string"
-      ? `${existing.releaseNotes}\nSynced from EAS ${buildId} (${build.gitCommitHash ?? "unknown"}).`
-      : `Synced from EAS ${buildId}.`,
+  releaseNotes: buildSyncedApkReleaseNotes({
+    appVersion,
+    buildNumber,
+    runtimeVersion,
+    buildId,
+    gitCommitHash: build.gitCommitHash,
+  }),
 };
 
 fs.writeFileSync(MANIFEST, JSON.stringify(next, null, 2) + "\n", "utf8");

@@ -25,7 +25,31 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.filter.outputs.should_build }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect native APK build inputs
+        id: filter
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          mapfile -t changed < <(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
+          should_build="$(node scripts/should-build-driver-apk.mjs "${changed[@]}")"
+          echo "should_build=$should_build" >> "$GITHUB_OUTPUT"
+          echo "Driver APK native inputs changed: $should_build"
+
   build:
+    needs: changes
+    if: needs.changes.outputs.should_build == 'true'
     runs-on: ubuntu-latest
     outputs:
       build_id: ${{ steps.eas_build.outputs.build_id }}
