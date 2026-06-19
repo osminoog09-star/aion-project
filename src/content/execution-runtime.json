@@ -11,8 +11,8 @@
     "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-19T12:16:07.603Z",
-    "heartbeatAt": "2026-06-19T12:16:07.603Z",
+    "updatedAt": "2026-06-19T12:33:16.514Z",
+    "heartbeatAt": "2026-06-19T12:33:16.514Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -33,15 +33,22 @@
     "lastFailure": null,
     "lastCompletedAction": "AI заблокирован: Release failed",
     "retryCount": 0,
-    "validationProgress": "Правка: eas-exec.mjs",
+    "validationProgress": "Правка: expo-build-api.mjs",
     "progressPercent": 68,
     "etaMinutes": 45,
     "autonomousDepth": 8,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "scripts/eas-exec.mjs",
+    "currentFile": "scripts/expo-build-api.mjs",
     "recentActions": [
+      {
+        "at": "2026-06-19T12:33:16.514Z",
+        "tag": "CODE",
+        "message": "Правка: expo-build-api.mjs",
+        "file": "scripts/expo-build-api.mjs",
+        "repo": "aion-project"
+      },
       {
         "at": "2026-06-19T12:16:07.603Z",
         "tag": "CODE",
@@ -257,17 +264,15 @@
         "message": "Dashboard: pickProfitFromRuntime для блока смены",
         "file": "aion-driver/screens/DashboardScreen.tsx",
         "repo": "aion-driver"
-      },
-      {
-        "at": "2026-05-15T13:28:44.113Z",
-        "tag": "VALIDATE",
-        "message": "test:shift-economics ok (4 cases)",
-        "file": "aion-driver/scripts/ci/test-shift-display-economics.mjs",
-        "repo": "aion-driver"
       }
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-19T12:33:16.514Z",
+      "phase": "coding",
+      "summary": "[CODE] Правка: expo-build-api.mjs"
+    },
     {
       "at": "2026-06-19T12:16:07.603Z",
       "phase": "coding",
@@ -894,20 +899,12 @@
       "resultRu": "В процессе",
       "icon": "⚡",
       "confidence": 0.9
-    },
-    {
-      "at": "2026-05-15T12:16:44.236Z",
-      "phase": "coding",
-      "summary": "AI пишет и улучшает код: Stop-zone validation на устройстве",
-      "feedEventId": null,
-      "titleRu": "AI пишет и улучшает код",
-      "explanationRu": "Подтвердить GPS cluster insights после 2+ смен",
-      "resultRu": "В процессе",
-      "icon": "⚡",
-      "confidence": 0.88
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-19T12:33:16.514Z"
+    },
     {
       "at": "2026-06-19T12:16:07.603Z"
     },
@@ -1048,9 +1045,6 @@
     },
     {
       "at": "2026-05-15T15:36:07.617Z"
-    },
-    {
-      "at": "2026-05-15T15:35:57.659Z"
     }
   ]
 }

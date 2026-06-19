@@ -7,19 +7,21 @@ loadDotenvLocal();
 
 const BUILD_QUERY = `
 query BuildById($buildId: ID!) {
-  buildById(buildId: $buildId) {
-    id
-    status
-    platform
-    appVersion
-    appBuildVersion
-    runtimeVersion
-    completedAt
-    artifacts {
-      applicationArchiveUrl
-      buildUrl
+  builds {
+    byId(buildId: $buildId) {
+      id
+      status
+      platform
+      appVersion
+      appBuildVersion
+      runtimeVersion
+      completedAt
+      artifacts {
+        applicationArchiveUrl
+        buildUrl
+      }
+      gitCommitHash
     }
-    gitCommitHash
   }
 }
 `;
@@ -44,7 +46,7 @@ export async function fetchExpoBuildById(buildId) {
   if (json.errors?.length) {
     throw new Error(json.errors.map((e) => e.message).join("; "));
   }
-  const build = json.data?.buildById;
+  const build = json.data?.builds?.byId;
   if (!build) throw new Error(`Build ${buildId} not found`);
   return build;
 }
