@@ -1,3 +1,5 @@
+import { parseSemver, semverLess } from "./semverCompare";
+
 /**
  * Удалённый манифест полного APK (JSON). Источник: Supabase / CDN / статический URL.
  * Поля расширяемы — неизвестные ключи игнорируются в UI, но сохраняются при парсинге.
@@ -35,6 +37,9 @@ export function isApkManifest(v: unknown): v is ApkUpdateManifest {
   const apkOk =
     typeof o.latestVersion === "string" &&
     typeof o.minimumSupported === "string" &&
+    parseSemver(o.latestVersion) !== null &&
+    parseSemver(o.minimumSupported) !== null &&
+    !semverLess(o.latestVersion, o.minimumSupported) &&
     typeof o.apkUrl === "string" &&
     /^https?:\/\//i.test(o.apkUrl);
   if (!apkOk) return false;

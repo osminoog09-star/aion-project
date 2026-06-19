@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-19T16:52:00.000Z",
+  "lastUpdated": "2026-06-19T20:30:22.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. Hard-polish Update Center: APK manifest refresh теперь single-flight, с error diagnostics и явным loading state.",
-  "currentStatus": "Driver Update Center hardening; release stack live",
+  "currentFocus": "Release stack live. Hard-polish APK contract: malformed и противоречивые version bounds теперь отклоняются до update evaluation.",
+  "currentStatus": "Driver APK manifest validation; release stack live",
   "latestRun": {
     "label": "Vercel production",
     "status": "success",
@@ -30,7 +30,8 @@
     "Driver OTA run 27836718953 опубликован в preview channel на runtime 1.0.9.",
     "Vercel failure traced to Hobby cron limit; backup schedule changed from every 5 minutes to daily 06:00 UTC.",
     "Vercel production 2a676ab опубликован; live manifest 1.0.9 и все 11 operations routes проверены.",
-    "Update Center APK refresh защищён от конкурентных fetch; unexpected failure фиксируется в diagnostics."
+    "Update Center APK refresh защищён от конкурентных fetch; unexpected failure фиксируется в diagnostics.",
+    "APK manifest validator отклоняет malformed semver, minimumSupported выше latestVersion и небезопасные URL; добавлен CI gate на 7 сценариев."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -56,6 +57,10 @@
     "Driver OTA run 27836718953: SUCCESS; EAS Update preview published",
     "Vercel production 2a676ab: SUCCESS",
     "Live /operations: Codex status + APK 1.0.9 visible, console errors 0",
-    "Live route validation: 11/11 OK"
+    "Live route validation: 11/11 OK",
+    "Driver APK manifest validation — OK (7 deterministic cases)",
+    "Driver typecheck после APK contract hardening — OK",
+    "Driver npm run validate:code после APK contract hardening — OK",
+    "Portal npm run build после status/roadmap update — OK"
   ]
 }

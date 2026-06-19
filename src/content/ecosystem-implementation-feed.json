@@ -4,6 +4,52 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-19-m1zf6q",
+      "occurredAt": "2026-06-19",
+      "title": "Driver APK manifest contract validation",
+      "summary": "Driver rejects malformed semver, contradictory minimum/latest bounds and unsafe APK URLs before update evaluation; CI covers 7 deterministic cases.",
+      "subsystemIds": [
+        "updates",
+        "apk-channel",
+        "mobile-app"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 См. reasoning в audit"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "reasoning": "A malformed release manifest previously degraded to reason=none and could silently hide an APK update.",
+      "task": "apk-manifest-contract-validation",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/src/core/updates/apkManifest.types.ts",
+        "aion-driver/scripts/ci/test-apk-manifest-validation.mjs",
+        "aion-driver/package.json"
+      ],
+      "apkImpact": "OTA-safe client validation; no native rebuild required"
+    },
+    {
       "id": "evt-2026-06-19-exec-6gfwyp",
       "occurredAt": "2026-06-19",
       "title": "AI пишет и улучшает код",
