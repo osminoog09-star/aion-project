@@ -11,3 +11,30 @@ index d84e52b..91731e0 100644
      ],
    };
  };
+diff --git a/node_modules/react-native-css-interop/src/runtime/web/color-scheme.ts b/node_modules/react-native-css-interop/src/runtime/web/color-scheme.ts
+index 3e64d9f..ddc4235 100644
+--- a/node_modules/react-native-css-interop/src/runtime/web/color-scheme.ts
++++ b/node_modules/react-native-css-interop/src/runtime/web/color-scheme.ts
+@@ -41,13 +41,15 @@ if (darkModeFlag) {
+     const flags = darkModeFlag.split(" ");
+     darkMode = flags[0];
+     darkModeValue = flags[1];
+-    colorScheme.set(
+-      globalThis.window.document.documentElement.classList.contains(
+-        darkModeValue,
+-      )
+-        ? "dark"
+-        : "system",
+-    );
++    if (darkMode === "class") {
++      colorScheme.set(
++        globalThis.window.document.documentElement.classList.contains(
++          darkModeValue,
++        )
++          ? "dark"
++          : "system",
++      );
++    }
+   }).observe(headNode, { attributes: false, childList: true, subtree: false });
+ }
+ 

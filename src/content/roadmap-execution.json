@@ -230,6 +230,18 @@
           "Исправить typed auth route в AION Link — DONE",
           "Queue summary test + Driver validate:code — DONE"
         ]
+      },
+      {
+        "priority": 15,
+        "id": "driver-web-color-scheme-runtime",
+        "title": "Driver web: NativeWind color-scheme runtime fix",
+        "status": "shipped",
+        "tasks": [
+          "Воспроизвести darkMode media error browser smoke — DONE",
+          "Не вызывать manual colorScheme.set для media mode — DONE",
+          "Сохранить существующий Babel compatibility patch — DONE",
+          "Metro web bundle + Driver validate:code — DONE"
+        ]
       }
     ],
     "blockedTasks": [
