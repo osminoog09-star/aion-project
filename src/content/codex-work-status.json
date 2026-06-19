@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2026-06-19T16:23:00.000Z",
+  "lastUpdated": "2026-06-19T16:27:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "APK 1.0.9 готов. Восстанавливаю OTA для последних Driver-фиксов: patch-package parse error исправлен и подтверждён настоящим npm ci.",
-  "currentStatus": "Driver OTA recovery: dependency install fixed",
+  "currentFocus": "APK 1.0.9 build 13 и OTA preview для последних Driver-фиксов опубликованы. Следующий шаг — установка APK, проверка OTA и device smoke.",
+  "currentStatus": "Driver APK 1.0.9 + latest OTA ready for device smoke",
   "latestRun": {
-    "label": "EAS Build Driver preview",
+    "label": "Driver OTA Preview",
     "status": "success",
-    "url": "https://github.com/osminoog09-star/aion-project/actions/runs/27834179469"
+    "url": "https://github.com/osminoog09-star/aion-project/actions/runs/27836718953"
   },
   "completed": [
     "Портал /operations теперь должен показывать явный статус работы Codex, а не только длинный runtime JSON.",
@@ -26,10 +26,10 @@
     "EAS run 27834179469 завершён success; manifest bot опубликовал APK 1.0.9 build 13 без rebase/push ошибки.",
     "OCR history использует single-flight save: double-submit заблокирован, source controls locked, storage error видим пользователю.",
     "Fuel OCR attachment блокирует повторный submit/закрытие modal во время записи и показывает ошибку Shift storage.",
-    "OTA npm ci blocker найден в malformed css-interop patch; patch пересоздан штатно и успешно применяется локальным npm ci."
+    "OTA npm ci blocker найден в malformed css-interop patch; patch пересоздан штатно и успешно применяется локальным npm ci.",
+    "Driver OTA run 27836718953 опубликован в preview channel на runtime 1.0.9."
   ],
   "next": [
-    "Дождаться зелёного Driver OTA Preview после исправления patch-package.",
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
     "Проверить runtime retry OCR queue, queue-status card и fuel confirmation на preview APK.",
     "Восстановить Vercel deploy token/hook, чтобы свежий статус появился на live /operations."
@@ -49,6 +49,7 @@
     "APK manifest 1.0.9 build 13 validation — OK",
     "Runtime compatibility 1.0.9 >= 1.0.6 — OK",
     "Driver OTA run 27836531412: failed на npm ci из-за parse error patch-package",
-    "Local npm ci + patch-package apply — OK после пересоздания patch"
+    "Local npm ci + patch-package apply — OK после пересоздания patch",
+    "Driver OTA run 27836718953: SUCCESS; EAS Update preview published"
   ]
 }

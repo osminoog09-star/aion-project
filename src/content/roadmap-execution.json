@@ -288,13 +288,13 @@
         "priority": 19,
         "id": "driver-ota-patch-install-recovery",
         "title": "Driver OTA: восстановить npm ci / patch-package",
-        "status": "in_progress",
+        "status": "shipped",
         "tasks": [
           "Диагностировать failed OTA job 27836531412 — DONE",
           "Пересоздать css-interop patch без cache-мусора — DONE",
           "Подтвердить patch настоящим npm ci — DONE",
           "Driver validate:code — DONE",
-          "Новый OTA workflow — IN_PROGRESS"
+          "Driver OTA run 27836718953 + EAS Update preview — SUCCESS"
         ]
       }
     ],
