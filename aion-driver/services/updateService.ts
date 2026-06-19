@@ -191,6 +191,7 @@ export function extractUpdateManifestSummary(
             pickString(ota.releaseNotes) ?? pickString(ota.notes) ?? pickString(ota.message);
         }
       }
+      if (!commitHash && isRecord(inner)) commitHash = readCommitFromExtra(inner);
       if (!commitHash) commitHash = readCommitFromExtra(expoClient);
     }
   }

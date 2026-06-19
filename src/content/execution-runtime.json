@@ -11,8 +11,8 @@
     "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-19T11:42:17.659Z",
-    "heartbeatAt": "2026-06-19T11:42:17.659Z",
+    "updatedAt": "2026-06-19T11:46:53.872Z",
+    "heartbeatAt": "2026-06-19T11:46:53.872Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -33,15 +33,22 @@
     "lastFailure": null,
     "lastCompletedAction": "AI заблокирован: Release failed",
     "retryCount": 0,
-    "validationProgress": "Портал распознаёт NEXT из field validation отчёта",
+    "validationProgress": "Driver OTA manifest summary покрыт CI и читает nested commit",
     "progressPercent": 68,
     "etaMinutes": 45,
-    "autonomousDepth": 6,
+    "autonomousDepth": 7,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "src/lib/operations/field-validation-report.ts",
+    "currentFile": "aion-driver/services/updateService.ts",
     "recentActions": [
+      {
+        "at": "2026-06-19T11:46:53.872Z",
+        "tag": "CODE",
+        "message": "Driver OTA manifest summary покрыт CI и читает nested commit",
+        "file": "aion-driver/services/updateService.ts",
+        "repo": "aion-project"
+      },
       {
         "at": "2026-06-19T11:42:17.659Z",
         "tag": "CODE",
@@ -256,17 +263,26 @@
         "tag": "VALIDATE",
         "message": "driver: typecheck + test:field-validation ok",
         "repo": "aion-project"
-      },
-      {
-        "at": "2026-05-15T13:23:34.667Z",
-        "tag": "CODE",
-        "message": "Driver: CI тест field validation + refresh FGS при фокусе экрана",
-        "file": "aion-driver/features/route/computeRouteFieldValidation.ts",
-        "repo": "aion-driver"
       }
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-19T11:46:53.872Z",
+      "phase": "coding",
+      "summary": "[CODE] Driver OTA manifest summary покрыт CI и читает nested commit"
+    },
+    {
+      "at": "2026-06-19T11:44:45.581Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Route intelligence UX + field validation",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Проверка backfill и stop-zone на реальном устройстве",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-06-19T11:42:17.659Z",
       "phase": "coding",
@@ -906,31 +922,15 @@
       "resultRu": "Этап выполнен",
       "icon": "✨",
       "confidence": 0.95
-    },
-    {
-      "at": "2026-05-15T11:57:53.867Z",
-      "phase": "coding",
-      "summary": "AI пишет и улучшает код: Route intelligence UX + field validation",
-      "feedEventId": "evt-2026-05-15-exec-lj5k3o",
-      "titleRu": "AI пишет и улучшает код",
-      "explanationRu": "Проверка backfill и stop-zone на реальном устройстве",
-      "resultRu": "В процессе",
-      "icon": "⚡",
-      "confidence": 0.88
-    },
-    {
-      "at": "2026-05-15T11:57:53.603Z",
-      "phase": "completed",
-      "summary": "AI завершил этап: Owner Command Center — roadmap блоками",
-      "feedEventId": "evt-2026-05-15-exec-s18qig",
-      "titleRu": "AI завершил этап",
-      "explanationRu": "Визуальный центр управления: 7 подсистем, очередь, здоровье, narration RU",
-      "resultRu": "Этап выполнен",
-      "icon": "✨",
-      "confidence": 0.93
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-19T11:46:53.872Z"
+    },
+    {
+      "at": "2026-06-19T11:44:45.581Z"
+    },
     {
       "at": "2026-06-19T11:42:17.659Z"
     },
@@ -1068,12 +1068,6 @@
     },
     {
       "at": "2026-05-15T15:35:17.579Z"
-    },
-    {
-      "at": "2026-05-15T15:35:07.570Z"
-    },
-    {
-      "at": "2026-05-15T15:34:57.592Z"
     }
   ]
 }
