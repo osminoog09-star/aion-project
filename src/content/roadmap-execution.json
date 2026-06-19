@@ -335,6 +335,18 @@
           "Сохранять HTTP(S) URL safety contract — DONE",
           "Детерминированный CI test (7 cases) — DONE"
         ]
+      },
+      {
+        "priority": 23,
+        "id": "apk-manifest-cache-isolation",
+        "title": "APK manifest cache: изоляция endpoint",
+        "status": "shipped",
+        "tasks": [
+          "Привязать memory cache к нормализованному URL — DONE",
+          "Версионировать и привязать AsyncStorage cache к URL — DONE",
+          "Не отдавать manifest старого окружения после endpoint switch — DONE",
+          "Детерминированный CI test (5 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
