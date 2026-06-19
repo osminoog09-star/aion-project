@@ -296,6 +296,19 @@
           "Driver validate:code — DONE",
           "Driver OTA run 27836718953 + EAS Update preview — SUCCESS"
         ]
+      },
+      {
+        "priority": 20,
+        "id": "vercel-hobby-cron-deploy-recovery",
+        "title": "Vercel production: Hobby-compatible cron",
+        "status": "in_progress",
+        "tasks": [
+          "Диагностировать Vercel failure check — DONE",
+          "Подтвердить официальный Hobby limit once/day — DONE",
+          "Перевести backup cron на 06:00 UTC daily — DONE",
+          "Сохранить Supabase INSERT webhook как immediate path — DONE",
+          "Production deploy + live validation — IN_PROGRESS"
+        ]
       }
     ],
     "blockedTasks": [

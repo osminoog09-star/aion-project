@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-19T16:27:00.000Z",
+  "lastUpdated": "2026-06-19T16:42:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "APK 1.0.9 build 13 и OTA preview для последних Driver-фиксов опубликованы. Следующий шаг — установка APK, проверка OTA и device smoke.",
-  "currentStatus": "Driver APK 1.0.9 + latest OTA ready for device smoke",
+  "currentFocus": "APK/OTA 1.0.9 готовы. Восстанавливаю live /operations: Vercel build падал из-за cron каждые 5 минут на Hobby; cron переведён в daily backup.",
+  "currentStatus": "Vercel production recovery: Hobby cron fixed",
   "latestRun": {
     "label": "Driver OTA Preview",
     "status": "success",
@@ -27,12 +27,13 @@
     "OCR history использует single-flight save: double-submit заблокирован, source controls locked, storage error видим пользователю.",
     "Fuel OCR attachment блокирует повторный submit/закрытие modal во время записи и показывает ошибку Shift storage.",
     "OTA npm ci blocker найден в malformed css-interop patch; patch пересоздан штатно и успешно применяется локальным npm ci.",
-    "Driver OTA run 27836718953 опубликован в preview channel на runtime 1.0.9."
+    "Driver OTA run 27836718953 опубликован в preview channel на runtime 1.0.9.",
+    "Vercel failure traced to Hobby cron limit; backup schedule changed from every 5 minutes to daily 06:00 UTC."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
     "Проверить runtime retry OCR queue, queue-status card и fuel confirmation на preview APK.",
-    "Восстановить Vercel deploy token/hook, чтобы свежий статус появился на live /operations."
+    "Дождаться Vercel Git deployment после Hobby-compatible cron fix и проверить live /operations."
   ],
   "checks": [
     "npm run repo:verify — OK",
@@ -50,6 +51,7 @@
     "Runtime compatibility 1.0.9 >= 1.0.6 — OK",
     "Driver OTA run 27836531412: failed на npm ci из-за parse error patch-package",
     "Local npm ci + patch-package apply — OK после пересоздания patch",
-    "Driver OTA run 27836718953: SUCCESS; EAS Update preview published"
+    "Driver OTA run 27836718953: SUCCESS; EAS Update preview published",
+    "Vercel check 945a88d: failure redirected to Cron Jobs usage/pricing; root cause confirmed"
   ]
 }

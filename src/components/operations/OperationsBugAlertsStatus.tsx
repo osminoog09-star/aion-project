@@ -30,7 +30,7 @@ export function OperationsBugAlertsStatus() {
   const rows = [
     ["Webhook / Telegram / Slack", ch.webhook],
     ["Email (Resend)", ch.email],
-    ["Vercel cron (5 min)", ch.cron],
+    ["Vercel cron (daily backup)", ch.cron],
     ["Supabase INSERT webhook", ch.supabaseWebhook],
     ["Service role (cursor)", ch.serviceRole],
   ] as const;

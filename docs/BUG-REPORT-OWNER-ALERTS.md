@@ -8,7 +8,7 @@
 | `BUG_REPORT_TELEGRAM_CHAT_ID` | Required for Telegram when using bot sendMessage URL |
 | `RESEND_API_KEY` + `OWNER_ALERT_EMAIL` | Optional email via Resend |
 | `BUG_REPORT_WEBHOOK_SECRET` | Auth for Supabase Database Webhook → portal |
-| `CRON_SECRET` | Auth for Vercel cron `GET /api/cron/bug-report-alerts` (every 5 min backup) |
+| `CRON_SECRET` | Auth for Vercel cron `GET /api/cron/bug-report-alerts` (daily backup on Hobby) |
 | `OPERATIONS_SUPABASE_SERVICE_ROLE_KEY` | Cursor for last notified report id |
 
 ## Supabase Database Webhook (instant)
@@ -20,4 +20,4 @@
 
 ## Cron backup
 
-Vercel cron calls `/api/cron/bug-report-alerts` every 5 minutes. First run only seeds cursor (no spam on history).
+Vercel cron calls `/api/cron/bug-report-alerts` daily at 06:00 UTC. This fits the Hobby plan limit; the Supabase INSERT webhook remains the immediate notification path. First run only seeds cursor (no spam on history).
