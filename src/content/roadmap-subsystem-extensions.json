@@ -62,7 +62,7 @@
     "nextRecommendedStep": "Задокументировать и отобразить на /control канал→runtime→последняя известная ревизия из клиента/манифеста."
   },
   "apk-channel": {
-    "whatWorks": ["Манифест JSON 1.0.8 на Vercel (→1.0.9 после EAS)", "force/minRuntime в типах", "com/driver fetch", "sync-apk-manifest-from-eas + CI auto на native push"],
+    "whatWorks": ["Манифест JSON 1.0.9 build 13 в репозитории", "force/minRuntime в типах", "com/driver fetch", "sync-apk-manifest-from-eas + CI auto на native push"],
     "whatDoesNotWork": ["Центральный signed download hub на com"],
     "requiresApk": ["Всегда для native bump"],
     "otaImpact": "medium",
