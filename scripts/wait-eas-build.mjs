@@ -21,7 +21,7 @@ if (!buildId) {
 
 const terminal = new Set(["FINISHED", "ERRORED", "CANCELED"]);
 
-function view() {
+async function view() {
   return easBuildViewJson(buildId);
 }
 
@@ -32,7 +32,7 @@ console.log(`[EAS] Waiting for build ${buildId} (max ${Math.round(maxWaitMs / 60
 while (Date.now() - started < maxWaitMs) {
   let build;
   try {
-    build = view();
+    build = await view();
     viewFailures = 0;
   } catch (e) {
     viewFailures += 1;

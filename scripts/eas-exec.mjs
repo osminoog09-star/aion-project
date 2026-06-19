@@ -4,11 +4,12 @@
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { fetchExpoBuildById } from "./expo-build-api.mjs";
 import { resolveAionDriverPath } from "./resolve-aion-driver-path.mjs";
 
 const portalRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-export function easBuildViewJson(buildId) {
+export async function easBuildViewJson(buildId) {
   const driverRoot = resolveAionDriverPath() ?? path.join(portalRoot, "aion-driver");
   const bin = process.platform === "win32" ? "npx.cmd" : "npx";
   let raw;
@@ -33,6 +34,11 @@ export function easBuildViewJson(buildId) {
     const detail = [e.message, stderr ? `stderr:\n${stderr}` : "", stdout ? `stdout:\n${stdout}` : ""]
       .filter(Boolean)
       .join("\n");
+    if (process.env.EXPO_TOKEN?.trim()) {
+      console.warn("[EAS] eas-cli build:view failed; falling back to Expo GraphQL API.");
+      console.warn(detail);
+      return fetchExpoBuildById(buildId);
+    }
     throw new Error(detail);
   }
   const trimmed = raw.trim();

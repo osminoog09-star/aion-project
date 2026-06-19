@@ -27,7 +27,7 @@ if (!buildId) {
 
 let build;
 try {
-  build = easBuildViewJson(buildId);
+  build = await easBuildViewJson(buildId);
 } catch (e) {
   console.error("eas build:view failed:", e.message ?? e);
   process.exit(1);
