@@ -18,7 +18,16 @@ const manifestA = { latestVersion: "1.0.9", minimumSupported: "1.0.6", apkUrl: "
 const manifestB = { latestVersion: "1.1.0", minimumSupported: "1.0.9", apkUrl: "https://b.example.com/b.apk" };
 let networkCalls = 0;
 
-function compileFetcher(fetchImpl) {
+function compileFetcher(
+  fetchImpl,
+  {
+    setTimeoutImpl = (callback) => {
+      callback();
+      return 1;
+    },
+    clearTimeoutImpl = () => {},
+  } = {},
+) {
   return compileTsModule(
     "src/core/updates/fetchApkManifest.ts",
     {
@@ -28,11 +37,8 @@ function compileFetcher(fetchImpl) {
     {
       fetch: fetchImpl,
       AbortController,
-      setTimeout: (callback) => {
-        callback();
-        return 1;
-      },
-      clearTimeout: () => {},
+      setTimeout: setTimeoutImpl,
+      clearTimeout: clearTimeoutImpl,
     },
   );
 }
@@ -69,4 +75,42 @@ assert.equal(mismatchedC.manifest, null, "cache from another manifest URL must n
 assert.equal(mismatchedC.fromCache, false);
 assert.equal(mismatchedC.fetchedAtMs, null);
 
-console.log("test-apk-manifest-cache: ok (10 assertions)");
+const timeoutCaller = new AbortController();
+let timeoutSignal;
+const timesOut = compileFetcher(async (_url, options) => {
+  timeoutSignal = options.signal;
+  return { ok: false, json: async () => null };
+});
+assert.equal(await timesOut.fetchApkUpdateManifest(urlA, timeoutCaller.signal), null);
+assert.notEqual(timeoutSignal, timeoutCaller.signal, "caller signal must not replace the mandatory timeout signal");
+assert.equal(timeoutSignal?.aborted, true, "mandatory timeout must abort the fetch signal");
+
+const caller = new AbortController();
+let callerSignal;
+let timeoutCleared = false;
+const callerCancelled = compileFetcher(
+  async (_url, options) => {
+    callerSignal = options.signal;
+    return new Promise((resolve) => {
+      options.signal.addEventListener(
+        "abort",
+        () => resolve({ ok: false, json: async () => null }),
+        { once: true },
+      );
+    });
+  },
+  {
+    setTimeoutImpl: () => 7,
+    clearTimeoutImpl: (id) => {
+      if (id === 7) timeoutCleared = true;
+    },
+  },
+);
+const cancelledRequest = callerCancelled.fetchApkUpdateManifest(urlA, caller.signal);
+caller.abort();
+assert.equal(await cancelledRequest, null);
+assert.notEqual(callerSignal, caller.signal, "caller cancellation should propagate through the internal controller");
+assert.equal(callerSignal?.aborted, true, "caller cancellation must abort the fetch signal");
+assert.equal(timeoutCleared, true, "timeout must be cleared after caller cancellation");
+
+console.log("test-apk-manifest-cache: ok (17 assertions)");

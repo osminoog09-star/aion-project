@@ -383,6 +383,18 @@
           "Считать stale от возраста cached manifest, не от времени чтения — DONE",
           "Детерминированный CI test (10 assertions) — DONE"
         ]
+      },
+      {
+        "priority": 27,
+        "id": "apk-fetch-abort-composition",
+        "title": "APK manifest fetch: timeout + caller cancellation",
+        "status": "shipped",
+        "tasks": [
+          "Не отключать обязательный timeout при внешнем AbortSignal — DONE",
+          "Проксировать caller cancellation через внутренний controller — DONE",
+          "Очищать timeout и abort listener в finally — DONE",
+          "Детерминированный CI suite (17 assertions total) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

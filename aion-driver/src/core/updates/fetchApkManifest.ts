@@ -57,12 +57,15 @@ export async function fetchApkUpdateManifest(
   const normalizedUrl = url.trim();
   if (!/^https?:\/\//i.test(normalizedUrl)) return null;
   const ctrl = new AbortController();
+  const abortFromCaller = () => ctrl.abort();
+  if (signal?.aborted) ctrl.abort();
+  else signal?.addEventListener("abort", abortFromCaller, { once: true });
   const t = setTimeout(() => ctrl.abort(), DEFAULT_TIMEOUT_MS);
   try {
     const res = await fetch(normalizedUrl, {
       method: "GET",
       headers: { Accept: "application/json" },
-      signal: signal ?? ctrl.signal,
+      signal: ctrl.signal,
     });
     if (!res.ok) return null;
     const json: unknown = await res.json();
@@ -71,6 +74,7 @@ export async function fetchApkUpdateManifest(
     return null;
   } finally {
     clearTimeout(t);
+    signal?.removeEventListener("abort", abortFromCaller);
   }
 }
 
