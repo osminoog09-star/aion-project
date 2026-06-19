@@ -23,7 +23,7 @@
     "nextRecommendedStep": "Проверить OCR retry/restart и stale-result reset на preview APK; затем перейти к следующему критичному Driver edge-state."
   },
   "updates": {
-    "whatWorks": ["Update Center", "OTA check/apply", "APK manifest single-flight refresh + error diagnostics", "Строгая APK manifest semver/order/URL validation", "URL-scoped memory/offline manifest cache", "ApkUpdateBanner + ApkUpdateModal", "Default manifest URL из portal base", "CI sync manifest после EAS FINISHED"],
+    "whatWorks": ["Update Center", "OTA check/apply", "APK manifest single-flight refresh + error diagnostics", "Строгая APK manifest semver/order/URL validation", "URL-scoped memory/offline manifest cache", "Current-build-only release metadata", "ApkUpdateBanner + ApkUpdateModal", "Default manifest URL из portal base", "CI sync manifest после EAS FINISHED"],
     "whatDoesNotWork": ["Полная история и единый engine на всех экранах"],
     "mocked": [],
     "localOnly": ["Локальная история OTA"],
@@ -62,7 +62,7 @@
     "nextRecommendedStep": "Задокументировать и отобразить на /control канал→runtime→последняя известная ревизия из клиента/манифеста."
   },
   "apk-channel": {
-    "whatWorks": ["Манифест JSON 1.0.9 build 13 в репозитории", "force/minRuntime в типах", "semver/order/URL contract validation + CI", "URL-scoped offline cache", "com/driver fetch", "sync-apk-manifest-from-eas + CI auto на native push"],
+    "whatWorks": ["Манифест JSON 1.0.9 build 13 в репозитории", "force/minRuntime в типах", "semver/order/URL contract validation + CI", "URL-scoped offline cache", "Детерминированные releaseNotes текущего EAS build", "Native-input gate перед EAS preview build", "com/driver fetch", "sync-apk-manifest-from-eas + CI auto на native push"],
     "whatDoesNotWork": ["Центральный signed download hub на com"],
     "requiresApk": ["Всегда для native bump"],
     "otaImpact": "medium",

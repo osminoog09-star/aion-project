@@ -5,18 +5,18 @@
   "buildNumber": "13",
   "compatibilityStatus": "compatible_with_portal_runtime",
   "portalMinRuntimeVersion": "1.0.6",
-  "releaseDate": "2026-06-19T16:05:49.578Z",
+  "releaseDate": "2026-06-19T20:45:23.103Z",
   "releaseType": "test",
-  "releaseNotes": "TEST — проверка цепочки APK/манифест (preview). apkUrl — плейсхолдер; после eas build FINISHED для 1.0.4 подставьте прямой URL артефакта (eas build:view --json → artifacts).\nSynced from EAS eb4250a2-8702-4c47-af49-0e5b75eb9724 (ccc2357ca9e6a7665ee37339932f1b1d8a7997fd).\nSynced from EAS 6a775e51-7dcc-4c0f-9082-f3a3cc138442 (6683004fbf87c59429c9c63cf738050ce672bdba).\nSynced from EAS 3e8d2c54-1049-4d9b-8373-a9183d1b2aee (a97e4bf18e7edcac69879fafe5612d2108d4cb8b).\nSynced from EAS d7baa96a-d98f-41f8-b612-233d70616056 (81c104d83c9ef0c623e2c07e765c14a77a0a3331).",
+  "releaseNotes": "Preview APK 1.0.9 build 13. Runtime 1.0.9. Direct artifact URL verified from FINISHED EAS build 0d3dd137-e3bb-42ec-9e7f-94cd102023d8 (da4b6f4595292ad38822b1c7b2c41a9a7ae0e6d3).",
   "changelog": [
     "1.0.8: Runtime Sphere, auto-sync, живой overlay orb (OrbView), Link Pair UI.",
     "1.0.8: баг-репорты в облако, журнал заправок (исправить/удалить).",
     "Установите поверх preview 1.0.6/1.0.7 — дальше OTA на runtime 1.0.8."
   ],
-  "apkUrl": "https://expo.dev/artifacts/eas/C4vELxiFyj1k70KxVPm-tliPcxBgj-xNGVKbcbTTqxs.apk",
+  "apkUrl": "https://expo.dev/artifacts/eas/UsxUtQfIrvYAfS_gZcdQjMGMBIsmu5MrNcscHKxduHk.apk",
   "critical": false,
   "forceUpdate": false,
-  "easBuildId": "d7baa96a-d98f-41f8-b612-233d70616056",
+  "easBuildId": "0d3dd137-e3bb-42ec-9e7f-94cd102023d8",
   "supportedFeatures": [
     "field_validation_8_8",
     "ota_smoke_from_validation",

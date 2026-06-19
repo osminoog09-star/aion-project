@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2026-06-19T20:42:00.000Z",
+  "lastUpdated": "2026-06-19T20:54:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. Hard-polish APK cache: memory и offline manifest теперь изолированы по endpoint URL.",
-  "currentStatus": "Driver APK cache isolation; release stack live",
+  "currentFocus": "Release stack live. EAS preview preflight теперь отделяет native APK inputs от OTA-safe sync/status изменений.",
+  "currentStatus": "Driver APK build input gate; release stack live",
   "latestRun": {
-    "label": "Vercel production",
+    "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
-    "url": "https://aion-com.vercel.app/operations"
+    "url": "https://expo.dev/artifacts/eas/UsxUtQfIrvYAfS_gZcdQjMGMBIsmu5MrNcscHKxduHk.apk"
   },
   "completed": [
     "Портал /operations теперь должен показывать явный статус работы Codex, а не только длинный runtime JSON.",
@@ -32,7 +32,9 @@
     "Vercel production 2a676ab опубликован; live manifest 1.0.9 и все 11 operations routes проверены.",
     "Update Center APK refresh защищён от конкурентных fetch; unexpected failure фиксируется в diagnostics.",
     "APK manifest validator отклоняет malformed semver, minimumSupported выше latestVersion и небезопасные URL; добавлен CI gate на 7 сценариев.",
-    "APK manifest memory/AsyncStorage cache привязан к нормализованному endpoint URL; старый endpoint больше не протекает в новое окружение."
+    "APK manifest memory/AsyncStorage cache привязан к нормализованному endpoint URL; старый endpoint больше не протекает в новое окружение.",
+    "Preview APK build 0d3dd137 FINISHED; manifest получил новый direct URL, releaseNotes очищены от placeholder и старых EAS build ID.",
+    "EAS preview workflow получил deterministic path gate: sync/status/client TS больше не запускают полный APK build."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -63,6 +65,9 @@
     "Driver typecheck после APK contract hardening — OK",
     "Driver npm run validate:code после APK contract hardening — OK",
     "Portal npm run build после status/roadmap update — OK",
-    "Driver APK manifest cache isolation — OK (5 deterministic cases)"
+    "Driver APK manifest cache isolation — OK (5 deterministic cases)",
+    "EAS preview APK run 27847164060 — SUCCESS; manifest bot commit d49837b",
+    "APK release notes generator — OK (6 assertions)",
+    "Driver APK build path gate — OK (7 cases)"
   ]
 }
