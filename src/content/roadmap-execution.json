@@ -153,7 +153,7 @@
           "ApkUpdateBanner + default manifest URL + CI auto-sync workflow — DONE",
           "Device smoke: установка 1.0.8 + модалка обновления — owner",
           "1.0.9 versionCode 13 + OrbView dimAlpha — code DONE",
-          "EAS preview build run 27833843484 — build DONE, manifest sync IN_PROGRESS"
+          "EAS preview build run 27834179469 — build DONE, manifest sync IN_PROGRESS"
         ]
       },
       {
@@ -180,6 +180,18 @@
           "Блокировать нулевые и отрицательные суммы поездок — DONE",
           "Показать водителю точную причину и действие — DONE",
           "Детерминированный CI test-ocr-confirmation (4 cases) — DONE"
+        ]
+      },
+      {
+        "priority": 11,
+        "id": "ocr-queue-restart-recovery",
+        "title": "OCR queue: восстановление после перезапуска приложения",
+        "status": "shipped",
+        "tasks": [
+          "Вернуть interrupted processing jobs в pending при старте — DONE",
+          "Сохранить attempt count и немедленный nextRetryAt — DONE",
+          "Не менять pending/failed/done jobs — DONE",
+          "Детерминированный recovery test (5 cases) — DONE"
         ]
       }
     ],

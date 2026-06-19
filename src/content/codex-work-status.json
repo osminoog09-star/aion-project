@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2026-06-19T15:19:08.000Z",
+  "lastUpdated": "2026-06-19T15:25:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "EAS preview APK 1.0.9: build завершён успешно, sync-manifest выполняется. Параллельно закрыт edge state post-OCR confirm: пустые, нулевые и отрицательные выплаты больше нельзя сохранить.",
-  "currentStatus": "Driver release loop: ждёт manifest sync; OCR confirm hardened",
+  "currentFocus": "EAS preview APK 1.0.9 run 27834179469: build завершён успешно, sync-manifest выполняется. Параллельно Driver теперь сразу восстанавливает прерванные OCR jobs после перезапуска.",
+  "currentStatus": "Driver release loop: ждёт manifest sync; OCR queue recovery shipped",
   "latestRun": {
     "label": "EAS Build Driver preview",
     "status": "sync_manifest_in_progress",
-    "url": "https://github.com/osminoog09-star/aion-project/actions/runs/27833843484"
+    "url": "https://github.com/osminoog09-star/aion-project/actions/runs/27834179469"
   },
   "completed": [
     "Портал /operations теперь должен показывать явный статус работы Codex, а не только длинный runtime JSON.",
@@ -16,11 +16,12 @@
     "Bug report webhook payload для Telegram, Slack и Discord покрыт root CI.",
     "EAS sync-manifest получил Setup EAS, подробный лог и fallback с eas-cli на Expo GraphQL API.",
     "Expo GraphQL query исправлен по схеме eas-cli: builds.byId(buildId).",
-    "Post-OCR confirm валидирует выплату и суммы поездок до записи в историю; добавлены 4 CI-сценария."
+    "Post-OCR confirm валидирует выплату и суммы поездок до записи в историю; добавлены 4 CI-сценария.",
+    "OCR queue при старте возвращает прерванные processing jobs в pending без сброса attempt count; добавлены 5 CI-сценариев."
   ],
   "next": [
-    "Дождаться sync-manifest run 27833843484 и проверить bot commit для apk-manifest.preview.json.",
-    "Закоммитить и запушить post-OCR confirmation hardening после успешного release sync.",
+    "Дождаться sync-manifest run 27834179469 и проверить bot commit для apk-manifest.preview.json.",
+    "Проверить runtime retry OCR queue после ошибки и перезапуска на preview APK.",
     "После успешного APK manifest: device smoke Driver 1.0.9, затем уже field validation 8/8."
   ],
   "checks": [
@@ -30,7 +31,8 @@
     "Live Vercel пока не обновился: VERCEL_TOKEN и VERCEL_DEPLOY_HOOK не настроены в Actions",
     "EAS run 27826017815: build OK, release safety OK, manifest sync OK, push rejected из-за stale master",
     "EAS run 27827368751: build OK, manifest sync OK, release safety OK, commit-step failed на unstaged changes после partial stash",
-    "EAS run 27833843484: build OK; sync-manifest IN_PROGRESS",
-    "Driver npm run validate:code — OK, включая test-ocr-confirmation (4 cases)"
+    "EAS run 27833843484: отменён concurrency после следующего Driver push",
+    "EAS run 27834179469: build OK; sync-manifest IN_PROGRESS",
+    "Driver npm run validate:code — OK, включая OCR confirm (4 cases) и queue recovery (5 cases)"
   ]
 }

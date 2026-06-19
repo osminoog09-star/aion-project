@@ -1,6 +1,7 @@
 import type { OcrParseResult } from "../types";
 import type { OcrQueueItem, OcrQueueJobPayload } from "./ocrQueueTypes";
 import { loadOcrQueue, saveOcrQueue, updateOcrQueue } from "./ocrQueueStorage";
+import { recoverInterruptedOcrItems } from "./recoverInterruptedOcrItems";
 import { pulseSyncOk } from "../../../src/core/aion/runtime/runtimePulseBus";
 import {
   getLinkRelayUserId,
@@ -257,4 +258,15 @@ export async function replayFailedOcrJobs(): Promise<number> {
     }),
   );
   return n;
+}
+
+/** On a fresh app runtime no previous in-process OCR worker can still own these jobs. */
+export async function recoverInterruptedOcrJobs(): Promise<number> {
+  let recoveredCount = 0;
+  await updateOcrQueue((cur) => {
+    const recovered = recoverInterruptedOcrItems(cur, Date.now());
+    recoveredCount = recovered.recoveredCount;
+    return recovered.items;
+  });
+  return recoveredCount;
 }

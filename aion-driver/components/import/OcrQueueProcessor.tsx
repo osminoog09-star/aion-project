@@ -1,6 +1,9 @@
 import { useEffect, useRef } from "react";
 import { AppState } from "react-native";
-import { processNextOcrQueueItem } from "../../features/import/ocrQueue/ocrQueueEngine";
+import {
+  processNextOcrQueueItem,
+  recoverInterruptedOcrJobs,
+} from "../../features/import/ocrQueue/ocrQueueEngine";
 import { subscribeOcrQueue } from "../../features/import/ocrQueue/ocrQueueEvents";
 import { useRuntimePulse } from "../../src/core/aion/runtime/runtimePulseBus";
 
@@ -29,7 +32,9 @@ export function OcrQueueProcessor() {
       }
     };
 
-    void drain();
+    void recoverInterruptedOcrJobs()
+      .catch(() => 0)
+      .finally(() => void drain());
     const id = setInterval(() => void drain(), 12_000);
     const sub = AppState.addEventListener("change", (s) => {
       if (s === "active") void drain();

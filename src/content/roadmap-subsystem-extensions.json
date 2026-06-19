@@ -1,6 +1,6 @@
 {
   "mobile-app": {
-    "whatWorks": ["Смена end-to-end", "Garage/карта/OCR happy path", "Post-OCR confirm блокирует невалидные выплаты", "OTA каналы EAS", "Desktop shell", "Журнал заправок edit/delete", "BugReportModal → driver_bug_reports", "diagnosticLog в отчётах", "Link QR pair + OCR relay", "OrbView dim (native 1.0.9)"],
+    "whatWorks": ["Смена end-to-end", "Garage/карта/OCR happy path", "Post-OCR confirm блокирует невалидные выплаты", "OCR queue восстанавливает interrupted jobs после restart", "OTA каналы EAS", "Desktop shell", "Журнал заправок edit/delete", "BugReportModal → driver_bug_reports", "diagnosticLog в отчётах", "Link QR pair + OCR relay", "OrbView dim (native 1.0.9)"],
     "whatDoesNotWork": ["Не все edge-состояния UI", "Паритет web/mobile не везде"],
     "mocked": [],
     "localOnly": ["Локальная timeline без облачного SoT"],
@@ -20,7 +20,7 @@
     "highestValueImprovement": "Закрыть update/entity согласованность с порталом и облаком.",
     "requiredDependencies": ["updates subsystem", "aion-entity", "Supabase RLS когда появится auth"],
     "recommendedNextPhase": "Hard polish критичных потоков + единый диагностический слой.",
-    "nextRecommendedStep": "После post-OCR confirm взять следующий узкий edge-state критичного потока: восстановление OCR queue после ошибки/перезапуска."
+    "nextRecommendedStep": "Проверить OCR retry/restart на preview APK; затем взять edge-state смены источника после уже готового OCR result."
   },
   "updates": {
     "whatWorks": ["Update Center", "OTA check/apply", "APK manifest fetch", "ApkUpdateBanner + ApkUpdateModal", "Default manifest URL из portal base", "CI sync manifest после EAS FINISHED"],
