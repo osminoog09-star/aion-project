@@ -1,0 +1,32 @@
+{
+  "lastUpdated": "2026-06-19T12:42:00.000Z",
+  "priority": "Модуль Driver",
+  "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
+  "currentFocus": "EAS preview APK 1.0.9: build стартует, sync-manifest ждёт FINISHED и должен обновить apk-manifest.preview.json.",
+  "currentStatus": "В работе",
+  "latestRun": {
+    "label": "EAS Build Driver preview",
+    "status": "in_progress",
+    "url": "https://github.com/osminoog09-star/aion-project/actions/runs/27826017815"
+  },
+  "completed": [
+    "Портал /operations теперь должен показывать явный статус работы Codex, а не только длинный runtime JSON.",
+    "Field validation отчёт Driver передаёт NEXT, портал его распознаёт и показывает владельцу следующий шаг.",
+    "Driver OTA manifest summary покрыт CI; nested commit из Expo manifest читается корректно.",
+    "Bug report webhook payload для Telegram, Slack и Discord покрыт root CI.",
+    "EAS sync-manifest получил Setup EAS, подробный лог и fallback с eas-cli на Expo GraphQL API.",
+    "Expo GraphQL query исправлен по схеме eas-cli: builds.byId(buildId)."
+  ],
+  "next": [
+    "Дождаться результата EAS run 27826017815.",
+    "Если sync-manifest пройдёт: проверить обновлённый apk-manifest.preview.json, запушенный ботом, и статус Vercel.",
+    "Если sync-manifest упадёт: разобрать новый лог и чинить только этот release-loop участок.",
+    "После успешного APK manifest: device smoke Driver 1.0.9, затем уже field validation 8/8."
+  ],
+  "checks": [
+    "npm run repo:verify — OK",
+    "npm run build — OK",
+    "Vercel deploy / Portal build по последним пушам — OK",
+    "EAS preview workflow — проверяется"
+  ]
+}

@@ -11,8 +11,8 @@
     "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-19T12:33:16.514Z",
-    "heartbeatAt": "2026-06-19T12:33:16.514Z",
+    "updatedAt": "2026-06-19T12:49:48.549Z",
+    "heartbeatAt": "2026-06-19T12:49:48.549Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -33,15 +33,22 @@
     "lastFailure": null,
     "lastCompletedAction": "AI заблокирован: Release failed",
     "retryCount": 0,
-    "validationProgress": "Правка: expo-build-api.mjs",
+    "validationProgress": "Operations получил видимый статус работы Codex по Driver",
     "progressPercent": 68,
     "etaMinutes": 45,
     "autonomousDepth": 8,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "CODE",
-    "currentFile": "scripts/expo-build-api.mjs",
+    "currentFile": "src/app/operations/page.tsx",
     "recentActions": [
+      {
+        "at": "2026-06-19T12:49:48.549Z",
+        "tag": "CODE",
+        "message": "Operations получил видимый статус работы Codex по Driver",
+        "file": "src/app/operations/page.tsx",
+        "repo": "aion-project"
+      },
       {
         "at": "2026-06-19T12:33:16.514Z",
         "tag": "CODE",
@@ -257,17 +264,15 @@
         "message": "Route groups/summary/handoff: pickProfitFromRouteRow",
         "file": "aion-driver/features/route/groupRouteAnalytics.ts",
         "repo": "aion-driver"
-      },
-      {
-        "at": "2026-05-15T13:30:40.010Z",
-        "tag": "CODE",
-        "message": "Dashboard: pickProfitFromRuntime для блока смены",
-        "file": "aion-driver/screens/DashboardScreen.tsx",
-        "repo": "aion-driver"
       }
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-19T12:49:48.549Z",
+      "phase": "coding",
+      "summary": "[CODE] Operations получил видимый статус работы Codex по Driver"
+    },
     {
       "at": "2026-06-19T12:33:16.514Z",
       "phase": "coding",
@@ -888,20 +893,12 @@
       "resultRu": "В процессе",
       "icon": "✅",
       "confidence": 0.9
-    },
-    {
-      "at": "2026-05-15T12:20:11.746Z",
-      "phase": "coding",
-      "summary": "AI пишет и улучшает код: Field validation: backfill + stop-zone на устройстве",
-      "feedEventId": null,
-      "titleRu": "AI пишет и улучшает код",
-      "explanationRu": "Roadmap P1: подтвердить coverage и insights на реальных сменах",
-      "resultRu": "В процессе",
-      "icon": "⚡",
-      "confidence": 0.9
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-19T12:49:48.549Z"
+    },
     {
       "at": "2026-06-19T12:33:16.514Z"
     },
@@ -1042,9 +1039,6 @@
     },
     {
       "at": "2026-05-16T13:42:47.149Z"
-    },
-    {
-      "at": "2026-05-15T15:36:07.617Z"
     }
   ]
 }

@@ -5,6 +5,7 @@ import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
 import { getOperationsHubView } from "@/lib/operations-hub-data";
 import { OperationsHub } from "@/components/operations/OperationsHub";
+import { CodexWorkStatusPanel } from "@/components/operations/CodexWorkStatusPanel";
 import {
   CloudSoTPanel,
   CursorRulesPanel,
@@ -34,6 +35,7 @@ export default async function OperationsPage() {
         <RoadmapHubLinks />
       </div>
       <OperationsSubNav />
+      <CodexWorkStatusPanel />
 
       <Link
         href={ecosystemRoutes.operationsCommand}
