@@ -37,4 +37,3 @@ index 3e64d9f..ddc4235 100644
 +    }
    }).observe(headNode, { attributes: false, childList: true, subtree: false });
  }
- 
