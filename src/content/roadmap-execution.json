@@ -536,6 +536,19 @@
           "Различать обязательный, runtime и optional сценарии — DONE",
           "Детерминированный CI test (18 assertions) — DONE"
         ]
+      },
+      {
+        "priority": 39,
+        "id": "driver-cached-apk-state-propagation",
+        "title": "Update engine: cache fallback виден на всех Driver-поверхностях",
+        "status": "shipped",
+        "tasks": [
+          "Удалить недостижимую cached-ветку manifest_failed — DONE",
+          "Показывать degraded state для cached idle — DONE",
+          "Сохранять critical/optional APK verdict при fallback — DONE",
+          "Добавлять cache badge и предупреждение к verdict — DONE",
+          "Детерминированный state-machine CI test (14 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
