@@ -484,6 +484,19 @@
           "Сохранить force/minimum/runtime safety priorities — DONE",
           "Детерминированный CI test (8 cases) — DONE"
         ]
+      },
+      {
+        "priority": 35,
+        "id": "driver-apk-url-parser",
+        "title": "APK URL contract: строгий parser",
+        "status": "shipped",
+        "tasks": [
+          "Требовать HTTPS protocol и hostname — DONE",
+          "Отклонять URL credentials — DONE",
+          "Отклонять external whitespace и malformed URL — DONE",
+          "Подключить URL polyfill в root layout — DONE",
+          "Детерминированный CI suite (20 manifest cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

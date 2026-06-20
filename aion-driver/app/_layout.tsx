@@ -1,3 +1,4 @@
+import "react-native-url-polyfill/auto";
 import * as Sentry from "@sentry/react-native";
 import "react-native-gesture-handler";
 import "../global.css";

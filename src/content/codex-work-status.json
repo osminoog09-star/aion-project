@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T06:49:29.000Z",
+  "lastUpdated": "2026-06-20T07:03:01.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. APK rollout policy вынесена в чистый evaluator с явными paused/emergency/force/minimum приоритетами.",
-  "currentStatus": "Driver APK rollout policy; release stack live",
+  "currentFocus": "Release stack live. APK URL contract использует настоящий parser: HTTPS, обязательный hostname, без credentials и внешних пробелов.",
+  "currentStatus": "Driver strict APK URL parsing; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -43,7 +43,8 @@
     "SemVer comparator исправлен: prerelease ниже stable, identifiers сравниваются детерминированно, build metadata не влияет на порядок.",
     "Driver APK transport переведён на HTTPS-only: HTTP manifest endpoint блокируется до fetch, HTTP artifact/fallback отклоняются валидатором.",
     "APK manifest optional contract ужесточён: boolean flags, rollout enum, release date, runtime metadata и changelog проверяются до evaluation.",
-    "APK rollout policy исправлена: paused скрывает обычный newer rollout, emergency/force имеют явный приоритет, minimum/runtime safety остаются активны."
+    "APK rollout policy исправлена: paused скрывает обычный newer rollout, emergency/force имеют явный приоритет, minimum/runtime safety остаются активны.",
+    "APK URL validation переведена с prefix regex на URL parser; root layout явно загружает polyfill для одинакового Android/web поведения."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -86,6 +87,7 @@
     "Driver SemVer prerelease/build ordering — OK (10 cases)",
     "Driver APK HTTPS-only transport — OK (9 manifest cases, 20 cache assertions)",
     "Driver APK strict optional manifest fields — OK (17 cases)",
-    "Driver APK paused/emergency/force policy — OK (8 cases)"
+    "Driver APK paused/emergency/force policy — OK (8 cases)",
+    "Driver strict APK URL parsing — OK (20 manifest cases)"
   ]
 }

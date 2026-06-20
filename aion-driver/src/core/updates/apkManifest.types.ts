@@ -32,7 +32,18 @@ export type ApkUpdateManifest = {
 };
 
 export function isHttpsUrl(value: unknown): value is string {
-  return typeof value === "string" && /^https:\/\//i.test(value);
+  if (typeof value !== "string" || value.trim() !== value) return false;
+  try {
+    const parsed = new URL(value);
+    return (
+      parsed.protocol === "https:" &&
+      Boolean(parsed.hostname) &&
+      !parsed.username &&
+      !parsed.password
+    );
+  } catch {
+    return false;
+  }
 }
 
 function optionalBoolean(o: Record<string, unknown>, key: string): boolean {
