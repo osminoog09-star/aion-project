@@ -614,6 +614,19 @@
           "Не пропускать network retries при invalid cache — DONE",
           "Детерминированный cache CI test (40 assertions) — DONE"
         ]
+      },
+      {
+        "priority": 45,
+        "id": "driver-deterministic-apk-stale-boundaries",
+        "title": "APK stale evaluator: детерминированные временные границы",
+        "status": "shipped",
+        "tasks": [
+          "Использовать одну nowMs точку в evaluator — DONE",
+          "Зафиксировать точную 36h fetch boundary — DONE",
+          "Зафиксировать 90d release boundary — DONE",
+          "Помечать invalid/future timestamps как stale — DONE",
+          "Детерминированный cache CI test (47 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
