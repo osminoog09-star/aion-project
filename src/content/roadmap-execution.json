@@ -432,6 +432,19 @@
           "Сохранить push только в main без рекурсии workflow — DONE",
           "Root CI test (4 assertions) + YAML parse — DONE"
         ]
+      },
+      {
+        "priority": 31,
+        "id": "driver-semver-prerelease-ordering",
+        "title": "APK version policy: полный SemVer ordering",
+        "status": "shipped",
+        "tasks": [
+          "Считать prerelease ниже stable — DONE",
+          "Сравнивать numeric/text prerelease identifiers — DONE",
+          "Игнорировать build metadata при ordering — DONE",
+          "Отклонять invalid leading zeros — DONE",
+          "Детерминированный CI test (10 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

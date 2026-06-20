@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T03:09:34.000Z",
+  "lastUpdated": "2026-06-20T03:49:03.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. Sync main автоматически создаёт single-parent promotion commit для надёжного Vercel production alias.",
-  "currentStatus": "Automatic Vercel production promotion; Driver priority",
+  "currentFocus": "Release stack live. APK version policy теперь корректно сравнивает SemVer prerelease/build metadata и не пропускает stable release для preview build.",
+  "currentStatus": "Driver SemVer prerelease ordering; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -39,7 +39,8 @@
     "APK manifest fetch больше не теряет 12s timeout при внешнем AbortSignal; caller cancel проксируется через внутренний controller с cleanup listener/timer.",
     "minimumRuntimeVersion исправлен: runtime 1.0.10 совместим с минимумом 1.0.9; opaque runtime fingerprints требуют точного совпадения.",
     "APK download объединён в один helper: primary URL, автоматический fallback, dedupe и Alert при полном failure без unhandled rejection.",
-    "Sync main workflow теперь сам создаёт single-parent promotion commit после merge, устраняя повторяющийся ручной Vercel promotion."
+    "Sync main workflow теперь сам создаёт single-parent promotion commit после merge, устраняя повторяющийся ручной Vercel promotion.",
+    "SemVer comparator исправлен: prerelease ниже stable, identifiers сравниваются детерминированно, build metadata не влияет на порядок."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -78,6 +79,7 @@
     "Driver APK fetch timeout/caller cancellation — OK (17 assertions total)",
     "Driver runtime minimum compatibility — OK (6 cases)",
     "Driver APK download primary/fallback/failure — OK (8 assertions)",
-    "Sync main automatic production promotion — OK (4 assertions + YAML parse)"
+    "Sync main automatic production promotion — OK (4 assertions + YAML parse)",
+    "Driver SemVer prerelease/build ordering — OK (10 cases)"
   ]
 }
