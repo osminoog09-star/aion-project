@@ -70,6 +70,10 @@ export function useApkUpdateController() {
     try {
       const res = await fetchApkUpdateManifestResilient(MANIFEST_URL);
       setFromCache(res.fromCache);
+      if (res.networkFailedAtMs != null) {
+        lastErrorRef.current = res.networkFailedAtMs;
+        setLastErrorAtMs(res.networkFailedAtMs);
+      }
       if (res.manifest) {
         const at = res.fetchedAtMs ?? Date.now();
         lastSuccessRef.current = at;
@@ -83,11 +87,11 @@ export function useApkUpdateController() {
           evald,
           loading: false,
           lastSuccessAtMs: at,
-          lastErrorAtMs: lastErrorRef.current,
+          lastErrorAtMs: res.networkFailedAtMs ?? lastErrorRef.current,
           manifestStale: stale,
         });
       } else {
-        const errAt = Date.now();
+        const errAt = res.networkFailedAtMs ?? Date.now();
         lastErrorRef.current = errAt;
         setLastErrorAtMs(errAt);
         publishApkDiagnostics({
