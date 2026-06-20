@@ -44,7 +44,7 @@ export function useApkUpdateController() {
   const lastErrorRef = useRef<number | null>(null);
   const refreshInFlightRef = useRef(false);
 
-  const refresh = useCallback(async () => {
+  const runRefresh = useCallback(async (bypassMemory: boolean) => {
     if (refreshInFlightRef.current) return;
     if (!MANIFEST_URL || __DEV__) {
       publishApkDiagnostics({
@@ -68,7 +68,7 @@ export function useApkUpdateController() {
       manifestStale: false,
     });
     try {
-      const res = await fetchApkUpdateManifestResilient(MANIFEST_URL);
+      const res = await fetchApkUpdateManifestResilient(MANIFEST_URL, { bypassMemory });
       setFromCache(res.fromCache);
       if (res.networkFailedAtMs != null) {
         lastErrorRef.current = res.networkFailedAtMs;
@@ -122,13 +122,15 @@ export function useApkUpdateController() {
     }
   }, []);
 
+  const refresh = useCallback(() => runRefresh(true), [runRefresh]);
+
   useEffect(() => {
-    void refresh();
+    void runRefresh(false);
     const sub = AppState.addEventListener("change", (s) => {
-      if (s === "active") void refresh();
+      if (s === "active") void runRefresh(false);
     });
     return () => sub.remove();
-  }, [refresh]);
+  }, [runRefresh]);
 
   const evald = useMemo(() => {
     if (!manifest) return null;
