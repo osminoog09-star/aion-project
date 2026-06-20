@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppState } from "react-native";
 import { fetchApkUpdateManifestResilient, isManifestSemanticallyStale } from "./fetchApkManifest";
 import { semverLess } from "./semverCompare";
+import { isRuntimeBelowMinimum } from "./runtimeCompatibility";
 import { publishApkDiagnostics } from "./apkDiagnosticsSink";
 import type { ApkUpdateManifest } from "./apkManifest.types";
 import { getApkManifestUrl } from "../../../lib/apkManifestUrl";
@@ -44,7 +45,7 @@ export function evaluateApkUpdate(
     };
   }
   const rt = currentRuntime();
-  if (manifest.minimumRuntimeVersion && rt && manifest.minimumRuntimeVersion.trim() !== rt.trim()) {
+  if (manifest.minimumRuntimeVersion && rt && isRuntimeBelowMinimum(rt, manifest.minimumRuntimeVersion)) {
     return { reason: "runtime_mismatch", critical: Boolean(manifest.emergency) };
   }
   if (manifest.runtimeVersion && rt && manifest.runtimeVersion !== rt) {

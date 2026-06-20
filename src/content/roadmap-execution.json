@@ -395,6 +395,18 @@
           "Очищать timeout и abort listener в finally — DONE",
           "Детерминированный CI suite (17 assertions total) — DONE"
         ]
+      },
+      {
+        "priority": 28,
+        "id": "runtime-minimum-semver",
+        "title": "APK runtime policy: semver minimum compatibility",
+        "status": "shipped",
+        "tasks": [
+          "Считать runtime выше minimum совместимым — DONE",
+          "Блокировать runtime ниже minimum — DONE",
+          "Для opaque runtime hash сохранить equality fallback — DONE",
+          "Детерминированный CI test (6 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
