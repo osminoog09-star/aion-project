@@ -4,10 +4,10 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
-      "id": "evt-2026-06-20-ciwc1o",
+      "id": "evt-2026-06-20-wcnr1u",
       "occurredAt": "2026-06-20",
-      "title": "Driver cached APK state propagation",
-      "summary": "The shared update state machine now exposes cached APK provenance without hiding critical or optional update verdicts.",
+      "title": "Driver APK cache trust boundary",
+      "summary": "Persistent APK fallback is no longer promoted to trusted memory; every later refresh retries the network and preserves cached provenance.",
       "subsystemIds": [
         "updates",
         "apk-channel",
@@ -18,7 +18,7 @@
       "repository": "aion-project",
       "rollup": {
     "fullyDone": [
-      "✅ Cached APK provenance во всех update engine поверхностях"
+      "✅ Persistent fallback остаётся untrusted до сетевого успеха"
     ],
     "partiallyDone": [],
         "notStarted": [],
@@ -38,6 +38,50 @@
     "driver_validate_code": "passed",
     "web_build": "passed"
   },
+      "reasoning": "A recent persistent cache row could be returned by the memory fast path as a false network success on the next refresh.",
+      "task": "apk-cache-trust-boundary",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/src/core/updates/fetchApkManifest.ts",
+        "aion-driver/scripts/ci/test-apk-manifest-cache.mjs"
+      ],
+      "apkImpact": "OTA-safe cache provenance correction"
+    },
+    {
+      "id": "evt-2026-06-20-ciwc1o",
+      "occurredAt": "2026-06-20",
+      "title": "Driver cached APK state propagation",
+      "summary": "The shared update state machine now exposes cached APK provenance without hiding critical or optional update verdicts.",
+      "subsystemIds": [
+        "updates",
+        "apk-channel",
+        "mobile-app"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [
+          "✅ Cached APK provenance во всех update engine поверхностях"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "driver_validate_code": "passed",
+        "web_build": "passed"
+      },
       "reasoning": "The cached branch under manifest_failed was unreachable, so shared Driver surfaces could report a healthy idle state while using fallback data.",
       "task": "cached-apk-state-propagation",
       "confidence": "high",

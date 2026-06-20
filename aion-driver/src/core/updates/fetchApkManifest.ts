@@ -112,7 +112,6 @@ export async function fetchApkUpdateManifestResilient(url: string): Promise<{
   const row = await readCache(normalizedUrl);
   if (row?.json && isApkManifest(row.json)) {
     const failedAt = Date.now();
-    memory = { url: normalizedUrl, manifest: row.json, at: row.at };
     return { manifest: row.json, fromCache: true, attempts: 3, fetchedAtMs: row.at, networkFailedAtMs: failedAt };
   }
 
