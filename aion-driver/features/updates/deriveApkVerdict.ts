@@ -1,5 +1,6 @@
 import type { ApkUpdateManifest } from "../../src/core/updates/apkManifest.types";
 import type { ApkUpdateEvaluation } from "../../src/core/updates/apkUpdatePolicy";
+import { deriveApkUpdateExplanation } from "./deriveApkUpdateExplanation";
 
 export type ApkVerdict = {
   headline: string;
@@ -34,7 +35,7 @@ export function deriveApkVerdict(input: {
       rolloutPaused: false,
     };
   }
-  const { reason, critical } = input.evaluation;
+  const { reason } = input.evaluation;
   if (reason === "none" && input.manifest.rolloutState === "paused") {
     return {
       headline: "Выпуск APK приостановлен",
@@ -51,26 +52,10 @@ export function deriveApkVerdict(input: {
       rolloutPaused: false,
     };
   }
-  if (reason === "below_minimum") {
-    return {
-      headline: "Нужен новый APK",
-      detail: `Версия приложения ниже minimumSupported (${input.manifest.minimumSupported}). OTA не заменит нативный слой.`,
-      apkBlock: true,
-      rolloutPaused: false,
-    };
-  }
-  if (reason === "newer_available") {
-    return {
-      headline: critical ? "Нужен новый APK (важно)" : "Доступна новая полная сборка",
-      detail: `На сервере ${input.manifest.latestVersion}. OTA обновляет только JS при совпадающем runtime.`,
-      apkBlock: true,
-      rolloutPaused: false,
-    };
-  }
+  const explanation = deriveApkUpdateExplanation({ manifest: input.manifest, evaluation: input.evaluation });
   return {
-    headline: "Несовпадение runtime",
-    detail:
-      "Установленный runtime не совпадает с манифестом — для выравнивания нужна полная сборка с нужным native/runtime.",
+    headline: explanation.title,
+    detail: explanation.detail,
     apkBlock: true,
     rolloutPaused: false,
   };
