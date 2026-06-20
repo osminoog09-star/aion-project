@@ -30,6 +30,7 @@ import {
 import { deriveRuntimeCompatibilityPanel } from "../services/runtimeCompatibility";
 import { getApkManifestUrl } from "../lib/apkManifestUrl";
 import { openApkDownload } from "../src/core/updates/openApkDownload";
+import { deriveApkVerdict } from "../features/updates/deriveApkVerdict";
 
 const MANIFEST_CONFIGURED = Boolean(
   typeof process !== "undefined" && getApkManifestUrl().startsWith("http"),
@@ -108,50 +109,16 @@ export function UpdateCenterScreen() {
     return seenOta !== cur;
   }, [seenOta]);
 
-  const apkVerdict = useMemo(() => {
-    if (!MANIFEST_CONFIGURED) {
-      return {
-        headline: "Манифест APK не подключён",
-        detail:
-          "Задайте EXPO_PUBLIC_APK_MANIFEST_URL на JSON (latestVersion, minimumSupported, apkUrl, runtimeVersion). Тогда приложение сравнит версию и runtime.",
-        apkBlock: false,
-      };
-    }
-    if (apk.loading && !apk.manifest) {
-      return { headline: "Проверка манифеста APK…", detail: "", apkBlock: false };
-    }
-    if (!apk.manifest || !apk.evald) {
-      return { headline: "Манифест APK недоступен", detail: "Проверьте сеть и URL.", apkBlock: false };
-    }
-    const { reason, critical } = apk.evald;
-    if (reason === "none") {
-      return {
-        headline: "Полная сборка: актуально",
-        detail: `Сервер: latest ${apk.manifest.latestVersion}, minimum ${apk.manifest.minimumSupported}.`,
-        apkBlock: false,
-      };
-    }
-    if (reason === "below_minimum") {
-      return {
-        headline: "Нужен новый APK",
-        detail: `Версия приложения ниже minimumSupported (${apk.manifest.minimumSupported}). OTA не заменит нативный слой.`,
-        apkBlock: true,
-      };
-    }
-    if (reason === "newer_available") {
-      return {
-        headline: critical ? "Нужен новый APK (важно)" : "Доступна новая полная сборка",
-        detail: `На сервере ${apk.manifest.latestVersion}. OTA обновляет только JS при совпадающем runtime.`,
-        apkBlock: true,
-      };
-    }
-    return {
-      headline: "Несовпадение runtime",
-      detail:
-        "Установленный runtime не совпадает с манифестом — для выравнивания нужна полная сборка с нужным native/runtime.",
-      apkBlock: true,
-    };
-  }, [apk.evald, apk.loading, apk.manifest]);
+  const apkVerdict = useMemo(
+    () =>
+      deriveApkVerdict({
+        manifestConfigured: MANIFEST_CONFIGURED,
+        loading: apk.loading,
+        manifest: apk.manifest,
+        evaluation: apk.evald,
+      }),
+    [apk.evald, apk.loading, apk.manifest],
+  );
 
   const runtimeCompat = useMemo(
     () =>
@@ -213,6 +180,13 @@ export function UpdateCenterScreen() {
         body: apkVerdict.detail || "Нативный слой, overlay или runtime требуют полной сборки.",
       };
     }
+    if (apkVerdict.rolloutPaused) {
+      return {
+        emoji: "🟡",
+        title: "Выпуск APK приостановлен",
+        body: apkVerdict.detail,
+      };
+    }
     if (u.phase === "ready" || u.phase === "prompt") {
       return {
         emoji: "🟡",
@@ -225,7 +199,7 @@ export function UpdateCenterScreen() {
       title: "Приложение актуально",
       body: "Нет ожидающих OTA; по манифесту APK критических требований нет.",
     };
-  }, [apkVerdict.apkBlock, apkVerdict.detail, u.phase]);
+  }, [apkVerdict.apkBlock, apkVerdict.detail, apkVerdict.rolloutPaused, u.phase]);
 
   const lastDebug = peekLastOtaCheckDebug();
 
