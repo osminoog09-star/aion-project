@@ -85,9 +85,20 @@ assert.equal(isApkManifest({ ...valid, emergency: 1 }), false, "numeric emergenc
 assert.equal(isApkManifest({ ...valid, rolloutState: "rolling" }), false, "unknown rollout state must be rejected");
 assert.equal(isApkManifest({ ...valid, runtimeVersion: 109 }), false, "numeric runtime version must be rejected");
 assert.equal(isApkManifest({ ...valid, releaseDate: "tomorrow" }), false, "invalid release date must be rejected");
+assert.equal(isApkManifest({ ...valid, releaseDate: "2026-06-20" }), false, "date-only release date must be rejected");
+assert.equal(
+  isApkManifest({ ...valid, releaseDate: "2026-06-20T03:00:00+03:00" }),
+  false,
+  "non-canonical timezone offset must be rejected",
+);
+assert.equal(
+  isApkManifest({ ...valid, releaseDate: "2026-02-30T00:00:00.000Z" }),
+  false,
+  "normalized impossible release date must be rejected",
+);
 assert.equal(isApkManifest({ ...valid, changelog: ["ok", 7] }), false, "non-string changelog item must be rejected");
 
-console.log("test-apk-manifest-validation: ok (20 cases)");
+console.log("test-apk-manifest-validation: ok (23 cases)");
 
 await import("./test-apk-manifest-cache.mjs");
 await import("./test-apk-runtime-compatibility.mjs");

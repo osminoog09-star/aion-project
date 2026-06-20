@@ -54,6 +54,14 @@ function optionalString(o: Record<string, unknown>, key: string): boolean {
   return o[key] == null || typeof o[key] === "string";
 }
 
+function isCanonicalUtcTimestamp(value: unknown): value is string {
+  if (typeof value !== "string") return false;
+  const parsed = Date.parse(value);
+  if (!Number.isFinite(parsed)) return false;
+  const canonical = new Date(parsed).toISOString();
+  return value === canonical || value === canonical.replace(".000Z", "Z");
+}
+
 export function isApkManifest(v: unknown): v is ApkUpdateManifest {
   if (!v || typeof v !== "object") return false;
   const o = v as Record<string, unknown>;
@@ -90,7 +98,7 @@ export function isApkManifest(v: unknown): v is ApkUpdateManifest {
   ) {
     return false;
   }
-  if (o.releaseDate != null && (typeof o.releaseDate !== "string" || !Number.isFinite(Date.parse(o.releaseDate)))) {
+  if (o.releaseDate != null && !isCanonicalUtcTimestamp(o.releaseDate)) {
     return false;
   }
   if (o.changelog != null && (!Array.isArray(o.changelog) || !o.changelog.every((line) => typeof line === "string"))) {

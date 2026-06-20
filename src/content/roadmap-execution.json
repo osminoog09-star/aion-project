@@ -627,6 +627,19 @@
           "Помечать invalid/future timestamps как stale — DONE",
           "Детерминированный cache CI test (47 assertions) — DONE"
         ]
+      },
+      {
+        "priority": 46,
+        "id": "driver-canonical-apk-release-timestamp",
+        "title": "APK manifest: canonical UTC releaseDate contract",
+        "status": "shipped",
+        "tasks": [
+          "Требовать UTC ISO timestamp с Z — DONE",
+          "Отклонять date-only releaseDate — DONE",
+          "Отклонять timezone offset representation — DONE",
+          "Отклонять нормализуемые impossible dates — DONE",
+          "Детерминированный manifest CI test (23 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
