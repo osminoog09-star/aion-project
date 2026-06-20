@@ -3,7 +3,7 @@ import * as Updates from "expo-updates";
 import { router, type Href } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Linking,
+  Alert,
   Platform,
   Pressable,
   ScrollView,
@@ -29,6 +29,7 @@ import {
 } from "../features/updates/storage/whatsNewAckStorage";
 import { deriveRuntimeCompatibilityPanel } from "../services/runtimeCompatibility";
 import { getApkManifestUrl } from "../lib/apkManifestUrl";
+import { openApkDownload } from "../src/core/updates/openApkDownload";
 
 const MANIFEST_CONFIGURED = Boolean(
   typeof process !== "undefined" && getApkManifestUrl().startsWith("http"),
@@ -380,8 +381,16 @@ export function UpdateCenterScreen() {
                       variant="glass"
                       className="mt-4"
                       onPress={() => {
-                        const url = apk.manifest?.apkUrl;
-                        if (url) void Linking.openURL(url);
+                        const manifest = apk.manifest;
+                        if (!manifest) return;
+                        void openApkDownload(manifest).then((result) => {
+                          if (!result.ok) {
+                            Alert.alert(
+                              "Не удалось открыть APK",
+                              "Основная и резервная ссылки недоступны. Проверьте подключение и повторите позже.",
+                            );
+                          }
+                        });
                       }}
                     />
                     <Text selectable className="mt-2 font-mono text-xs text-slate-500">

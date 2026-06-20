@@ -407,6 +407,19 @@
           "Для opaque runtime hash сохранить equality fallback — DONE",
           "Детерминированный CI test (6 cases) — DONE"
         ]
+      },
+      {
+        "priority": 29,
+        "id": "apk-download-fallback",
+        "title": "APK download: fallback и управляемая ошибка",
+        "status": "shipped",
+        "tasks": [
+          "Открывать primary artifact URL — DONE",
+          "Переходить на fallbackApkUrl при rejection — DONE",
+          "Не открывать duplicate fallback повторно — DONE",
+          "Показывать Alert при полном failure — DONE",
+          "Детерминированный CI test (8 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

@@ -1,7 +1,8 @@
 import * as Haptics from "expo-haptics";
-import { Linking } from "react-native";
+import { Alert } from "react-native";
 import { ApkUpdateModal } from "./ApkUpdateModal";
 import { useApkUpdates } from "../../contexts/ApkUpdatesContext";
+import { openApkDownload } from "../../src/core/updates/openApkDownload";
 
 /**
  * Полная сборка APK (отдельно от OTA через expo-updates).
@@ -21,7 +22,11 @@ export function ApkUpdateGate() {
         snooze();
       }}
       onUpdate={() => {
-        void Linking.openURL(manifest.apkUrl);
+        void openApkDownload(manifest).then((result) => {
+          if (!result.ok) {
+            Alert.alert("Не удалось открыть APK", "Проверьте подключение и повторите загрузку из Центра обновлений.");
+          }
+        });
       }}
     />
   );
