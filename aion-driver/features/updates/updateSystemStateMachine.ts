@@ -72,6 +72,7 @@ function apkHeadline(reason: ApkUpdateReason, critical: boolean): { headline: st
 function mapApkState(
   ev: { reason: ApkUpdateReason; critical: boolean },
   manifestStale: boolean,
+  fromCache: boolean,
 ): UpdateEngineView {
   const { headline, detail } = apkHeadline(ev.reason, ev.critical);
   const st: UpdateEngineState = ev.critical
@@ -81,11 +82,15 @@ function mapApkState(
     : ev.reason === "runtime_mismatch"
       ? "runtime_mismatch"
       : "apk_recommended";
+  const warnings = [
+    manifestStale ? "манифест давно не обновлялся на сервере" : null,
+    fromCache ? "свежий манифест не получен; решение основано на локальных данных" : null,
+  ].filter((value): value is string => value != null);
   return {
     state: st,
     headline,
-    detail: manifestStale ? `${detail} · манифест давно не обновлялся на сервере.` : detail,
-    badges: ["apk", ev.reason],
+    detail: warnings.length ? `${detail} · ${warnings.join(" · ")}.` : detail,
+    badges: ["apk", ev.reason, ...(fromCache ? ["cache"] : [])],
   };
 }
 
@@ -123,9 +128,7 @@ export function deriveUpdateEngineView(input: UpdateMachineInput): UpdateEngineV
     return {
       state: "manifest_failed",
       headline: "Манифест APK недоступен",
-      detail: input.apkFromCache
-        ? "Показаны последние закэшированные данные; свежий JSON с сервера не получен."
-        : "Проверьте URL, TLS и JSON. Повтор при возврате в приложение.",
+      detail: "Проверьте URL, TLS и JSON. Повтор при возврате в приложение.",
       badges: [...badges, "apk"],
     };
   }
@@ -170,7 +173,7 @@ export function deriveUpdateEngineView(input: UpdateMachineInput): UpdateEngineV
   }
 
   if (input.apkEval && input.apkEval.reason !== "none" && input.apkEval.critical) {
-    const v = mapApkState(input.apkEval, input.apkManifestStale);
+    const v = mapApkState(input.apkEval, input.apkManifestStale, input.apkFromCache);
     return { ...v, badges: [...badges, ...v.badges] };
   }
 
@@ -184,8 +187,17 @@ export function deriveUpdateEngineView(input: UpdateMachineInput): UpdateEngineV
   }
 
   if (input.apkEval && input.apkEval.reason !== "none") {
-    const v = mapApkState(input.apkEval, input.apkManifestStale);
+    const v = mapApkState(input.apkEval, input.apkManifestStale, input.apkFromCache);
     return { ...v, badges: [...badges, ...v.badges] };
+  }
+
+  if (input.apkFromCache && input.apkManifestPresent && input.apkLastErrorAtMs) {
+    return {
+      state: "stale_manifest",
+      headline: "Показаны локальные данные APK",
+      detail: "Свежий манифест с сервера не получен. Повторите проверку перед установкой полной сборки.",
+      badges: [...badges, "apk", "cache"],
+    };
   }
 
   if (input.apkManifestStale && input.apkManifestPresent) {
