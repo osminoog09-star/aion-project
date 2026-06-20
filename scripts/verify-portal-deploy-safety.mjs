@@ -63,5 +63,9 @@ execSync("node scripts/ci/test-driver-apk-build-paths.mjs", {
   cwd: root,
   stdio: "inherit",
 });
+execSync("node scripts/ci/test-sync-main-promotion.mjs", {
+  cwd: root,
+  stdio: "inherit",
+});
 
 console.log("Portal deploy safety OK.");

@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Fast-forward main to master
+      - name: Sync main and create production promotion commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -28,4 +28,6 @@ jobs:
           else
             git checkout -b main origin/master
           fi
+          # Vercel reliably promotes a single-parent main commit; merge commits can remain Preview-only.
+          git commit --allow-empty -m "chore(deploy): promote synced main"
           git push origin main
