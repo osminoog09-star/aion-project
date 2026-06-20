@@ -562,6 +562,19 @@
           "Сохранять исходный fetchedAt persistent JSON — DONE",
           "Детерминированный cache CI test (30 assertions) — DONE"
         ]
+      },
+      {
+        "priority": 41,
+        "id": "driver-force-network-apk-refresh",
+        "title": "Update Center: ручной APK refresh всегда проверяет сеть",
+        "status": "shipped",
+        "tasks": [
+          "Добавить bypassMemory option в resilient fetch — DONE",
+          "Сохранить memory throttle для background refresh — DONE",
+          "Подключить force-network к публичному controller refresh — DONE",
+          "Не менять single-flight защиту — DONE",
+          "Детерминированный cache CI test (35 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

@@ -69,10 +69,17 @@ assert.equal(memoryA.networkFailedAtMs, null);
 assert.equal(memoryA.fetchedAtMs, firstA.fetchedAtMs, "memory reuse must preserve the original fetch time");
 assert.equal(networkCalls, 1, "same URL should reuse the fresh memory cache");
 
+const forcedA = await online.fetchApkUpdateManifestResilient(urlA, { bypassMemory: true });
+assert.equal(forcedA.manifest?.latestVersion, "1.0.9");
+assert.equal(forcedA.fromCache, false);
+assert.equal(forcedA.attempts, 1, "manual refresh must bypass trusted memory");
+assert.equal(forcedA.networkFailedAtMs, null);
+assert.equal(networkCalls, 2, "manual refresh must perform a network request");
+
 const firstB = await online.fetchApkUpdateManifestResilient(urlB);
 assert.equal(firstB.manifest?.latestVersion, "1.1.0");
 assert.equal(firstB.fromCache, false, "different URL must bypass the memory cache");
-assert.equal(networkCalls, 2, "different URL should hit the network");
+assert.equal(networkCalls, 3, "different URL should hit the network");
 
 let offlineCalls = 0;
 const offline = compileFetcher(async () => {
@@ -136,4 +143,4 @@ assert.notEqual(callerSignal, caller.signal, "caller cancellation should propaga
 assert.equal(callerSignal?.aborted, true, "caller cancellation must abort the fetch signal");
 assert.equal(timeoutCleared, true, "timeout must be cleared after caller cancellation");
 
-console.log("test-apk-manifest-cache: ok (30 assertions)");
+console.log("test-apk-manifest-cache: ok (35 assertions)");

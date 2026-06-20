@@ -81,7 +81,10 @@ export async function fetchApkUpdateManifest(
 /**
  * Ретраи + кэш последнего валидного JSON (офлайн / сетевые сбои).
  */
-export async function fetchApkUpdateManifestResilient(url: string): Promise<{
+export async function fetchApkUpdateManifestResilient(
+  url: string,
+  options: { bypassMemory?: boolean } = {},
+): Promise<{
   manifest: ApkUpdateManifest | null;
   /** True only when a failed network refresh fell back to persistent storage. */
   fromCache: boolean;
@@ -94,7 +97,7 @@ export async function fetchApkUpdateManifestResilient(url: string): Promise<{
     return { manifest: null, fromCache: false, attempts: 0, fetchedAtMs: null, networkFailedAtMs: null };
   }
 
-  if (memory && memory.url === normalizedUrl && Date.now() - memory.at < 60_000) {
+  if (!options.bypassMemory && memory && memory.url === normalizedUrl && Date.now() - memory.at < 60_000) {
     return { manifest: memory.manifest, fromCache: false, attempts: 0, fetchedAtMs: memory.at, networkFailedAtMs: null };
   }
 
