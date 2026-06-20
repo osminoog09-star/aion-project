@@ -74,12 +74,23 @@ assert.equal(firstB.manifest?.latestVersion, "1.1.0");
 assert.equal(firstB.fromCache, false, "different URL must bypass the memory cache");
 assert.equal(networkCalls, 2, "different URL should hit the network");
 
-const offline = compileFetcher(async () => ({ ok: false, json: async () => null }));
+let offlineCalls = 0;
+const offline = compileFetcher(async () => {
+  offlineCalls += 1;
+  return { ok: false, json: async () => null };
+});
 const cachedB = await offline.fetchApkUpdateManifestResilient(urlB);
 assert.equal(cachedB.manifest?.latestVersion, "1.1.0");
 assert.equal(cachedB.fromCache, true, "matching persistent cache should remain available offline");
 assert.equal(typeof cachedB.networkFailedAtMs, "number", "offline fallback must record fresh network failure time");
 assert.equal(cachedB.fetchedAtMs, firstB.fetchedAtMs, "offline fallback must preserve cache age");
+
+const cachedBAgain = await offline.fetchApkUpdateManifestResilient(urlB);
+assert.equal(cachedBAgain.manifest?.latestVersion, "1.1.0");
+assert.equal(cachedBAgain.fromCache, true, "persistent fallback must not be promoted to trusted memory");
+assert.equal(cachedBAgain.attempts, 3, "repeat refresh must retry the network before falling back");
+assert.equal(typeof cachedBAgain.networkFailedAtMs, "number");
+assert.equal(offlineCalls, 6, "each offline refresh must perform the resilient retry sequence");
 
 const mismatchedC = await offline.fetchApkUpdateManifestResilient(urlC);
 assert.equal(mismatchedC.manifest, null, "cache from another manifest URL must not leak across endpoints");
@@ -125,4 +136,4 @@ assert.notEqual(callerSignal, caller.signal, "caller cancellation should propaga
 assert.equal(callerSignal?.aborted, true, "caller cancellation must abort the fetch signal");
 assert.equal(timeoutCleared, true, "timeout must be cleared after caller cancellation");
 
-console.log("test-apk-manifest-cache: ok (25 assertions)");
+console.log("test-apk-manifest-cache: ok (30 assertions)");

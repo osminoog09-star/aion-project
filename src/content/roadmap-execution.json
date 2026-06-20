@@ -549,6 +549,19 @@
           "Добавлять cache badge и предупреждение к verdict — DONE",
           "Детерминированный state-machine CI test (14 assertions) — DONE"
         ]
+      },
+      {
+        "priority": 40,
+        "id": "driver-apk-cache-trust-boundary",
+        "title": "APK cache: persistent fallback не становится trusted memory",
+        "status": "shipped",
+        "tasks": [
+          "Не записывать persistent fallback в trusted memory — DONE",
+          "Повторять network retries при следующем refresh — DONE",
+          "Сохранять fromCache provenance после повторной проверки — DONE",
+          "Сохранять исходный fetchedAt persistent JSON — DONE",
+          "Детерминированный cache CI test (30 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
