@@ -80,3 +80,4 @@ await import("./test-apk-manifest-cache.mjs");
 await import("./test-apk-runtime-compatibility.mjs");
 await import("./test-apk-download-open.mjs");
 await import("./test-semver-compare.mjs");
+await import("./test-apk-update-policy.mjs");

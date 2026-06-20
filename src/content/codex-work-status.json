@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T06:37:34.000Z",
+  "lastUpdated": "2026-06-20T06:49:29.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. APK manifest optional flags и metadata строго валидируются по типам до update policy evaluation.",
-  "currentStatus": "Driver APK strict optional contract; release stack live",
+  "currentFocus": "Release stack live. APK rollout policy вынесена в чистый evaluator с явными paused/emergency/force/minimum приоритетами.",
+  "currentStatus": "Driver APK rollout policy; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -42,7 +42,8 @@
     "Sync main workflow теперь сам создаёт single-parent promotion commit после merge, устраняя повторяющийся ручной Vercel promotion.",
     "SemVer comparator исправлен: prerelease ниже stable, identifiers сравниваются детерминированно, build metadata не влияет на порядок.",
     "Driver APK transport переведён на HTTPS-only: HTTP manifest endpoint блокируется до fetch, HTTP artifact/fallback отклоняются валидатором.",
-    "APK manifest optional contract ужесточён: boolean flags, rollout enum, release date, runtime metadata и changelog проверяются до evaluation."
+    "APK manifest optional contract ужесточён: boolean flags, rollout enum, release date, runtime metadata и changelog проверяются до evaluation.",
+    "APK rollout policy исправлена: paused скрывает обычный newer rollout, emergency/force имеют явный приоритет, minimum/runtime safety остаются активны."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -84,6 +85,7 @@
     "Sync main automatic production promotion — OK (4 assertions + YAML parse)",
     "Driver SemVer prerelease/build ordering — OK (10 cases)",
     "Driver APK HTTPS-only transport — OK (9 manifest cases, 20 cache assertions)",
-    "Driver APK strict optional manifest fields — OK (17 cases)"
+    "Driver APK strict optional manifest fields — OK (17 cases)",
+    "Driver APK paused/emergency/force policy — OK (8 cases)"
   ]
 }

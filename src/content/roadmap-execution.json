@@ -471,6 +471,19 @@
           "Проверять releaseDate и changelog — DONE",
           "Детерминированный CI test (17 cases) — DONE"
         ]
+      },
+      {
+        "priority": 34,
+        "id": "driver-apk-rollout-policy",
+        "title": "APK rollout policy: paused/emergency/force priorities",
+        "status": "shipped",
+        "tasks": [
+          "Вынести evaluation в чистый policy module — DONE",
+          "Скрывать обычный newer rollout при paused — DONE",
+          "Сделать emergency rollout критичным — DONE",
+          "Сохранить force/minimum/runtime safety priorities — DONE",
+          "Детерминированный CI test (8 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
