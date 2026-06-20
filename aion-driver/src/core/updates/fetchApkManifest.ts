@@ -5,6 +5,7 @@ const DEFAULT_TIMEOUT_MS = 12_000;
 const CACHE_KEY = "@aion_driver/apk_manifest_cache_v2";
 const STALE_MS = 36 * 60 * 60 * 1000;
 const MAX_RELEASE_AGE_MS = 90 * 24 * 60 * 60 * 1000;
+const MAX_CLOCK_SKEW_MS = 5 * 60 * 1000;
 
 type CacheRow = { url: string; at: number; json: unknown };
 
@@ -31,7 +32,16 @@ async function readCache(expectedUrl: string): Promise<CacheRow | null> {
     const v = JSON.parse(raw) as unknown;
     if (!v || typeof v !== "object") return null;
     const o = v as Record<string, unknown>;
-    if (typeof o.url !== "string" || o.url !== expectedUrl || typeof o.at !== "number") return null;
+    if (
+      typeof o.url !== "string" ||
+      o.url !== expectedUrl ||
+      typeof o.at !== "number" ||
+      !Number.isFinite(o.at) ||
+      o.at <= 0 ||
+      o.at > Date.now() + MAX_CLOCK_SKEW_MS
+    ) {
+      return null;
+    }
     return { url: o.url, at: o.at, json: o.json };
   } catch {
     return null;

@@ -601,6 +601,19 @@
           "Сохранить optional runtime mismatch отложенным — DONE",
           "Детерминированный policy CI test (12 cases) — DONE"
         ]
+      },
+      {
+        "priority": 44,
+        "id": "driver-apk-cache-clock-validation",
+        "title": "APK cache: строгая валидация persistent timestamp",
+        "status": "shipped",
+        "tasks": [
+          "Отклонять non-finite cache timestamp — DONE",
+          "Отклонять zero/negative timestamp — DONE",
+          "Ограничить future clock skew пятью минутами — DONE",
+          "Не пропускать network retries при invalid cache — DONE",
+          "Детерминированный cache CI test (40 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

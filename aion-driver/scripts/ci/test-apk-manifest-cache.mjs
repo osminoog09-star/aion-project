@@ -16,6 +16,7 @@ const manifestTypes = compileTsModule(
 const urlA = "https://a.example.com/apk.json";
 const urlB = "https://b.example.com/apk.json";
 const urlC = "https://c.example.com/apk.json";
+const urlD = "https://d.example.com/apk.json";
 const manifestA = { latestVersion: "1.0.9", minimumSupported: "1.0.6", apkUrl: "https://a.example.com/a.apk" };
 const manifestB = { latestVersion: "1.1.0", minimumSupported: "1.0.9", apkUrl: "https://b.example.com/b.apk" };
 let networkCalls = 0;
@@ -105,6 +106,17 @@ assert.equal(mismatchedC.fromCache, false);
 assert.equal(mismatchedC.fetchedAtMs, null);
 assert.equal(typeof mismatchedC.networkFailedAtMs, "number", "failed refresh without cache must be timestamped");
 
+storage.set(
+  "@aion_driver/apk_manifest_cache_v2",
+  JSON.stringify({ url: urlD, at: Date.now() + 10 * 60 * 1000, json: manifestB }),
+);
+const futureD = await offline.fetchApkUpdateManifestResilient(urlD);
+assert.equal(futureD.manifest, null, "cache timestamp beyond allowed clock skew must be rejected");
+assert.equal(futureD.fromCache, false);
+assert.equal(futureD.fetchedAtMs, null);
+assert.equal(typeof futureD.networkFailedAtMs, "number");
+assert.equal(offlineCalls, 12, "invalid persistent cache must not skip the network retry sequence");
+
 const timeoutCaller = new AbortController();
 let timeoutSignal;
 const timesOut = compileFetcher(async (_url, options) => {
@@ -143,4 +155,4 @@ assert.notEqual(callerSignal, caller.signal, "caller cancellation should propaga
 assert.equal(callerSignal?.aborted, true, "caller cancellation must abort the fetch signal");
 assert.equal(timeoutCleared, true, "timeout must be cleared after caller cancellation");
 
-console.log("test-apk-manifest-cache: ok (35 assertions)");
+console.log("test-apk-manifest-cache: ok (40 assertions)");

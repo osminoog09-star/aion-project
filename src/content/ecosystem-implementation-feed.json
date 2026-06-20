@@ -4,10 +4,10 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
-      "id": "evt-2026-06-20-lgikrd",
+      "id": "evt-2026-06-20-5l1yie",
       "occurredAt": "2026-06-20",
-      "title": "Driver runtime force-update policy",
-      "summary": "Runtime mismatches now honor manifest forceUpdate and critical flags through the same immediate-update policy used for newer APK versions.",
+      "title": "Driver APK cache clock validation",
+      "summary": "Persistent APK cache now rejects non-finite, non-positive, and excessively future timestamps before fallback.",
       "subsystemIds": [
         "updates",
         "apk-channel",
@@ -18,7 +18,7 @@
       "repository": "aion-project",
       "rollup": {
     "fullyDone": [
-      "✅ Runtime mismatch сохраняет forceUpdate/critical обязательность"
+      "✅ Persistent APK cache timestamp валидируется до fallback"
     ],
     "partiallyDone": [],
         "notStarted": [],
@@ -38,6 +38,50 @@
     "driver_validate_code": "passed",
     "web_build": "passed"
   },
+      "reasoning": "A corrupted or clock-skewed cache timestamp could appear indefinitely fresh and distort stale diagnostics.",
+      "task": "apk-cache-clock-validation",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/src/core/updates/fetchApkManifest.ts",
+        "aion-driver/scripts/ci/test-apk-manifest-cache.mjs"
+      ],
+      "apkImpact": "OTA-safe persistent cache hardening"
+    },
+    {
+      "id": "evt-2026-06-20-lgikrd",
+      "occurredAt": "2026-06-20",
+      "title": "Driver runtime force-update policy",
+      "summary": "Runtime mismatches now honor manifest forceUpdate and critical flags through the same immediate-update policy used for newer APK versions.",
+      "subsystemIds": [
+        "updates",
+        "apk-channel",
+        "mobile-app"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [
+          "✅ Runtime mismatch сохраняет forceUpdate/critical обязательность"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "driver_validate_code": "passed",
+        "web_build": "passed"
+      },
       "reasoning": "A matching app version with an incompatible runtime could downgrade forceUpdate or critical to a postponable APK prompt.",
       "task": "runtime-force-update-policy",
       "confidence": "high",

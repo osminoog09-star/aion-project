@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T22:05:00.000Z",
+  "lastUpdated": "2026-06-20T21:29:49.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. Runtime mismatch теперь сохраняет forceUpdate/critical обязательность из APK manifest.",
-  "currentStatus": "Driver runtime force-update policy; release stack live",
+  "currentFocus": "Release stack live. Persistent APK cache отклоняет невалидные и слишком будущие timestamps.",
+  "currentStatus": "Driver APK cache clock validation; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -52,7 +52,8 @@
     "Повторный offline refresh APK снова проверяет сеть и сохраняет fromCache=true; persistent fallback больше не маскируется быстрым memory reuse.",
     "Кнопка обновления APK обходит 60-секундный memory cache; автоматический refresh остаётся throttled и не создаёт лишние запросы.",
     "Удалён отдельный apkHeadline из state machine; summary, verdict и modal теперь получают одинаковые APK reason/detail из одного selector.",
-    "APK policy использует единый requiresImmediateUpdate для newer и runtime mismatch; forceUpdate/critical больше нельзя отложить из-за совпавшей app version."
+    "APK policy использует единый requiresImmediateUpdate для newer и runtime mismatch; forceUpdate/critical больше нельзя отложить из-за совпавшей app version.",
+    "Persistent APK cache проверяет finite/positive timestamp и максимум 5 минут clock skew; future cache больше не выглядит свежим."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -104,6 +105,7 @@
     "Driver APK cache trust boundary — OK (30 cache assertions)",
     "Driver force-network APK refresh — OK (35 cache assertions)",
     "Driver shared APK explanation engine — OK (19 state-machine assertions)",
-    "Driver runtime force-update policy — OK (12 policy cases)"
+    "Driver runtime force-update policy — OK (12 policy cases)",
+    "Driver APK cache clock validation — OK (40 cache assertions)"
   ]
 }
