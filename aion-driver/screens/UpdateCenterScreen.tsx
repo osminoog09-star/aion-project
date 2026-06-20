@@ -267,7 +267,9 @@ export function UpdateCenterScreen() {
               {engine.badges.length ? ` · ${engine.badges.join(",")}` : ""}
             </Text>
             {apk.fromCache && apk.manifest ? (
-              <Text className="mt-2 text-xs text-amber-300/90">Манифест APK из локального кэша (сеть недоступна).</Text>
+              <Text className="mt-2 text-xs text-amber-300/90">
+                Свежий манифест APK не получен; показаны последние локальные данные.
+              </Text>
             ) : null}
           </GlowCard>
 

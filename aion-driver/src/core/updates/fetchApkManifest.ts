@@ -87,14 +87,15 @@ export async function fetchApkUpdateManifestResilient(url: string): Promise<{
   fromCache: boolean;
   attempts: number;
   fetchedAtMs: number | null;
+  networkFailedAtMs: number | null;
 }> {
   const normalizedUrl = url.trim();
   if (!isHttpsUrl(normalizedUrl)) {
-    return { manifest: null, fromCache: false, attempts: 0, fetchedAtMs: null };
+    return { manifest: null, fromCache: false, attempts: 0, fetchedAtMs: null, networkFailedAtMs: null };
   }
 
   if (memory && memory.url === normalizedUrl && Date.now() - memory.at < 60_000) {
-    return { manifest: memory.manifest, fromCache: false, attempts: 0, fetchedAtMs: memory.at };
+    return { manifest: memory.manifest, fromCache: false, attempts: 0, fetchedAtMs: memory.at, networkFailedAtMs: null };
   }
 
   for (let attempt = 0; attempt < 3; attempt += 1) {
@@ -103,16 +104,17 @@ export async function fetchApkUpdateManifestResilient(url: string): Promise<{
       const fetchedAt = Date.now();
       memory = { url: normalizedUrl, manifest: m, at: fetchedAt };
       await writeCache(normalizedUrl, fetchedAt, m);
-      return { manifest: m, fromCache: false, attempts: attempt + 1, fetchedAtMs: fetchedAt };
+      return { manifest: m, fromCache: false, attempts: attempt + 1, fetchedAtMs: fetchedAt, networkFailedAtMs: null };
     }
     if (attempt < 2) await sleep(600 * 2 ** attempt);
   }
 
   const row = await readCache(normalizedUrl);
   if (row?.json && isApkManifest(row.json)) {
+    const failedAt = Date.now();
     memory = { url: normalizedUrl, manifest: row.json, at: row.at };
-    return { manifest: row.json, fromCache: true, attempts: 3, fetchedAtMs: row.at };
+    return { manifest: row.json, fromCache: true, attempts: 3, fetchedAtMs: row.at, networkFailedAtMs: failedAt };
   }
 
-  return { manifest: null, fromCache: false, attempts: 3, fetchedAtMs: null };
+  return { manifest: null, fromCache: false, attempts: 3, fetchedAtMs: null, networkFailedAtMs: Date.now() };
 }

@@ -510,6 +510,19 @@
           "Не включать APK block/download для paused optional rollout — DONE",
           "Детерминированный CI test (9 assertions) — DONE"
         ]
+      },
+      {
+        "priority": 37,
+        "id": "driver-apk-cache-fallback-diagnostics",
+        "title": "APK cache fallback: честная диагностика свежего сбоя",
+        "status": "shipped",
+        "tasks": [
+          "Фиксировать timestamp неудачного fresh refresh — DONE",
+          "Сохранять исходный fetchedAt локального манифеста — DONE",
+          "Передавать lastErrorAt в diagnostics при cache fallback — DONE",
+          "Не сводить все причины fallback к offline в UI copy — DONE",
+          "Детерминированный CI suite (25 cache assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

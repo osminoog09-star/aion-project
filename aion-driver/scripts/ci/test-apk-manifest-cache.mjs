@@ -53,16 +53,19 @@ const online = compileFetcher(async (url) => {
 const insecure = await online.fetchApkUpdateManifestResilient("http://a.example.com/apk.json");
 assert.equal(insecure.manifest, null, "cleartext manifest endpoint must be rejected before fetch");
 assert.equal(insecure.attempts, 0);
+assert.equal(insecure.networkFailedAtMs, null);
 assert.equal(networkCalls, 0, "cleartext endpoint must not hit the network");
 
 const firstA = await online.fetchApkUpdateManifestResilient(urlA);
 assert.equal(firstA.manifest?.latestVersion, "1.0.9");
 assert.equal(firstA.fromCache, false);
+assert.equal(firstA.networkFailedAtMs, null);
 assert.equal(typeof firstA.fetchedAtMs, "number");
 
 const memoryA = await online.fetchApkUpdateManifestResilient(urlA);
 assert.equal(memoryA.manifest?.latestVersion, "1.0.9");
 assert.equal(memoryA.fromCache, false, "fresh memory reuse must not be reported as an offline fallback");
+assert.equal(memoryA.networkFailedAtMs, null);
 assert.equal(memoryA.fetchedAtMs, firstA.fetchedAtMs, "memory reuse must preserve the original fetch time");
 assert.equal(networkCalls, 1, "same URL should reuse the fresh memory cache");
 
@@ -75,12 +78,14 @@ const offline = compileFetcher(async () => ({ ok: false, json: async () => null 
 const cachedB = await offline.fetchApkUpdateManifestResilient(urlB);
 assert.equal(cachedB.manifest?.latestVersion, "1.1.0");
 assert.equal(cachedB.fromCache, true, "matching persistent cache should remain available offline");
+assert.equal(typeof cachedB.networkFailedAtMs, "number", "offline fallback must record fresh network failure time");
 assert.equal(cachedB.fetchedAtMs, firstB.fetchedAtMs, "offline fallback must preserve cache age");
 
 const mismatchedC = await offline.fetchApkUpdateManifestResilient(urlC);
 assert.equal(mismatchedC.manifest, null, "cache from another manifest URL must not leak across endpoints");
 assert.equal(mismatchedC.fromCache, false);
 assert.equal(mismatchedC.fetchedAtMs, null);
+assert.equal(typeof mismatchedC.networkFailedAtMs, "number", "failed refresh without cache must be timestamped");
 
 const timeoutCaller = new AbortController();
 let timeoutSignal;
@@ -120,4 +125,4 @@ assert.notEqual(callerSignal, caller.signal, "caller cancellation should propaga
 assert.equal(callerSignal?.aborted, true, "caller cancellation must abort the fetch signal");
 assert.equal(timeoutCleared, true, "timeout must be cleared after caller cancellation");
 
-console.log("test-apk-manifest-cache: ok (20 assertions)");
+console.log("test-apk-manifest-cache: ok (25 assertions)");
