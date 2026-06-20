@@ -3,18 +3,13 @@ import * as Updates from "expo-updates";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AppState } from "react-native";
 import { fetchApkUpdateManifestResilient, isManifestSemanticallyStale } from "./fetchApkManifest";
-import { semverLess } from "./semverCompare";
-import { isRuntimeBelowMinimum } from "./runtimeCompatibility";
+import { evaluateApkUpdatePolicy } from "./apkUpdatePolicy";
 import { publishApkDiagnostics } from "./apkDiagnosticsSink";
 import type { ApkUpdateManifest } from "./apkManifest.types";
 import { getApkManifestUrl } from "../../../lib/apkManifestUrl";
 import { appendAionTimelineEvent } from "../../../storage/core/aionTimelineStorage";
 
-export type ApkUpdateReason =
-  | "none"
-  | "below_minimum"
-  | "newer_available"
-  | "runtime_mismatch";
+export type { ApkUpdateReason } from "./apkUpdatePolicy";
 
 function appVersion(): string {
   return (
@@ -30,28 +25,8 @@ function currentRuntime(): string | null {
 
 export function evaluateApkUpdate(
   manifest: ApkUpdateManifest,
-): { reason: ApkUpdateReason; critical: boolean } {
-  const cur = appVersion();
-  if (semverLess(cur, manifest.minimumSupported)) {
-    return { reason: "below_minimum", critical: true };
-  }
-  if (manifest.forceUpdate && semverLess(cur, manifest.latestVersion)) {
-    return { reason: "newer_available", critical: true };
-  }
-  if (semverLess(cur, manifest.latestVersion)) {
-    return {
-      reason: "newer_available",
-      critical: Boolean(manifest.critical || manifest.emergency),
-    };
-  }
-  const rt = currentRuntime();
-  if (manifest.minimumRuntimeVersion && rt && isRuntimeBelowMinimum(rt, manifest.minimumRuntimeVersion)) {
-    return { reason: "runtime_mismatch", critical: Boolean(manifest.emergency) };
-  }
-  if (manifest.runtimeVersion && rt && manifest.runtimeVersion !== rt) {
-    return { reason: "runtime_mismatch", critical: false };
-  }
-  return { reason: "none", critical: false };
+): ReturnType<typeof evaluateApkUpdatePolicy> {
+  return evaluateApkUpdatePolicy(manifest, appVersion(), currentRuntime());
 }
 
 const MANIFEST_URL =
