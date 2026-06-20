@@ -1,10 +1,22 @@
 import assert from "node:assert/strict";
 import { compileTsModule } from "./lib/compileTsModule.mjs";
 
+const explanation = compileTsModule("features/updates/deriveApkUpdateExplanation.ts", {
+  "../../src/core/updates/apkManifest.types": {},
+  "../../src/core/updates/apkUpdatePolicy": {},
+});
 const { deriveUpdateEngineView } = compileTsModule("features/updates/updateSystemStateMachine.ts", {
   "../../hooks/useUpdatesController": {},
   "../../src/core/updates/useApkUpdateController": {},
+  "../../src/core/updates/apkManifest.types": {},
+  "./deriveApkUpdateExplanation": explanation,
 });
+
+const manifest = {
+  latestVersion: "1.1.0",
+  minimumSupported: "1.0.0",
+  apkUrl: "https://example.com/aion.apk",
+};
 
 const base = {
   dev: false,
@@ -16,7 +28,7 @@ const base = {
   emergencyLaunch: false,
   manifestUrlConfigured: true,
   apkLoading: false,
-  apkManifestPresent: true,
+  apkManifest: manifest,
   apkEval: { reason: "none", critical: false },
   apkManifestStale: false,
   apkLastErrorAtMs: null,
@@ -39,6 +51,7 @@ const cachedCritical = deriveUpdateEngineView({
   apkEval: { reason: "below_minimum", critical: true },
 });
 assert.equal(cachedCritical.state, "apk_required", "cached provenance must not hide a critical APK verdict");
+assert.equal(cachedCritical.headline, "Требуется новый APK");
 assert.equal(cachedCritical.badges.includes("cache"), true);
 assert.match(cachedCritical.detail, /решение основано на локальных данных/);
 
@@ -49,12 +62,13 @@ const cachedOptional = deriveUpdateEngineView({
   apkEval: { reason: "newer_available", critical: false },
 });
 assert.equal(cachedOptional.state, "apk_recommended");
+assert.equal(cachedOptional.headline, "Доступна новая полная сборка");
 assert.equal(cachedOptional.badges.includes("cache"), true);
 assert.match(cachedOptional.detail, /свежий манифест не получен/);
 
 const missing = deriveUpdateEngineView({
   ...base,
-  apkManifestPresent: false,
+  apkManifest: null,
   apkEval: null,
   apkLastErrorAtMs: 1_750_000_000_000,
 });
@@ -69,4 +83,12 @@ assert.equal(fresh.state, "apk_required");
 assert.equal(fresh.badges.includes("cache"), false);
 assert.doesNotMatch(fresh.detail, /локальных данных/);
 
-console.log("test-update-system-state: ok (14 assertions)");
+const runtimeMismatch = deriveUpdateEngineView({
+  ...base,
+  apkEval: { reason: "runtime_mismatch", critical: false },
+});
+assert.equal(runtimeMismatch.state, "runtime_mismatch");
+assert.equal(runtimeMismatch.headline, "Нужен совместимый APK");
+assert.match(runtimeMismatch.detail, /снова получать совместимые OTA-обновления/);
+
+console.log("test-update-system-state: ok (19 assertions)");

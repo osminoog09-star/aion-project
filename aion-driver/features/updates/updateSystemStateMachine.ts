@@ -1,5 +1,7 @@
 import type { UpdateUiPhase } from "../../hooks/useUpdatesController";
 import type { ApkUpdateReason } from "../../src/core/updates/useApkUpdateController";
+import type { ApkUpdateManifest } from "../../src/core/updates/apkManifest.types";
+import { deriveApkUpdateExplanation } from "./deriveApkUpdateExplanation";
 
 export type UpdateEngineState =
   | "idle"
@@ -35,46 +37,20 @@ export type UpdateMachineInput = {
   emergencyLaunch: boolean;
   manifestUrlConfigured: boolean;
   apkLoading: boolean;
-  apkManifestPresent: boolean;
+  apkManifest: ApkUpdateManifest | null;
   apkEval: { reason: ApkUpdateReason; critical: boolean } | null;
   apkManifestStale: boolean;
   apkLastErrorAtMs: number | null;
   apkFromCache: boolean;
 };
 
-function apkHeadline(reason: ApkUpdateReason, critical: boolean): { headline: string; detail: string } {
-  switch (reason) {
-    case "below_minimum":
-      return {
-        headline: "Нужен новый APK",
-        detail: "Версия ниже минимально поддерживаемой. OTA не заменит нативный движок Android.",
-      };
-    case "newer_available":
-      return critical
-        ? {
-            headline: "Обязательное обновление APK",
-            detail: "Политика релиза или безопасность требуют новую полную сборку.",
-          }
-        : {
-            headline: "Доступна новая полная сборка",
-            detail: "Рекомендуем установить APK, когда удобно — OTA обновляет только JS при том же runtime.",
-          };
-    case "runtime_mismatch":
-      return {
-        headline: "Несовпадение runtime",
-        detail: "Нативный слой и серверный runtime разошлись — нужна сборка с нужным engine.",
-      };
-    default:
-      return { headline: "APK", detail: "" };
-  }
-}
-
 function mapApkState(
   ev: { reason: ApkUpdateReason; critical: boolean },
+  manifest: ApkUpdateManifest,
   manifestStale: boolean,
   fromCache: boolean,
 ): UpdateEngineView {
-  const { headline, detail } = apkHeadline(ev.reason, ev.critical);
+  const explanation = deriveApkUpdateExplanation({ manifest, evaluation: ev });
   const st: UpdateEngineState = ev.critical
     ? ev.reason === "runtime_mismatch"
       ? "runtime_mismatch"
@@ -88,8 +64,8 @@ function mapApkState(
   ].filter((value): value is string => value != null);
   return {
     state: st,
-    headline,
-    detail: warnings.length ? `${detail} · ${warnings.join(" · ")}.` : detail,
+    headline: explanation.title,
+    detail: warnings.length ? `${explanation.detail} · ${warnings.join(" · ")}.` : explanation.detail,
     badges: ["apk", ev.reason, ...(fromCache ? ["cache"] : [])],
   };
 }
@@ -124,7 +100,7 @@ export function deriveUpdateEngineView(input: UpdateMachineInput): UpdateEngineV
     badges.push("embedded");
   }
 
-  if (input.manifestUrlConfigured && !input.apkLoading && !input.apkManifestPresent && input.apkLastErrorAtMs) {
+  if (input.manifestUrlConfigured && !input.apkLoading && !input.apkManifest && input.apkLastErrorAtMs) {
     return {
       state: "manifest_failed",
       headline: "Манифест APK недоступен",
@@ -172,8 +148,8 @@ export function deriveUpdateEngineView(input: UpdateMachineInput): UpdateEngineV
     }
   }
 
-  if (input.apkEval && input.apkEval.reason !== "none" && input.apkEval.critical) {
-    const v = mapApkState(input.apkEval, input.apkManifestStale, input.apkFromCache);
+  if (input.apkManifest && input.apkEval && input.apkEval.reason !== "none" && input.apkEval.critical) {
+    const v = mapApkState(input.apkEval, input.apkManifest, input.apkManifestStale, input.apkFromCache);
     return { ...v, badges: [...badges, ...v.badges] };
   }
 
@@ -186,12 +162,12 @@ export function deriveUpdateEngineView(input: UpdateMachineInput): UpdateEngineV
     };
   }
 
-  if (input.apkEval && input.apkEval.reason !== "none") {
-    const v = mapApkState(input.apkEval, input.apkManifestStale, input.apkFromCache);
+  if (input.apkManifest && input.apkEval && input.apkEval.reason !== "none") {
+    const v = mapApkState(input.apkEval, input.apkManifest, input.apkManifestStale, input.apkFromCache);
     return { ...v, badges: [...badges, ...v.badges] };
   }
 
-  if (input.apkFromCache && input.apkManifestPresent && input.apkLastErrorAtMs) {
+  if (input.apkFromCache && input.apkManifest && input.apkLastErrorAtMs) {
     return {
       state: "stale_manifest",
       headline: "Показаны локальные данные APK",
@@ -200,7 +176,7 @@ export function deriveUpdateEngineView(input: UpdateMachineInput): UpdateEngineV
     };
   }
 
-  if (input.apkManifestStale && input.apkManifestPresent) {
+  if (input.apkManifestStale && input.apkManifest) {
     return {
       state: "stale_manifest",
       headline: "Манифест устарел",

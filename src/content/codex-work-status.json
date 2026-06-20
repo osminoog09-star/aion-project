@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T21:30:00.000Z",
+  "lastUpdated": "2026-06-20T21:50:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. Ручная проверка APK всегда идёт в сеть, фоновые refresh сохраняют безопасный memory throttle.",
-  "currentStatus": "Driver force-network APK refresh; release stack live",
+  "currentFocus": "Release stack live. Update state machine, verdict и APK modal используют один explanation selector.",
+  "currentStatus": "Driver shared APK explanation engine; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -50,7 +50,8 @@
     "Единый APK explanation selector синхронизировал Update Center и modal: причина, обязательность и действие больше не расходятся между поверхностями.",
     "APK cache fallback теперь виден в общей update state machine: idle становится degraded, а critical/optional verdict сохраняется с cache badge и предупреждением.",
     "Повторный offline refresh APK снова проверяет сеть и сохраняет fromCache=true; persistent fallback больше не маскируется быстрым memory reuse.",
-    "Кнопка обновления APK обходит 60-секундный memory cache; автоматический refresh остаётся throttled и не создаёт лишние запросы."
+    "Кнопка обновления APK обходит 60-секундный memory cache; автоматический refresh остаётся throttled и не создаёт лишние запросы.",
+    "Удалён отдельный apkHeadline из state machine; summary, verdict и modal теперь получают одинаковые APK reason/detail из одного selector."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -100,6 +101,7 @@
     "Driver unified APK explanation — OK (18 assertions)",
     "Driver cached APK state propagation — OK (14 assertions)",
     "Driver APK cache trust boundary — OK (30 cache assertions)",
-    "Driver force-network APK refresh — OK (35 cache assertions)"
+    "Driver force-network APK refresh — OK (35 cache assertions)",
+    "Driver shared APK explanation engine — OK (19 state-machine assertions)"
   ]
 }
