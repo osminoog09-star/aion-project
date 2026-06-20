@@ -4,10 +4,10 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
-      "id": "evt-2026-06-20-7o7dj7",
+      "id": "evt-2026-06-20-lgikrd",
       "occurredAt": "2026-06-20",
-      "title": "Driver shared APK explanation engine",
-      "summary": "Update summary, verdict, and modal now use one tested APK explanation selector for minimum, runtime, critical, and optional states.",
+      "title": "Driver runtime force-update policy",
+      "summary": "Runtime mismatches now honor manifest forceUpdate and critical flags through the same immediate-update policy used for newer APK versions.",
       "subsystemIds": [
         "updates",
         "apk-channel",
@@ -18,7 +18,7 @@
       "repository": "aion-project",
       "rollup": {
     "fullyDone": [
-      "✅ Один APK explanation selector для summary, verdict и modal"
+      "✅ Runtime mismatch сохраняет forceUpdate/critical обязательность"
     ],
     "partiallyDone": [],
         "notStarted": [],
@@ -38,6 +38,50 @@
     "driver_validate_code": "passed",
     "web_build": "passed"
   },
+      "reasoning": "A matching app version with an incompatible runtime could downgrade forceUpdate or critical to a postponable APK prompt.",
+      "task": "runtime-force-update-policy",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/src/core/updates/apkUpdatePolicy.ts",
+        "aion-driver/scripts/ci/test-apk-update-policy.mjs"
+      ],
+      "apkImpact": "OTA-safe mandatory update policy correction"
+    },
+    {
+      "id": "evt-2026-06-20-7o7dj7",
+      "occurredAt": "2026-06-20",
+      "title": "Driver shared APK explanation engine",
+      "summary": "Update summary, verdict, and modal now use one tested APK explanation selector for minimum, runtime, critical, and optional states.",
+      "subsystemIds": [
+        "updates",
+        "apk-channel",
+        "mobile-app"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [
+          "✅ Один APK explanation selector для summary, verdict и modal"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "driver_validate_code": "passed",
+        "web_build": "passed"
+      },
       "reasoning": "The shared state machine retained a separate copy map, so its guidance could diverge from the verdict and modal introduced in the previous slice.",
       "task": "shared-apk-explanation-engine",
       "confidence": "high",
