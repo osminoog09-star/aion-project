@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T03:49:03.000Z",
+  "lastUpdated": "2026-06-20T03:55:42.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. APK version policy теперь корректно сравнивает SemVer prerelease/build metadata и не пропускает stable release для preview build.",
-  "currentStatus": "Driver SemVer prerelease ordering; release stack live",
+  "currentFocus": "Release stack live. Driver принимает manifest endpoint и APK/fallback artifacts только по HTTPS, отсекая cleartext до network/UI.",
+  "currentStatus": "Driver APK HTTPS-only transport; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -40,7 +40,8 @@
     "minimumRuntimeVersion исправлен: runtime 1.0.10 совместим с минимумом 1.0.9; opaque runtime fingerprints требуют точного совпадения.",
     "APK download объединён в один helper: primary URL, автоматический fallback, dedupe и Alert при полном failure без unhandled rejection.",
     "Sync main workflow теперь сам создаёт single-parent promotion commit после merge, устраняя повторяющийся ручной Vercel promotion.",
-    "SemVer comparator исправлен: prerelease ниже stable, identifiers сравниваются детерминированно, build metadata не влияет на порядок."
+    "SemVer comparator исправлен: prerelease ниже stable, identifiers сравниваются детерминированно, build metadata не влияет на порядок.",
+    "Driver APK transport переведён на HTTPS-only: HTTP manifest endpoint блокируется до fetch, HTTP artifact/fallback отклоняются валидатором."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -80,6 +81,7 @@
     "Driver runtime minimum compatibility — OK (6 cases)",
     "Driver APK download primary/fallback/failure — OK (8 assertions)",
     "Sync main automatic production promotion — OK (4 assertions + YAML parse)",
-    "Driver SemVer prerelease/build ordering — OK (10 cases)"
+    "Driver SemVer prerelease/build ordering — OK (10 cases)",
+    "Driver APK HTTPS-only transport — OK (9 manifest cases, 20 cache assertions)"
   ]
 }

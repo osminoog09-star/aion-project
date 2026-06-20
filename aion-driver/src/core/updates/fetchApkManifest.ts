@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { isApkManifest, type ApkUpdateManifest } from "./apkManifest.types";
+import { isApkManifest, isHttpsUrl, type ApkUpdateManifest } from "./apkManifest.types";
 
 const DEFAULT_TIMEOUT_MS = 12_000;
 const CACHE_KEY = "@aion_driver/apk_manifest_cache_v2";
@@ -55,7 +55,7 @@ export async function fetchApkUpdateManifest(
   signal?: AbortSignal,
 ): Promise<ApkUpdateManifest | null> {
   const normalizedUrl = url.trim();
-  if (!/^https?:\/\//i.test(normalizedUrl)) return null;
+  if (!isHttpsUrl(normalizedUrl)) return null;
   const ctrl = new AbortController();
   const abortFromCaller = () => ctrl.abort();
   if (signal?.aborted) ctrl.abort();
@@ -89,7 +89,7 @@ export async function fetchApkUpdateManifestResilient(url: string): Promise<{
   fetchedAtMs: number | null;
 }> {
   const normalizedUrl = url.trim();
-  if (!/^https?:\/\//i.test(normalizedUrl)) {
+  if (!isHttpsUrl(normalizedUrl)) {
     return { manifest: null, fromCache: false, attempts: 0, fetchedAtMs: null };
   }
 

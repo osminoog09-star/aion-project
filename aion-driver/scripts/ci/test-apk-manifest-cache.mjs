@@ -48,6 +48,11 @@ const online = compileFetcher(async (url) => {
   return { ok: true, json: async () => (url === urlA ? manifestA : manifestB) };
 });
 
+const insecure = await online.fetchApkUpdateManifestResilient("http://a.example.com/apk.json");
+assert.equal(insecure.manifest, null, "cleartext manifest endpoint must be rejected before fetch");
+assert.equal(insecure.attempts, 0);
+assert.equal(networkCalls, 0, "cleartext endpoint must not hit the network");
+
 const firstA = await online.fetchApkUpdateManifestResilient(urlA);
 assert.equal(firstA.manifest?.latestVersion, "1.0.9");
 assert.equal(firstA.fromCache, false);
@@ -113,4 +118,4 @@ assert.notEqual(callerSignal, caller.signal, "caller cancellation should propaga
 assert.equal(callerSignal?.aborted, true, "caller cancellation must abort the fetch signal");
 assert.equal(timeoutCleared, true, "timeout must be cleared after caller cancellation");
 
-console.log("test-apk-manifest-cache: ok (17 assertions)");
+console.log("test-apk-manifest-cache: ok (20 assertions)");

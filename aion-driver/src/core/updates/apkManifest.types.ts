@@ -31,6 +31,10 @@ export type ApkUpdateManifest = {
   easBuildId?: string;
 };
 
+export function isHttpsUrl(value: unknown): value is string {
+  return typeof value === "string" && /^https:\/\//i.test(value);
+}
+
 export function isApkManifest(v: unknown): v is ApkUpdateManifest {
   if (!v || typeof v !== "object") return false;
   const o = v as Record<string, unknown>;
@@ -40,10 +44,9 @@ export function isApkManifest(v: unknown): v is ApkUpdateManifest {
     parseSemver(o.latestVersion) !== null &&
     parseSemver(o.minimumSupported) !== null &&
     !semverLess(o.latestVersion, o.minimumSupported) &&
-    typeof o.apkUrl === "string" &&
-    /^https?:\/\//i.test(o.apkUrl);
+    isHttpsUrl(o.apkUrl);
   if (!apkOk) return false;
-  if (o.fallbackApkUrl != null && typeof o.fallbackApkUrl === "string" && !/^https?:\/\//i.test(o.fallbackApkUrl)) {
+  if (o.fallbackApkUrl != null && !isHttpsUrl(o.fallbackApkUrl)) {
     return false;
   }
   return true;
