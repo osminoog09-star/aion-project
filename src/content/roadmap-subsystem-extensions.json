@@ -79,7 +79,7 @@
     "nextRecommendedStep": "Device smoke: модалка «1.0.8 доступна» на 1.0.6/1.0.7; затем signed CDN (опционально)."
   },
   "web-portal": {
-    "whatWorks": ["Next.js страницы", "Roadmap/status/control", "Supabase merge"],
+    "whatWorks": ["Next.js страницы", "Roadmap/status/control", "Supabase merge", "Automatic single-parent Vercel production promotion"],
     "whatDoesNotWork": ["Auth, account, private ops"],
     "localOnly": ["JSON seed до snapshot"],
     "cloudReady": ["Snapshots при ключах"],

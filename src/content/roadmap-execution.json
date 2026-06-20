@@ -420,6 +420,18 @@
           "Показывать Alert при полном failure — DONE",
           "Детерминированный CI test (8 assertions) — DONE"
         ]
+      },
+      {
+        "priority": 30,
+        "id": "vercel-main-auto-promotion",
+        "title": "Vercel production: автоматический single-parent promotion",
+        "status": "shipped",
+        "tasks": [
+          "После sync merge создавать allow-empty promotion commit — DONE",
+          "Не использовать skip-ci в promotion — DONE",
+          "Сохранить push только в main без рекурсии workflow — DONE",
+          "Root CI test (4 assertions) + YAML parse — DONE"
+        ]
       }
     ],
     "blockedTasks": [
