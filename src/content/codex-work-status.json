@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T20:27:07.000Z",
+  "lastUpdated": "2026-06-20T20:40:10.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. APK cache fallback сохраняет время локальных данных и отдельно фиксирует ошибку свежего сетевого запроса.",
-  "currentStatus": "Driver APK fallback diagnostics; release stack live",
+  "currentFocus": "Release stack live. Update Center и APK modal используют единое объяснение обязательного, runtime и optional обновления.",
+  "currentStatus": "Driver unified APK blocker explanation; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -46,7 +46,8 @@
     "APK rollout policy исправлена: paused скрывает обычный newer rollout, emergency/force имеют явный приоритет, minimum/runtime safety остаются активны.",
     "APK URL validation переведена с prefix regex на URL parser; root layout явно загружает polyfill для одинакового Android/web поведения.",
     "Update Center получил отдельный paused rollout verdict и жёлтый summary; verdict logic вынесена в чистый selector.",
-    "APK persistent fallback больше не выглядит как успешное сетевое обновление: diagnostics получает network failure timestamp, а Update Center показывает точную cached-copy без неверного вывода об offline."
+    "APK persistent fallback больше не выглядит как успешное сетевое обновление: diagnostics получает network failure timestamp, а Update Center показывает точную cached-copy без неверного вывода об offline.",
+    "Единый APK explanation selector синхронизировал Update Center и modal: причина, обязательность и действие больше не расходятся между поверхностями."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -92,6 +93,7 @@
     "Driver APK paused/emergency/force policy — OK (8 cases)",
     "Driver strict APK URL parsing — OK (20 manifest cases)",
     "Driver paused rollout verdict UX — OK (9 assertions)",
-    "Driver APK fallback diagnostics — OK (25 cache assertions)"
+    "Driver APK fallback diagnostics — OK (25 cache assertions)",
+    "Driver unified APK explanation — OK (18 assertions)"
   ]
 }

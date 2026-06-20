@@ -5,23 +5,7 @@ import { useTheme } from "../../contexts/ThemeContext";
 import type { ApkUpdateManifest } from "../../src/core/updates/apkManifest.types";
 import type { ApkUpdateReason } from "../../src/core/updates/useApkUpdateController";
 import Constants from "expo-constants";
-
-function reasonTitle(r: ApkUpdateReason): string {
-  if (r === "below_minimum") return "Требуется обновление";
-  if (r === "newer_available") return "Доступна новая версия";
-  if (r === "runtime_mismatch") return "Новая сборка приложения";
-  return "Обновление";
-}
-
-function reasonDetail(r: ApkUpdateReason): string {
-  if (r === "runtime_mismatch") {
-    return "Эта версия APK и OTA-канал должны совпадать по runtime. Установите предложенную сборку один раз — дальше снова пойдут обычные OTA-обновления.";
-  }
-  if (r === "below_minimum") {
-    return "Текущая сборка ниже минимально допустимой для сервиса. Обновление обязательно.";
-  }
-  return "Полная сборка обновляет нативный слой. JavaScript-контент по-прежнему может приходить по OTA.";
-}
+import { deriveApkUpdateExplanation } from "../../features/updates/deriveApkUpdateExplanation";
 
 export function ApkUpdateModal({
   visible,
@@ -40,6 +24,7 @@ export function ApkUpdateModal({
 }) {
   const { semantic, resolved } = useTheme();
   const cur = Constants.expoConfig?.version ?? "—";
+  const explanation = deriveApkUpdateExplanation({ manifest, evaluation: { reason, critical } });
   const borderTint = resolved === "light" ? semantic.borderStrong : "rgba(34,211,238,0.25)";
   return (
     <Modal visible={visible} animationType="slide" transparent>
@@ -57,10 +42,10 @@ export function ApkUpdateModal({
             AION · полная сборка
           </Text>
           <Text className="mt-2 text-2xl font-semibold" style={{ color: semantic.textPrimary }}>
-            {reasonTitle(reason)}
+            {explanation.title}
           </Text>
           <Text className="mt-2 text-xs leading-5" style={{ color: semantic.textSecondary }}>
-            {reasonDetail(reason)}
+            {explanation.detail}
           </Text>
           <Text className="mt-3 text-sm leading-5" style={{ color: semantic.textSecondary }}>
             Текущая версия: {cur}
@@ -86,7 +71,7 @@ export function ApkUpdateModal({
             переустановки, пока не меняется runtime или нативные модули.
           </Text>
           <View className="mt-5 flex-row gap-3">
-            {!critical ? (
+            {!explanation.mandatory ? (
               <Pressable
                 onPress={() => {
                   void Haptics.selectionAsync();
@@ -105,10 +90,10 @@ export function ApkUpdateModal({
                 void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
                 onUpdate();
               }}
-              className={`items-center rounded-2xl py-3.5 ${critical ? "flex-1" : "flex-1"}`}
+              className="flex-1 items-center rounded-2xl py-3.5"
               style={{ backgroundColor: semantic.accent }}
             >
-              <Text className="text-sm font-semibold text-slate-950">Скачать APK</Text>
+              <Text className="text-sm font-semibold text-slate-950">{explanation.actionLabel}</Text>
             </Pressable>
           </View>
         </LinearGradient>

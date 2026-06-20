@@ -523,6 +523,19 @@
           "Не сводить все причины fallback к offline в UI copy — DONE",
           "Детерминированный CI suite (25 cache assertions) — DONE"
         ]
+      },
+      {
+        "priority": 38,
+        "id": "driver-unified-apk-blocker-explanation",
+        "title": "APK blocker: единое объяснение на всех Driver-поверхностях",
+        "status": "shipped",
+        "tasks": [
+          "Вынести reason/mandatory/action в чистый selector — DONE",
+          "Подключить selector к Update Center verdict — DONE",
+          "Подключить selector к APK modal — DONE",
+          "Различать обязательный, runtime и optional сценарии — DONE",
+          "Детерминированный CI test (18 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
