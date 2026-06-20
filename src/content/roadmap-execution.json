@@ -588,6 +588,19 @@
           "Согласовать minimum/runtime/optional тексты — DONE",
           "Детерминированный state-machine CI test (19 assertions) — DONE"
         ]
+      },
+      {
+        "priority": 43,
+        "id": "driver-runtime-force-update-policy",
+        "title": "APK policy: forceUpdate сохраняется при runtime mismatch",
+        "status": "shipped",
+        "tasks": [
+          "Объединить force/critical/emergency в requiresImmediateUpdate — DONE",
+          "Применить обязательность к exact runtime mismatch — DONE",
+          "Применить обязательность к minimumRuntime mismatch — DONE",
+          "Сохранить optional runtime mismatch отложенным — DONE",
+          "Детерминированный policy CI test (12 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

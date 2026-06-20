@@ -16,11 +16,12 @@ export function evaluateApkUpdatePolicy(
 
   const newerAvailable = semverLess(currentVersion, manifest.latestVersion);
   const emergency = manifest.emergency === true || manifest.rolloutState === "emergency";
+  const requiresImmediateUpdate = manifest.forceUpdate === true || manifest.critical === true || emergency;
   const rolloutPaused = manifest.rolloutState === "paused";
   if (newerAvailable && (!rolloutPaused || manifest.forceUpdate === true || emergency)) {
     return {
       reason: "newer_available",
-      critical: manifest.forceUpdate === true || manifest.critical === true || emergency,
+      critical: requiresImmediateUpdate,
     };
   }
 
@@ -29,10 +30,10 @@ export function evaluateApkUpdatePolicy(
     currentRuntime &&
     isRuntimeBelowMinimum(currentRuntime, manifest.minimumRuntimeVersion)
   ) {
-    return { reason: "runtime_mismatch", critical: emergency };
+    return { reason: "runtime_mismatch", critical: requiresImmediateUpdate };
   }
   if (manifest.runtimeVersion && currentRuntime && manifest.runtimeVersion.trim() !== currentRuntime.trim()) {
-    return { reason: "runtime_mismatch", critical: emergency };
+    return { reason: "runtime_mismatch", critical: requiresImmediateUpdate };
   }
   return { reason: "none", critical: false };
 }

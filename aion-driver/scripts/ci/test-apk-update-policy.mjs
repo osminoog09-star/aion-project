@@ -55,4 +55,25 @@ assert.deepEqual(
   "emergency runtime mismatch should be critical",
 );
 
-console.log("test-apk-update-policy: ok (8 cases)");
+assert.deepEqual(
+  JSON.parse(JSON.stringify(evaluateApkUpdatePolicy({ ...base, latestVersion: "1.0.9", runtimeVersion: "1.1.0", forceUpdate: true }, "1.0.9", "1.0.9"))),
+  { reason: "runtime_mismatch", critical: true },
+  "forceUpdate must remain mandatory when the version matches but runtime does not",
+);
+assert.deepEqual(
+  JSON.parse(JSON.stringify(evaluateApkUpdatePolicy({ ...base, latestVersion: "1.0.9", runtimeVersion: "1.1.0", critical: true }, "1.0.9", "1.0.9"))),
+  { reason: "runtime_mismatch", critical: true },
+  "critical manifest must remain critical for runtime mismatch",
+);
+assert.deepEqual(
+  JSON.parse(JSON.stringify(evaluateApkUpdatePolicy({ ...base, latestVersion: "1.0.9", runtimeVersion: "1.1.0" }, "1.0.9", "1.0.9"))),
+  { reason: "runtime_mismatch", critical: false },
+  "ordinary runtime mismatch may still be postponed",
+);
+assert.deepEqual(
+  JSON.parse(JSON.stringify(evaluateApkUpdatePolicy({ ...base, latestVersion: "1.0.9", minimumRuntimeVersion: "1.1.0", forceUpdate: true }, "1.0.9", "1.0.9"))),
+  { reason: "runtime_mismatch", critical: true },
+  "minimum runtime mismatch must honor forceUpdate",
+);
+
+console.log("test-apk-update-policy: ok (12 cases)");
