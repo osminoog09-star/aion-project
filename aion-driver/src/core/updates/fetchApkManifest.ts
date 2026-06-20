@@ -17,11 +17,17 @@ function parseIsoMs(s: string | undefined): number | null {
   return Number.isFinite(t) ? t : null;
 }
 
-export function isManifestSemanticallyStale(m: ApkUpdateManifest, fetchedAtMs: number): boolean {
-  const age = Date.now() - fetchedAtMs;
+export function isManifestSemanticallyStale(
+  m: ApkUpdateManifest,
+  fetchedAtMs: number,
+  nowMs = Date.now(),
+): boolean {
+  if (!Number.isFinite(fetchedAtMs) || fetchedAtMs <= 0) return true;
+  const age = nowMs - fetchedAtMs;
+  if (age < -MAX_CLOCK_SKEW_MS) return true;
   if (age > STALE_MS) return true;
   const rd = parseIsoMs(m.releaseDate);
-  if (rd != null && Date.now() - rd > MAX_RELEASE_AGE_MS) return true;
+  if (rd != null && (rd > nowMs + MAX_CLOCK_SKEW_MS || nowMs - rd > MAX_RELEASE_AGE_MS)) return true;
   return false;
 }
 

@@ -21,6 +21,15 @@ const manifestA = { latestVersion: "1.0.9", minimumSupported: "1.0.6", apkUrl: "
 const manifestB = { latestVersion: "1.1.0", minimumSupported: "1.0.9", apkUrl: "https://b.example.com/b.apk" };
 let networkCalls = 0;
 
+const fixedNow = Date.parse("2026-06-20T12:00:00.000Z");
+assert.equal(onlineSafeStale({ fetchedAt: fixedNow - 60 * 60 * 1000 }), false);
+assert.equal(onlineSafeStale({ fetchedAt: fixedNow - 36 * 60 * 60 * 1000 }), false, "exact stale boundary remains fresh");
+assert.equal(onlineSafeStale({ fetchedAt: fixedNow - 36 * 60 * 60 * 1000 - 1 }), true);
+assert.equal(onlineSafeStale({ fetchedAt: fixedNow + 10 * 60 * 1000 }), true, "far-future fetch time is stale");
+assert.equal(onlineSafeStale({ fetchedAt: 0 }), true, "invalid fetch time is stale");
+assert.equal(onlineSafeStale({ fetchedAt: fixedNow, releaseDate: "2026-03-20T11:59:59.000Z" }), true);
+assert.equal(onlineSafeStale({ fetchedAt: fixedNow, releaseDate: "2026-06-20T12:10:01.000Z" }), true);
+
 function compileFetcher(
   fetchImpl,
   {
@@ -44,6 +53,11 @@ function compileFetcher(
       clearTimeout: clearTimeoutImpl,
     },
   );
+}
+
+function onlineSafeStale({ fetchedAt, releaseDate }) {
+  const module = compileFetcher(async () => ({ ok: false, json: async () => null }));
+  return module.isManifestSemanticallyStale({ ...manifestA, releaseDate }, fetchedAt, fixedNow);
 }
 
 const online = compileFetcher(async (url) => {
@@ -155,4 +169,4 @@ assert.notEqual(callerSignal, caller.signal, "caller cancellation should propaga
 assert.equal(callerSignal?.aborted, true, "caller cancellation must abort the fetch signal");
 assert.equal(timeoutCleared, true, "timeout must be cleared after caller cancellation");
 
-console.log("test-apk-manifest-cache: ok (40 assertions)");
+console.log("test-apk-manifest-cache: ok (47 assertions)");
