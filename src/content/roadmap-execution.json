@@ -445,6 +445,19 @@
           "Отклонять invalid leading zeros — DONE",
           "Детерминированный CI test (10 cases) — DONE"
         ]
+      },
+      {
+        "priority": 32,
+        "id": "driver-apk-https-only",
+        "title": "APK update transport: HTTPS-only",
+        "status": "shipped",
+        "tasks": [
+          "Отклонять HTTP manifest endpoint до fetch — DONE",
+          "Отклонять HTTP primary APK URL — DONE",
+          "Отклонять HTTP fallback APK URL — DONE",
+          "Переиспользовать единый HTTPS validator — DONE",
+          "CI: 9 manifest cases + 20 cache assertions — DONE"
+        ]
       }
     ],
     "blockedTasks": [

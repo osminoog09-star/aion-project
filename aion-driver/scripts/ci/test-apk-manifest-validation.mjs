@@ -39,12 +39,22 @@ assert.equal(
   "non-HTTP APK URL must be rejected",
 );
 assert.equal(
+  isApkManifest({ ...valid, apkUrl: "http://example.com/aion-driver.apk" }),
+  false,
+  "cleartext HTTP APK URL must be rejected",
+);
+assert.equal(
+  isApkManifest({ ...valid, fallbackApkUrl: "http://example.com/aion-driver.apk" }),
+  false,
+  "cleartext HTTP fallback URL must be rejected",
+);
+assert.equal(
   isApkManifest({ ...valid, fallbackApkUrl: "javascript:alert(1)" }),
   false,
   "unsafe fallback URL must be rejected",
 );
 
-console.log("test-apk-manifest-validation: ok (7 cases)");
+console.log("test-apk-manifest-validation: ok (9 cases)");
 
 await import("./test-apk-manifest-cache.mjs");
 await import("./test-apk-runtime-compatibility.mjs");
