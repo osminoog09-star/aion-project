@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T21:40:00.000Z",
+  "lastUpdated": "2026-06-20T21:50:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. APK stale evaluation имеет одну временную точку и проверенные clock-skew границы.",
-  "currentStatus": "Driver deterministic APK stale boundaries; release stack live",
+  "currentFocus": "Release stack live. APK releaseDate принимает только canonical UTC ISO timestamp из EAS pipeline.",
+  "currentStatus": "Driver canonical APK release timestamp; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -54,7 +54,8 @@
     "Удалён отдельный apkHeadline из state machine; summary, verdict и modal теперь получают одинаковые APK reason/detail из одного selector.",
     "APK policy использует единый requiresImmediateUpdate для newer и runtime mismatch; forceUpdate/critical больше нельзя отложить из-за совпавшей app version.",
     "Persistent APK cache проверяет finite/positive timestamp и максимум 5 минут clock skew; future cache больше не выглядит свежим.",
-    "APK semantic stale evaluator принимает nowMs, детерминированно проверяет 36h/90d границы и помечает invalid/future timestamps как stale."
+    "APK semantic stale evaluator принимает nowMs, детерминированно проверяет 36h/90d границы и помечает invalid/future timestamps как stale.",
+    "APK manifest validator отклоняет date-only, timezone offset и нормализуемые невозможные releaseDate; canonical EAS UTC ISO остаётся совместимым."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -108,6 +109,7 @@
     "Driver shared APK explanation engine — OK (19 state-machine assertions)",
     "Driver runtime force-update policy — OK (12 policy cases)",
     "Driver APK cache clock validation — OK (40 cache assertions)",
-    "Driver deterministic APK stale boundaries — OK (47 cache assertions)"
+    "Driver deterministic APK stale boundaries — OK (47 cache assertions)",
+    "Driver canonical APK release timestamp — OK (23 manifest cases)"
   ]
 }
