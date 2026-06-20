@@ -575,6 +575,19 @@
           "Не менять single-flight защиту — DONE",
           "Детерминированный cache CI test (35 assertions) — DONE"
         ]
+      },
+      {
+        "priority": 42,
+        "id": "driver-shared-apk-explanation-engine",
+        "title": "APK explanation: один selector для summary, verdict и modal",
+        "status": "shipped",
+        "tasks": [
+          "Удалить дублирующий apkHeadline из state machine — DONE",
+          "Передавать валидированный manifest вместо present boolean — DONE",
+          "Использовать общий explanation selector в summary — DONE",
+          "Согласовать minimum/runtime/optional тексты — DONE",
+          "Детерминированный state-machine CI test (19 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

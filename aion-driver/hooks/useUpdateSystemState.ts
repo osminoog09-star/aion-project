@@ -40,7 +40,7 @@ export function useUpdateSystemState(): UpdateEngineView & {
       emergencyLaunch: Updates.isEmergencyLaunch,
       manifestUrlConfigured,
       apkLoading: apk.loading,
-      apkManifestPresent: apk.manifest != null,
+      apkManifest: apk.manifest,
       apkEval: apk.evald,
       apkManifestStale: apk.manifestStale,
       apkLastErrorAtMs: apk.lastErrorAtMs,
