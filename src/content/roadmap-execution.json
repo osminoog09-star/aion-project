@@ -497,6 +497,19 @@
           "Подключить URL polyfill в root layout — DONE",
           "Детерминированный CI suite (20 manifest cases) — DONE"
         ]
+      },
+      {
+        "priority": 36,
+        "id": "driver-paused-rollout-ux",
+        "title": "Update Center: честный paused rollout UX",
+        "status": "shipped",
+        "tasks": [
+          "Вынести APK verdict в чистый selector — DONE",
+          "Показать отдельный paused headline/detail — DONE",
+          "Не показывать ложный зелёный current summary — DONE",
+          "Не включать APK block/download для paused optional rollout — DONE",
+          "Детерминированный CI test (9 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
