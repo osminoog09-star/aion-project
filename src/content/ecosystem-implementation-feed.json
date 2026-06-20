@@ -4,6 +4,51 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-20-znp05a",
+      "occurredAt": "2026-06-20",
+      "title": "Driver APK strict optional contract",
+      "summary": "APK manifest validation now enforces boolean policy flags, rollout enum, typed runtime/release metadata, valid release dates and string-only changelog before evaluation.",
+      "subsystemIds": [
+        "updates",
+        "apk-channel",
+        "mobile-app"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 См. reasoning в audit"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "reasoning": "Malformed optional values such as forceUpdate='false' were accepted and became truthy during update policy evaluation.",
+      "task": "driver-apk-optional-contract",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/src/core/updates/apkManifest.types.ts",
+        "aion-driver/scripts/ci/test-apk-manifest-validation.mjs"
+      ],
+      "apkImpact": "OTA-safe manifest policy hardening"
+    },
+    {
       "id": "evt-2026-06-20-hbmf4z",
       "occurredAt": "2026-06-20",
       "title": "Driver APK HTTPS-only transport",

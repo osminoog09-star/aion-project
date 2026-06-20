@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T03:55:42.000Z",
+  "lastUpdated": "2026-06-20T06:37:34.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. Driver принимает manifest endpoint и APK/fallback artifacts только по HTTPS, отсекая cleartext до network/UI.",
-  "currentStatus": "Driver APK HTTPS-only transport; release stack live",
+  "currentFocus": "Release stack live. APK manifest optional flags и metadata строго валидируются по типам до update policy evaluation.",
+  "currentStatus": "Driver APK strict optional contract; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -41,7 +41,8 @@
     "APK download объединён в один helper: primary URL, автоматический fallback, dedupe и Alert при полном failure без unhandled rejection.",
     "Sync main workflow теперь сам создаёт single-parent promotion commit после merge, устраняя повторяющийся ручной Vercel promotion.",
     "SemVer comparator исправлен: prerelease ниже stable, identifiers сравниваются детерминированно, build metadata не влияет на порядок.",
-    "Driver APK transport переведён на HTTPS-only: HTTP manifest endpoint блокируется до fetch, HTTP artifact/fallback отклоняются валидатором."
+    "Driver APK transport переведён на HTTPS-only: HTTP manifest endpoint блокируется до fetch, HTTP artifact/fallback отклоняются валидатором.",
+    "APK manifest optional contract ужесточён: boolean flags, rollout enum, release date, runtime metadata и changelog проверяются до evaluation."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -82,6 +83,7 @@
     "Driver APK download primary/fallback/failure — OK (8 assertions)",
     "Sync main automatic production promotion — OK (4 assertions + YAML parse)",
     "Driver SemVer prerelease/build ordering — OK (10 cases)",
-    "Driver APK HTTPS-only transport — OK (9 manifest cases, 20 cache assertions)"
+    "Driver APK HTTPS-only transport — OK (9 manifest cases, 20 cache assertions)",
+    "Driver APK strict optional manifest fields — OK (17 cases)"
   ]
 }

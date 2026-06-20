@@ -12,7 +12,20 @@ const valid = {
   apkUrl: "https://example.com/aion-driver.apk",
 };
 
+const validExtended = {
+  ...valid,
+  runtimeVersion: "1.0.9",
+  buildNumber: "13",
+  critical: false,
+  forceUpdate: false,
+  emergency: false,
+  rolloutState: "full",
+  releaseDate: "2026-06-20T00:00:00.000Z",
+  changelog: ["Update Center hardening"],
+};
+
 assert.equal(isApkManifest(valid), true, "valid release manifest should pass");
+assert.equal(isApkManifest(validExtended), true, "valid optional release fields should pass");
 assert.equal(
   isApkManifest({ ...valid, fallbackApkUrl: "https://cdn.example.com/aion-driver.apk" }),
   true,
@@ -53,8 +66,15 @@ assert.equal(
   false,
   "unsafe fallback URL must be rejected",
 );
+assert.equal(isApkManifest({ ...valid, forceUpdate: "false" }), false, "string forceUpdate must be rejected");
+assert.equal(isApkManifest({ ...valid, critical: "false" }), false, "string critical flag must be rejected");
+assert.equal(isApkManifest({ ...valid, emergency: 1 }), false, "numeric emergency flag must be rejected");
+assert.equal(isApkManifest({ ...valid, rolloutState: "rolling" }), false, "unknown rollout state must be rejected");
+assert.equal(isApkManifest({ ...valid, runtimeVersion: 109 }), false, "numeric runtime version must be rejected");
+assert.equal(isApkManifest({ ...valid, releaseDate: "tomorrow" }), false, "invalid release date must be rejected");
+assert.equal(isApkManifest({ ...valid, changelog: ["ok", 7] }), false, "non-string changelog item must be rejected");
 
-console.log("test-apk-manifest-validation: ok (9 cases)");
+console.log("test-apk-manifest-validation: ok (17 cases)");
 
 await import("./test-apk-manifest-cache.mjs");
 await import("./test-apk-runtime-compatibility.mjs");
