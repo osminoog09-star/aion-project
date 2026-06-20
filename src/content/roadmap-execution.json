@@ -458,6 +458,19 @@
           "Переиспользовать единый HTTPS validator — DONE",
           "CI: 9 manifest cases + 20 cache assertions — DONE"
         ]
+      },
+      {
+        "priority": 33,
+        "id": "driver-apk-optional-contract",
+        "title": "APK manifest: строгие optional flags и metadata",
+        "status": "shipped",
+        "tasks": [
+          "Проверять critical/forceUpdate/emergency как boolean — DONE",
+          "Проверять rolloutState по enum — DONE",
+          "Проверять runtime/build/release metadata по типам — DONE",
+          "Проверять releaseDate и changelog — DONE",
+          "Детерминированный CI test (17 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

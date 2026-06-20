@@ -35,6 +35,14 @@ export function isHttpsUrl(value: unknown): value is string {
   return typeof value === "string" && /^https:\/\//i.test(value);
 }
 
+function optionalBoolean(o: Record<string, unknown>, key: string): boolean {
+  return o[key] == null || typeof o[key] === "boolean";
+}
+
+function optionalString(o: Record<string, unknown>, key: string): boolean {
+  return o[key] == null || typeof o[key] === "string";
+}
+
 export function isApkManifest(v: unknown): v is ApkUpdateManifest {
   if (!v || typeof v !== "object") return false;
   const o = v as Record<string, unknown>;
@@ -47,6 +55,34 @@ export function isApkManifest(v: unknown): v is ApkUpdateManifest {
     isHttpsUrl(o.apkUrl);
   if (!apkOk) return false;
   if (o.fallbackApkUrl != null && !isHttpsUrl(o.fallbackApkUrl)) {
+    return false;
+  }
+  if (!["critical", "forceUpdate", "emergency"].every((key) => optionalBoolean(o, key))) {
+    return false;
+  }
+  if (
+    ![
+      "runtimeVersion",
+      "buildNumber",
+      "minimumRuntimeVersion",
+      "downloadSizeLabel",
+      "releaseType",
+      "releaseNotes",
+      "easBuildId",
+    ].every((key) => optionalString(o, key))
+  ) {
+    return false;
+  }
+  if (
+    o.rolloutState != null &&
+    !["full", "staged", "paused", "emergency"].includes(String(o.rolloutState))
+  ) {
+    return false;
+  }
+  if (o.releaseDate != null && (typeof o.releaseDate !== "string" || !Number.isFinite(Date.parse(o.releaseDate)))) {
+    return false;
+  }
+  if (o.changelog != null && (!Array.isArray(o.changelog) || !o.changelog.every((line) => typeof line === "string"))) {
     return false;
   }
   return true;
