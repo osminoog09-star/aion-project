@@ -1,8 +1,54 @@
 {
-  "lastUpdated": "2026-06-19",
+  "lastUpdated": "2026-06-20",
   "maintainedInRepository": true,
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
+    {
+      "id": "evt-2026-06-20-0e4g4b",
+      "occurredAt": "2026-06-20",
+      "title": "Driver runtime minimum compatibility",
+      "summary": "minimumRuntimeVersion now uses semver ordering, so newer runtimes satisfy an older minimum; opaque runtime fingerprints retain strict equality fallback.",
+      "subsystemIds": [
+        "updates",
+        "apk-channel",
+        "mobile-app"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 См. reasoning в audit"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "reasoning": "Exact string comparison incorrectly required an APK when runtime 1.0.10 was checked against minimum 1.0.9.",
+      "task": "runtime-minimum-semver",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/src/core/updates/runtimeCompatibility.ts",
+        "aion-driver/src/core/updates/useApkUpdateController.ts",
+        "aion-driver/scripts/ci/test-apk-runtime-compatibility.mjs"
+      ],
+      "apkImpact": "OTA-safe runtime policy correction"
+    },
     {
       "id": "evt-2026-06-19-d6jzhc",
       "occurredAt": "2026-06-19",
