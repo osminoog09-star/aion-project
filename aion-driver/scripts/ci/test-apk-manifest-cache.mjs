@@ -7,9 +7,11 @@ const asyncStorage = {
   setItem: async (key, value) => storage.set(key, value),
 };
 const semver = compileTsModule("src/core/updates/semverCompare.ts");
-const manifestTypes = compileTsModule("src/core/updates/apkManifest.types.ts", {
-  "./semverCompare": semver,
-});
+const manifestTypes = compileTsModule(
+  "src/core/updates/apkManifest.types.ts",
+  { "./semverCompare": semver },
+  { URL },
+);
 
 const urlA = "https://a.example.com/apk.json";
 const urlB = "https://b.example.com/apk.json";
