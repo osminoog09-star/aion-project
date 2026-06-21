@@ -2,6 +2,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { StrategicPrioritiesPayload } from "@/lib/ecosystem-types";
 import type { PriorityChangeAudit } from "@/lib/ecosystem-types";
+import { shouldAllowPrioritiesFilesystemWrite } from "@/lib/operations/priorities-persist-policy";
 
 const CONTENT = path.join(process.cwd(), "src/content");
 const PRIORITIES_FILE = path.join(CONTENT, "strategic-priorities.json");
@@ -16,7 +17,7 @@ export type SavePrioritiesInput = {
 
 export type SavePrioritiesResult = {
   persistedTo: ("filesystem" | "supabase")[];
-  feedEventId: string;
+  feedEventId: string | null;
 };
 
 async function writeJsonFile(filePath: string, data: unknown): Promise<void> {
@@ -99,7 +100,8 @@ export async function saveStrategicPriorities(input: SavePrioritiesInput): Promi
 
   const persistedTo: SavePrioritiesResult["persistedTo"] = [];
 
-  if (process.env.OPERATIONS_ALLOW_FS_WRITE !== "0") {
+  const allowFs = shouldAllowPrioritiesFilesystemWrite(process.env);
+  if (allowFs) {
     await writeJsonFile(PRIORITIES_FILE, payload);
 
     if (input.nextImplementationTarget?.trim()) {
@@ -125,6 +127,6 @@ export async function saveStrategicPriorities(input: SavePrioritiesInput): Promi
     );
   }
 
-  const feedEventId = await appendPriorityAuditFeed(input.audit);
+  const feedEventId = allowFs ? await appendPriorityAuditFeed(input.audit) : null;
   return { persistedTo, feedEventId };
 }
