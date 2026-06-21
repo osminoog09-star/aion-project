@@ -4,6 +4,50 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-21-9ym7jr",
+      "occurredAt": "2026-06-21",
+      "title": "Maps/Fuel: real-data ADR и схемы",
+      "summary": "Зафиксированы provenance-контракты для GPS-классов километров и fuel allocation. Неизвестные значения остаются null/unclassified/unallocated; публикация чисел разрешена только из persisted shift, GPS и подтверждённых fuel entries. Движок не запускался.",
+      "subsystemIds": [
+        "gps-route",
+        "ocr",
+        "driver-intelligence"
+      ],
+      "eventType": "architecture_decision",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Define Maps and Fuel real-data contracts without fake engine",
+      "confidence": "high",
+      "changedFiles": [
+        "docs/adr/0001-maps-fuel-real-data-contracts.md",
+        "aion-driver/features/intelligence/contracts/mapsFuelIntelligence.ts"
+      ],
+      "runtimeImpact": "No runtime behavior or synthetic metrics added"
+    },
+    {
       "id": "evt-2026-06-21-jw8r00",
       "occurredAt": "2026-06-21",
       "title": "Portal: Supabase writes на Vercel",
