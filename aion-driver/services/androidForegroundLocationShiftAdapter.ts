@@ -28,10 +28,10 @@ export class AndroidForegroundLocationShiftAdapter implements BackgroundTracking
       await Location.stopLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK);
     }
     await Location.startLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK, {
-      accuracy: Location.Accuracy.Balanced,
+      accuracy: Location.Accuracy.High,
       distanceInterval: BACKGROUND_DISTANCE_INTERVAL_M,
       timeInterval: BACKGROUND_TIME_INTERVAL_MS,
-      pausesUpdatesAutomatically: true,
+      pausesUpdatesAutomatically: false,
       foregroundService: {
         notificationTitle: "AION — активная смена",
         notificationBody: "Трек маршрута; откройте приложение для деталей.",

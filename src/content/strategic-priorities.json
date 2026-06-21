@@ -3,19 +3,22 @@
   "constitutionVersion": "2.0",
   "autonomousOrchestration": "Cursor executes roadmap/priorities/deps autonomously; owner observes /operations/command (Russian) and edits /operations/priorities — no ChatGPT relay.",
   "ownerLanguageRule": "Владелец видит только русский интерфейс. Английский — код и технические детали (свёрнуто).",
-  "ownerDirective": "PRIMARY: APK 1.0.9 (OrbView dim) — EAS auto на push; manifest после FINISHED. Vercel: BUG_REPORT_NOTIFY_WEBHOOK_URL. Field validation 8/8 — отложено.",
+  "ownerDirective": "Непрерывный автономный режим. Field validation 8/8 навсегда снят как блокер. APK hardening закрыт. Приоритет: GPS High, unified runtime/costs, profit UI, OCR, portal writes, Maps/Fuel ADR.",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
-  "nextImplementationTarget": "EAS 1.0.9 FINISHED → manifest sync → device smoke; Vercel bug webhook env",
-  "executionNotes": "Field validation 8/8 + portal report inbox (/operations/live paste). BG gate hint on device when 8/8. CI: test:field-validation-report in repo:verify. Device gate: owner paste report after 8/8.",
+  "nextImplementationTarget": "Unified shift runtime + operational costs",
+  "executionNotes": "Не ждать owner device smoke. validate:code и repo:verify обязательны. Maps/Fuel показывают числа только из реально накопленных данных; без данных UI ничего не выдумывает.",
   "priorities": [
     {
       "id": "aion-maps-driver-runtime-os",
       "title": "AION Maps & Driver Runtime OS",
       "level": "strategic",
-      "subsystemIds": ["gps-route", "driver-intelligence"],
-      "status": "roadmap_only",
+      "subsystemIds": [
+        "gps-route",
+        "driver-intelligence"
+      ],
+      "status": "actionable",
       "rationale": "Core differentiation: реальный километраж, road matching, операционная карта смены, runtime routing. Сейчас — roadmap, ADR, dependency graph, self-host architecture planning.",
-      "nextAction": "Зафиксировать этапы GPS Intelligence → AI-native Maps; не начинать tile/routing engine до 8/8",
+      "nextAction": "ADR и схемы реальных GPS-данных; production map/routing engine пока не запускать",
       "setAt": "2026-05-17",
       "setBy": "product-owner"
     },
@@ -23,10 +26,14 @@
       "id": "operational-fuel-cost-intelligence",
       "title": "Operational Fuel & Cost Intelligence",
       "level": "strategic",
-      "subsystemIds": ["ocr", "driver-intelligence", "gps-route"],
-      "status": "roadmap_only",
+      "subsystemIds": [
+        "ocr",
+        "driver-intelligence",
+        "gps-route"
+      ],
+      "status": "actionable",
       "rationale": "Реальные расходы водителя: умная заправка, ₽/100 км, прибыль после топлива, распределение топлива по классам km (связь с Maps). Сейчас — data model + milestones, без full allocation engine.",
-      "nextAction": "Roadmap: smart refuel → GPS allocation → AI economics → интеграция с AION Maps",
+      "nextAction": "Схема operational costs и fuel allocation только по реальным сменам и OCR-чекам",
       "setAt": "2026-05-17",
       "setBy": "product-owner"
     },
@@ -34,10 +41,14 @@
       "id": "driver-intelligence-core",
       "title": "Driver Intelligence Core",
       "level": "critical",
-      "subsystemIds": ["mobile-app", "ocr", "background-drive"],
+      "subsystemIds": [
+        "mobile-app",
+        "ocr",
+        "background-drive"
+      ],
       "status": "in_progress",
       "rationale": "MASTER §11–12: модуль Driver должен быть полезен в реальной жизни до расширения экосистемы.",
-      "nextAction": "APK 1.0.6 → Маршруты 8/8 → paste отчёт; backfill + stop zones на реальных сменах",
+      "nextAction": "GPS High и непрерывный foreground service; затем unified runtime и operational costs",
       "setAt": "2026-05-15",
       "setBy": "product-owner"
     },
@@ -45,7 +56,10 @@
       "id": "unified-shift-runtime",
       "title": "Unified shift runtime + profit path",
       "level": "critical",
-      "subsystemIds": ["mobile-app", "background-drive"],
+      "subsystemIds": [
+        "mobile-app",
+        "background-drive"
+      ],
       "status": "in_progress",
       "rationale": "MASTER §14–15: один runtime path, strict shift state machine.",
       "nextAction": "Перевести cloud trip projections на after-costs contract без смешивания fuel и operational expenses",
@@ -56,7 +70,9 @@
       "id": "ocr-production-queue",
       "title": "OCR production queue",
       "level": "high",
-      "subsystemIds": ["ocr"],
+      "subsystemIds": [
+        "ocr"
+      ],
       "status": "done",
       "rationale": "MASTER §18: retry, dedupe, offline, replay — без ручного ввода топлива.",
       "nextAction": "Multi-shift historical intelligence (no fake recommendations)",
@@ -67,10 +83,14 @@
       "id": "apk-release-loop",
       "title": "APK release loop (device-verified)",
       "level": "high",
-      "subsystemIds": ["updates", "apk-channel", "release-ops"],
-      "status": "partially_done",
+      "subsystemIds": [
+        "updates",
+        "apk-channel",
+        "release-ops"
+      ],
+      "status": "done",
       "rationale": "1.0.8 FINISHED + manifest на Vercel; auto-notify в приложении; CI sync после EAS. Device smoke владельца — не 8/8 gate.",
-      "nextAction": "Установить 1.0.8 APK → проверить модалку обновления и /operations/bugs",
+      "nextAction": "APK hardening закрыт; новые preview builds только для функциональных изменений Driver",
       "setAt": "2026-05-17",
       "setBy": "cursor"
     },
@@ -78,10 +98,12 @@
       "id": "background-runtime-production",
       "title": "Android background runtime (production)",
       "level": "high",
-      "subsystemIds": ["background-drive"],
-      "status": "experimental",
+      "subsystemIds": [
+        "background-drive"
+      ],
+      "status": "in_progress",
       "rationale": "MASTER §26: FGS stability, reconnect, OEM — experimental path есть, production gate нет.",
-      "nextAction": "Field tests + BACKGROUND_TRACKING_PRODUCTION_READY gate",
+      "nextAction": "Автоматические проверки FGS, reconnect и GPS policy без owner device gate",
       "setAt": "2026-05-15",
       "setBy": "cursor"
     },
@@ -89,7 +111,9 @@
       "id": "overlay-hud-evolution",
       "title": "Overlay Driver HUD",
       "level": "medium",
-      "subsystemIds": ["background-drive"],
+      "subsystemIds": [
+        "background-drive"
+      ],
       "status": "in_progress",
       "rationale": "MASTER §24: €/ч, rental profit, warnings — зависит от runtime.",
       "nextAction": "Native HUD fields после unified runtime",
@@ -100,7 +124,10 @@
       "id": "ecosystem-control-portal",
       "title": "Ecosystem control portal",
       "level": "medium",
-      "subsystemIds": ["web-portal", "operations-center"],
+      "subsystemIds": [
+        "web-portal",
+        "operations-center"
+      ],
       "status": "in_progress",
       "rationale": "MASTER §6–8: observability, audit, priorities, validation.",
       "nextAction": "Auth hardening + Supabase write on Vercel prod",
@@ -111,7 +138,9 @@
       "id": "route-heatmap-future",
       "title": "Route + heatmap intelligence",
       "level": "low",
-      "subsystemIds": ["mobile-app"],
+      "subsystemIds": [
+        "mobile-app"
+      ],
       "status": "not_started",
       "rationale": "MASTER §19–21: только из real GPS — после trip store.",
       "nextAction": "ChatGPT review geospatial storage schema",
@@ -122,7 +151,9 @@
       "id": "link-cloud-relay",
       "title": "AION Link cloud pairing",
       "level": "low",
-      "subsystemIds": ["aion-link"],
+      "subsystemIds": [
+        "aion-link"
+      ],
       "status": "blocked",
       "rationale": "Backend RLS + protocol undecided.",
       "nextAction": "Architecture review before implementation",
@@ -134,86 +165,119 @@
     {
       "id": "overlay-hud-full",
       "title": "Overlay HUD advanced analytics",
-      "dependsOn": ["background-runtime-production", "unified-shift-runtime"],
+      "dependsOn": [
+        "background-runtime-production",
+        "unified-shift-runtime"
+      ],
       "status": "blocked",
       "reason": "MASTER §10: overlay before stable FGS/runtime — OEM risk"
     },
     {
       "id": "heatmap-analytics",
       "title": "Historical heatmaps",
-      "dependsOn": ["route-gps-store"],
+      "dependsOn": [
+        "route-gps-store"
+      ],
       "status": "blocked",
       "reason": "MASTER §21: no fake heatmaps — requires trip history"
     },
     {
       "id": "route-gps-store",
       "title": "GPS trip history store",
-      "dependsOn": ["unified-shift-runtime", "background-runtime-production"],
+      "dependsOn": [
+        "unified-shift-runtime",
+        "background-runtime-production"
+      ],
       "status": "done",
       "reason": "v1: AsyncStorage session, buffered append, stop detection, shift snapshot fields"
     },
     {
       "id": "post-shift-analytics",
       "title": "Post-shift analytics engine",
-      "dependsOn": ["route-gps-store", "ocr-production-queue"],
+      "dependsOn": [
+        "route-gps-store",
+        "ocr-production-queue"
+      ],
       "status": "done",
       "reason": "v1: ShiftAnalyticsSnapshot persisted on endShift (route/idle/time/profit)"
     },
     {
       "id": "time-intelligence",
       "title": "Best hours / zones analytics",
-      "dependsOn": ["route-gps-store", "post-shift-analytics"],
+      "dependsOn": [
+        "route-gps-store",
+        "post-shift-analytics"
+      ],
       "status": "in_progress",
-      "reason": "Route timeline + rollups + stop zones live; field validation 8/8 unlocks production FGS gate"
+      "reason": "Route timeline and rollups use accumulated real shift data; no owner device gate"
     },
     {
       "id": "aion-maps-driver-runtime-os",
       "title": "AION Maps & Driver Runtime OS",
-      "dependsOn": ["driver-intelligence-core", "route-gps-store", "time-intelligence"],
-      "status": "blocked",
-      "reason": "Стратегия · roadmap only: GPS Intelligence → Road Matching → Operational Map → Runtime Routing → AI-native Maps. Без map engine до architecture branch."
+      "dependsOn": [
+        "driver-intelligence-core",
+        "route-gps-store",
+        "time-intelligence"
+      ],
+      "status": "actionable",
+      "reason": "ADR and data schemas are actionable; production engine remains dependency-gated"
     },
     {
       "id": "maps-gps-intelligence",
       "title": "Maps: GPS Intelligence (этап 1)",
-      "dependsOn": ["aion-maps-driver-runtime-os", "route-gps-store"],
-      "status": "blocked",
-      "reason": "Классификация km: заказ / подача / порожняк / личное — после field validation 8/8"
+      "dependsOn": [
+        "aion-maps-driver-runtime-os",
+        "route-gps-store"
+      ],
+      "status": "actionable",
+      "reason": "Define real-data kilometer classes and storage contracts; do not synthesize metrics"
     },
     {
       "id": "maps-road-matching",
       "title": "Maps: Road Matching (этап 2)",
-      "dependsOn": ["maps-gps-intelligence"],
+      "dependsOn": [
+        "maps-gps-intelligence"
+      ],
       "status": "blocked",
       "reason": "Map-matching к road graph — spike + ADR, не production engine"
     },
     {
       "id": "operational-fuel-cost-intelligence",
       "title": "Operational Fuel & Cost Intelligence",
-      "dependsOn": ["driver-intelligence-core", "ocr-production-queue", "unified-shift-runtime"],
-      "status": "blocked",
-      "reason": "Стратегия · roadmap only: умная заправка → GPS allocation → AI Driver Economics → AION Maps"
+      "dependsOn": [
+        "driver-intelligence-core",
+        "ocr-production-queue",
+        "unified-shift-runtime"
+      ],
+      "status": "actionable",
+      "reason": "Runtime cost contract and real OCR data path are actionable without field validation"
     },
     {
       "id": "fuel-gps-cost-allocation",
       "title": "Fuel: распределение по классам km",
-      "dependsOn": ["operational-fuel-cost-intelligence", "maps-gps-intelligence"],
+      "dependsOn": [
+        "operational-fuel-cost-intelligence",
+        "maps-gps-intelligence"
+      ],
       "status": "blocked",
       "reason": "Топливо на заказ/подачу/порожняк — зависит от Maps GPS Intelligence"
     },
     {
       "id": "fuel-maps-predictive",
       "title": "Fuel: предиктивный расход на маршруте",
-      "dependsOn": ["fuel-gps-cost-allocation", "maps-road-matching"],
+      "dependsOn": [
+        "fuel-gps-cost-allocation",
+        "maps-road-matching"
+      ],
       "status": "blocked",
       "reason": "После Runtime Routing / road graph — не в текущем спринте"
     }
   ],
   "cursorAdaptationRules": [
-    "strategic + roadmap_only → document in feed, never start map/fuel engine without explicit owner go",
-    "Execute critical + high before medium/low unless blocked by dependencyGraph",
-    "blocked level or status=blocked → document in feed, pick next actionable node",
-    "experimental → no fully_done without validation evidence",
-    "User ownerDirective overrides default queue when explicit conflict"
+    "Never select APK manifest hardening; that phase is closed",
+    "After 3 repeats, switch to a different subsystem",
+    "Execute critical and high priorities before medium and low unless dependency-blocked",
+    "Maps/Fuel numbers must come from persisted real usage; absent data stays absent",
+    "Automated validation is mandatory; owner device smoke is not a gate"
   ]
 }

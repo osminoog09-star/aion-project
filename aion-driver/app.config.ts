@@ -38,7 +38,7 @@ export default {
     },
     android: {
       package: "com.aion.driver",
-      versionCode: 13,
+      versionCode: 14,
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#030712",
