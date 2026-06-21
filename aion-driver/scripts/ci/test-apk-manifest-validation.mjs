@@ -84,6 +84,10 @@ assert.equal(isApkManifest({ ...valid, critical: "false" }), false, "string crit
 assert.equal(isApkManifest({ ...valid, emergency: 1 }), false, "numeric emergency flag must be rejected");
 assert.equal(isApkManifest({ ...valid, rolloutState: "rolling" }), false, "unknown rollout state must be rejected");
 assert.equal(isApkManifest({ ...valid, runtimeVersion: 109 }), false, "numeric runtime version must be rejected");
+assert.equal(isApkManifest({ ...valid, runtimeVersion: " 1.0.9 " }), false, "padded runtime version must be rejected");
+assert.equal(isApkManifest({ ...valid, minimumRuntimeVersion: "" }), false, "empty minimum runtime must be rejected");
+assert.equal(isApkManifest({ ...valid, buildNumber: " " }), false, "blank build number must be rejected");
+assert.equal(isApkManifest({ ...valid, easBuildId: " build-id" }), false, "padded EAS build id must be rejected");
 assert.equal(isApkManifest({ ...valid, releaseDate: "tomorrow" }), false, "invalid release date must be rejected");
 assert.equal(isApkManifest({ ...valid, releaseDate: "2026-06-20" }), false, "date-only release date must be rejected");
 assert.equal(
@@ -98,7 +102,7 @@ assert.equal(
 );
 assert.equal(isApkManifest({ ...valid, changelog: ["ok", 7] }), false, "non-string changelog item must be rejected");
 
-console.log("test-apk-manifest-validation: ok (23 cases)");
+console.log("test-apk-manifest-validation: ok (27 cases)");
 
 await import("./test-apk-manifest-cache.mjs");
 await import("./test-apk-runtime-compatibility.mjs");

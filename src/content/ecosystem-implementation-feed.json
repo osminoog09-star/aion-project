@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2026-06-20",
+  "lastUpdated": "2026-06-21",
   "maintainedInRepository": true,
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
-      "id": "evt-2026-06-20-c8k2bt",
-      "occurredAt": "2026-06-20",
-      "title": "Driver canonical APK release timestamp",
-      "summary": "APK releaseDate now requires canonical UTC ISO output compatible with the EAS manifest generator.",
+      "id": "evt-2026-06-21-px8ha5",
+      "occurredAt": "2026-06-21",
+      "title": "Driver APK identity metadata contract",
+      "summary": "Runtime, minimum-runtime, build-number, and EAS build identity fields now reject blank or externally padded strings.",
       "subsystemIds": [
         "updates",
         "apk-channel",
@@ -18,7 +18,7 @@
       "repository": "aion-project",
       "rollup": {
     "fullyDone": [
-      "✅ APK releaseDate использует canonical UTC ISO contract"
+      "✅ Runtime/build identity metadata не принимает blank/padded строки"
     ],
     "partiallyDone": [],
         "notStarted": [],
@@ -38,6 +38,50 @@
     "driver_validate_code": "passed",
     "web_build": "passed"
   },
+      "reasoning": "Type-only optional string validation allowed whitespace identities to trigger false runtime mismatch and weak notification dedupe.",
+      "task": "apk-identity-metadata-contract",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/src/core/updates/apkManifest.types.ts",
+        "aion-driver/scripts/ci/test-apk-manifest-validation.mjs"
+      ],
+      "apkImpact": "OTA-safe APK identity contract hardening"
+    },
+    {
+      "id": "evt-2026-06-20-c8k2bt",
+      "occurredAt": "2026-06-20",
+      "title": "Driver canonical APK release timestamp",
+      "summary": "APK releaseDate now requires canonical UTC ISO output compatible with the EAS manifest generator.",
+      "subsystemIds": [
+        "updates",
+        "apk-channel",
+        "mobile-app"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [
+          "✅ APK releaseDate использует canonical UTC ISO contract"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "driver_validate_code": "passed",
+        "web_build": "passed"
+      },
       "reasoning": "Date.parse accepted date-only, offset, and normalized impossible dates, making release age diagnostics dependent on permissive parser behavior.",
       "task": "canonical-apk-release-timestamp",
       "confidence": "high",
