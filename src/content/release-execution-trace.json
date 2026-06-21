@@ -2,6 +2,38 @@
   "version": "1.0",
   "events": [
     {
+      "id": "tr-1782075469523",
+      "at": "2026-06-21T20:57:49.523Z",
+      "stage": "gha_started",
+      "message": "Run 27917259226 status=queued",
+      "runId": 27917259226,
+      "runUrl": "https://github.com/osminoog09-star/aion-project/actions/runs/27917259226",
+      "level": "info"
+    },
+    {
+      "id": "tr-1782075464029",
+      "at": "2026-06-21T20:57:44.029Z",
+      "stage": "gha_trigger",
+      "message": "Dispatched eas-build-driver-preview.yml @ master",
+      "workflowId": 277895512,
+      "level": "info"
+    },
+    {
+      "id": "tr-1782075462440",
+      "at": "2026-06-21T20:57:42.440Z",
+      "stage": "preflight",
+      "message": "Workflow OK id=277895512",
+      "workflowId": 277895512,
+      "level": "info"
+    },
+    {
+      "id": "tr-1782075462064",
+      "at": "2026-06-21T20:57:42.064Z",
+      "stage": "preflight",
+      "message": "Checking workflow eas-build-driver-preview.yml",
+      "level": "info"
+    },
+    {
       "id": "tr-1779152012237",
       "at": "2026-05-19T00:53:32.237Z",
       "stage": "release_failed",

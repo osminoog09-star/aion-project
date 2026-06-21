@@ -5,7 +5,7 @@
 import assert from "node:assert/strict";
 import { compileTsModule } from "./lib/compileTsModule.mjs";
 
-const { getCompletedShiftProfit, pickProfitFromRouteRow } = compileTsModule("utils/shiftDisplayEconomics.ts", {
+const { getCompletedShiftEconomicsProjection, getCompletedShiftProfit, pickProfitFromRouteRow } = compileTsModule("utils/shiftDisplayEconomics.ts", {
   "./formatting": {
     formatCurrencyDisplay(value, currency = "RUB") {
       return `${Math.round(value)} ${currency}`;
@@ -59,6 +59,16 @@ async function main() {
   assert.equal(fromShift.profit, 50);
   assert.equal(fromShift.usesAfterCosts, true);
   assert.equal(getCompletedShiftProfit(fromShiftInput()), 50, "aggregates must prefer after-costs profit");
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(getCompletedShiftEconomicsProjection({
+      ...fromShiftInput(),
+      income: 100,
+      distanceKm: 10,
+      profitPerKm: 7,
+    }))),
+    { profit: 50, profitPerHour: 12, profitPerKm: 5, totalExpenses: 50 },
+    "cloud/UI projection must use after-costs values",
+  );
 
   assert.equal(
     getCompletedShiftProfit(fromShiftInput({ netProfitAfterCosts: undefined, profitPerHourAfterCosts: undefined })),
@@ -70,7 +80,7 @@ async function main() {
   assert.equal(empty.profit, null);
   assert.equal(empty.usesAfterCosts, false);
 
-  console.log("test-shift-display-economics: ok (6 cases)");
+  console.log("test-shift-display-economics: ok (7 cases)");
 }
 
 function fromShiftInput(overrides = {}) {

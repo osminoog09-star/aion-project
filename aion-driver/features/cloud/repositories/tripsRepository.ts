@@ -2,12 +2,14 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Json } from "../../../lib/database.types";
 import type { Database } from "../../../lib/database.types";
 import type { Shift } from "../../../types";
+import { getCompletedShiftEconomicsProjection } from "../../../utils/shiftDisplayEconomics";
 
 export function shiftToTripInsert(
   userId: string,
   shift: Shift,
   vehicleRemoteId: string | null,
 ): Database["public"]["Tables"]["trips"]["Insert"] {
+  const economics = getCompletedShiftEconomicsProjection(shift);
   return {
     user_id: userId,
     vehicle_id: vehicleRemoteId,
@@ -16,13 +18,13 @@ export function shiftToTripInsert(
     started_at: shift.startedAt,
     ended_at: shift.endedAt,
     earnings: shift.income,
-    expenses_total: shift.fuelCostTotal,
+    expenses_total: economics.totalExpenses,
     distance_km: shift.distanceKm,
     duration_seconds: Math.max(0, Math.round(shift.durationMs / 1000)),
     fuel_liters_equivalent:
       shift.fuelUsedPetrolLiters + shift.fuelUsedGasLiters,
-    profit_per_hour: shift.profitPerHour,
-    profit_per_km: shift.profitPerKm,
+    profit_per_hour: economics.profitPerHour,
+    profit_per_km: economics.profitPerKm,
   };
 }
 

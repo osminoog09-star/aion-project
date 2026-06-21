@@ -6,6 +6,7 @@ import { useShift } from "../../hooks/useShift";
 import { useResolvedCurrency } from "../../hooks/useResolvedCurrency";
 import type { Shift } from "../../types";
 import { formatCurrencyDisplay } from "../../utils/formatting";
+import { getCompletedShiftProfit, pickProfitFromLive } from "../../utils/shiftDisplayEconomics";
 
 function formatDuration(ms: number): string {
   const h = Math.floor(ms / 3600000);
@@ -28,7 +29,7 @@ export function DesktopFinanceScreen() {
     if (!activeShift || !liveMetrics) return null;
     return {
       income: liveMetrics.income,
-      net: liveMetrics.netProfit,
+      net: pickProfitFromLive(liveMetrics).profit,
       durationMs: liveMetrics.durationMs,
     };
   }, [activeShift, liveMetrics]);
@@ -53,7 +54,7 @@ export function DesktopFinanceScreen() {
           {formatCurrencyDisplay(sh.income, currency)}
         </Text>
         <Text style={{ flex: 1.3, fontSize: 12, fontWeight: "700", color: s.success }} numberOfLines={1}>
-          {formatCurrencyDisplay(sh.netProfit, currency)}
+          {formatCurrencyDisplay(getCompletedShiftProfit(sh), currency)}
         </Text>
       </View>
     ),

@@ -5,6 +5,7 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 import type { TimelineEntry } from "../../features/history/useTimelineEntries";
 import type { AppCurrencyCode } from "../../types/device";
 import { formatCurrencyDisplay } from "../../utils/formatting";
+import { getCompletedShiftProfit } from "../../utils/shiftDisplayEconomics";
 
 type Props = {
   entries: TimelineEntry[];
@@ -13,7 +14,7 @@ type Props = {
 
 function labelFor(e: TimelineEntry, currency: AppCurrencyCode): string {
   if (e.kind === "shift") {
-    return `Смена · ${formatCurrencyDisplay(e.shift.netProfit, currency)}`;
+    return `Смена · ${formatCurrencyDisplay(getCompletedShiftProfit(e.shift), currency)}`;
   }
   if (e.kind === "ocr") {
     return `OCR · ${e.record.platform.toUpperCase()}`;

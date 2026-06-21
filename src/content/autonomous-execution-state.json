@@ -1,8 +1,8 @@
 {
   "version": "1.0",
-  "phase": "autonomous_active",
+  "phase": "gha_running",
   "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
-  "updatedAt": "2026-06-21T20:55:44.084Z",
+  "updatedAt": "2026-06-21T20:57:49.525Z",
   "apkVersion": "1.0.7",
   "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
   "roadmapSynced": true,
@@ -12,6 +12,18 @@
   "error": null,
   "telemetry": "autonomous_owner_mandate",
   "history": [
+    {
+      "at": "2026-06-21T20:57:49.525Z",
+      "phase": "gha_running",
+      "workflowRunId": 27917259226,
+      "workflowRunUrl": "https://github.com/osminoog09-star/aion-project/actions/runs/27917259226"
+    },
+    {
+      "at": "2026-06-21T20:57:44.030Z",
+      "phase": "gha_triggered",
+      "workflowFile": "eas-build-driver-preview.yml",
+      "workflowId": 277895512
+    },
     {
       "at": "2026-06-21T20:55:44.084Z",
       "phase": "autonomous_active",
@@ -30,5 +42,9 @@
       "error": "fetch failed",
       "telemetry": "build_absent_or_gha_failed"
     }
-  ]
+  ],
+  "workflowFile": "eas-build-driver-preview.yml",
+  "workflowId": 277895512,
+  "workflowRunId": 27917259226,
+  "workflowRunUrl": "https://github.com/osminoog09-star/aion-project/actions/runs/27917259226"
 }
