@@ -54,6 +54,11 @@ function optionalString(o: Record<string, unknown>, key: string): boolean {
   return o[key] == null || typeof o[key] === "string";
 }
 
+function optionalIdentityString(o: Record<string, unknown>, key: string): boolean {
+  const value = o[key];
+  return value == null || (typeof value === "string" && value.length > 0 && value.trim() === value);
+}
+
 function isCanonicalUtcTimestamp(value: unknown): value is string {
   if (typeof value !== "string") return false;
   const parsed = Date.parse(value);
@@ -81,15 +86,14 @@ export function isApkManifest(v: unknown): v is ApkUpdateManifest {
   }
   if (
     ![
-      "runtimeVersion",
-      "buildNumber",
-      "minimumRuntimeVersion",
       "downloadSizeLabel",
       "releaseType",
       "releaseNotes",
-      "easBuildId",
     ].every((key) => optionalString(o, key))
   ) {
+    return false;
+  }
+  if (!["runtimeVersion", "buildNumber", "minimumRuntimeVersion", "easBuildId"].every((key) => optionalIdentityString(o, key))) {
     return false;
   }
   if (

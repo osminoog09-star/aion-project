@@ -640,6 +640,19 @@
           "Отклонять нормализуемые impossible dates — DONE",
           "Детерминированный manifest CI test (23 cases) — DONE"
         ]
+      },
+      {
+        "priority": 47,
+        "id": "driver-apk-identity-metadata-contract",
+        "title": "APK manifest: строгие runtime/build identity strings",
+        "status": "shipped",
+        "tasks": [
+          "Отклонять padded runtimeVersion — DONE",
+          "Отклонять empty minimumRuntimeVersion — DONE",
+          "Отклонять blank buildNumber — DONE",
+          "Отклонять padded easBuildId — DONE",
+          "Детерминированный manifest CI test (27 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
