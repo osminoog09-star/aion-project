@@ -105,7 +105,11 @@ export function isApkManifest(v: unknown): v is ApkUpdateManifest {
   if (o.releaseDate != null && !isCanonicalUtcTimestamp(o.releaseDate)) {
     return false;
   }
-  if (o.changelog != null && (!Array.isArray(o.changelog) || !o.changelog.every((line) => typeof line === "string"))) {
+  if (
+    o.changelog != null &&
+    (!Array.isArray(o.changelog) ||
+      !o.changelog.every((line) => typeof line === "string" && line.length > 0 && line.trim() === line))
+  ) {
     return false;
   }
   return true;

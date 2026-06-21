@@ -101,8 +101,11 @@ assert.equal(
   "normalized impossible release date must be rejected",
 );
 assert.equal(isApkManifest({ ...valid, changelog: ["ok", 7] }), false, "non-string changelog item must be rejected");
+assert.equal(isApkManifest({ ...valid, changelog: [""] }), false, "empty changelog item must be rejected");
+assert.equal(isApkManifest({ ...valid, changelog: ["   "] }), false, "blank changelog item must be rejected");
+assert.equal(isApkManifest({ ...valid, changelog: [" padded"] }), false, "padded changelog item must be rejected");
 
-console.log("test-apk-manifest-validation: ok (27 cases)");
+console.log("test-apk-manifest-validation: ok (30 cases)");
 
 await import("./test-apk-manifest-cache.mjs");
 await import("./test-apk-runtime-compatibility.mjs");
