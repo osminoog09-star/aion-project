@@ -63,6 +63,10 @@ function isPositiveIntegerString(value: unknown): value is string {
   return typeof value === "string" && /^[1-9]\d*$/.test(value);
 }
 
+function isCanonicalUuid(value: unknown): value is string {
+  return typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(value);
+}
+
 function isCanonicalUtcTimestamp(value: unknown): value is string {
   if (typeof value !== "string") return false;
   const parsed = Date.parse(value);
@@ -103,6 +107,9 @@ export function isApkManifest(v: unknown): v is ApkUpdateManifest {
     return false;
   }
   if (o.buildNumber != null && !isPositiveIntegerString(o.buildNumber)) {
+    return false;
+  }
+  if (o.easBuildId != null && !isCanonicalUuid(o.easBuildId)) {
     return false;
   }
   if (

@@ -4,10 +4,10 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
-      "id": "evt-2026-06-21-6j6ojc",
+      "id": "evt-2026-06-21-2qwesk",
       "occurredAt": "2026-06-21",
-      "title": "Driver canonical APK build number",
-      "summary": "APK buildNumber now requires a canonical positive integer string compatible with Android versionCode and EAS output.",
+      "title": "Driver canonical EAS build identity",
+      "summary": "APK easBuildId now requires the canonical lowercase UUID emitted by the EAS pipeline.",
       "subsystemIds": [
         "updates",
         "apk-channel",
@@ -18,7 +18,7 @@
       "repository": "aion-project",
       "rollup": {
     "fullyDone": [
-      "✅ APK buildNumber canonical и совместим с Android versionCode"
+      "✅ easBuildId canonical и трассируется до EAS build"
     ],
     "partiallyDone": [],
         "notStarted": [],
@@ -38,6 +38,50 @@
     "driver_validate_code": "passed",
     "web_build": "passed"
   },
+      "reasoning": "Generic identity validation allowed opaque labels that weakened manifest-to-build traceability and notification dedupe.",
+      "task": "canonical-eas-build-identity",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/src/core/updates/apkManifest.types.ts",
+        "aion-driver/scripts/ci/test-apk-manifest-validation.mjs"
+      ],
+      "apkImpact": "OTA-safe EAS build traceability hardening"
+    },
+    {
+      "id": "evt-2026-06-21-6j6ojc",
+      "occurredAt": "2026-06-21",
+      "title": "Driver canonical APK build number",
+      "summary": "APK buildNumber now requires a canonical positive integer string compatible with Android versionCode and EAS output.",
+      "subsystemIds": [
+        "updates",
+        "apk-channel",
+        "mobile-app"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [
+          "✅ APK buildNumber canonical и совместим с Android versionCode"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "driver_validate_code": "passed",
+        "web_build": "passed"
+      },
       "reasoning": "Generic string validation allowed partial parseInt values such as 13beta and ambiguous zero or leading-zero build identities.",
       "task": "canonical-apk-build-number",
       "confidence": "high",
