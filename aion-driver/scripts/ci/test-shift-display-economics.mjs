@@ -5,7 +5,7 @@
 import assert from "node:assert/strict";
 import { compileTsModule } from "./lib/compileTsModule.mjs";
 
-const { pickProfitFromRouteRow } = compileTsModule("utils/shiftDisplayEconomics.ts", {
+const { getCompletedShiftProfit, pickProfitFromRouteRow } = compileTsModule("utils/shiftDisplayEconomics.ts", {
   "./formatting": {
     formatCurrencyDisplay(value, currency = "RUB") {
       return `${Math.round(value)} ${currency}`;
@@ -58,12 +58,30 @@ async function main() {
   });
   assert.equal(fromShift.profit, 50);
   assert.equal(fromShift.usesAfterCosts, true);
+  assert.equal(getCompletedShiftProfit(fromShiftInput()), 50, "aggregates must prefer after-costs profit");
+
+  assert.equal(
+    getCompletedShiftProfit(fromShiftInput({ netProfitAfterCosts: undefined, profitPerHourAfterCosts: undefined })),
+    70,
+    "legacy shifts must fall back to netProfit",
+  );
 
   const empty = pickProfitFromRouteRow({});
   assert.equal(empty.profit, null);
   assert.equal(empty.usesAfterCosts, false);
 
-  console.log("test-shift-display-economics: ok (4 cases)");
+  console.log("test-shift-display-economics: ok (6 cases)");
+}
+
+function fromShiftInput(overrides = {}) {
+  return {
+    id: "s1",
+    netProfit: 70,
+    profitPerHour: 18,
+    netProfitAfterCosts: 50,
+    profitPerHourAfterCosts: 12,
+    ...overrides,
+  };
 }
 
 main().catch((e) => {

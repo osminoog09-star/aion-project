@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T23:05:00.000Z",
+  "lastUpdated": "2026-06-21T04:41:09.000Z",
   "priority": "Модуль Driver",
-  "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. APK easBuildId требует canonical lowercase UUID из EAS pipeline.",
-  "currentStatus": "Driver canonical EAS build identity; release stack live",
+  "headline": "Codex ведёт критический Driver runtime/profit path; APK hardening остановлен.",
+  "currentFocus": "Недельные, месячные и профильные агрегаты используют единый after-costs selector с legacy fallback.",
+  "currentStatus": "Driver unified completed-shift profit aggregates",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -60,7 +60,8 @@
     "APK manifest changelog содержит только непустые trimmed строки; пустые bullets больше не попадают в update modal.",
     "APK manifest boundary отклоняет padded latestVersion/minimumSupported, не меняя tolerant comparator для локальных runtime значений.",
     "APK buildNumber принимает только положительное целое без leading zeros; partial parseInt значения больше не проходят manifest.",
-    "APK easBuildId валидируется как canonical lowercase UUID; malformed identity больше не участвует в traceability и dedupe."
+    "APK easBuildId валидируется как canonical lowercase UUID; malformed identity больше не участвует в traceability и dedupe.",
+    "Dashboard period stats и Driver Profile totals/best-week/XP больше не суммируют gross netProfit при наличии operationalCosts."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -120,6 +121,7 @@
     "Driver APK changelog item contract — OK (30 manifest cases)",
     "Driver APK canonical version boundary — OK (32 manifest cases)",
     "Driver canonical APK build number — OK (35 manifest cases)",
-    "Driver canonical EAS build identity — OK (37 manifest cases)"
+    "Driver canonical EAS build identity — OK (37 manifest cases)",
+    "Driver completed-shift profit aggregates — OK (6 economics cases)"
   ]
 }

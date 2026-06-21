@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import type { Shift } from "../../../types";
+import { getCompletedShiftProfit } from "../../../utils/shiftDisplayEconomics";
 
 function startOfTodayMs(): number {
   const d = new Date();
@@ -32,7 +33,7 @@ export function usePeriodShiftStats(shifts: Shift[]) {
         const end = new Date(s.endedAt).getTime();
         if (Number.isNaN(end)) continue;
         if (end >= wStart && end < wEnd) {
-          monthWeekSpark[3 - w] += s.netProfit;
+          monthWeekSpark[3 - w] += getCompletedShiftProfit(s);
         }
       }
     }
@@ -44,7 +45,7 @@ export function usePeriodShiftStats(shifts: Shift[]) {
         const end = new Date(s.endedAt).getTime();
         if (Number.isNaN(end)) continue;
         if (end >= dayStart && end < dayEnd) {
-          weekSpark[i] += s.netProfit;
+          weekSpark[i] += getCompletedShiftProfit(s);
           weekFuelSpark[i] += s.fuelCostTotal;
         }
       }
@@ -53,14 +54,15 @@ export function usePeriodShiftStats(shifts: Shift[]) {
     for (const s of shifts) {
       const end = new Date(s.endedAt).getTime();
       if (Number.isNaN(end)) continue;
-      if (end >= t0) todayProfit += s.netProfit;
+      const displayProfit = getCompletedShiftProfit(s);
+      if (end >= t0) todayProfit += displayProfit;
       if (end >= w0) {
-        weekProfit += s.netProfit;
+        weekProfit += displayProfit;
         weekFuel += s.fuelCostTotal;
         weekTrips += 1;
       }
       if (end >= m30) {
-        monthProfit += s.netProfit;
+        monthProfit += displayProfit;
         monthFuel += s.fuelCostTotal;
         monthTrips += 1;
       }

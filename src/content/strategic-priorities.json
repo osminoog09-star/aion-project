@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-19",
+  "lastUpdated": "2026-06-21",
   "constitutionVersion": "2.0",
   "autonomousOrchestration": "Cursor executes roadmap/priorities/deps autonomously; owner observes /operations/command (Russian) and edits /operations/priorities — no ChatGPT relay.",
   "ownerLanguageRule": "Владелец видит только русский интерфейс. Английский — код и технические детали (свёрнуто).",
@@ -48,7 +48,7 @@
       "subsystemIds": ["mobile-app", "background-drive"],
       "status": "in_progress",
       "rationale": "MASTER §14–15: один runtime path, strict shift state machine.",
-      "nextAction": "Закрепить operationalCosts; без дублирующей математики в UI",
+      "nextAction": "Перевести Driver analytics/AI score и cloud projections на единый after-costs selector; не дублировать profit math",
       "setAt": "2026-05-15",
       "setBy": "cursor"
     },
