@@ -4,6 +4,99 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-21-kq52l4",
+      "occurredAt": "2026-06-21",
+      "title": "Driver GPS: высокая точность",
+      "summary": "Foreground и Android FGS переведены на Accuracy.High; автоматическая пауза активной смены отключена. Фильтр 45 м теперь получает подходящие GPS fixes. Подготовлен preview APK 1.0.9 build 14.",
+      "subsystemIds": [
+        "background-drive",
+        "gps-route",
+        "driver-intelligence"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Improve active-shift GPS accuracy",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/services/locationService.ts",
+        "aion-driver/services/androidForegroundLocationShiftAdapter.ts",
+        "aion-driver/app.config.ts",
+        "aion-driver/scripts/ci/test-location-accuracy-policy.mjs"
+      ],
+      "runtimeImpact": "More accepted route points and less distance undercount during active shifts",
+      "apkImpact": "New preview APK 1.0.9 build 14 required"
+    },
+    {
+      "id": "evt-2026-06-21-mdfa72",
+      "occurredAt": "2026-06-21",
+      "title": "Owner: автономный режим без device gate",
+      "summary": "Field validation 8/8 навсегда снят как стоп-условие. APK hardening закрыт; активна очередь GPS, runtime/costs, profit UI, OCR, portal writes и Maps/Fuel ADR только на реальных данных.",
+      "subsystemIds": [
+        "operations-center",
+        "background-drive",
+        "driver-intelligence"
+      ],
+      "eventType": "owner_decision",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Remove owner device gate and resume autonomous execution",
+      "confidence": "high",
+      "changedFiles": [
+        "src/content/strategic-priorities.json",
+        "src/content/autonomous-execution-state.json",
+        "src/content/execution-loop-state.json"
+      ],
+      "runtimeImpact": "Autonomous work no longer waits for owner device smoke",
+      "apkImpact": "Preview APK builds only for functional Driver changes"
+    },
+    {
       "id": "evt-2026-06-21-ya3bk4",
       "occurredAt": "2026-06-21",
       "title": "Driver after-costs analytics score",
@@ -17,16 +110,16 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-    "fullyDone": [
-      "✅ Driver Analytics и AI score используют after-costs profit"
-    ],
-    "partiallyDone": [],
+        "fullyDone": [
+          "✅ Driver Analytics и AI score используют after-costs profit"
+        ],
+        "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-  "stillMissing": [
-    "Cloud trip projections ещё хранят gross profit columns"
-  ],
+      "stillMissing": [
+        "Cloud trip projections ещё хранят gross profit columns"
+      ],
       "blocked": [],
       "impacts": {
         "release": "medium",
@@ -36,10 +129,10 @@
         "ux": "medium",
         "cloud": "low"
       },
-  "validation": {
-    "driver_validate_code": "passed",
-    "web_build": "passed"
-  },
+      "validation": {
+        "driver_validate_code": "passed",
+        "web_build": "passed"
+      },
       "reasoning": "Driver Profile totals were net while AI score and recommendations still optimized gross profit, favoring shifts with hidden rental and fixed costs.",
       "task": "after-costs-analytics-score",
       "confidence": "high",

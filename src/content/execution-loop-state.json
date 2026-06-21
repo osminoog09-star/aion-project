@@ -1,20 +1,20 @@
 {
   "version": "1.0",
   "loopStartedAt": "2026-05-15T13:23:00.483Z",
-  "lastTaskKey": "route-intelligence-ux-+-field-validation",
-  "sameTaskCount": 6,
-  "lastAutonomousAt": "2026-06-19T11:54:41.402Z",
+  "lastTaskKey": "unified-shift-runtime-+-operational-costs",
+  "sameTaskCount": 1,
+  "lastAutonomousAt": "2026-06-21T20:56:07.073Z",
   "lastHealAt": null,
   "healCountHour": 0,
   "healHourStarted": null,
   "deployCooldownUntil": null,
-  "totalAutonomousTicks": 8,
-  "autonomousDepth": 8,
+  "totalAutonomousTicks": 9,
+  "autonomousDepth": 9,
   "ownerMandate": {
     "active": true,
-    "labelRu": "Автономная работа 1 ч (владелец)",
-    "startedAt": "2026-05-18T12:45:44.047Z",
-    "endsAt": "2026-05-18T13:45:44.047Z",
-    "durationMs": 3600000
+    "labelRu": "Автономная работа 4 ч (владелец)",
+    "startedAt": "2026-06-21T20:55:45.001Z",
+    "endsAt": "2026-06-22T00:55:45.001Z",
+    "durationMs": 14400000
   }
 }

@@ -93,7 +93,7 @@ export function startFilteredLocationSession(
   void (async () => {
     subscription = await Location.watchPositionAsync(
       {
-        accuracy: Location.Accuracy.Balanced,
+        accuracy: Location.Accuracy.High,
         timeInterval,
         distanceInterval,
       },

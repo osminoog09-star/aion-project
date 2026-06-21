@@ -62,7 +62,7 @@ export const RUNTIME_GRAPH = {
 };
 
 export const SAFETY = {
-  maxSameTaskRepeats: 5,
+  maxSameTaskRepeats: 3,
   maxHealPerHour: 3,
   deployCooldownMs: 120_000,
   maxAutonomousDepth: 48,
@@ -71,6 +71,51 @@ export const SAFETY = {
 
 /** Mirrors owner-ru-constitution AUTONOMOUS_QUEUE_RU */
 export const AUTONOMOUS_QUEUE = [
+  {
+    key: "unified-runtime-costs",
+    task: "Unified shift runtime + operational costs",
+    subsystem: "shift-economics",
+    reasoning: "Keep one source of truth for shift profit and operational costs",
+    next: "Deduplicate profit math in Driver UI",
+    progressPercent: 72,
+    etaMinutes: 60,
+  },
+  {
+    key: "profit-ui-dedup",
+    task: "Deduplicate profit math in Driver UI",
+    subsystem: "driver-ui",
+    reasoning: "UI must consume runtime economics instead of recalculating profit",
+    next: "OCR production path",
+    progressPercent: 45,
+    etaMinutes: 75,
+  },
+  {
+    key: "ocr-production",
+    task: "OCR production path",
+    subsystem: "ocr",
+    reasoning: "Improve real receipt ingestion without synthetic data",
+    next: "Portal auth and Supabase write path",
+    progressPercent: 55,
+    etaMinutes: 90,
+  },
+  {
+    key: "portal-auth-writes",
+    task: "Portal auth + Supabase write path",
+    subsystem: "web-portal",
+    reasoning: "Make authenticated operational writes reliable in production",
+    next: "Maps and Fuel ADR/data schemas",
+    progressPercent: 40,
+    etaMinutes: 90,
+  },
+  {
+    key: "maps-fuel-adr",
+    task: "Maps and Fuel ADR + real-data schemas",
+    subsystem: "architecture",
+    reasoning: "Define contracts only; do not invent numbers or start a fake engine",
+    next: "Implement only against accumulated real Driver data",
+    progressPercent: 20,
+    etaMinutes: 120,
+  },
   {
     key: "route-field-validation",
     task: "Route intelligence UX + field validation",
@@ -242,12 +287,15 @@ export function pickNextTask(priorities, loopState) {
     .map((p) => (p.id ?? "").toLowerCase())
     .filter(Boolean);
 
-  let pick =
-    AUTONOMOUS_QUEUE.find((q) => target.includes(q.key.replace(/-/g, " ").slice(0, 8))) ??
-    AUTONOMOUS_QUEUE.find((q) => target.includes(q.task.slice(0, 14).toLowerCase())) ??
-    AUTONOMOUS_QUEUE[0];
+  const excludedKeys = new Set(["route-field-validation", "stop-zone-device", "apk-release"]);
+  const actionableQueue = AUTONOMOUS_QUEUE.filter((q) => !excludedKeys.has(q.key));
 
-  for (const q of AUTONOMOUS_QUEUE) {
+  let pick =
+    actionableQueue.find((q) => target.includes(q.key.replace(/-/g, " ").slice(0, 8))) ??
+    actionableQueue.find((q) => target.includes(q.task.slice(0, 14).toLowerCase())) ??
+    actionableQueue[0];
+
+  for (const q of actionableQueue) {
     if (blocked.has(q.subsystem)) continue;
     if (target.includes(q.subsystem) || target.includes(q.task.slice(0, 10).toLowerCase())) {
       pick = q;
@@ -260,10 +308,10 @@ export function pickNextTask(priorities, loopState) {
       ACTION_TAGS.AUDIT,
       "Стратегический roadmap-only приоритет — удерживаем field validation / production gate",
     );
-    pick = AUTONOMOUS_QUEUE[0];
+    pick = actionableQueue[0];
   }
 
-  const key = pick.key;
+  const key = taskKey(pick.task);
   if (loopState.lastTaskKey === key && loopState.sameTaskCount >= SAFETY.maxSameTaskRepeats) {
     const bg = BACKGROUND_TASKS[loopState.totalAutonomousTicks % BACKGROUND_TASKS.length];
     logAction(ACTION_TAGS.AUDIT, `Anti-loop: переключаюсь на фоновую задачу «${bg.task}»`);

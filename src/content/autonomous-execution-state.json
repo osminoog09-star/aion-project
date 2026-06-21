@@ -1,17 +1,23 @@
 {
   "version": "1.0",
-  "phase": "release_failed",
+  "phase": "autonomous_active",
   "buildId": "eb4250a2-8702-4c47-af49-0e5b75eb9724",
-  "updatedAt": "2026-05-19T00:53:32.238Z",
+  "updatedAt": "2026-06-21T20:55:44.084Z",
   "apkVersion": "1.0.7",
   "apkUrl": "https://expo.dev/artifacts/eas/v3WRE56cBwqcm5igu49QaJ.apk",
   "roadmapSynced": true,
   "strategicRoadmapSynced": true,
-  "humanBoundary": "eas_build_1_0_7_then_field_validation_8_8",
-  "note": "Код 1.0.7 (Google OAuth native). Запустить EAS Build Driver (preview) → manifest sync → Маршруты 8/8 → /operations/live.",
-  "error": "fetch failed",
-  "telemetry": "build_absent_or_gha_failed",
+  "humanBoundary": null,
+  "note": "Owner removed field validation 8/8 permanently. Autonomous queue is active; APK hardening is closed.",
+  "error": null,
+  "telemetry": "autonomous_owner_mandate",
   "history": [
+    {
+      "at": "2026-06-21T20:55:44.084Z",
+      "phase": "autonomous_active",
+      "ownerDecision": "field_validation_8_8_removed_permanently",
+      "queue": "gps_runtime_costs_profit_ocr_portal_maps_fuel_adr"
+    },
     {
       "at": "2026-05-19T00:53:32.238Z",
       "phase": "release_failed",

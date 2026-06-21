@@ -2,17 +2,17 @@
   "version": "2.0",
   "orchestrationVersion": "3.0",
   "agentId": "cursor-autonomous",
-  "lastUpdated": "2026-06-19",
+  "lastUpdated": "2026-06-21",
   "runtime": {
     "status": "coding",
     "phase": "coding",
-    "currentTask": "Route intelligence UX + field validation",
-    "subsystem": "driver-intelligence",
-    "reasoning": "Проверка backfill и stop-zone на реальном устройстве",
+    "currentTask": "Unified shift runtime + operational costs",
+    "subsystem": "shift-economics",
+    "reasoning": "Keep one source of truth for shift profit and operational costs",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-19T12:49:48.549Z",
-    "heartbeatAt": "2026-06-19T12:49:48.549Z",
+    "updatedAt": "2026-06-21T20:56:07.288Z",
+    "heartbeatAt": "2026-06-21T20:56:07.288Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -20,7 +20,7 @@
     ],
     "commitCandidate": "pending",
     "blocker": null,
-    "nextStep": "OTA тест Driver",
+    "nextStep": "Deduplicate profit math in Driver UI",
     "branch": "main",
     "dependencyTarget": "Live execution observability + self-healing",
     "pendingReviewCount": 0,
@@ -34,12 +34,12 @@
     "lastCompletedAction": "AI заблокирован: Release failed",
     "retryCount": 0,
     "validationProgress": "Operations получил видимый статус работы Codex по Driver",
-    "progressPercent": 68,
-    "etaMinutes": 45,
-    "autonomousDepth": 8,
+    "progressPercent": 72,
+    "etaMinutes": 60,
+    "autonomousDepth": 9,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
-    "lastAction": "CODE",
+    "lastAction": "NEXT",
     "currentFile": "src/app/operations/page.tsx",
     "recentActions": [
       {
@@ -268,6 +268,17 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-21T20:56:07.288Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Unified shift runtime + operational costs",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Keep one source of truth for shift profit and operational costs",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-06-19T12:49:48.549Z",
       "phase": "coding",
@@ -882,20 +893,12 @@
       "resultRu": "В процессе",
       "icon": "⚡",
       "confidence": 0.9
-    },
-    {
-      "at": "2026-05-15T12:21:14.729Z",
-      "phase": "validating",
-      "summary": "AI проверяет качество: Field validation Driver — typecheck",
-      "feedEventId": "evt-2026-05-15-exec-x9ikbs",
-      "titleRu": "AI проверяет качество",
-      "explanationRu": "Проверка после чеклиста field validation на /driver/route-timeline",
-      "resultRu": "В процессе",
-      "icon": "✅",
-      "confidence": 0.9
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-21T20:56:07.288Z"
+    },
     {
       "at": "2026-06-19T12:49:48.549Z"
     },
@@ -1036,9 +1039,6 @@
     },
     {
       "at": "2026-05-16T13:42:47.833Z"
-    },
-    {
-      "at": "2026-05-16T13:42:47.149Z"
     }
   ]
 }
