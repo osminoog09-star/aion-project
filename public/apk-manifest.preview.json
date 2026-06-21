@@ -5,18 +5,18 @@
   "buildNumber": "13",
   "compatibilityStatus": "compatible_with_portal_runtime",
   "portalMinRuntimeVersion": "1.0.6",
-  "releaseDate": "2026-06-19T20:45:23.103Z",
+  "releaseDate": "2026-06-21T05:02:21.904Z",
   "releaseType": "test",
-  "releaseNotes": "Preview APK 1.0.9 build 13. Runtime 1.0.9. Direct artifact URL verified from FINISHED EAS build 0d3dd137-e3bb-42ec-9e7f-94cd102023d8 (da4b6f4595292ad38822b1c7b2c41a9a7ae0e6d3).",
+  "releaseNotes": "Preview APK 1.0.9 build 13. Runtime 1.0.9. Direct artifact URL verified from FINISHED EAS build a3c0282e-df35-4ebb-844f-e7234e927028 (21ecfbe6eac0b6060eca8b9d143ec8493519584f).",
   "changelog": [
     "1.0.8: Runtime Sphere, auto-sync, живой overlay orb (OrbView), Link Pair UI.",
     "1.0.8: баг-репорты в облако, журнал заправок (исправить/удалить).",
     "Установите поверх preview 1.0.6/1.0.7 — дальше OTA на runtime 1.0.8."
   ],
-  "apkUrl": "https://expo.dev/artifacts/eas/UsxUtQfIrvYAfS_gZcdQjMGMBIsmu5MrNcscHKxduHk.apk",
+  "apkUrl": "https://expo.dev/artifacts/eas/1nzKO9myQWbMj_4vwzVWHz8XwSYYxojS1EYlHNaDNeo.apk",
   "critical": false,
   "forceUpdate": false,
-  "easBuildId": "0d3dd137-e3bb-42ec-9e7f-94cd102023d8",
+  "easBuildId": "a3c0282e-df35-4ebb-844f-e7234e927028",
   "supportedFeatures": [
     "field_validation_8_8",
     "ota_smoke_from_validation",
