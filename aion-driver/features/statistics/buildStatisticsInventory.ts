@@ -11,6 +11,7 @@ import { listAionTimeline } from "../../storage/core/aionTimelineStorage";
 import { STAT_ELEMENT_CATALOG } from "./catalog";
 import { filterShiftsByPeriod, formatShiftRowLabel } from "./shiftPeriod";
 import type { StatisticsInventory, StatElementId, StatElementInventoryItem } from "./types";
+import { getCompletedShiftProfit } from "../../utils/shiftDisplayEconomics";
 
 const TIMELINE_KEY = "@aion/core/timeline_v1";
 
@@ -66,13 +67,13 @@ export async function buildStatisticsInventory(): Promise<StatisticsInventory> {
     shifts_today: {
       count: today.length,
       preview: today.length
-        ? `${today.length} смен · ${Math.round(today.reduce((a, s) => a + s.netProfit, 0))} чистыми`
+        ? `${today.length} смен · ${Math.round(today.reduce((a, s) => a + getCompletedShiftProfit(s), 0))} чистыми`
         : "Нет смен за сегодня",
     },
     shifts_7d: {
       count: week.length,
       preview: week.length
-        ? `${week.length} смен · ${Math.round(week.reduce((a, s) => a + s.netProfit, 0))} за 7 д`
+        ? `${week.length} смен · ${Math.round(week.reduce((a, s) => a + getCompletedShiftProfit(s), 0))} за 7 д`
         : "Пусто",
     },
     shifts_30d: {
@@ -158,7 +159,7 @@ export async function buildStatisticsInventory(): Promise<StatisticsInventory> {
   const recentShifts = history.slice(0, 24).map((s) => ({
     id: s.id,
     endedAt: s.endedAt,
-    netProfit: s.netProfit,
+    netProfit: getCompletedShiftProfit(s),
     distanceKm: s.distanceKm,
     label: formatShiftRowLabel(s),
   }));

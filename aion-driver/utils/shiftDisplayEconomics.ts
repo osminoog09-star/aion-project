@@ -98,6 +98,16 @@ export function getCompletedShiftProfitPerKm(shift: Shift): number {
   return shift.distanceKm > 0 ? profit / shift.distanceKm : shift.profitPerKm;
 }
 
+export function getCompletedShiftEconomicsProjection(shift: Shift) {
+  const profit = getCompletedShiftProfit(shift);
+  return {
+    profit,
+    profitPerHour: getCompletedShiftProfitPerHour(shift),
+    profitPerKm: getCompletedShiftProfitPerKm(shift),
+    totalExpenses: Math.max(0, shift.income - profit),
+  };
+}
+
 /** Краткая строка аренда + фикс. для HUD / истории. */
 export function formatOperationalCostsBrief(
   oc: ShiftOperationalCosts,

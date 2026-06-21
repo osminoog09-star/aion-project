@@ -4,6 +4,53 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-21-pvfoo4",
+      "occurredAt": "2026-06-21",
+      "title": "Driver: единая прибыль после расходов",
+      "summary": "Supabase trip projection, desktop finance, timeline и статистика теперь используют один after-costs contract. expenses_total включает топливо, аренду и фиксированные расходы; legacy-смены сохраняют прежний fallback.",
+      "subsystemIds": [
+        "driver-intelligence",
+        "web-portal",
+        "background-drive"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Unify shift runtime operational costs and deduplicate profit UI",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/utils/shiftDisplayEconomics.ts",
+        "aion-driver/features/cloud/repositories/tripsRepository.ts",
+        "aion-driver/screens/desktop/DesktopFinanceScreen.tsx",
+        "aion-driver/components/driver/DriverBriefTimeline.tsx",
+        "aion-driver/features/statistics/buildStatisticsInventory.ts"
+      ],
+      "runtimeImpact": "One persisted/display economics projection across cloud and Driver UI"
+    },
+    {
       "id": "evt-2026-06-21-kq52l4",
       "occurredAt": "2026-06-21",
       "title": "Driver GPS: высокая точность",
