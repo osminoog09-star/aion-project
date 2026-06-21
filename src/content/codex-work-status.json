@@ -1,9 +1,9 @@
 {
-  "lastUpdated": "2026-06-20T22:20:00.000Z",
+  "lastUpdated": "2026-06-20T22:35:00.000Z",
   "priority": "Модуль Driver",
   "headline": "Codex ведёт Driver release loop и не переключается на новые большие фичи.",
-  "currentFocus": "Release stack live. APK changelog отклоняет пустые, пробельные и padded строки до modal rendering.",
-  "currentStatus": "Driver APK changelog item contract; release stack live",
+  "currentFocus": "Release stack live. APK latestVersion/minimumSupported требуют canonical semver без внешних пробелов.",
+  "currentStatus": "Driver APK canonical version boundary; release stack live",
   "latestRun": {
     "label": "EAS preview APK 1.0.9 build 13",
     "status": "success",
@@ -57,7 +57,8 @@
     "APK semantic stale evaluator принимает nowMs, детерминированно проверяет 36h/90d границы и помечает invalid/future timestamps как stale.",
     "APK manifest validator отклоняет date-only, timezone offset и нормализуемые невозможные releaseDate; canonical EAS UTC ISO остаётся совместимым.",
     "runtimeVersion, minimumRuntimeVersion, buildNumber и easBuildId отклоняют blank/padded значения до policy, UI и notification dedupe.",
-    "APK manifest changelog содержит только непустые trimmed строки; пустые bullets больше не попадают в update modal."
+    "APK manifest changelog содержит только непустые trimmed строки; пустые bullets больше не попадают в update modal.",
+    "APK manifest boundary отклоняет padded latestVersion/minimumSupported, не меняя tolerant comparator для локальных runtime значений."
   ],
   "next": [
     "Установить APK 1.0.9 build 13 на устройство и выполнить smoke основных Driver-потоков.",
@@ -114,6 +115,7 @@
     "Driver deterministic APK stale boundaries — OK (47 cache assertions)",
     "Driver canonical APK release timestamp — OK (23 manifest cases)",
     "Driver APK identity metadata contract — OK (27 manifest cases)",
-    "Driver APK changelog item contract — OK (30 manifest cases)"
+    "Driver APK changelog item contract — OK (30 manifest cases)",
+    "Driver APK canonical version boundary — OK (32 manifest cases)"
   ]
 }
