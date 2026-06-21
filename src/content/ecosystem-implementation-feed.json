@@ -4,10 +4,10 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
-      "id": "evt-2026-06-21-y5nbo9",
+      "id": "evt-2026-06-21-6j6ojc",
       "occurredAt": "2026-06-21",
-      "title": "Driver APK canonical version boundary",
-      "summary": "Required APK version fields now reject externally padded semver strings at the manifest boundary.",
+      "title": "Driver canonical APK build number",
+      "summary": "APK buildNumber now requires a canonical positive integer string compatible with Android versionCode and EAS output.",
       "subsystemIds": [
         "updates",
         "apk-channel",
@@ -18,7 +18,7 @@
       "repository": "aion-project",
       "rollup": {
     "fullyDone": [
-      "✅ Required APK semver fields canonical на manifest boundary"
+      "✅ APK buildNumber canonical и совместим с Android versionCode"
     ],
     "partiallyDone": [],
         "notStarted": [],
@@ -38,6 +38,50 @@
     "driver_validate_code": "passed",
     "web_build": "passed"
   },
+      "reasoning": "Generic string validation allowed partial parseInt values such as 13beta and ambiguous zero or leading-zero build identities.",
+      "task": "canonical-apk-build-number",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/src/core/updates/apkManifest.types.ts",
+        "aion-driver/scripts/ci/test-apk-manifest-validation.mjs"
+      ],
+      "apkImpact": "OTA-safe APK build identity hardening"
+    },
+    {
+      "id": "evt-2026-06-21-y5nbo9",
+      "occurredAt": "2026-06-21",
+      "title": "Driver APK canonical version boundary",
+      "summary": "Required APK version fields now reject externally padded semver strings at the manifest boundary.",
+      "subsystemIds": [
+        "updates",
+        "apk-channel",
+        "mobile-app"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [
+          "✅ Required APK semver fields canonical на manifest boundary"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "driver_validate_code": "passed",
+        "web_build": "passed"
+      },
       "reasoning": "The shared semver parser trims local values, which unintentionally allowed non-canonical server version strings through manifest validation.",
       "task": "apk-canonical-version-boundary",
       "confidence": "high",
