@@ -59,6 +59,10 @@ function optionalIdentityString(o: Record<string, unknown>, key: string): boolea
   return value == null || (typeof value === "string" && value.length > 0 && value.trim() === value);
 }
 
+function isPositiveIntegerString(value: unknown): value is string {
+  return typeof value === "string" && /^[1-9]\d*$/.test(value);
+}
+
 function isCanonicalUtcTimestamp(value: unknown): value is string {
   if (typeof value !== "string") return false;
   const parsed = Date.parse(value);
@@ -96,6 +100,9 @@ export function isApkManifest(v: unknown): v is ApkUpdateManifest {
     return false;
   }
   if (!["runtimeVersion", "buildNumber", "minimumRuntimeVersion", "easBuildId"].every((key) => optionalIdentityString(o, key))) {
+    return false;
+  }
+  if (o.buildNumber != null && !isPositiveIntegerString(o.buildNumber)) {
     return false;
   }
   if (

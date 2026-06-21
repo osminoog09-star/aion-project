@@ -679,6 +679,19 @@
           "Не менять tolerant local runtime comparator — DONE",
           "Детерминированный manifest CI test (32 cases) — DONE"
         ]
+      },
+      {
+        "priority": 50,
+        "id": "driver-canonical-apk-build-number",
+        "title": "APK manifest: canonical Android buildNumber",
+        "status": "shipped",
+        "tasks": [
+          "Требовать positive integer string — DONE",
+          "Отклонять mixed numeric/text build — DONE",
+          "Отклонять zero buildNumber — DONE",
+          "Отклонять leading zeros — DONE",
+          "Детерминированный manifest CI test (35 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
