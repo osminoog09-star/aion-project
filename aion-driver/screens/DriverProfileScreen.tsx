@@ -13,6 +13,7 @@ import { useMergedShiftHistory } from "../features/trips/hooks/useMergedShiftHis
 import { useResolvedCurrency } from "../hooks/useResolvedCurrency";
 import { useResolvedDistanceUnits } from "../hooks/useResolvedDistanceUnits";
 import type { Shift } from "../types";
+import { getCompletedShiftProfit } from "../utils/shiftDisplayEconomics";
 import {
   formatCurrencyDisplay,
   formatKm,
@@ -40,7 +41,7 @@ function bestCalendarWeekProfitRub(shifts: Shift[]): number {
     const end = new Date(s.endedAt).getTime();
     if (Number.isNaN(end)) continue;
     const wk = startOfWeekMondayMs(end);
-    byWeek.set(wk, (byWeek.get(wk) ?? 0) + s.netProfit);
+    byWeek.set(wk, (byWeek.get(wk) ?? 0) + getCompletedShiftProfit(s));
   }
   let max = 0;
   for (const v of byWeek.values()) max = Math.max(max, v);
@@ -78,7 +79,7 @@ export function DriverProfileScreen() {
     let fuelL = 0;
     let durMs = 0;
     for (const s of merged) {
-      net += s.netProfit;
+      net += getCompletedShiftProfit(s);
       km += s.distanceKm;
       fuelL += s.fuelUsedPetrolLiters + s.fuelUsedGasLiters;
       durMs += s.durationMs;
@@ -104,7 +105,7 @@ export function DriverProfileScreen() {
     let xp = 0;
     for (const s of merged) {
       xp += Math.max(0, Math.round(s.durationMs / 60_000));
-      xp += Math.min(120, Math.floor(Math.max(0, s.netProfit) / 500));
+      xp += Math.min(120, Math.floor(Math.max(0, getCompletedShiftProfit(s)) / 500));
     }
     const level = Math.max(1, 1 + Math.floor(xp / 800));
     const prevThreshold = (level - 1) * 800;

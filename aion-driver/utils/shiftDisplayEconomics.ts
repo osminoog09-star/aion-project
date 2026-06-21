@@ -84,6 +84,11 @@ export function pickProfitFromRouteRow(input: {
   return { profit: null, profitPerHour: null, usesAfterCosts: false };
 }
 
+/** Число для агрегатов завершённых смен: afterCosts при наличии, иначе legacy netProfit. */
+export function getCompletedShiftProfit(shift: Shift): number {
+  return pickProfitFromRouteRow({ shift }).profit ?? 0;
+}
+
 /** Краткая строка аренда + фикс. для HUD / истории. */
 export function formatOperationalCostsBrief(
   oc: ShiftOperationalCosts,

@@ -705,6 +705,19 @@
           "Сохранить текущий production EAS ID — DONE",
           "Детерминированный manifest CI test (37 cases) — DONE"
         ]
+      },
+      {
+        "priority": 52,
+        "id": "driver-unified-completed-shift-profit",
+        "title": "Unified shift runtime: after-costs агрегаты завершённых смен",
+        "status": "shipped",
+        "tasks": [
+          "Ввести один completed-shift profit selector — DONE",
+          "Перевести today/week/month totals — DONE",
+          "Перевести profile total и best week — DONE",
+          "Перевести profit-based XP — DONE",
+          "Сохранить legacy fallback + CI test (6 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
