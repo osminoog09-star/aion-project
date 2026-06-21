@@ -4,6 +4,51 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-21-hqipq2",
+      "occurredAt": "2026-06-21",
+      "title": "GPS preview APK готов: build 14",
+      "summary": "EAS workflow 27917259226 завершён успешно. APK 1.0.9 build 14 собран из GPS Accuracy.High/continuous FGS change; manifest синхронизирован. Field validation и owner device smoke не являются гейтом.",
+      "subsystemIds": [
+        "background-drive",
+        "gps-route",
+        "operations-center"
+      ],
+      "eventType": "release_ready",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Build functional GPS preview APK",
+      "confidence": "high",
+      "changedFiles": [
+        "public/apk-manifest.preview.json",
+        "src/content/autonomous-execution-state.json"
+      ],
+      "runtimeImpact": "Autonomous queue continues after successful cloud build",
+      "apkImpact": "Ready: EAS f9528e71-4845-4172-8c4b-3c3dc817e4d8"
+    },
+    {
       "id": "evt-2026-06-21-yhorxd",
       "occurredAt": "2026-06-21",
       "title": "Driver UI: статистика после расходов",
