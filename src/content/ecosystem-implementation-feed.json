@@ -4,6 +4,49 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-21-yhorxd",
+      "occurredAt": "2026-06-21",
+      "title": "Driver UI: статистика после расходов",
+      "summary": "Последний direct netProfit в completed-shift statistical labels заменён на общий after-costs helper. OCR payout не изменён: он остаётся отдельным импортом до привязки к смене.",
+      "subsystemIds": [
+        "driver-intelligence",
+        "driver-ui"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Finish after-costs profit deduplication in statistics UI",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/features/statistics/shiftPeriod.ts",
+        "aion-driver/scripts/ci/test-shift-display-economics.mjs"
+      ],
+      "runtimeImpact": "Consistent completed-shift profit labels"
+    },
+    {
       "id": "evt-2026-06-21-9ym7jr",
       "occurredAt": "2026-06-21",
       "title": "Maps/Fuel: real-data ADR и схемы",
