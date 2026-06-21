@@ -692,6 +692,19 @@
           "Отклонять leading zeros — DONE",
           "Детерминированный manifest CI test (35 cases) — DONE"
         ]
+      },
+      {
+        "priority": 51,
+        "id": "driver-canonical-eas-build-identity",
+        "title": "APK manifest: canonical EAS build UUID",
+        "status": "shipped",
+        "tasks": [
+          "Требовать UUID-shaped easBuildId — DONE",
+          "Требовать canonical lowercase identity — DONE",
+          "Отклонять opaque build labels — DONE",
+          "Сохранить текущий production EAS ID — DONE",
+          "Детерминированный manifest CI test (37 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
