@@ -4,6 +4,50 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-21-jw8r00",
+      "occurredAt": "2026-06-21",
+      "title": "Portal: Supabase writes на Vercel",
+      "summary": "Сохранение strategic priorities на Vercel больше не пытается писать deployment filesystem. Authenticated owner write использует Supabase; локальный JSON и audit feed остаются для локального режима или явного override.",
+      "subsystemIds": [
+        "web-portal",
+        "operations-center"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Fix authenticated priorities persistence on Vercel",
+      "confidence": "high",
+      "changedFiles": [
+        "src/lib/operations/priorities-persist.ts",
+        "src/lib/operations/priorities-persist-policy.ts",
+        "scripts/ci/test-priorities-persist-policy.mjs"
+      ],
+      "runtimeImpact": "Owner priority saves persist through Supabase in production"
+    },
+    {
       "id": "evt-2026-06-21-js8wij",
       "occurredAt": "2026-06-21",
       "title": "OCR: пустой результат можно повторить",
