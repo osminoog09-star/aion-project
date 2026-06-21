@@ -89,6 +89,15 @@ export function getCompletedShiftProfit(shift: Shift): number {
   return pickProfitFromRouteRow({ shift }).profit ?? 0;
 }
 
+export function getCompletedShiftProfitPerHour(shift: Shift): number {
+  return pickProfitFromRouteRow({ shift }).profitPerHour ?? 0;
+}
+
+export function getCompletedShiftProfitPerKm(shift: Shift): number {
+  const profit = getCompletedShiftProfit(shift);
+  return shift.distanceKm > 0 ? profit / shift.distanceKm : shift.profitPerKm;
+}
+
 /** Краткая строка аренда + фикс. для HUD / истории. */
 export function formatOperationalCostsBrief(
   oc: ShiftOperationalCosts,

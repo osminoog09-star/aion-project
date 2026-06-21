@@ -718,6 +718,19 @@
           "Перевести profit-based XP — DONE",
           "Сохранить legacy fallback + CI test (6 cases) — DONE"
         ]
+      },
+      {
+        "priority": 53,
+        "id": "driver-after-costs-analytics-score",
+        "title": "Driver Analytics: after-costs best hours и score",
+        "status": "shipped",
+        "tasks": [
+          "Добавить profit/hour и profit/km selectors — DONE",
+          "Перевести median и recent average — DONE",
+          "Перевести best hours и consistency — DONE",
+          "Перевести route efficiency/fatigue/momentum — DONE",
+          "Добавить analytics CI test (4 assertions) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

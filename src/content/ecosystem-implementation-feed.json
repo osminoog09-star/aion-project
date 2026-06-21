@@ -4,28 +4,28 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
-      "id": "evt-2026-06-21-88kuxz",
+      "id": "evt-2026-06-21-ya3bk4",
       "occurredAt": "2026-06-21",
-      "title": "Driver unified completed-shift profit",
-      "summary": "Period dashboards and Driver Profile now aggregate after-costs profit through one selector, with legacy netProfit fallback for older shifts.",
+      "title": "Driver after-costs analytics score",
+      "summary": "Driver Analytics now ranks best hours, median performance, consistency, route efficiency, fatigue, and momentum using after-costs profit.",
       "subsystemIds": [
         "mobile-app",
         "driver-intelligence",
-        "background-drive"
+        "time-intelligence"
       ],
       "eventType": "implementation_finished",
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
     "fullyDone": [
-      "✅ Period/Profile aggregates используют after-costs profit"
+      "✅ Driver Analytics и AI score используют after-costs profit"
     ],
     "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
   "stillMissing": [
-    "Driver analytics/AI score и cloud projections ещё используют часть gross-полей"
+    "Cloud trip projections ещё хранят gross profit columns"
   ],
       "blocked": [],
       "impacts": {
@@ -40,6 +40,54 @@
     "driver_validate_code": "passed",
     "web_build": "passed"
   },
+      "reasoning": "Driver Profile totals were net while AI score and recommendations still optimized gross profit, favoring shifts with hidden rental and fixed costs.",
+      "task": "after-costs-analytics-score",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/utils/shiftDisplayEconomics.ts",
+        "aion-driver/features/driver/analytics/computeDriverAnalytics.ts",
+        "aion-driver/scripts/ci/test-driver-analytics-profit.mjs",
+        "aion-driver/package.json"
+      ],
+      "apkImpact": "OTA-safe Driver intelligence correction"
+    },
+    {
+      "id": "evt-2026-06-21-88kuxz",
+      "occurredAt": "2026-06-21",
+      "title": "Driver unified completed-shift profit",
+      "summary": "Period dashboards and Driver Profile now aggregate after-costs profit through one selector, with legacy netProfit fallback for older shifts.",
+      "subsystemIds": [
+        "mobile-app",
+        "driver-intelligence",
+        "background-drive"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [
+          "✅ Period/Profile aggregates используют after-costs profit"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Driver analytics/AI score и cloud projections ещё используют часть gross-полей"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "none",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "driver_validate_code": "passed",
+        "web_build": "passed"
+      },
       "reasoning": "Live and history views showed after-costs profit, while weekly, monthly, profile, best-week, and XP totals still used gross netProfit.",
       "task": "unified-completed-shift-profit",
       "confidence": "high",
