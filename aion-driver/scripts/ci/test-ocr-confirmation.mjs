@@ -92,6 +92,23 @@ assert.equal(summary.done, 1);
 
 console.log("test-ocr-queue-summary: ok (4 counters)");
 
+const { isOcrResultCacheable } = compileTsModule(
+  "features/import/ocrQueue/isOcrResultCacheable.ts",
+);
+const emptyOcr = {
+  trips: [],
+  earnings: 0,
+  normalizedSourceText: undefined,
+  fuelReceipt: undefined,
+  dashboardCluster: undefined,
+};
+assert.equal(isOcrResultCacheable(emptyOcr), false);
+assert.equal(isOcrResultCacheable({ ...emptyOcr, normalizedSourceText: "trip 12.50" }), true);
+assert.equal(isOcrResultCacheable({ ...emptyOcr, trips: [{ amount: 12.5 }] }), true);
+assert.equal(isOcrResultCacheable({ ...emptyOcr, fuelReceipt: { confidence: 0.8 } }), true);
+
+console.log("test-ocr-result-cacheability: ok (4 cases)");
+
 const { validateFuelOcrConfirmation } = compileTsModule(
   "features/import/confirmation/validateFuelOcrConfirmation.ts",
 );

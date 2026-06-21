@@ -4,6 +4,50 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-21-js8wij",
+      "occurredAt": "2026-06-21",
+      "title": "OCR: пустой результат можно повторить",
+      "summary": "Пустое распознавание больше не кешируется как вечный done/dedupe-hit. Повторный импорт снова запускает native OCR; реальные поездки, текст, fuel receipt и dashboard extraction по-прежнему дедуплицируются.",
+      "subsystemIds": [
+        "ocr",
+        "driver-intelligence"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Make OCR dedupe cache only meaningful real extractions",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/features/import/ocrQueue/isOcrResultCacheable.ts",
+        "aion-driver/features/import/ocrQueue/ocrQueueEngine.ts",
+        "aion-driver/scripts/ci/test-ocr-confirmation.mjs"
+      ],
+      "runtimeImpact": "Recoverable OCR retries without synthetic values"
+    },
+    {
       "id": "evt-2026-06-21-pvfoo4",
       "occurredAt": "2026-06-21",
       "title": "Driver: единая прибыль после расходов",

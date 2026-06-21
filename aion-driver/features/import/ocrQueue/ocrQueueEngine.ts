@@ -4,6 +4,7 @@ import { loadOcrQueue, saveOcrQueue, updateOcrQueue } from "./ocrQueueStorage";
 import { recoverInterruptedOcrItems } from "./recoverInterruptedOcrItems";
 import { buildOcrDedupeKey } from "./buildOcrDedupeKey";
 import { summarizeOcrQueue, type OcrQueueStats } from "./summarizeOcrQueue";
+import { isOcrResultCacheable } from "./isOcrResultCacheable";
 import { pulseSyncOk } from "../../../src/core/aion/runtime/runtimePulseBus";
 import {
   getLinkRelayUserId,
@@ -46,13 +47,13 @@ export async function enqueueOcrJob(payload: OcrQueueJobPayload): Promise<Enqueu
   const next = await updateOcrQueue((cur) => {
     const existing = cur.find((x) => x.dedupeKey === dedupeKey);
     const now = Date.now();
-    if (existing?.status === "done" && existing.resultParse) {
+    if (existing?.status === "done" && isOcrResultCacheable(existing.resultParse)) {
       return cur;
     }
     if (existing && (existing.status === "pending" || existing.status === "processing")) {
       return cur;
     }
-    if (existing?.status === "failed") {
+    if (existing?.status === "failed" || existing?.status === "done") {
       return cur.map((x) =>
         x.id === existing.id
           ? {
@@ -62,6 +63,7 @@ export async function enqueueOcrJob(payload: OcrQueueJobPayload): Promise<Enqueu
               updatedAtMs: now,
               nextRetryAtMs: now,
               lastError: undefined,
+              resultParse: undefined,
               payload,
             }
           : x,
@@ -86,7 +88,7 @@ export async function enqueueOcrJob(payload: OcrQueueJobPayload): Promise<Enqueu
   return {
     id: hit.id,
     dedupe: !createdNew,
-    alreadyDone: hit.status === "done" && Boolean(hit.resultParse),
+    alreadyDone: hit.status === "done" && isOcrResultCacheable(hit.resultParse),
   };
 }
 
