@@ -1,4 +1,8 @@
 import type { Shift } from "../../../types";
+import {
+  getCompletedShiftProfitPerHour,
+  getCompletedShiftProfitPerKm,
+} from "../../../utils/shiftDisplayEconomics";
 
 export type DriverAnalytics = {
   efficiencyScore: number;
@@ -69,10 +73,10 @@ export function computeDriverAnalytics(shifts: Shift[]): DriverAnalytics {
     };
   }
 
-  const pph = shifts.map((s) => s.profitPerHour);
+  const pph = shifts.map(getCompletedShiftProfitPerHour);
   const med = median(pph);
   const lastN = shifts.slice(0, Math.min(10, shifts.length));
-  const lastAvg = lastN.reduce((a, s) => a + s.profitPerHour, 0) / lastN.length;
+  const lastAvg = lastN.reduce((a, s) => a + getCompletedShiftProfitPerHour(s), 0) / lastN.length;
 
   const hourWeight = new Array(24).fill(0);
   const hourProfit = new Array(24).fill(0);
@@ -80,7 +84,7 @@ export function computeDriverAnalytics(shifts: Shift[]): DriverAnalytics {
     const h = new Date(s.startedAt).getHours();
     const w = Math.max(s.durationMs / 3_600_000, 0.25);
     hourWeight[h] += w;
-    hourProfit[h] += s.profitPerHour * w;
+    hourProfit[h] += getCompletedShiftProfitPerHour(s) * w;
   }
   const scored = hourWeight
     .map((w, h) => ({
@@ -117,7 +121,7 @@ export function computeDriverAnalytics(shifts: Shift[]): DriverAnalytics {
 
   const qualityScores = shifts.map((s) => {
     const fuelRatio = s.income > 0 ? s.fuelCostTotal / s.income : 1;
-    const p = Math.min(100, (s.profitPerHour / Math.max(med, 1)) * 45 + (1 - Math.min(fuelRatio, 0.5)) * 55);
+    const p = Math.min(100, (getCompletedShiftProfitPerHour(s) / Math.max(med, 1)) * 45 + (1 - Math.min(fuelRatio, 0.5)) * 55);
     return Math.round(Math.max(0, Math.min(100, p)));
   });
   const shiftQualityAvg =
@@ -130,11 +134,12 @@ export function computeDriverAnalytics(shifts: Shift[]): DriverAnalytics {
   );
 
   const last = shifts[0]!;
-  const ppk = shifts.map((s) => s.profitPerKm);
+  const ppk = shifts.map(getCompletedShiftProfitPerKm);
   const medPpk = median(ppk);
+  const lastPpk = getCompletedShiftProfitPerKm(last);
   const routeEfficiencyScore = Math.round(
     medPpk > 0
-      ? Math.max(0, Math.min(100, (last.profitPerKm / medPpk) * 70 + 15))
+      ? Math.max(0, Math.min(100, (lastPpk / medPpk) * 70 + 15))
       : 55,
   );
 
@@ -166,7 +171,7 @@ export function computeDriverAnalytics(shifts: Shift[]): DriverAnalytics {
       ? Math.max(0, (lastFuel - medFuel) * lastDurH)
       : 0;
 
-  const recentPph = shifts.slice(0, 10).map((s) => s.profitPerHour);
+  const recentPph = shifts.slice(0, 10).map(getCompletedShiftProfitPerHour);
   const pphSd = stdev(recentPph);
   const consistencyScore = Math.round(
     Math.max(0, Math.min(100, 100 - (pphSd / Math.max(med * 0.14, 12)) * 38)),
@@ -180,7 +185,7 @@ export function computeDriverAnalytics(shifts: Shift[]): DriverAnalytics {
   }
 
   let fatigueHint = "";
-  if (last.durationMs > 10 * 3_600_000 && last.profitPerHour < med * 0.88) {
+  if (last.durationMs > 10 * 3_600_000 && getCompletedShiftProfitPerHour(last) < med * 0.88) {
     fatigueHint =
       "Длинная смена с просадкой прибыли/ч — планируйте паузы и сон между выходами.";
   } else if (last.durationMs > 12 * 3_600_000) {

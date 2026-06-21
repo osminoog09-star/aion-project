@@ -1,6 +1,6 @@
 {
   "mobile-app": {
-    "whatWorks": ["Смена end-to-end", "Unified after-costs period/profile aggregates", "Garage/карта/OCR happy path", "Post-OCR confirm блокирует невалидные выплаты", "OCR queue восстанавливает interrupted jobs после restart", "OCR queue status + failed retry UI", "Смена OCR source сбрасывает stale result", "OTA каналы EAS", "Desktop shell", "Журнал заправок edit/delete", "BugReportModal → driver_bug_reports", "diagnosticLog в отчётах", "Link QR pair + OCR relay", "OrbView dim (native 1.0.9)"],
+    "whatWorks": ["Смена end-to-end", "Unified after-costs period/profile aggregates", "After-costs Driver Analytics/AI score", "Garage/карта/OCR happy path", "Post-OCR confirm блокирует невалидные выплаты", "OCR queue восстанавливает interrupted jobs после restart", "OCR queue status + failed retry UI", "Смена OCR source сбрасывает stale result", "OTA каналы EAS", "Desktop shell", "Журнал заправок edit/delete", "BugReportModal → driver_bug_reports", "diagnosticLog в отчётах", "Link QR pair + OCR relay", "OrbView dim (native 1.0.9)"],
     "whatDoesNotWork": ["Не все edge-состояния UI", "Паритет web/mobile не везде"],
     "mocked": [],
     "localOnly": ["Локальная timeline без облачного SoT"],

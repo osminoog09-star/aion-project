@@ -48,7 +48,7 @@
       "subsystemIds": ["mobile-app", "background-drive"],
       "status": "in_progress",
       "rationale": "MASTER §14–15: один runtime path, strict shift state machine.",
-      "nextAction": "Перевести Driver analytics/AI score и cloud projections на единый after-costs selector; не дублировать profit math",
+      "nextAction": "Перевести cloud trip projections на after-costs contract без смешивания fuel и operational expenses",
       "setAt": "2026-05-15",
       "setBy": "cursor"
     },
