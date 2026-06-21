@@ -81,6 +81,17 @@ async function main() {
   assert.equal(empty.usesAfterCosts, false);
 
   console.log("test-shift-display-economics: ok (7 cases)");
+
+  const { formatShiftRowLabel } = compileTsModule("features/statistics/shiftPeriod.ts", {
+    "../../utils/shiftDisplayEconomics": {
+      getCompletedShiftProfit: () => 42,
+    },
+  });
+  assert.match(
+    formatShiftRowLabel({ endedAt: "2026-06-21T12:00:00.000Z", distanceKm: 10, netProfit: 99 }),
+    /· 42 · 10\.0 км$/,
+    "statistics labels must use the shared completed-shift profit",
+  );
 }
 
 function fromShiftInput(overrides = {}) {

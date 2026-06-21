@@ -1,4 +1,5 @@
 import type { Shift } from "../../types";
+import { getCompletedShiftProfit } from "../../utils/shiftDisplayEconomics";
 import type { StatPeriod } from "./types";
 
 function startOfTodayMs(): number {
@@ -32,5 +33,5 @@ export function formatShiftRowLabel(s: Shift): string {
         hour: "2-digit",
         minute: "2-digit",
       });
-  return `${date} · ${Math.round(s.netProfit)} · ${s.distanceKm.toFixed(1)} км`;
+  return `${date} · ${Math.round(getCompletedShiftProfit(s))} · ${s.distanceKm.toFixed(1)} км`;
 }
