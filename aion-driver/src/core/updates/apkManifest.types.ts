@@ -73,6 +73,8 @@ export function isApkManifest(v: unknown): v is ApkUpdateManifest {
   const apkOk =
     typeof o.latestVersion === "string" &&
     typeof o.minimumSupported === "string" &&
+    o.latestVersion.trim() === o.latestVersion &&
+    o.minimumSupported.trim() === o.minimumSupported &&
     parseSemver(o.latestVersion) !== null &&
     parseSemver(o.minimumSupported) !== null &&
     !semverLess(o.latestVersion, o.minimumSupported) &&

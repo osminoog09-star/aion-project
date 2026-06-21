@@ -666,6 +666,19 @@
           "Сохранить валидные release bullets — DONE",
           "Детерминированный manifest CI test (30 cases) — DONE"
         ]
+      },
+      {
+        "priority": 49,
+        "id": "driver-apk-canonical-version-boundary",
+        "title": "APK manifest: canonical required semver strings",
+        "status": "shipped",
+        "tasks": [
+          "Отклонять padded latestVersion — DONE",
+          "Отклонять padded minimumSupported — DONE",
+          "Сохранить strict semver parsing — DONE",
+          "Не менять tolerant local runtime comparator — DONE",
+          "Детерминированный manifest CI test (32 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [

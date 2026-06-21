@@ -54,6 +54,16 @@ assert.equal(
   "non-HTTP APK URL must be rejected",
 );
 assert.equal(
+  isApkManifest({ ...valid, latestVersion: " 1.0.9" }),
+  false,
+  "padded latestVersion must be rejected at the manifest boundary",
+);
+assert.equal(
+  isApkManifest({ ...valid, minimumSupported: "1.0.6 " }),
+  false,
+  "padded minimumSupported must be rejected at the manifest boundary",
+);
+assert.equal(
   isApkManifest({ ...valid, apkUrl: "http://example.com/aion-driver.apk" }),
   false,
   "cleartext HTTP APK URL must be rejected",
@@ -105,7 +115,7 @@ assert.equal(isApkManifest({ ...valid, changelog: [""] }), false, "empty changel
 assert.equal(isApkManifest({ ...valid, changelog: ["   "] }), false, "blank changelog item must be rejected");
 assert.equal(isApkManifest({ ...valid, changelog: [" padded"] }), false, "padded changelog item must be rejected");
 
-console.log("test-apk-manifest-validation: ok (30 cases)");
+console.log("test-apk-manifest-validation: ok (32 cases)");
 
 await import("./test-apk-manifest-cache.mjs");
 await import("./test-apk-runtime-compatibility.mjs");
