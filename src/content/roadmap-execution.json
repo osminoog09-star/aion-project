@@ -653,6 +653,19 @@
           "Отклонять padded easBuildId — DONE",
           "Детерминированный manifest CI test (27 cases) — DONE"
         ]
+      },
+      {
+        "priority": 48,
+        "id": "driver-apk-changelog-item-contract",
+        "title": "APK manifest: чистые changelog items для modal",
+        "status": "shipped",
+        "tasks": [
+          "Отклонять empty changelog item — DONE",
+          "Отклонять whitespace-only item — DONE",
+          "Отклонять externally padded item — DONE",
+          "Сохранить валидные release bullets — DONE",
+          "Детерминированный manifest CI test (30 cases) — DONE"
+        ]
       }
     ],
     "blockedTasks": [
