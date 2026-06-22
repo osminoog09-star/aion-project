@@ -4,6 +4,49 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-e9hnm6",
+      "occurredAt": "2026-06-22",
+      "title": "GPS watcher: устранена гонка остановки",
+      "summary": "Если foreground GPS watcher создаётся уже после endShift/stop, поздняя subscription теперь сразу удаляется. Это предотвращает скрытое продолжение геолокации и расход батареи после завершения смены.",
+      "subsystemIds": [
+        "background-drive",
+        "gps-route"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Clean up late foreground location subscription",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/services/locationService.ts",
+        "aion-driver/scripts/ci/test-location-accuracy-policy.mjs"
+      ],
+      "runtimeImpact": "No orphan GPS watcher after rapid shift stop"
+    },
+    {
       "id": "evt-2026-06-22-enzajq",
       "occurredAt": "2026-06-22",
       "title": "Cloud trips: убыток не обнуляется",

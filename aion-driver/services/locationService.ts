@@ -49,6 +49,7 @@ export function startFilteredLocationSession(
   const distanceInterval = options.distanceIntervalMeters ?? 8;
 
   let subscription: Location.LocationSubscription | null = null;
+  let stopped = false;
 
   const handleLocation = (loc: Location.LocationObject) => {
     const acc = loc.coords.accuracy ?? 999;
@@ -91,18 +92,28 @@ export function startFilteredLocationSession(
   };
 
   void (async () => {
-    subscription = await Location.watchPositionAsync(
-      {
-        accuracy: Location.Accuracy.High,
-        timeInterval,
-        distanceInterval,
-      },
-      handleLocation
-    );
+    try {
+      const next = await Location.watchPositionAsync(
+        {
+          accuracy: Location.Accuracy.High,
+          timeInterval,
+          distanceInterval,
+        },
+        handleLocation
+      );
+      if (stopped) {
+        next.remove();
+        return;
+      }
+      subscription = next;
+    } catch (error) {
+      if (!stopped) console.warn("[AION][location] foreground watcher failed", error);
+    }
   })();
 
   return {
     stop: () => {
+      stopped = true;
       subscription?.remove();
       subscription = null;
     },
