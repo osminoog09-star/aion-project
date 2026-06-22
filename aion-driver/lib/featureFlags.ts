@@ -23,8 +23,4 @@ export const featureFlags = {
   /** QA: mock OCR (EXPO_PUBLIC_OCR_DEV_MOCK=1). Не использовать как реальные данные. */
   ocrDevMock:
     typeof process !== "undefined" && process.env.EXPO_PUBLIC_OCR_DEV_MOCK === "1",
-  /** 8/8 field validation как production gate (FGS / OTA signoff). По умолчанию off. */
-  fieldValidationProductionGate:
-    typeof process !== "undefined" &&
-    process.env.EXPO_PUBLIC_FIELD_VALIDATION_GATE === "1",
 } as const;

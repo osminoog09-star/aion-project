@@ -97,12 +97,12 @@ async function main() {
   assert.ok(blockers.includes("Есть GPS-смены"));
   assert.equal(formatFieldValidationBlockersRu(full), "");
   assert.ok(getNextFieldValidationActionRu(empty).includes("Смена"));
-  assert.ok(getNextFieldValidationActionRu(full).includes("OTA smoke"));
+  assert.ok(getNextFieldValidationActionRu(full).includes("без ручного gate"));
   assert.ok(empty.checks.every((c) => c.passed === false ? c.actionRu.length > 0 : true));
   assert.ok(full.checks.every((c) => c.actionRu.length > 0));
 
   const report = formatFieldValidationReportRu(full);
-  assert.ok(report.includes("ГОТОВО"));
+  assert.ok(report.includes("ДИАГНОСТИКА МАРШРУТА: 8/8"));
   assert.ok(report.includes("NEXT:"));
 
   console.log("test-route-field-validation: ok (6 cases)");
