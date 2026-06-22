@@ -11,8 +11,8 @@
     "reasoning": "Production gate для фоновой смены",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-22T03:23:34.003Z",
-    "heartbeatAt": "2026-06-22T03:23:34.003Z",
+    "updatedAt": "2026-06-22T03:25:45.695Z",
+    "heartbeatAt": "2026-06-22T03:25:45.695Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -36,7 +36,7 @@
     "validationProgress": "Operations получил видимый статус работы Codex по Driver",
     "progressPercent": 40,
     "etaMinutes": 90,
-    "autonomousDepth": 11,
+    "autonomousDepth": 12,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "NEXT",
@@ -268,6 +268,17 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-22T03:25:45.695Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Runtime stabilization (FGS + unified shift)",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Production gate для фоновой смены",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-06-22T03:23:34.003Z",
       "phase": "coding",
@@ -882,20 +893,12 @@
       "resultRu": "В процессе",
       "icon": "🔍",
       "confidence": 0.9
-    },
-    {
-      "at": "2026-05-15T13:01:53.667Z",
-      "phase": "coding",
-      "summary": "AI пишет и улучшает код: Runtime stabilization: unified profit display + FGS field checks",
-      "feedEventId": null,
-      "titleRu": "AI пишет и улучшает код",
-      "explanationRu": "shiftDisplayEconomics, heartbeat diagnostics, FGS constants aligned",
-      "resultRu": "В процессе",
-      "icon": "⚡",
-      "confidence": 0.9
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-22T03:25:45.695Z"
+    },
     {
       "at": "2026-06-22T03:23:34.003Z"
     },
@@ -1036,9 +1039,6 @@
     },
     {
       "at": "2026-05-16T13:47:59.713Z"
-    },
-    {
-      "at": "2026-05-16T13:47:58.868Z"
     }
   ]
 }
