@@ -1,16 +1,16 @@
-import { createHmac } from "node:crypto";
 import { cookies } from "next/headers";
 import { secureSecretMatches } from "@/lib/operations/secure-secret";
+import {
+  buildOwnerSessionToken,
+  OWNER_SESSION_MAX_AGE_SECONDS,
+  verifyOwnerSessionToken,
+} from "@/lib/operations/owner-session-token";
 
 export const OWNER_COOKIE = "aion_ops_owner";
 
 function getOwnerSecret(): string | null {
   const s = process.env.OPERATIONS_OWNER_SECRET?.trim();
   return s && s.length >= 16 ? s : null;
-}
-
-function signToken(secret: string): string {
-  return createHmac("sha256", secret).update("aion-owner-v1").digest("hex");
 }
 
 export function isOwnerAuthConfigured(): boolean {
@@ -22,17 +22,16 @@ export function verifyOwnerPassword(password: string): boolean {
   return secureSecretMatches(password, secret);
 }
 
-export function buildOwnerCookieValue(): string | null {
+export function buildOwnerCookieValue(nowMs = Date.now()): string | null {
   const secret = getOwnerSecret();
   if (!secret) return null;
-  return signToken(secret);
+  return buildOwnerSessionToken(secret, nowMs);
 }
 
-export function verifyOwnerCookieValue(value: string | undefined): boolean {
+export function verifyOwnerCookieValue(value: string | undefined, nowMs = Date.now()): boolean {
   const secret = getOwnerSecret();
   if (!secret || !value) return false;
-  const expected = signToken(secret);
-  return secureSecretMatches(value, expected, 64);
+  return verifyOwnerSessionToken(value, secret, nowMs);
 }
 
 export async function isOwnerAuthenticated(): Promise<boolean> {
@@ -49,7 +48,7 @@ export async function setOwnerSessionCookie(): Promise<boolean> {
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    maxAge: 60 * 60 * 24 * 7,
+    maxAge: OWNER_SESSION_MAX_AGE_SECONDS,
   });
   return true;
 }
