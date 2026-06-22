@@ -63,20 +63,20 @@
     "focus": "EAS preview APK 1.0.9 build 14 готов. Сейчас: runtime, OCR, cloud writes. Maps/Fuel: ADR и схемы без фейковых чисел."
   },
   "readiness": {
-    "mobile": 68,
+    "mobile": 76,
     "desktop": 62,
-    "webPortal": 28,
-    "ocr": 70,
-    "cloud": 44,
-    "updates": 68,
+    "webPortal": 44,
+    "ocr": 80,
+    "cloud": 48,
+    "updates": 72,
     "aionEntity": 58,
     "aionLink": 52,
     "performance": 46,
-    "sync": 64,
+    "sync": 68,
     "realtime": 32,
-    "releaseOps": 42,
+    "releaseOps": 58,
     "offline": 60,
-    "backgroundDrive": 22
+    "backgroundDrive": 48
   },
   "operations": [
     {
