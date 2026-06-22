@@ -1,10 +1,11 @@
 import type { OcrParseResult } from "../types";
 import type { OcrQueueItem, OcrQueueJobPayload } from "./ocrQueueTypes";
-import { loadOcrQueue, saveOcrQueue, updateOcrQueue } from "./ocrQueueStorage";
+import { loadOcrQueue, updateOcrQueue } from "./ocrQueueStorage";
 import { recoverInterruptedOcrItems } from "./recoverInterruptedOcrItems";
 import { buildOcrDedupeKey } from "./buildOcrDedupeKey";
 import { summarizeOcrQueue, type OcrQueueStats } from "./summarizeOcrQueue";
 import { isOcrResultCacheable } from "./isOcrResultCacheable";
+import { claimNextOcrItem } from "./claimNextOcrItem";
 import { pulseSyncOk } from "../../../src/core/aion/runtime/runtimePulseBus";
 import {
   getLinkRelayUserId,
@@ -110,36 +111,17 @@ export async function pushFailedOcrReplay(
 
 type ProgressCb = (label: string, phase?: number) => void;
 
-function pickNextPending(items: OcrQueueItem[]): number {
-  const now = Date.now();
-  return items.findIndex(
-    (x) =>
-      x.status === "pending" &&
-      (x.nextRetryAtMs == null || x.nextRetryAtMs <= now),
-  );
-}
-
 export async function processNextOcrQueueItem(onProgress?: ProgressCb): Promise<boolean> {
-  const cur = await loadOcrQueue();
-  const idx = pickNextPending(cur);
-  if (idx < 0) return false;
-
-  const item = cur[idx]!;
   const now = Date.now();
+  let claimed: OcrQueueItem | null = null;
+  await updateOcrQueue((cur) => {
+    const result = claimNextOcrItem(cur, now);
+    claimed = result.claimed;
+    return result.items;
+  });
+  if (!claimed) return false;
+  const item = claimed as OcrQueueItem;
   const processingId = item.id;
-
-  await saveOcrQueue(
-    cur.map((x, i) =>
-      i === idx
-        ? {
-            ...x,
-            status: "processing" as const,
-            updatedAtMs: now,
-            attemptCount: x.attemptCount + 1,
-          }
-        : x,
-    ),
-  );
 
   try {
     const { runOcrPipeline } = await import("../services/ocrPipeline");

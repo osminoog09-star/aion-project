@@ -4,6 +4,50 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-n4i2ue",
+      "occurredAt": "2026-06-22",
+      "title": "OCR queue: атомарный claim",
+      "summary": "Параллельные OCR processors больше не могут одновременно забрать один pending job. Claim и переход в processing выполняются внутри сериализованной storage-транзакции, предотвращая двойное распознавание и повторный relay.",
+      "subsystemIds": [
+        "ocr",
+        "driver-intelligence"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Make OCR queue claim atomic",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/features/import/ocrQueue/claimNextOcrItem.ts",
+        "aion-driver/features/import/ocrQueue/ocrQueueEngine.ts",
+        "aion-driver/scripts/ci/test-ocr-confirmation.mjs"
+      ],
+      "runtimeImpact": "One OCR execution per queued job under concurrent processors"
+    },
+    {
       "id": "evt-2026-06-22-e9hnm6",
       "occurredAt": "2026-06-22",
       "title": "GPS watcher: устранена гонка остановки",
