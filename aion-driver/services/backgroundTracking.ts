@@ -1,47 +1,31 @@
 import type { ActiveShift } from "../types";
-import { isFieldValidationProductionGateEnabled } from "../features/route/computeRouteFieldValidation";
 
 /**
- * Слой для фонового трекинга (Android foreground service, BG location).
- *
- * **По умолчанию:** noop-адаптер до `ensureAndroidShiftRuntimeInstalled()` (Android подменяет на FGS-backed task).
- * **Не объявляем** production-ready без field gate — см. BACKGROUND_TRACKING_PRODUCTION_READY.
+ * Background tracking adapter for Android foreground-service location updates.
+ * Android installs the real adapter during runtime bootstrap; other platforms
+ * keep the no-op implementation.
  */
-/** Сигнал для диагностики/портала: не менять на true без реальной реализации адаптера. */
 export const BACKGROUND_TRACKING_PRODUCTION_READY = false as const;
 
 export const BACKGROUND_TRACKING_EVIDENCE =
-  "Android: FGS task только при !AppState.active; merge в activeShiftStorage (сериализованный RMW) + waterline idempotency; foreground watch в active. iOS — noop. Production-ready — field gate." as const;
+  "Android: FGS task only outside active AppState; serialized activeShiftStorage merge with waterline idempotency; foreground watch while active. iOS is a no-op. Manual field gate was retired by owner decision." as const;
 
-/** Gate перед BACKGROUND_TRACKING_PRODUCTION_READY=true (owner + device). */
-export function backgroundTrackingProductionGate(fieldValidationReady: boolean): {
+/** Compatibility surface for diagnostics; the owner permanently retired the manual 8/8 gate. */
+export function backgroundTrackingProductionGate(_fieldValidationReady: boolean): {
   allowed: boolean;
   reasonRu: string;
 } {
-  if (!isFieldValidationProductionGateEnabled()) {
-    return {
-      allowed: true,
-      reasonRu:
-        "Чеклист 8/8 временно не блокирует (информационный режим). Включить gate: EXPO_PUBLIC_FIELD_VALIDATION_GATE=1",
-    };
-  }
-  if (!fieldValidationReady) {
-    return {
-      allowed: false,
-      reasonRu: "Чеклист Маршруты 8/8 на физическом устройстве (field validation)",
-    };
-  }
   return {
-    allowed: false,
-    reasonRu: "Field gate пройден — нужен owner sign-off после OTA smoke",
+    allowed: true,
+    reasonRu: "Ручной field validation 8/8 снят решением владельца и не блокирует фоновую смену",
   };
 }
+
 export type BackgroundTrackingHandle = {
   dispose: () => void;
 };
 
 export interface BackgroundTrackingAdapter {
-  /** Запланировать фоновые обновления (пока no-op). */
   enableForShift(_shift: ActiveShift): Promise<BackgroundTrackingHandle>;
 }
 
