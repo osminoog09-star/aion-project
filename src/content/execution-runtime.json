@@ -2,7 +2,7 @@
   "version": "2.0",
   "orchestrationVersion": "3.0",
   "agentId": "cursor-autonomous",
-  "lastUpdated": "2026-06-21",
+  "lastUpdated": "2026-06-22",
   "runtime": {
     "status": "coding",
     "phase": "coding",
@@ -11,8 +11,8 @@
     "reasoning": "Keep one source of truth for shift profit and operational costs",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-21T20:56:07.288Z",
-    "heartbeatAt": "2026-06-21T20:56:07.288Z",
+    "updatedAt": "2026-06-22T01:08:12.117Z",
+    "heartbeatAt": "2026-06-22T01:08:12.117Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -36,7 +36,7 @@
     "validationProgress": "Operations получил видимый статус работы Codex по Driver",
     "progressPercent": 72,
     "etaMinutes": 60,
-    "autonomousDepth": 9,
+    "autonomousDepth": 10,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "NEXT",
@@ -268,6 +268,17 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-22T01:08:12.117Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Unified shift runtime + operational costs",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Keep one source of truth for shift profit and operational costs",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-06-21T20:56:07.288Z",
       "phase": "coding",
@@ -882,20 +893,12 @@
       "resultRu": "В процессе",
       "icon": "⚡",
       "confidence": 0.9
-    },
-    {
-      "at": "2026-05-15T12:21:34.440Z",
-      "phase": "coding",
-      "summary": "AI пишет и улучшает код: OTA smoke test: field validation на устройстве",
-      "feedEventId": "evt-2026-05-15-exec-wwveo4",
-      "titleRu": "AI пишет и улучшает код",
-      "explanationRu": "Чеклист на /route-timeline готов — владелец проверяет 6 gates на телефоне",
-      "resultRu": "В процессе",
-      "icon": "⚡",
-      "confidence": 0.9
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-22T01:08:12.117Z"
+    },
     {
       "at": "2026-06-21T20:56:07.288Z"
     },
@@ -1036,9 +1039,6 @@
     },
     {
       "at": "2026-05-16T13:43:38.975Z"
-    },
-    {
-      "at": "2026-05-16T13:42:47.833Z"
     }
   ]
 }

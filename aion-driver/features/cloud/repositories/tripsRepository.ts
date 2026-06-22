@@ -92,6 +92,8 @@ export function rowPayloadToShift(
     return null;
   }
   const durationMs = (row.duration_seconds ?? 0) * 1000;
+  const profitAfterCosts = (row.earnings ?? 0) - (row.expenses_total ?? 0);
+  const profitPerHourAfterCosts = row.profit_per_hour ?? 0;
   return {
     id: row.client_ref ?? row.id,
     startedAt: row.started_at,
@@ -107,11 +109,10 @@ export function rowPayloadToShift(
     fuelCostGas: 0,
     fuelCostTotal: row.expenses_total ?? 0,
     gasSavingsRub: 0,
-    netProfit: Math.max(
-      0,
-      (row.earnings ?? 0) - (row.expenses_total ?? 0),
-    ),
-    profitPerHour: row.profit_per_hour ?? 0,
+    netProfit: profitAfterCosts,
+    profitPerHour: profitPerHourAfterCosts,
     profitPerKm: row.profit_per_km ?? 0,
+    netProfitAfterCosts: profitAfterCosts,
+    profitPerHourAfterCosts,
   };
 }

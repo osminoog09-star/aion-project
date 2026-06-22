@@ -2,19 +2,19 @@
   "version": "1.0",
   "loopStartedAt": "2026-05-15T13:23:00.483Z",
   "lastTaskKey": "unified-shift-runtime-+-operational-costs",
-  "sameTaskCount": 1,
-  "lastAutonomousAt": "2026-06-21T20:56:07.073Z",
+  "sameTaskCount": 2,
+  "lastAutonomousAt": "2026-06-22T01:08:11.897Z",
   "lastHealAt": null,
   "healCountHour": 0,
   "healHourStarted": null,
   "deployCooldownUntil": null,
-  "totalAutonomousTicks": 9,
-  "autonomousDepth": 9,
+  "totalAutonomousTicks": 10,
+  "autonomousDepth": 10,
   "ownerMandate": {
     "active": true,
     "labelRu": "Автономная работа 4 ч (владелец)",
-    "startedAt": "2026-06-21T20:55:45.001Z",
-    "endsAt": "2026-06-22T00:55:45.001Z",
+    "startedAt": "2026-06-22T01:08:11.073Z",
+    "endsAt": "2026-06-22T05:08:11.073Z",
     "durationMs": 14400000
   }
 }
