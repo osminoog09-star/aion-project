@@ -3,13 +3,11 @@ import { t } from "@/i18n";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
 
 const primaryNav = [
-  { href: ecosystemRoutes.home, label: t("nav.platform") },
-  { href: ecosystemRoutes.ecosystem, label: t("nav.ecosystem") },
-  { href: ecosystemRoutes.roadmap, label: t("nav.roadmap") },
-  { href: ecosystemRoutes.operations, label: t("nav.operations") },
-  { href: ecosystemRoutes.status, label: t("nav.status") },
-  { href: ecosystemRoutes.releases, label: t("nav.releases") },
-  { href: ecosystemRoutes.control, label: t("nav.control") },
+  { href: ecosystemRoutes.home, label: "Обзор" },
+  { href: ecosystemRoutes.aionProject, label: "Driver" },
+  { href: ecosystemRoutes.roadmap, label: "Прогресс" },
+  { href: ecosystemRoutes.operations, label: "Операции" },
+  { href: ecosystemRoutes.releases, label: "Релизы" },
 ] as const;
 
 const moduleNav = [
@@ -28,17 +26,17 @@ const moduleNav = [
 export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="aion-root flex min-h-full flex-col">
-      <header className="sticky top-0 z-50 border-b border-cyan-500/15 bg-slate-950/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6">
-          <Link href="/" className="font-semibold tracking-[0.35em] text-cyan-300/95">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090b0d]/95 backdrop-blur-md">
+        <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 md:px-6">
+          <Link href="/" className="shrink-0 font-semibold tracking-[0.24em] text-white">
             AION
           </Link>
-          <nav className="flex flex-wrap items-center justify-end gap-1 text-sm md:gap-3">
+          <nav className="ml-auto flex min-w-0 items-center gap-1 overflow-x-auto text-sm [scrollbar-width:none] md:gap-2">
             {primaryNav.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className="rounded-lg px-2 py-1.5 text-slate-400 transition hover:bg-white/5 hover:text-cyan-200 md:px-3"
+                className="shrink-0 rounded-md px-2 py-1.5 text-slate-400 transition hover:bg-white/5 hover:text-white md:px-3"
               >
                 {l.label}
               </Link>
@@ -47,7 +45,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
       <main className="flex-1">{children}</main>
-      <footer className="border-t border-white/5 bg-slate-950/90 px-4 py-8 text-center md:px-6">
+      <footer className="border-t border-white/10 bg-[#090b0d] px-4 py-8 text-center md:px-6">
         <nav className="mx-auto flex max-w-6xl flex-wrap justify-center gap-x-4 gap-y-2 text-[11px] text-slate-500">
           {moduleNav.map((l) => (
             <Link key={l.href} href={l.href} className="transition hover:text-cyan-400/90">

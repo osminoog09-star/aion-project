@@ -5,7 +5,7 @@
   "ownerLanguageRule": "Владелец видит только русский интерфейс. Английский — код и технические детали (свёрнуто).",
   "ownerDirective": "Непрерывный автономный режим. Field validation 8/8 навсегда снят как блокер. APK hardening закрыт. Приоритет: GPS High, unified runtime/costs, profit UI, OCR, portal writes, Maps/Fuel ADR.",
   "editPolicy": "Owner edits via /operations/priorities (authenticated) → JSON + feed audit; Cursor re-reads each cycle.",
-  "nextImplementationTarget": "Unified shift runtime + operational costs",
+  "nextImplementationTarget": "Background runtime lifecycle, reconnect и cloud sync edge cases",
   "executionNotes": "Не ждать owner device smoke. validate:code и repo:verify обязательны. Maps/Fuel показывают числа только из реально накопленных данных; без данных UI ничего не выдумывает.",
   "priorities": [
     {
@@ -18,7 +18,7 @@
       ],
       "status": "actionable",
       "rationale": "Core differentiation: реальный километраж, road matching, операционная карта смены, runtime routing. Сейчас — roadmap, ADR, dependency graph, self-host architecture planning.",
-      "nextAction": "ADR и схемы реальных GPS-данных; production map/routing engine пока не запускать",
+      "nextAction": "Копить реальные GPS-смены; следующий producer создаёт только provenance snapshot, без map/routing engine",
       "setAt": "2026-05-17",
       "setBy": "product-owner"
     },
@@ -33,7 +33,7 @@
       ],
       "status": "actionable",
       "rationale": "Реальные расходы водителя: умная заправка, ₽/100 км, прибыль после топлива, распределение топлива по классам km (связь с Maps). Сейчас — data model + milestones, без full allocation engine.",
-      "nextAction": "Схема operational costs и fuel allocation только по реальным сменам и OCR-чекам",
+      "nextAction": "Копить подтверждённые OCR/manual fuel entries; allocation запускать только при достаточном evidence",
       "setAt": "2026-05-17",
       "setBy": "product-owner"
     },
@@ -48,7 +48,7 @@
       ],
       "status": "in_progress",
       "rationale": "MASTER §11–12: модуль Driver должен быть полезен в реальной жизни до расширения экосистемы.",
-      "nextAction": "GPS High и непрерывный foreground service; затем unified runtime и operational costs",
+      "nextAction": "Укрепить background lifecycle/reconnect и строить multi-shift intelligence только из реальных смен",
       "setAt": "2026-05-15",
       "setBy": "product-owner"
     },
@@ -62,7 +62,7 @@
       ],
       "status": "in_progress",
       "rationale": "MASTER §14–15: один runtime path, strict shift state machine.",
-      "nextAction": "Перевести cloud trip projections на after-costs contract без смешивания fuel и operational expenses",
+      "nextAction": "Убрать оставшиеся legacy-расчёты и проверить единый economics contract в correction/import/cloud flows",
       "setAt": "2026-05-15",
       "setBy": "cursor"
     },
@@ -130,7 +130,7 @@
       ],
       "status": "in_progress",
       "rationale": "MASTER §6–8: observability, audit, priorities, validation.",
-      "nextAction": "Auth hardening + Supabase write on Vercel prod",
+      "nextAction": "Развернуть отдельный agent key и расширить authenticated Supabase writes для private operations",
       "setAt": "2026-05-15",
       "setBy": "cursor"
     },
