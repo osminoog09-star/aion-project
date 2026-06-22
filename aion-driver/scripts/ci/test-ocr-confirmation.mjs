@@ -55,6 +55,29 @@ assert.equal(recovered.items[1], queue[1]);
 
 console.log("test-ocr-queue-recovery: ok (5 cases)");
 
+const { claimNextOcrItem } = compileTsModule(
+  "features/import/ocrQueue/claimNextOcrItem.ts",
+);
+const pendingJob = {
+  id: "pending",
+  dedupeKey: "image:1",
+  status: "pending",
+  attemptCount: 0,
+  maxAttempts: 5,
+  createdAtMs: now - 1000,
+  updatedAtMs: now - 1000,
+  nextRetryAtMs: now,
+  payload: { imageUris: ["file:///one.jpg"], platform: "bolt", currencyCode: "EUR" },
+};
+const firstClaim = claimNextOcrItem([pendingJob], now);
+assert.equal(firstClaim.claimed?.id, "pending");
+assert.equal(firstClaim.claimed?.status, "processing");
+assert.equal(firstClaim.claimed?.attemptCount, 1);
+const secondClaim = claimNextOcrItem(firstClaim.items, now);
+assert.equal(secondClaim.claimed, null);
+
+console.log("test-ocr-atomic-claim: ok (4 cases)");
+
 const { buildOcrDedupeKey } = compileTsModule(
   "features/import/ocrQueue/buildOcrDedupeKey.ts",
 );
