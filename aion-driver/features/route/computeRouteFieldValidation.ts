@@ -30,7 +30,7 @@ function check(
   return { id, labelRu, passed, detailRu, actionRu };
 }
 
-/** Device field-validation checklist — honest gates for roadmap P1. */
+/** Device diagnostics checklist for route quality and background runtime evidence. */
 export const FGS_HEARTBEAT_FRESH_MS = 5 * 60_000;
 
 export function isFgsHeartbeatFresh(
@@ -40,19 +40,8 @@ export function isFgsHeartbeatFresh(
   return ageMs != null && ageMs >= 0 && ageMs < freshMs;
 }
 
-/** OTA smoke + production FGS gate — полный чеклист на устройстве. */
+/** Complete diagnostics signal count; informational and never an owner gate. */
 export const FIELD_VALIDATION_MIN_PASSED = 8;
-
-/**
- * Production gate 8/8: включить через EXPO_PUBLIC_FIELD_VALIDATION_GATE=1 в EAS.
- * По умолчанию выключен — чеклист информационный, OTA/приложение не блокируются.
- */
-export function isFieldValidationProductionGateEnabled(): boolean {
-  return (
-    typeof process !== "undefined" &&
-    process.env.EXPO_PUBLIC_FIELD_VALIDATION_GATE === "1"
-  );
-}
 
 /** Базовый слой маршрутов/GPS — можно пользоваться без 8/8. */
 export const FIELD_VALIDATION_CORE_CHECK_IDS = [
@@ -198,15 +187,15 @@ export function formatFieldValidationBlockersRu(
 /** One owner-facing next action for the Route Intelligence card. */
 export function getNextFieldValidationActionRu(status: RouteFieldValidationStatus): string {
   const next = status.checks.find((c) => !c.passed);
-  if (!next) return "Все пункты пройдены — скопируйте отчёт и переходите к OTA smoke.";
+  if (!next) return "Все диагностические сигналы получены — фоновая смена продолжает работать без ручного gate.";
   return `${next.labelRu}: ${next.actionRu}`;
 }
 
-/** Полный отчёт для OTA smoke / owner (многострочный). */
+/** Multiline diagnostics report for support and automated analysis. */
 export function formatFieldValidationReportRu(status: RouteFieldValidationStatus): string {
   const header = status.ready
-    ? "FIELD VALIDATION: ГОТОВО (8/8) — OTA smoke"
-    : `FIELD VALIDATION: ${status.passedCount}/${status.totalCount}`;
+    ? "ДИАГНОСТИКА МАРШРУТА: 8/8"
+    : `ДИАГНОСТИКА МАРШРУТА: ${status.passedCount}/${status.totalCount}`;
   const nextAction = `NEXT: ${getNextFieldValidationActionRu(status)}`;
   const lines = status.checks.map(
     (c) =>
