@@ -4,6 +4,58 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-pd6bue",
+      "occurredAt": "2026-06-22",
+      "title": "Strategic priorities пишутся в Supabase атомарно",
+      "summary": "Убран race select+insert: snapshot kind стал singleton, запись выполняется одним upsert по kind.",
+      "subsystemIds": [
+        "operations-center",
+        "web-portal",
+        "supabase-platform"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+    "rollup": {
+      "fullyDone": [
+        "✅ Strategic priorities используют атомарный Supabase upsert по kind",
+        "✅ Migration удаляет legacy-дубли, сохраняя самый свежий snapshot",
+        "✅ CI закрепляет singleton-схему и запрещает возврат select+insert race"
+      ],
+      "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+    "stillMissing": [
+      "Применить migration 20260623200000 к production Supabase"
+    ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+      "backend": "medium",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+      "web_build": "passed",
+      "repo_verify": "passed",
+      "driver_validate_code": "passed",
+      "typescript": "passed"
+      },
+      "reasoning": "Параллельные owner-save больше не должны создавать конкурирующие portal_strategic_priorities строки.",
+      "task": "Portal auth / Supabase write path",
+      "confidence": "high",
+      "changedFiles": [
+        "src/lib/operations/priorities-persist.ts",
+        "aion-driver/supabase/migrations/20260623200000_unique_public_snapshot_kind.sql",
+        "scripts/ci/test-priorities-atomic-upsert.mjs",
+        "package.json"
+      ],
+      "runtimeImpact": "После применения migration каждый snapshot kind имеет одну строку; legacy-дубли схлопываются до самой свежей."
+    },
+    {
       "id": "evt-2026-06-22-rpu3mi",
       "occurredAt": "2026-06-22",
       "title": "Owner session теперь имеет серверный срок жизни",
@@ -15,29 +67,29 @@
       "eventType": "implementation_finished",
       "commitHash": null,
       "repository": "aion-project",
-    "rollup": {
-      "fullyDone": [
-        "✅ Owner-cookie содержит подписанное время выдачи и серверный TTL 7 дней",
-        "✅ Подделка, просрочка и токен из будущего отклоняются автоматическим тестом"
-      ],
-      "partiallyDone": [],
+      "rollup": {
+        "fullyDone": [
+          "✅ Owner-cookie содержит подписанное время выдачи и серверный TTL 7 дней",
+          "✅ Подделка, просрочка и токен из будущего отклоняются автоматическим тестом"
+        ],
+        "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-    "stillMissing": [],
+      "stillMissing": [],
       "blocked": [],
       "impacts": {
         "release": "low",
         "otaApk": "none",
-      "backend": "low",
+        "backend": "low",
         "realtime": "low",
         "ux": "medium",
         "cloud": "low"
       },
       "validation": {
-      "web_build": "passed",
-      "repo_verify": "passed",
-      "driver_validate_code": "passed"
+        "web_build": "passed",
+        "repo_verify": "passed",
+        "driver_validate_code": "passed"
       },
       "reasoning": "Закрыт бессрочный replay owner-cookie: maxAge браузера больше не является единственной защитой.",
       "task": "Portal auth / Supabase write path",

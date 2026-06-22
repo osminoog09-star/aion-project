@@ -74,17 +74,9 @@ async function trySupabaseUpsert(payload: StrategicPrioritiesPayload): Promise<b
       is_public: true,
       updated_at: new Date().toISOString(),
     };
-    const { data: existing } = await supabase
+    const { error } = await supabase
       .from("ecosystem_public_snapshots")
-      .select("id")
-      .eq("kind", kind)
-      .limit(1)
-      .maybeSingle();
-    if (existing?.id) {
-      const { error } = await supabase.from("ecosystem_public_snapshots").update(row).eq("id", existing.id);
-      return !error;
-    }
-    const { error } = await supabase.from("ecosystem_public_snapshots").insert(row);
+      .upsert(row, { onConflict: "kind" });
     return !error;
   } catch {
     return false;
