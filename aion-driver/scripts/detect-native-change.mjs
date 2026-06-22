@@ -21,7 +21,10 @@ const NATIVE_GLOBS = [
 function changedFiles(base = "HEAD~1") {
   try {
     const out = execSync(`git diff --name-only ${base}`, { cwd: root, encoding: "utf8" });
-    return out.split("\n").map((s) => s.trim()).filter(Boolean);
+    const modulePrefix = "aion-driver/";
+    return out.split("\n").map((s) => s.trim()).filter(Boolean).map((file) =>
+      file.startsWith(modulePrefix) ? file.slice(modulePrefix.length) : file
+    );
   } catch {
     return [];
   }
