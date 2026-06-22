@@ -11,7 +11,10 @@ const progress = Math.round(values.reduce((sum, value) => sum + value, 0) / valu
 assert.equal(progress, 57);
 assert.match(page, /Что готово и сколько осталось/);
 assert.match(page, /Осталось/);
-assert.match(page, /Не календарный срок/);
+assert.match(page, /Автономная разработка активна/);
+assert.match(page, /Общая готовность/);
+assert.match(page, /Оценка учитывает код, UX, облако, тесты и граничные случаи/);
+assert.match(page, /role="progressbar"/);
 assert.match(page, /Прогресс направлений/);
 assert.match(page, /Путь до результата/);
 assert.doesNotMatch(priorities.nextImplementationTarget, /device smoke|8\/8/i);
@@ -20,4 +23,4 @@ for (const label of ["Обзор", "Driver", "Прогресс", "Операци
   assert.match(shell, new RegExp(`label: "${label}"`));
 }
 
-console.log("project overview: OK (57% progress, clear remaining work, compact navigation)");
+console.log("project overview: OK (57% progress, live status, priority labels, compact navigation)");

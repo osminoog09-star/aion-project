@@ -30,15 +30,22 @@ function ProgressBar({ value, color }: { value: number; color: string }) {
   );
 }
 
-function SummaryMetric({ label, value, detail }: { label: string; value: string; detail: string }) {
+function SummaryMetric({ label, value, tone = "text-white" }: { label: string; value: string; tone?: string }) {
   return (
-    <div className="min-w-0 border-l-2 border-white/15 pl-4">
+    <div className="min-w-0">
       <p className="text-[11px] font-semibold uppercase text-slate-500">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-white">{value}</p>
-      <p className="mt-1 text-xs leading-5 text-slate-500">{detail}</p>
+      <p className={`mt-1 text-2xl font-semibold ${tone}`}>{value}</p>
     </div>
   );
 }
+
+const levelPresentation: Record<string, { label: string; className: string }> = {
+  critical: { label: "P0", className: "border-rose-400/30 bg-rose-400/10 text-rose-200" },
+  high: { label: "P1", className: "border-amber-400/30 bg-amber-400/10 text-amber-200" },
+  medium: { label: "P2", className: "border-cyan-400/30 bg-cyan-400/10 text-cyan-200" },
+  strategic: { label: "STR", className: "border-violet-400/30 bg-violet-400/10 text-violet-200" },
+  low: { label: "P3", className: "border-white/15 bg-white/5 text-slate-300" },
+};
 
 export default async function HomePage() {
   const [eco, priorities] = await Promise.all([getEcosystemStatus(), getStrategicPriorities()]);
@@ -92,24 +99,35 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="mt-9 grid gap-6 border-y border-white/10 py-6 sm:grid-cols-2 lg:grid-cols-4">
-            <SummaryMetric label="Общий прогресс" value={`${progress}%`} detail="Редакционная readiness-оценка" />
-            <SummaryMetric label="Осталось" value={`${remaining}%`} detail="Не календарный срок, а объём готовности" />
-            <SummaryMetric label="В работе" value={String(activeCount)} detail="Активные стратегические направления" />
-            <SummaryMetric
-              label="Очередь / блокеры"
-              value={`${queuedCount} / ${statusCounts.blocked ?? 0}`}
-              detail="Запланировано / заблокировано"
-            />
-          </div>
-
-          <div className="mt-6">
-            <div className="flex items-center justify-between gap-4 text-xs">
-              <span className="font-medium text-slate-300">Готовность AION</span>
-              <span className="font-mono text-slate-500">{progress} из 100</span>
+          <div className="mt-9 border-y border-white/10 py-6">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs">
+              <span className="inline-flex items-center gap-2 font-medium text-emerald-200">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                Автономная разработка активна
+              </span>
+              <span className="text-slate-600">Обновлено {eco.lastUpdated}</span>
+              <span className="text-slate-600">APK build {apkManifest.buildNumber}</span>
             </div>
-            <div className="mt-2 h-3 overflow-hidden rounded bg-white/10">
-              <div className="h-full rounded bg-emerald-400" style={{ width: `${progress}%` }} />
+
+            <div className="mt-6 grid gap-7 lg:grid-cols-[minmax(0,1.4fr)_minmax(300px,0.6fr)] lg:items-end">
+              <div>
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <p className="text-[11px] font-semibold uppercase text-slate-500">Общая готовность</p>
+                    <p className="mt-1 text-5xl font-semibold text-white md:text-6xl">{progress}<span className="text-2xl text-emerald-300">%</span></p>
+                  </div>
+                  <p className="pb-1 text-right text-sm text-slate-400"><span className="font-semibold text-amber-300">{remaining}%</span><br />Осталось</p>
+                </div>
+                <div className="mt-4 h-4 overflow-hidden rounded bg-white/10" role="progressbar" aria-label="Общая готовность AION" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
+                  <div className="h-full rounded bg-emerald-400" style={{ width: `${progress}%` }} />
+                </div>
+                <p className="mt-2 text-xs text-slate-600">Оценка учитывает код, UX, облако, тесты и граничные случаи.</p>
+              </div>
+              <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-5 lg:border-l lg:border-t-0 lg:pl-7 lg:pt-0">
+                <SummaryMetric label="В работе" value={String(activeCount)} tone="text-cyan-200" />
+                <SummaryMetric label="В очереди" value={String(queuedCount)} tone="text-amber-200" />
+                <SummaryMetric label="Блокеры" value={String(statusCounts.blocked ?? 0)} tone="text-rose-200" />
+              </div>
             </div>
           </div>
         </div>
@@ -130,15 +148,18 @@ export default async function HomePage() {
             <p className="mt-4 text-sm leading-6 text-slate-400">{codexStatus.currentFocus}</p>
 
             <div className="mt-6 divide-y divide-white/10 border-y border-white/10">
-              {activePriorities.map((item) => (
+              {activePriorities.map((item) => {
+                const level = levelPresentation[item.level] ?? levelPresentation.low;
+                return (
                 <div key={item.id} className="grid gap-2 py-4 sm:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
-                  <div className="flex items-start gap-2">
-                    <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-cyan-400" />
+                  <div className="flex items-start gap-3">
+                    <span className={`mt-0.5 shrink-0 rounded border px-1.5 py-0.5 font-mono text-[10px] font-semibold ${level.className}`}>{level.label}</span>
                     <p className="text-sm font-medium text-slate-200">{item.title}</p>
                   </div>
                   <p className="text-xs leading-5 text-slate-500">{item.nextAction}</p>
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
@@ -179,7 +200,7 @@ export default async function HomePage() {
               <div key={row.key}>
                 <div className="mb-2 flex items-center justify-between gap-4 text-sm">
                   <span className="text-slate-300">{row.label}</span>
-                  <span className="font-mono text-xs text-slate-500">{value}%</span>
+                  <span className="font-mono text-xs text-slate-500">{value}% · осталось {100 - value}%</span>
                 </div>
                 <ProgressBar value={value} color={row.color} />
               </div>
