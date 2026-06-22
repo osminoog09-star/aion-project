@@ -14,6 +14,11 @@ assert.match(foreground, /accuracy:\s*Location\.Accuracy\.High/);
 assert.doesNotMatch(foreground, /accuracy:\s*Location\.Accuracy\.Balanced/);
 assert.match(background, /accuracy:\s*Location\.Accuracy\.High/);
 assert.match(background, /pausesUpdatesAutomatically:\s*false/);
+assert.match(background, /killServiceOnDestroy:\s*false/);
+assert.match(
+  background,
+  /if \(bg\.status !== PermissionStatus\.GRANTED\) \{[\s\S]*?return \{ dispose: \(\) => \{\} \};\s*\}/,
+);
 assert.doesNotMatch(background, /accuracy:\s*Location\.Accuracy\.Balanced/);
 assert.match(foreground, /if \(stopped\) \{\s*next\.remove\(\)/s);
 assert.match(foreground, /stop:\s*\(\) => \{\s*stopped = true;/s);

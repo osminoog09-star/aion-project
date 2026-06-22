@@ -2,19 +2,19 @@
   "version": "1.0",
   "loopStartedAt": "2026-05-15T13:23:00.483Z",
   "lastTaskKey": "runtime-stabilization-(fgs-+-unified-shift)",
-  "sameTaskCount": 2,
-  "lastAutonomousAt": "2026-06-22T03:25:45.497Z",
+  "sameTaskCount": 3,
+  "lastAutonomousAt": "2026-06-22T03:29:57.422Z",
   "lastHealAt": null,
   "healCountHour": 0,
   "healHourStarted": null,
   "deployCooldownUntil": null,
-  "totalAutonomousTicks": 12,
-  "autonomousDepth": 12,
+  "totalAutonomousTicks": 13,
+  "autonomousDepth": 13,
   "ownerMandate": {
     "active": true,
     "labelRu": "Автономная работа 4 ч (владелец)",
-    "startedAt": "2026-06-22T03:23:33.011Z",
-    "endsAt": "2026-06-22T07:23:33.011Z",
+    "startedAt": "2026-06-22T03:29:56.463Z",
+    "endsAt": "2026-06-22T07:29:56.463Z",
     "durationMs": 14400000
   }
 }

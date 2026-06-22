@@ -7,7 +7,7 @@ const shiftContext = readFileSync(path.join(driverRoot, "contexts/ShiftContext.t
 
 assert.match(
   shiftContext,
-  /const handle = await getBackgroundTrackingAdapter\(\)\.enableForShift\(shift\);\s*if \(cancelled\) \{\s*handle\.dispose\(\);\s*return;\s*\}\s*bgTrackingRef\.current = handle;/s,
+  /const handle = await getBackgroundTrackingAdapter\(\)\.enableForShift\(shift\);\s*if \(cancelled\) \{\s*handle\.dispose\(\);\s*return;\s*\}\s*bgTrackingRef\.current = handle;[\s\S]*?catch \(error\) \{[\s\S]*?background tracking start failed/s,
   "a late FGS start must be disposed after AppState returns to foreground",
 );
 

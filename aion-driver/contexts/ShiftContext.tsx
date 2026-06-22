@@ -438,15 +438,19 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     }
     let cancelled = false;
     void (async () => {
-      const shift = activeShiftRef.current;
-      if (!shift || shift.paused) return;
-      bgTrackingRef.current?.dispose();
-      const handle = await getBackgroundTrackingAdapter().enableForShift(shift);
-      if (cancelled) {
-        handle.dispose();
-        return;
+      try {
+        const shift = activeShiftRef.current;
+        if (!shift || shift.paused) return;
+        bgTrackingRef.current?.dispose();
+        const handle = await getBackgroundTrackingAdapter().enableForShift(shift);
+        if (cancelled) {
+          handle.dispose();
+          return;
+        }
+        bgTrackingRef.current = handle;
+      } catch (error) {
+        if (!cancelled) console.warn("[AION][shift-runtime] background tracking start failed", error);
       }
-      bgTrackingRef.current = handle;
     })();
     return () => {
       cancelled = true;

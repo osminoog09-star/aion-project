@@ -11,8 +11,8 @@
     "reasoning": "Production gate для фоновой смены",
     "confidence": 0.88,
     "startedAt": "2026-06-19T11:22:11.429Z",
-    "updatedAt": "2026-06-22T03:25:45.695Z",
-    "heartbeatAt": "2026-06-22T03:25:45.695Z",
+    "updatedAt": "2026-06-22T03:29:57.740Z",
+    "heartbeatAt": "2026-06-22T03:29:57.740Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -36,7 +36,7 @@
     "validationProgress": "Operations получил видимый статус работы Codex по Driver",
     "progressPercent": 40,
     "etaMinutes": 90,
-    "autonomousDepth": 12,
+    "autonomousDepth": 13,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "NEXT",
@@ -268,6 +268,17 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-22T03:29:57.740Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Runtime stabilization (FGS + unified shift)",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Production gate для фоновой смены",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-06-22T03:25:45.695Z",
       "phase": "coding",
@@ -882,20 +893,12 @@
       "resultRu": "В процессе",
       "icon": "⚡",
       "confidence": 0.9
-    },
-    {
-      "at": "2026-05-15T13:02:40.383Z",
-      "phase": "analyzing",
-      "summary": "AI анализирует систему: Background runtime field matrix",
-      "feedEventId": "evt-2026-05-15-exec-t6uf9u",
-      "titleRu": "AI анализирует систему",
-      "explanationRu": "ChatGPT review ar-1778850154197: device gate before BACKGROUND_TRACKING_PRODUCTION_READY",
-      "resultRu": "В процессе",
-      "icon": "🔍",
-      "confidence": 0.9
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-22T03:29:57.740Z"
+    },
     {
       "at": "2026-06-22T03:25:45.695Z"
     },
@@ -1036,9 +1039,6 @@
     },
     {
       "at": "2026-05-16T13:56:04.603Z"
-    },
-    {
-      "at": "2026-05-16T13:47:59.713Z"
     }
   ]
 }

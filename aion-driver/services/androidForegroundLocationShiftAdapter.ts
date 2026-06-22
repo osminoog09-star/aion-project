@@ -23,6 +23,7 @@ export class AndroidForegroundLocationShiftAdapter implements BackgroundTracking
       console.warn(
         "[AION][shift-runtime] background location not granted — трек при полном фоне может прерываться",
       );
+      return { dispose: () => {} };
     }
     if (await Location.hasStartedLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK)) {
       await Location.stopLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK);
@@ -36,7 +37,7 @@ export class AndroidForegroundLocationShiftAdapter implements BackgroundTracking
         notificationTitle: "AION — активная смена",
         notificationBody: "Трек маршрута; откройте приложение для деталей.",
         notificationColor: "#030712",
-        killServiceOnDestroy: true,
+        killServiceOnDestroy: false,
       },
     });
     return {
