@@ -4,6 +4,50 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-k4nt4y",
+      "occurredAt": "2026-06-22",
+      "title": "Driver runtime: ручной 8/8 gate удалён окончательно",
+      "summary": "Background runtime больше не читает EXPO_PUBLIC_FIELD_VALIDATION_GATE и всегда следует решению владельца: ручная field validation не блокирует FGS и фоновую смену. CI подтверждает, что environment не может восстановить снятый gate.",
+      "subsystemIds": [
+        "background-drive",
+        "driver-mobile",
+        "operations-center"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Retire owner field gate from Driver background runtime",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/services/backgroundTracking.ts",
+        "aion-driver/scripts/ci/test-background-gate.mjs"
+      ],
+      "runtimeImpact": "Background shift diagnostics cannot regress into awaiting owner device validation"
+    },
+    {
       "id": "evt-2026-06-22-gcj8ln",
       "occurredAt": "2026-06-22",
       "title": "Главная AION получила рабочую панель прогресса",
@@ -1460,16 +1504,14 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-        "fullyDone": [],
-        "partiallyDone": [
-          "🟨 См. reasoning в audit"
+        "fullyDone": [
+          "Ручной 8/8 gate удалён из background runtime и защищён CI"
         ],
+        "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-      "stillMissing": [
-        "Уточнить rollup и validation после CI"
-      ],
+      "stillMissing": [],
       "blocked": [],
       "impacts": {
         "release": "medium",
@@ -1480,7 +1522,7 @@
         "cloud": "low"
       },
       "validation": {
-        "web_build": "pending"
+        "driver_validate_code": "passed"
       },
       "reasoning": "Policy suppressed a paused rollout correctly, but the screen mapped reason=none to a misleading green current state.",
       "task": "driver-paused-rollout-ux",

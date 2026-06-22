@@ -2,37 +2,26 @@ import assert from "node:assert/strict";
 import { compileTsModule } from "./lib/compileTsModule.mjs";
 
 async function main() {
-  const routeValidation = compileTsModule(
-    "features/route/computeRouteFieldValidation.ts",
-  );
-  const { backgroundTrackingProductionGate } = compileTsModule(
-    "services/backgroundTracking.ts",
-    {
-      "../features/route/computeRouteFieldValidation": routeValidation,
-    },
-  );
+  const { backgroundTrackingProductionGate } = compileTsModule("services/backgroundTracking.ts");
 
   delete process.env.EXPO_PUBLIC_FIELD_VALIDATION_GATE;
-  const off = backgroundTrackingProductionGate(false);
-  assert.equal(off.allowed, true, "gate off by default — не блокируем FGS/UI");
-  assert.ok(
-    off.reasonRu.includes("информацион") || off.reasonRu.includes("временно"),
-  );
+  const ownerDecision = backgroundTrackingProductionGate(false);
+  assert.equal(ownerDecision.allowed, true, "retired owner gate never blocks FGS/UI");
+  assert.ok(ownerDecision.reasonRu.includes("снят решением владельца"));
 
   process.env.EXPO_PUBLIC_FIELD_VALIDATION_GATE = "1";
-  const blocked = backgroundTrackingProductionGate(false);
-  assert.equal(blocked.allowed, false);
-  assert.ok(blocked.reasonRu.includes("8/8"));
+  const envCannotRestoreGate = backgroundTrackingProductionGate(false);
+  assert.equal(envCannotRestoreGate.allowed, true, "environment cannot restore retired owner gate");
 
-  const needsOwner = backgroundTrackingProductionGate(true);
-  assert.equal(needsOwner.allowed, false);
-  assert.ok(needsOwner.reasonRu.includes("owner sign-off"));
+  const historicalSuccessCannotChangeDecision = backgroundTrackingProductionGate(true);
+  assert.equal(historicalSuccessCannotChangeDecision.allowed, true);
+  assert.equal(historicalSuccessCannotChangeDecision.reasonRu, ownerDecision.reasonRu);
 
   delete process.env.EXPO_PUBLIC_FIELD_VALIDATION_GATE;
-  console.log("test-background-gate: ok (3 cases)");
+  console.log("test-background-gate: ok (owner gate permanently retired, 3 cases)");
 }
 
-main().catch((e) => {
-  console.error(e);
+main().catch((error) => {
+  console.error(error);
   process.exit(1);
 });
