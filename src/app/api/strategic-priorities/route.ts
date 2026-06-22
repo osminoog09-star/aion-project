@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { isOwnerAuthenticated } from "@/lib/operations/owner-auth";
 import { saveStrategicPriorities } from "@/lib/operations/priorities-persist";
+import { diffStrategicPriorities } from "@/lib/operations/priority-audit";
 import { validateStrategicPriorities } from "@/lib/operations/priority-validation";
 import {
   buildAutonomousNextTargets,
-  getLocalStrategicPriorities,
   getStrategicPriorities,
 } from "@/lib/strategic-priorities";
 import type { PriorityChangeAudit, StrategicPrioritiesPayload } from "@/lib/ecosystem-types";
@@ -55,21 +55,12 @@ export async function PUT(req: Request) {
     );
   }
 
-  const previous = getLocalStrategicPriorities();
+  const previous = await getStrategicPriorities();
   const audit: PriorityChangeAudit = {
-    ...body.audit,
+    reason: body.audit.reason.trim(),
     changedAt: new Date().toISOString(),
-    changedBy: body.audit.changedBy || "product-owner",
-    changes:
-      body.audit.changes?.length > 0
-        ? body.audit.changes
-        : [
-            {
-              path: "priorities",
-              previousValue: `${previous.priorities.length} items`,
-              newValue: `${body.payload.priorities.length} items`,
-            },
-          ],
+    changedBy: "product-owner",
+    changes: diffStrategicPriorities(previous, body.payload),
   };
 
   try {

@@ -29,7 +29,7 @@
     "deploy:hook": "node scripts/trigger-deploy-hook.mjs",
     "deploy:pipeline": "npm run repo:verify && node scripts/deploy-pipeline.mjs",
     "deploy:validate": "node scripts/post-deploy-validate.mjs",
-    "repo:verify": "node scripts/verify-portal-deploy-safety.mjs && node scripts/ci/test-bug-report-webhook-payload.mjs && node scripts/ci/test-execution-task-selection.mjs && node scripts/ci/test-priorities-persist-policy.mjs && node scripts/ci/test-priorities-atomic-upsert.mjs && node scripts/ci/test-secure-secret.mjs && node scripts/ci/test-owner-session-token.mjs && node scripts/ci/test-public-status-current.mjs && node scripts/ci/test-project-overview.mjs",
+    "repo:verify": "node scripts/verify-portal-deploy-safety.mjs && node scripts/ci/test-bug-report-webhook-payload.mjs && node scripts/ci/test-execution-task-selection.mjs && node scripts/ci/test-priorities-persist-policy.mjs && node scripts/ci/test-priorities-atomic-upsert.mjs && node scripts/ci/test-priority-audit.mjs && node scripts/ci/test-secure-secret.mjs && node scripts/ci/test-owner-session-token.mjs && node scripts/ci/test-public-status-current.mjs && node scripts/ci/test-project-overview.mjs",
     "repo:verify:modules": "node scripts/verify-aion-modules.mjs",
     "git:remote": "node scripts/setup-git-remote.mjs",
     "owner:unblock-check": "node scripts/owner-unblock-check.mjs",
