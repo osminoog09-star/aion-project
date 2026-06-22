@@ -4,6 +4,52 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-9g95e4",
+      "occurredAt": "2026-06-22",
+      "title": "Portal auth: отдельный agent key",
+      "summary": "Owner password/cookie и agent write-key теперь сравниваются constant-time через SHA-256 digest. Для автоматизации поддержан отдельный OPERATIONS_AGENT_KEY; текущий owner-secret fallback сохранён для совместимости.",
+      "subsystemIds": [
+        "web-portal",
+        "operations-center"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Harden owner and agent secret verification",
+      "confidence": "high",
+      "changedFiles": [
+        "src/lib/operations/secure-secret.ts",
+        "src/lib/operations/owner-auth.ts",
+        "src/lib/operations/review-agent-auth.ts",
+        "scripts/execution-push-live.mjs",
+        "scripts/ci/test-secure-secret.mjs"
+      ],
+      "runtimeImpact": "Safer authenticated writes without breaking current automation"
+    },
+    {
       "id": "evt-2026-06-22-n4i2ue",
       "occurredAt": "2026-06-22",
       "title": "OCR queue: атомарный claim",

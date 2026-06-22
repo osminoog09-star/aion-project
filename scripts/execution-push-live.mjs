@@ -11,7 +11,9 @@ import { loadDotenvLocal } from "./load-dotenv-local.mjs";
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 loadDotenvLocal();
 
-const secret = process.env.OPERATIONS_OWNER_SECRET?.trim();
+const secret =
+  process.env.OPERATIONS_AGENT_KEY?.trim() ||
+  process.env.OPERATIONS_OWNER_SECRET?.trim();
 const url =
   process.env.EXECUTION_LIVE_PUSH_URL?.trim() ??
   "https://aion-com.vercel.app/api/operations/execution-live-sync";

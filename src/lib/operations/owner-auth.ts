@@ -1,5 +1,6 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac } from "node:crypto";
 import { cookies } from "next/headers";
+import { secureSecretMatches } from "@/lib/operations/secure-secret";
 
 export const OWNER_COOKIE = "aion_ops_owner";
 
@@ -18,11 +19,7 @@ export function isOwnerAuthConfigured(): boolean {
 
 export function verifyOwnerPassword(password: string): boolean {
   const secret = getOwnerSecret();
-  if (!secret) return false;
-  const a = Buffer.from(password);
-  const b = Buffer.from(secret);
-  if (a.length !== b.length) return false;
-  return timingSafeEqual(a, b);
+  return secureSecretMatches(password, secret);
 }
 
 export function buildOwnerCookieValue(): string | null {
@@ -35,14 +32,7 @@ export function verifyOwnerCookieValue(value: string | undefined): boolean {
   const secret = getOwnerSecret();
   if (!secret || !value) return false;
   const expected = signToken(secret);
-  try {
-    const a = Buffer.from(value);
-    const b = Buffer.from(expected);
-    if (a.length !== b.length) return false;
-    return timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
+  return secureSecretMatches(value, expected, 64);
 }
 
 export async function isOwnerAuthenticated(): Promise<boolean> {
