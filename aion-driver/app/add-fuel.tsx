@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useMemo, useState } from "react";
 import {
   KeyboardAvoidingView,
@@ -28,10 +28,11 @@ import { useResolvedDistanceUnits } from "../hooks/useResolvedDistanceUnits";
 const FUEL_TYPES = ["АИ-95", "АИ-92", "ДТ", "Газ"] as const;
 
 export default function AddFuelModal() {
+  const params = useLocalSearchParams<{ total?: string }>();
   const { activeShift, addConfirmedFuelEntry, liveMetrics } = useShift();
   const currency = useResolvedCurrency();
   const distanceUnits = useResolvedDistanceUnits();
-  const [totalStr, setTotalStr] = useState("");
+  const [totalStr, setTotalStr] = useState(params.total ?? "");
   const [litersStr, setLitersStr] = useState("");
   const [fuelType, setFuelType] = useState<string>(FUEL_TYPES[0]);
   const [busy, setBusy] = useState(false);

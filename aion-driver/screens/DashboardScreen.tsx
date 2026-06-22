@@ -705,6 +705,17 @@ export function DashboardScreen() {
               />
             </View>
             ) : null}
+            {(canPause || canResume || canEnd) ? (
+            <View className="min-w-[47%] flex-1">
+              <GradientButton
+                title="Голос"
+                variant="glass"
+                size="cockpit"
+                onPress={() => router.push("/voice-control" as Href)}
+                disabled={busy !== null}
+              />
+            </View>
+            ) : null}
             {canPause ? (
             <View className="min-w-[47%] flex-1">
               <GradientButton
