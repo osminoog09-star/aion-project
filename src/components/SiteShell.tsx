@@ -28,7 +28,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
     <div className="aion-root flex min-h-full flex-col">
       <header className="sticky top-0 z-50 border-b border-white/10 bg-[#090b0d]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 md:px-6">
-          <Link href="/" className="shrink-0 font-semibold tracking-[0.24em] text-white">
+          <Link href="/" className="flex shrink-0 items-center gap-2 font-semibold tracking-[0.2em] text-white">
+            <span className="h-2 w-2 rounded-full bg-emerald-400" />
             AION
           </Link>
           <nav className="ml-auto flex min-w-0 items-center gap-1 overflow-x-auto text-sm [scrollbar-width:none] md:gap-2">
@@ -54,9 +55,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <p className="mx-auto mt-4 max-w-2xl text-xs text-slate-600">
-          Экосистемная AI-платформа <span className="font-mono text-slate-500">www.aion.com</span> · модуль Driver:{" "}
-          <span className="font-mono text-slate-500">{ecosystemRoutes.aionProject}</span> · roadmap/релизы: JSON +
-          публичные снимки Supabase.
+          AION Project · Driver, операции, прогресс и релизы. Данные синхронизируются из репозитория и Supabase.
         </p>
       </footer>
     </div>

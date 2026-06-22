@@ -4,6 +4,52 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-gcj8ln",
+      "occurredAt": "2026-06-22",
+      "title": "Главная AION получила рабочую панель прогресса",
+      "summary": "Общий прогресс 57% превращён в главный индикатор; добавлены статус автономной разработки, build APK, компактные счётчики работы, очереди и блокеров, уровни P0/P1/P2/STR и остаток по каждому направлению. Мобильная и desktop-версии проверены без переполнения.",
+      "subsystemIds": [
+        "web-portal",
+        "operations-center",
+        "roadmap-system"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [
+          "Панель прогресса, приоритеты и адаптивная компоновка"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "repo_verify": "passed",
+        "web_build": "passed",
+        "browser_desktop": "passed",
+        "browser_mobile": "passed"
+      },
+      "task": "Polish AION project overview hierarchy and mobile scanning",
+      "confidence": "high",
+      "changedFiles": [
+        "src/app/page.tsx",
+        "src/components/SiteShell.tsx",
+        "scripts/ci/test-project-overview.mjs"
+      ],
+      "runtimeImpact": "Owner sees current progress, active priorities and remaining work at a glance"
+    },
+    {
       "id": "evt-2026-06-22-z3y3sr",
       "occurredAt": "2026-06-22",
       "title": "Главная AION стала понятным обзором проекта",
