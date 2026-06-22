@@ -442,7 +442,11 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       if (!shift || shift.paused) return;
       bgTrackingRef.current?.dispose();
       const handle = await getBackgroundTrackingAdapter().enableForShift(shift);
-      if (!cancelled) bgTrackingRef.current = handle;
+      if (cancelled) {
+        handle.dispose();
+        return;
+      }
+      bgTrackingRef.current = handle;
     })();
     return () => {
       cancelled = true;

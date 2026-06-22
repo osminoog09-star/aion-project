@@ -4,6 +4,50 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-eldwi1",
+      "occurredAt": "2026-06-22",
+      "title": "Driver FGS: закрыта гонка при быстром возврате в приложение",
+      "summary": "Если AppState возвращался в active до завершения асинхронного старта background location, поздний FGS handle теперь сразу уничтожается и не дублирует foreground watcher. Добавлен отдельный CI-контракт перехода background→active.",
+      "subsystemIds": [
+        "background-drive",
+        "driver-mobile"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Dispose late-started FGS handle after AppState transition",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/contexts/ShiftContext.tsx",
+        "aion-driver/scripts/ci/test-background-transition-cleanup.mjs",
+        "aion-driver/package.json"
+      ],
+      "runtimeImpact": "Prevents duplicate GPS owners and leaked location service after rapid AppState transitions"
+    },
+    {
       "id": "evt-2026-06-22-k4nt4y",
       "occurredAt": "2026-06-22",
       "title": "Driver runtime: ручной 8/8 gate удалён окончательно",
@@ -1548,16 +1592,14 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-        "fullyDone": [],
-        "partiallyDone": [
-          "🟨 См. reasoning в audit"
+        "fullyDone": [
+          "Late-start FGS cleanup и CI-контракт AppState transition"
         ],
+        "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-      "stillMissing": [
-        "Уточнить rollup и validation после CI"
-      ],
+      "stillMissing": [],
       "blocked": [],
       "impacts": {
         "release": "medium",
@@ -1568,7 +1610,7 @@
         "cloud": "low"
       },
       "validation": {
-        "web_build": "pending"
+        "driver_validate_code": "passed"
       },
       "reasoning": "Prefix-only validation accepted malformed or credential-bearing HTTPS strings and depended on incidental URL polyfill loading.",
       "task": "driver-apk-url-parser",

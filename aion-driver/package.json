@@ -51,7 +51,7 @@
     "test:history-correction": "node scripts/ci/test-historical-shift-correction.mjs",
     "test:fgs-heartbeat": "node scripts/ci/test-fgs-heartbeat.mjs",
     "test:stop-zone": "node scripts/ci/test-stop-zone-progress.mjs",
-    "test:background-gate": "node scripts/ci/test-background-gate.mjs && node scripts/ci/test-location-accuracy-policy.mjs",
+    "test:background-gate": "node scripts/ci/test-background-gate.mjs && node scripts/ci/test-location-accuracy-policy.mjs && node scripts/ci/test-background-transition-cleanup.mjs",
     "test:ota-manifest": "node scripts/ci/test-ota-manifest-summary.mjs",
     "test:apk-manifest": "node scripts/ci/test-apk-manifest-validation.mjs",
     "test:ocr-confirmation": "node scripts/ci/test-ocr-confirmation.mjs",
