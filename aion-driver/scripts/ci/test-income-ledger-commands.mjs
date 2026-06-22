@@ -1,0 +1,15 @@
+import assert from "node:assert/strict";
+import { compileTsModule } from "./lib/compileTsModule.mjs";
+const { appendIncomeBatch, removeIncomeEntries } = compileTsModule("features/shift/runtime/incomeLedgerCommands.ts");
+const shift = { id: "s", totalIncome: 10, incomeEventsCount: 1, incomeLedger: [{ id: "old", atMs: 1, amount: 10 }] };
+let i = 0;
+const added = appendIncomeBatch(shift, 4, 3, () => ({ id: `v${++i}`, atMs: i, amount: 4 }));
+assert.equal(added.next.totalIncome, 22);
+assert.equal(added.next.incomeEventsCount, 4);
+assert.deepEqual([...added.entryIds], ["v1", "v2", "v3"]);
+const undone = removeIncomeEntries(added.next, added.entryIds);
+assert.equal(undone.totalIncome, 10);
+assert.equal(undone.incomeEventsCount, 1);
+assert.equal(undone.incomeLedger.length, 1);
+assert.equal(removeIncomeEntries(shift, ["missing"]), null);
+console.log("income ledger commands: OK (atomic batch + exact undo)");

@@ -4,6 +4,51 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-of8hfz",
+      "occurredAt": "2026-06-22",
+      "title": "Voice Control: атомарные заказы и точный Undo",
+      "summary": "Голосовой batch заказов теперь сохраняется одной income-ledger командой и возвращает точные entry IDs. Экран подтверждения предлагает Undo, удаляющий только созданные голосом записи и корректно восстанавливающий totalIncome/events count.",
+      "subsystemIds": [
+        "driver-mobile",
+        "shift-economics"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Add atomic voice income batch and exact undo",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/features/shift/runtime/incomeLedgerCommands.ts",
+        "aion-driver/contexts/ShiftContext.tsx",
+        "aion-driver/app/voice-control.tsx",
+        "aion-driver/scripts/ci/test-income-ledger-commands.mjs"
+      ],
+      "runtimeImpact": "Voice income cannot partially persist or undo an unrelated manual order"
+    },
+    {
       "id": "evt-2026-06-22-hw08y5",
       "occurredAt": "2026-06-22",
       "title": "Voice parser: суммы словами и native rebuild detection",
@@ -2033,12 +2078,16 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-        "fullyDone": ["Russian spoken numbers и native rebuild path normalization"],
+        "fullyDone": [
+          "Russian spoken numbers и native rebuild path normalization"
+        ],
         "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-      "stillMissing": ["Preview APK completion"],
+      "stillMissing": [
+        "Preview APK completion"
+      ],
       "blocked": [],
       "impacts": {
         "release": "medium",
@@ -2074,16 +2123,12 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-        "fullyDone": [],
-        "partiallyDone": [
-          "🟨 См. reasoning в audit"
-        ],
+        "fullyDone": ["Atomic voice income batch и exact-ID Undo"],
+        "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-      "stillMissing": [
-        "Уточнить rollup и validation после CI"
-      ],
+      "stillMissing": ["Preview APK completion"],
       "blocked": [],
       "impacts": {
         "release": "low",
@@ -2094,7 +2139,7 @@
         "cloud": "low"
       },
       "validation": {
-        "web_build": "pending"
+        "driver_validate_code": "passed"
       },
       "reasoning": "Repeated main merge commits remained Preview-only; a following single-parent empty commit consistently triggered production.",
       "task": "vercel-main-auto-promotion",
