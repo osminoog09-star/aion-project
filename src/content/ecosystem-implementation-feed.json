@@ -4,6 +4,51 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-dv1e51",
+      "occurredAt": "2026-06-22",
+      "title": "Driver FGS: безопасный запуск и непрерывная смена",
+      "summary": "Background permission теперь является строгой границей запуска, ошибки enableForShift не создают unhandled rejection, а killServiceOnDestroy=false сохраняет location service при уничтожении Activity. CI расширен контрактами permission и continuous FGS.",
+      "subsystemIds": [
+        "background-drive",
+        "driver-mobile"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Harden FGS permission and service lifecycle",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/services/androidForegroundLocationShiftAdapter.ts",
+        "aion-driver/contexts/ShiftContext.tsx",
+        "aion-driver/scripts/ci/test-location-accuracy-policy.mjs",
+        "aion-driver/scripts/ci/test-background-transition-cleanup.mjs"
+      ],
+      "runtimeImpact": "Background shift starts predictably and avoids silent service termination"
+    },
+    {
       "id": "evt-2026-06-22-eldwi1",
       "occurredAt": "2026-06-22",
       "title": "Driver FGS: закрыта гонка при быстром возврате в приложение",
@@ -1636,16 +1681,14 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-        "fullyDone": [],
-        "partiallyDone": [
-          "🟨 См. reasoning в audit"
+        "fullyDone": [
+          "Permission boundary, handled start failure и continuous FGS policy"
         ],
+        "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-      "stillMissing": [
-        "Уточнить rollup и validation после CI"
-      ],
+      "stillMissing": [],
       "blocked": [],
       "impacts": {
         "release": "medium",
@@ -1656,7 +1699,7 @@
         "cloud": "low"
       },
       "validation": {
-        "web_build": "pending"
+        "driver_validate_code": "passed"
       },
       "reasoning": "rolloutState existed in the manifest but paused still exposed optional APK updates and emergency state did not make the rollout critical.",
       "task": "driver-apk-rollout-policy",
