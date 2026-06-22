@@ -4,6 +4,50 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-fdvn3v",
+      "occurredAt": "2026-06-22",
+      "title": "Voice Control: final-result и confidence gate",
+      "summary": "Голосовая запись разрешена только для финального результата recognizer. Известная confidence ниже 55% блокирует сохранение; permission, network, no-speech и nomatch имеют отдельные сообщения и безопасный повтор.",
+      "subsystemIds": [
+        "driver-mobile",
+        "shift-economics"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Harden Voice Control recognition edge states",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/app/voice-control.tsx",
+        "aion-driver/scripts/ci/test-voice-control-safety.mjs",
+        "aion-driver/package.json"
+      ],
+      "runtimeImpact": "Interim, low-confidence and failed recognition cannot mutate shift money"
+    },
+    {
       "id": "evt-2026-06-22-bwc6ej",
       "occurredAt": "2026-06-22",
       "title": "Voice Control: защита валюты команды",
@@ -2213,12 +2257,16 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-        "fullyDone": ["Spoken currency detection и profile mismatch guard"],
+        "fullyDone": [
+          "Spoken currency detection и profile mismatch guard"
+        ],
         "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-      "stillMissing": ["Preview APK completion"],
+      "stillMissing": [
+        "Preview APK completion"
+      ],
       "blocked": [],
       "impacts": {
         "release": "medium",
@@ -2256,16 +2304,12 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-        "fullyDone": [],
-        "partiallyDone": [
-          "🟨 См. reasoning в audit"
-        ],
+        "fullyDone": ["Final-result, confidence и speech error safety gates"],
+        "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-      "stillMissing": [
-        "Уточнить rollup и validation после CI"
-      ],
+      "stillMissing": ["Preview APK completion"],
       "blocked": [],
       "impacts": {
         "release": "medium",
@@ -2276,7 +2320,7 @@
         "cloud": "low"
       },
       "validation": {
-        "web_build": "pending"
+        "driver_validate_code": "passed"
       },
       "reasoning": "Exact string comparison incorrectly required an APK when runtime 1.0.10 was checked against minimum 1.0.9.",
       "task": "runtime-minimum-semver",
