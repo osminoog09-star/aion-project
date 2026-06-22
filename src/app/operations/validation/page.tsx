@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { ReleaseSafetyBanner } from "@/components/operations/ReleaseSafetyBanner";
-import { ReleaseSafetyGatedPanel } from "@/components/operations/ReleaseSafetyGatedPanel";
-import { DriverFieldValidationOwnerGuide } from "@/components/operations/DriverFieldValidationOwnerGuide";
 import {
   loadExecutionAuditView,
   OperationsSubNav,
@@ -26,11 +24,6 @@ export default async function OperationsValidationPage() {
       <p className="mt-3 text-sm text-slate-400">{view.feed.policy}</p>
       <OperationsSubNav />
       <ReleaseSafetyBanner />
-      <ReleaseSafetyGatedPanel>
-        <div className="mt-8">
-          <DriverFieldValidationOwnerGuide />
-        </div>
-      </ReleaseSafetyGatedPanel>
       <ValidationDashboard view={view} />
     </div>
   );

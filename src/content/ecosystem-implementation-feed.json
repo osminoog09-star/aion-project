@@ -4,6 +4,57 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-3h6923",
+      "occurredAt": "2026-06-22",
+      "title": "Публичный сайт синхронизирован с Driver",
+      "summary": "Operations, roadmap, releases, ecosystem status и long-term strategy обновлены до APK 1.0.9 build 14 и текущих runtime/OCR/auth работ. Активные owner 8/8 панели удалены; добавлен CI против повторного status drift и исправлен mobile overflow Release center.",
+      "subsystemIds": [
+        "web-portal",
+        "operations-center",
+        "roadmap-system",
+        "apk-channel"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Synchronize all public portal status surfaces",
+      "confidence": "high",
+      "changedFiles": [
+        "src/content/codex-work-status.json",
+        "src/content/ecosystem-status.json",
+        "src/content/roadmap-execution.json",
+        "src/content/releases.json",
+        "src/content/roadmap-subsystem-extensions.json",
+        "src/content/strategic-long-term-directions.json",
+        "src/app/operations/live/page.tsx",
+        "src/app/releases/page.tsx"
+      ],
+      "runtimeImpact": "Public site now reflects autonomous product work instead of retired device gate"
+    },
+    {
       "id": "evt-2026-06-22-9g95e4",
       "occurredAt": "2026-06-22",
       "title": "Portal auth: отдельный agent key",

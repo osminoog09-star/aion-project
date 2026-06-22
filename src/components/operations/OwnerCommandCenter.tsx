@@ -153,7 +153,7 @@ export function OwnerCommandCenter({ view }: { view: OwnerCommandCenterView }) {
               href={ecosystemRoutes.operationsLive}
               className="rounded-xl border border-emerald-500/45 bg-emerald-500/15 px-4 py-2.5 text-center text-sm font-semibold text-emerald-100 hover:bg-emerald-500/25"
             >
-              Чеклист 8/8 · вставить отчёт →
+              Текущая автономная работа →
             </Link>
             <Link
               href={ecosystemRoutes.operationsLive}
