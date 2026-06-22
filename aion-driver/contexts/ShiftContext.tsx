@@ -75,6 +75,7 @@ import { resetStatisticsElement } from "../features/statistics/resetStatisticsEl
 import type { StatResetResult, StatResetTarget } from "../features/statistics/types";
 import { applyHistoricalShiftCorrection, type HistoricalShiftPatch } from "../utils/historicalShiftCorrection";
 import { stopShiftLocationTaskIfRunning } from "../tasks/shiftLocationTask";
+import { appendIncomeBatch, removeIncomeEntries } from "../features/shift/runtime/incomeLedgerCommands";
 
 function createShiftId(): string {
   return `${Date.now()}_${Math.random().toString(16).slice(2)}`;
@@ -100,6 +101,8 @@ type ShiftContextValue = {
   resumeShift: () => Promise<void>;
   endShift: () => Promise<void>;
   addIncome: (amount: number) => Promise<void>;
+  addIncomeBatch: (amount: number, count: number) => Promise<string[]>;
+  undoIncomeEntries: (entryIds: readonly string[]) => Promise<boolean>;
   addConfirmedFuelEntry: (entry: FuelEntry) => Promise<void>;
   updateFuelEntry: (
     id: string,
@@ -725,24 +728,28 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     setActiveShift(null);
   }, [activeShift, profile, stopTracking]);
 
+  const addIncomeBatch = useCallback(async (amount: number, count: number): Promise<string[]> => {
+    const prev = activeShiftRef.current;
+    if (!prev) return [];
+    const result = appendIncomeBatch(prev, amount, count, () => ({ id: createShiftId(), atMs: Date.now(), amount }));
+    if (!result) return [];
+    await saveActiveShift(result.next);
+    setActiveShift(result.next);
+    return result.entryIds;
+  }, []);
+
   const addIncome = useCallback(async (amount: number) => {
-    if (amount <= 0) return;
-    setActiveShift((prev) => {
-      if (!prev) return prev;
-      const entry = {
-        id: createShiftId(),
-        atMs: Date.now(),
-        amount,
-      };
-      const next: ActiveShift = {
-        ...prev,
-        totalIncome: prev.totalIncome + amount,
-        incomeEventsCount: (prev.incomeEventsCount ?? 0) + 1,
-        incomeLedger: [...(prev.incomeLedger ?? []), entry],
-      };
-      void saveActiveShift(next);
-      return next;
-    });
+    await addIncomeBatch(amount, 1);
+  }, [addIncomeBatch]);
+
+  const undoIncomeEntries = useCallback(async (entryIds: readonly string[]): Promise<boolean> => {
+    const prev = activeShiftRef.current;
+    if (!prev) return false;
+    const next = removeIncomeEntries(prev, entryIds);
+    if (!next) return false;
+    await saveActiveShift(next);
+    setActiveShift(next);
+    return true;
   }, []);
 
   const refreshPendingFuel = useCallback(async () => {
@@ -1115,6 +1122,8 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       resumeShift,
       endShift,
       addIncome,
+      addIncomeBatch,
+      undoIncomeEntries,
       addConfirmedFuelEntry,
       updateFuelEntry,
       removeFuelEntry,
@@ -1144,6 +1153,8 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       resumeShift,
       endShift,
       addIncome,
+      addIncomeBatch,
+      undoIncomeEntries,
       addConfirmedFuelEntry,
       updateFuelEntry,
       removeFuelEntry,

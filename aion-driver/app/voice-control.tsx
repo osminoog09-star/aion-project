@@ -11,11 +11,12 @@ import { useResolvedCurrency } from "../hooks/useResolvedCurrency";
 import { formatCurrencyDisplay } from "../utils/formatting";
 
 export default function VoiceControlScreen() {
-  const { activeShift, addIncome } = useShift();
+  const { activeShift, addIncomeBatch, undoIncomeEntries } = useShift();
   const currency = useResolvedCurrency();
   const [listening, setListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [savedEntryIds, setSavedEntryIds] = useState<string[]>([]);
   const command = parseDriverVoiceCommand(transcript);
   useSpeechRecognitionEvent("start", () => setListening(true));
   useSpeechRecognitionEvent("end", () => setListening(false));
@@ -33,8 +34,9 @@ export default function VoiceControlScreen() {
     if (!command) return;
     if (command.kind === "fuel") { router.replace({ pathname: "/add-fuel", params: { total: String(command.amount) } }); return; }
     if (!activeShift) { Alert.alert("Нет активной смены", "Сначала начните смену."); return; }
-    for (let i = 0; i < command.count; i += 1) await addIncome(command.amount);
-    router.back();
+    const ids = await addIncomeBatch(command.amount, command.count);
+    if (!ids.length) { setError("Не удалось записать заказ."); return; }
+    setSavedEntryIds(ids);
   };
   const summary = command?.kind === "income" ? `${command.count} заказ · ${formatCurrencyDisplay(command.total, currency)}` : command?.kind === "fuel" ? `Заправка · ${formatCurrencyDisplay(command.amount, currency)}` : null;
   return <SafeAreaView className="flex-1 bg-slate-950 px-5 py-6">
@@ -47,6 +49,6 @@ export default function VoiceControlScreen() {
       {transcript && !command ? <Text className="mt-3 text-center text-sm text-amber-300">Назовите заказ или заправку и сумму.</Text> : null}
       {error ? <Text className="mt-3 text-center text-sm text-rose-300">{error}</Text> : null}
     </View>
-    <PrimaryButton title="Подтвердить" onPress={() => void confirm()} disabled={!command || listening} />
+    {savedEntryIds.length ? <View className="gap-3"><PrimaryButton title="Готово" onPress={() => router.back()} /><Pressable onPress={() => void undoIncomeEntries(savedEntryIds).then(() => { setSavedEntryIds([]); setTranscript(""); })} className="items-center py-3"><Text className="text-sm font-semibold text-rose-300">Отменить запись</Text></Pressable></View> : <PrimaryButton title="Подтвердить" onPress={() => void confirm()} disabled={!command || listening} />}
   </SafeAreaView>;
 }
