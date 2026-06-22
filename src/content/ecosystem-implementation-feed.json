@@ -4,6 +4,50 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-bwc6ej",
+      "occurredAt": "2026-06-22",
+      "title": "Voice Control: защита валюты команды",
+      "summary": "Parser извлекает EUR/USD/RUB из речи. Подтверждение блокируется, если названная валюта не совпадает с валютой профиля, поэтому сумма не может молча попасть в одновалютную экономику смены с неверной единицей.",
+      "subsystemIds": [
+        "driver-mobile",
+        "shift-economics"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Validate spoken currency against Driver profile",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/features/voice/parseDriverVoiceCommand.ts",
+        "aion-driver/app/voice-control.tsx",
+        "aion-driver/scripts/ci/test-voice-command-parser.mjs"
+      ],
+      "runtimeImpact": "Prevents silent cross-currency corruption of shift income and fuel costs"
+    },
+    {
       "id": "evt-2026-06-22-of8hfz",
       "occurredAt": "2026-06-22",
       "title": "Voice Control: атомарные заказы и точный Undo",
@@ -2123,12 +2167,16 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-        "fullyDone": ["Atomic voice income batch и exact-ID Undo"],
+        "fullyDone": [
+          "Atomic voice income batch и exact-ID Undo"
+        ],
         "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-      "stillMissing": ["Preview APK completion"],
+      "stillMissing": [
+        "Preview APK completion"
+      ],
       "blocked": [],
       "impacts": {
         "release": "low",
@@ -2165,16 +2213,12 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-        "fullyDone": [],
-        "partiallyDone": [
-          "🟨 См. reasoning в audit"
-        ],
+        "fullyDone": ["Spoken currency detection и profile mismatch guard"],
+        "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-      "stillMissing": [
-        "Уточнить rollup и validation после CI"
-      ],
+      "stillMissing": ["Preview APK completion"],
       "blocked": [],
       "impacts": {
         "release": "medium",
@@ -2185,7 +2229,7 @@
         "cloud": "low"
       },
       "validation": {
-        "web_build": "pending"
+        "driver_validate_code": "passed"
       },
       "reasoning": "fallbackApkUrl was never used and Linking.openURL rejection could surface as an unhandled promise.",
       "task": "apk-download-fallback",

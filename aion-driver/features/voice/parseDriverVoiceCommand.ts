@@ -1,6 +1,13 @@
 export type DriverVoiceCommand =
-  | { kind: "income"; amount: number; count: number; total: number; transcript: string }
-  | { kind: "fuel"; amount: number; transcript: string };
+  | { kind: "income"; amount: number; count: number; total: number; currencyCode: "EUR" | "USD" | "RUB" | null; transcript: string }
+  | { kind: "fuel"; amount: number; currencyCode: "EUR" | "USD" | "RUB" | null; transcript: string };
+
+function detectCurrency(raw: string): "EUR" | "USD" | "RUB" | null {
+  if (/евро|\beur\b/.test(raw)) return "EUR";
+  if (/доллар|\busd\b/.test(raw)) return "USD";
+  if (/рубл|рублей|\brub\b/.test(raw)) return "RUB";
+  return null;
+}
 
 const NUMBER_WORDS: Record<string, number> = {
   один: 1, одна: 1, два: 2, две: 2, три: 3, четыре: 4, пять: 5, шесть: 6, семь: 7, восемь: 8, девять: 9,
@@ -30,9 +37,10 @@ function firstAmount(raw: string): number | null {
 export function parseDriverVoiceCommand(transcript: string): DriverVoiceCommand | null {
   const normalized = transcript.toLowerCase().replace(/ё/g, "е").replace(/\s+/g, " ").trim();
   if (!normalized) return null;
+  const currencyCode = detectCurrency(normalized);
   if (/заправ|топлив|бензин|дизел/.test(normalized)) {
     const amount = firstAmount(normalized);
-    return amount == null ? null : { kind: "fuel", amount, transcript: transcript.trim() };
+    return amount == null ? null : { kind: "fuel", amount, currencyCode, transcript: transcript.trim() };
   }
   if (/заказ|доход|заработ/.test(normalized)) {
     const counted = normalized.match(/(.+?)\s+заказ[а-я]*\s+по\s+(.+)/);
@@ -40,12 +48,12 @@ export function parseDriverVoiceCommand(transcript: string): DriverVoiceCommand 
       const count = firstAmount(counted[1]) ?? 0;
       const amount = firstAmount(counted[2]) ?? 0;
       if (Number.isInteger(count) && count > 0 && count <= 50 && amount > 0) {
-        return { kind: "income", amount, count, total: Math.round(amount * count * 100) / 100, transcript: transcript.trim() };
+        return { kind: "income", amount, count, total: Math.round(amount * count * 100) / 100, currencyCode, transcript: transcript.trim() };
       }
       return null;
     }
     const amount = firstAmount(normalized);
-    return amount == null ? null : { kind: "income", amount, count: 1, total: amount, transcript: transcript.trim() };
+    return amount == null ? null : { kind: "income", amount, count: 1, total: amount, currencyCode, transcript: transcript.trim() };
   }
   return null;
 }
