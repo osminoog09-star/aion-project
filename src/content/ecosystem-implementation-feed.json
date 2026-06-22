@@ -1,8 +1,51 @@
 {
-  "lastUpdated": "2026-06-21",
+  "lastUpdated": "2026-06-22",
   "maintainedInRepository": true,
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
+    {
+      "id": "evt-2026-06-22-enzajq",
+      "occurredAt": "2026-06-22",
+      "title": "Cloud trips: убыток не обнуляется",
+      "summary": "Fallback-восстановление Supabase trip без полного payload теперь сохраняет отрицательную after-costs прибыль и явные netProfitAfterCosts/profitPerHourAfterCosts. Убыточная смена больше не превращается в нулевую.",
+      "subsystemIds": [
+        "driver-intelligence",
+        "web-portal"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+      "rollup": {
+        "fullyDone": [],
+        "partiallyDone": [
+          "🟨 Запись из feed:append — уточните rollup"
+        ],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [
+        "Уточнить rollup и validation после CI"
+      ],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      },
+      "task": "Preserve negative after-costs profit in cloud trip fallback",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/features/cloud/repositories/tripsRepository.ts",
+        "aion-driver/scripts/ci/test-cloud-trip-economics.mjs"
+      ],
+      "runtimeImpact": "Cross-device history keeps loss-making shifts accurate"
+    },
     {
       "id": "evt-2026-06-21-hqipq2",
       "occurredAt": "2026-06-21",
