@@ -132,6 +132,7 @@ function ThemedAppTree() {
                   <Stack.Screen name="debug" options={{ animation: "slide_from_right" }} />
                   <Stack.Screen name="ota-debug" options={{ animation: "slide_from_right" }} />
                   <Stack.Screen name="aion-diagnostics" options={{ animation: "slide_from_right" }} />
+                  <Stack.Screen name="voice-control" options={{ animation: "slide_from_bottom" }} />
                   <Stack.Screen
                     name="add-income"
                     options={{

@@ -93,6 +93,13 @@ export default {
       ],
       "expo-updates",
       "expo-navigation-bar",
+      [
+        "expo-speech-recognition",
+        {
+          microphonePermission: "AION использует микрофон только после нажатия кнопки голосового ввода.",
+          speechRecognitionPermission: "AION распознаёт голосовые команды для заказов и заправок.",
+        },
+      ],
       require("./plugins/withAionOverlayOrb"),
     ],
     experiments: {
