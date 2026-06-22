@@ -17,22 +17,43 @@ export default function VoiceControlScreen() {
   const [transcript, setTranscript] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [savedEntryIds, setSavedEntryIds] = useState<string[]>([]);
+  const [resultFinal, setResultFinal] = useState(false);
+  const [resultConfidence, setResultConfidence] = useState<number | null>(null);
   const command = parseDriverVoiceCommand(transcript);
   const currencyMismatch = Boolean(command?.currencyCode && command.currencyCode !== currency);
+  const lowConfidence = resultConfidence != null && resultConfidence < 0.55;
   useSpeechRecognitionEvent("start", () => setListening(true));
   useSpeechRecognitionEvent("end", () => setListening(false));
-  useSpeechRecognitionEvent("result", (event) => setTranscript(event.results[0]?.transcript ?? ""));
-  useSpeechRecognitionEvent("error", () => { setListening(false); setError("Не удалось распознать команду."); });
+  useSpeechRecognitionEvent("result", (event) => {
+    const result = event.results[0];
+    setTranscript(result?.transcript ?? "");
+    if (event.isFinal) {
+      setResultFinal(true);
+      setResultConfidence(typeof result?.confidence === "number" && result.confidence > 0 ? result.confidence : null);
+    }
+  });
+  useSpeechRecognitionEvent("nomatch", () => setError("Речь слышна, но команда не распознана."));
+  useSpeechRecognitionEvent("error", (event) => {
+    setListening(false);
+    const message = event.error === "not-allowed"
+      ? "Для голосового ввода нужен доступ к микрофону."
+      : event.error === "network"
+        ? "Нет связи с сервисом распознавания. Повторите команду позже."
+        : event.error === "no-speech"
+          ? "Речь не обнаружена. Нажмите микрофон и повторите команду."
+          : "Не удалось распознать команду.";
+    setError(message);
+  });
 
   const start = async () => {
-    setError(null); setTranscript("");
+    setError(null); setTranscript(""); setResultFinal(false); setResultConfidence(null);
     if (!ExpoSpeechRecognitionModule.isRecognitionAvailable()) { setError("Сервис распознавания речи недоступен."); return; }
     const permission = await ExpoSpeechRecognitionModule.requestPermissionsAsync();
     if (!permission.granted) { setError("Для голосового ввода нужен микрофон."); return; }
     ExpoSpeechRecognitionModule.start({ lang: "ru-RU", interimResults: true, continuous: false, maxAlternatives: 1, contextualStrings: ["добавь заказ", "заправился", "евро", "рублей"] });
   };
   const confirm = async () => {
-    if (!command || currencyMismatch) return;
+    if (!command || !resultFinal || lowConfidence || currencyMismatch) return;
     if (command.kind === "fuel") { router.replace({ pathname: "/add-fuel", params: { total: String(command.amount) } }); return; }
     if (!activeShift) { Alert.alert("Нет активной смены", "Сначала начните смену."); return; }
     const ids = await addIncomeBatch(command.amount, command.count);
@@ -49,8 +70,9 @@ export default function VoiceControlScreen() {
       {summary ? <Text className="mt-3 text-center text-base font-semibold text-emerald-300">{summary}</Text> : null}
       {currencyMismatch ? <Text className="mt-3 text-center text-sm text-rose-300">В команде {command?.currencyCode}, а валюта профиля {currency}. Измените команду или валюту профиля.</Text> : null}
       {transcript && !command ? <Text className="mt-3 text-center text-sm text-amber-300">Назовите заказ или заправку и сумму.</Text> : null}
+      {lowConfidence ? <Text className="mt-3 text-center text-sm text-amber-300">Низкая уверенность распознавания. Повторите команду.</Text> : null}
       {error ? <Text className="mt-3 text-center text-sm text-rose-300">{error}</Text> : null}
     </View>
-    {savedEntryIds.length ? <View className="gap-3"><PrimaryButton title="Готово" onPress={() => router.back()} /><Pressable onPress={() => void undoIncomeEntries(savedEntryIds).then(() => { setSavedEntryIds([]); setTranscript(""); })} className="items-center py-3"><Text className="text-sm font-semibold text-rose-300">Отменить запись</Text></Pressable></View> : <PrimaryButton title="Подтвердить" onPress={() => void confirm()} disabled={!command || listening || currencyMismatch} />}
+    {savedEntryIds.length ? <View className="gap-3"><PrimaryButton title="Готово" onPress={() => router.back()} /><Pressable onPress={() => void undoIncomeEntries(savedEntryIds).then(() => { setSavedEntryIds([]); setTranscript(""); setResultFinal(false); })} className="items-center py-3"><Text className="text-sm font-semibold text-rose-300">Отменить запись</Text></Pressable></View> : <PrimaryButton title="Подтвердить" onPress={() => void confirm()} disabled={!command || !resultFinal || listening || lowConfidence || currencyMismatch} />}
   </SafeAreaView>;
 }

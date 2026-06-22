@@ -1,0 +1,10 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+const source = readFileSync("app/voice-control.tsx", "utf8");
+assert.match(source, /if \(!command \|\| !resultFinal \|\| lowConfidence \|\| currencyMismatch\) return/);
+assert.match(source, /resultConfidence < 0\.55/);
+assert.match(source, /useSpeechRecognitionEvent\("nomatch"/);
+assert.match(source, /event\.error === "network"/);
+assert.match(source, /event\.error === "no-speech"/);
+assert.match(source, /event\.error === "not-allowed"/);
+console.log("voice control safety: OK (final, confidence, permission, network, no-speech, nomatch)");
