@@ -1,148 +1,341 @@
 {
   "mobile-app": {
-    "whatWorks": ["Смена end-to-end", "Unified after-costs period/profile aggregates", "After-costs Driver Analytics/AI score", "Garage/карта/OCR happy path", "Post-OCR confirm блокирует невалидные выплаты", "OCR queue восстанавливает interrupted jobs после restart", "OCR queue status + failed retry UI", "Смена OCR source сбрасывает stale result", "OTA каналы EAS", "Desktop shell", "Журнал заправок edit/delete", "BugReportModal → driver_bug_reports", "diagnosticLog в отчётах", "Link QR pair + OCR relay", "OrbView dim (native 1.0.9)"],
-    "whatDoesNotWork": ["Не все edge-состояния UI", "Паритет web/mobile не везде"],
+    "whatWorks": [
+      "Смена end-to-end",
+      "Unified after-costs period/profile aggregates",
+      "After-costs Driver Analytics/AI score",
+      "Garage/карта/OCR happy path",
+      "Post-OCR confirm блокирует невалидные выплаты",
+      "OCR queue восстанавливает interrupted jobs после restart",
+      "OCR queue status + failed retry UI",
+      "Смена OCR source сбрасывает stale result",
+      "OTA каналы EAS",
+      "Desktop shell",
+      "Журнал заправок edit/delete",
+      "BugReportModal → driver_bug_reports",
+      "diagnosticLog в отчётах",
+      "Link QR pair + OCR relay",
+      "OrbView dim (native 1.0.9)"
+    ],
+    "whatDoesNotWork": [
+      "Не все edge-состояния UI",
+      "Паритет web/mobile не везде"
+    ],
     "mocked": [],
-    "localOnly": ["Локальная timeline без облачного SoT"],
-    "cloudReady": ["Supabase auth path частично"],
-    "requiresApk": ["Новый native module / движок вне OTA"],
-    "otaSafe": ["JS/ресурсы через OTA по политике канала"],
+    "localOnly": [
+      "Локальная timeline без облачного SoT"
+    ],
+    "cloudReady": [
+      "Supabase auth path частично"
+    ],
+    "requiresApk": [
+      "Новый native module / движок вне OTA"
+    ],
+    "otaSafe": [
+      "JS/ресурсы через OTA по политике канала"
+    ],
     "otaImpact": "high",
     "realtimeReadiness": 35,
     "backendReadiness": 50,
     "productionReadiness": 62,
-    "subsystemDebt": ["Нет единого CI gate по покрытию"],
+    "subsystemDebt": [
+      "Нет единого CI gate по покрытию"
+    ],
     "architectureState": "Expo app: модуль Driver; слои UI / domain / sync; частичный Supabase.",
-    "missingUx": ["Полный набор error/empty для OCR и оплаты", "Согласованные loading между web/mobile"],
-    "missingBackend": ["Сквозная корреляция Entity с облаком для персональных состояний"],
-    "missingRealtime": ["Стабильные каналы для live сущностей без дрейфа локального SoT"],
+    "missingUx": [
+      "Полный набор error/empty для OCR и оплаты",
+      "Согласованные loading между web/mobile"
+    ],
+    "missingBackend": [
+      "Сквозная корреляция Entity с облаком для персональных состояний"
+    ],
+    "missingRealtime": [
+      "Стабильные каналы для live сущностей без дрейфа локального SoT"
+    ],
     "biggestWeakness": "Edge UX + облачная корреляция состояния не доведены до production bar.",
     "highestValueImprovement": "Закрыть update/entity согласованность с порталом и облаком.",
-    "requiredDependencies": ["updates subsystem", "aion-entity", "Supabase RLS когда появится auth"],
+    "requiredDependencies": [
+      "updates subsystem",
+      "aion-entity",
+      "Supabase RLS когда появится auth"
+    ],
     "recommendedNextPhase": "Hard polish критичных потоков + единый диагностический слой.",
     "nextRecommendedStep": "Проверить OCR retry/restart и stale-result reset на preview APK; затем перейти к следующему критичному Driver edge-state."
   },
   "updates": {
-    "whatWorks": ["Update Center", "OTA check/apply", "APK manifest single-flight refresh + error diagnostics", "Paused rollout verdict + yellow summary", "Shared APK explanation across summary/verdict/modal", "Paused/emergency/force rollout policy", "Runtime mismatch honors force/critical policy", "Strict URL parser + root polyfill", "HTTPS-only manifest/APK/fallback transport", "Строгие optional flags/metadata manifest", "Canonical UTC releaseDate contract", "Strict runtime/build identity strings", "Strict changelog item contract", "Canonical required semver strings", "Canonical positive buildNumber", "Canonical EAS build UUID", "Полный SemVer prerelease/build ordering", "Строгая APK manifest semver/order/URL validation", "minimumRuntimeVersion semver ordering + opaque equality fallback", "URL-scoped memory/offline manifest cache", "Точный cache provenance + preserved fetchedAt", "Persistent fallback failure timestamp + precise cached copy", "Cached APK state propagation + cache badge", "Persistent fallback trust boundary", "Persistent cache timestamp validation", "Deterministic stale boundaries + clock skew", "Force-network manual APK refresh", "Composed timeout + caller cancellation", "APK primary/fallback download + handled failure", "Current-build-only release metadata", "ApkUpdateBanner + ApkUpdateModal", "Default manifest URL из portal base", "CI sync manifest после EAS FINISHED"],
-    "whatDoesNotWork": ["Полная история и единый engine на всех экранах"],
+    "whatWorks": [
+      "Update Center",
+      "OTA check/apply",
+      "APK manifest single-flight refresh + error diagnostics",
+      "Paused rollout verdict + yellow summary",
+      "Shared APK explanation across summary/verdict/modal",
+      "Paused/emergency/force rollout policy",
+      "Runtime mismatch honors force/critical policy",
+      "Strict URL parser + root polyfill",
+      "HTTPS-only manifest/APK/fallback transport",
+      "Строгие optional flags/metadata manifest",
+      "Canonical UTC releaseDate contract",
+      "Strict runtime/build identity strings",
+      "Strict changelog item contract",
+      "Canonical required semver strings",
+      "Canonical positive buildNumber",
+      "Canonical EAS build UUID",
+      "Полный SemVer prerelease/build ordering",
+      "Строгая APK manifest semver/order/URL validation",
+      "minimumRuntimeVersion semver ordering + opaque equality fallback",
+      "URL-scoped memory/offline manifest cache",
+      "Точный cache provenance + preserved fetchedAt",
+      "Persistent fallback failure timestamp + precise cached copy",
+      "Cached APK state propagation + cache badge",
+      "Persistent fallback trust boundary",
+      "Persistent cache timestamp validation",
+      "Deterministic stale boundaries + clock skew",
+      "Force-network manual APK refresh",
+      "Composed timeout + caller cancellation",
+      "APK primary/fallback download + handled failure",
+      "Current-build-only release metadata",
+      "ApkUpdateBanner + ApkUpdateModal",
+      "Default manifest URL из portal base",
+      "CI sync manifest после EAS FINISHED"
+    ],
+    "whatDoesNotWork": [
+      "Полная история и единый engine на всех экранах"
+    ],
     "mocked": [],
-    "localOnly": ["Локальная история OTA"],
-    "cloudReady": ["Манифест по HTTPS"],
-    "requiresApk": ["Смена runtime / security baseline вне OTA"],
-    "otaSafe": ["Контент OTA при соблюдении runtime"],
+    "localOnly": [
+      "Локальная история OTA"
+    ],
+    "cloudReady": [
+      "Манифест по HTTPS"
+    ],
+    "requiresApk": [
+      "Смена runtime / security baseline вне OTA"
+    ],
+    "otaSafe": [
+      "Контент OTA при соблюдении runtime"
+    ],
     "otaImpact": "high",
     "realtimeReadiness": 20,
     "backendReadiness": 35,
     "productionReadiness": 62,
     "architectureState": "Клиентский update engine + портальный mirror; нет единой БД истории.",
-    "missingUx": ["История OTA на всех поверхностях", "Единый экран объяснения blocked update"],
-    "missingBackend": ["Персистентная история применений в облаке (после release DB)"],
-    "missingRealtime": ["Live канал статуса rollout на портал (опционально)"],
+    "missingUx": [
+      "История OTA на всех поверхностях",
+      "Единый экран объяснения blocked update"
+    ],
+    "missingBackend": [
+      "Персистентная история применений в облаке (после release DB)"
+    ],
+    "missingRealtime": [
+      "Live канал статуса rollout на портал (опционально)"
+    ],
     "biggestWeakness": "Рассинхрон: несколько entry points без одного контракта отображения.",
     "highestValueImprovement": "Один модуль update state + прозрачность на com и в клиенте.",
-    "requiredDependencies": ["web-portal surfaces", "apk-channel manifest", "release-ops decision"],
+    "requiredDependencies": [
+      "web-portal surfaces",
+      "apk-channel manifest",
+      "release-ops decision"
+    ],
     "recommendedNextPhase": "Прозрачность end-to-end до merge в execution queue «done».",
     "nextRecommendedStep": "Ввести единый хук/selector состояния обновления и подключить его к Update Center и порталу."
   },
   "ota-eas": {
-    "whatWorks": ["Каналы preview/production", "reload apply", "embedded vs launch"],
-    "whatDoesNotWork": ["Публичный live stream статуса на портале"],
+    "whatWorks": [
+      "Каналы preview/production",
+      "reload apply",
+      "embedded vs launch"
+    ],
+    "whatDoesNotWork": [
+      "Публичный live stream статуса на портале"
+    ],
     "otaImpact": "high",
     "realtimeReadiness": 25,
     "backendReadiness": 40,
     "productionReadiness": 70,
     "architectureState": "EAS Update pipeline в клиенте; портал читает косвенно через manifest/релизы.",
-    "missingUx": ["Публичная витрина применённой ревизии на com"],
-    "missingBackend": ["Нет серверного hook для подписи канала без EAS dashboard"],
-    "missingRealtime": ["Push статуса применения на устройствах в портал (auth)"],
+    "missingUx": [
+      "Публичная витрина применённой ревизии на com"
+    ],
+    "missingBackend": [
+      "Нет серверного hook для подписи канала без EAS dashboard"
+    ],
+    "missingRealtime": [
+      "Push статуса применения на устройствах в портал (auth)"
+    ],
     "biggestWeakness": "Наблюдаемость каналов снаружи клиента слабая.",
     "highestValueImprovement": "Связать ota-eas метрики с operations-center health rows.",
-    "requiredDependencies": ["operations-center", "web-portal"],
+    "requiredDependencies": [
+      "operations-center",
+      "web-portal"
+    ],
     "recommendedNextPhase": "Наблюдаемость + алерты при failed apply.",
     "nextRecommendedStep": "Задокументировать и отобразить на /control канал→runtime→последняя известная ревизия из клиента/манифеста."
   },
   "apk-channel": {
-    "whatWorks": ["Манифест JSON 1.0.9 build 13 в репозитории", "force/minRuntime в типах", "semver/order/URL contract validation + CI", "URL-scoped offline cache", "Детерминированные releaseNotes текущего EAS build", "Native-input gate перед EAS preview build", "com/driver fetch", "sync-apk-manifest-from-eas + CI auto на native push"],
-    "whatDoesNotWork": ["Центральный signed download hub на com"],
-    "requiresApk": ["Всегда для native bump"],
+    "whatWorks": [
+      "EAS preview APK 1.0.9 build 14 live",
+      "HTTPS manifest + semver/runtime/update policy validation",
+      "URL-scoped offline cache and deterministic provenance",
+      "CI auto-sync after EAS FINISHED"
+    ],
+    "whatDoesNotWork": [
+      "Центральный signed download hub на com"
+    ],
+    "requiresApk": [
+      "Всегда для native bump"
+    ],
     "otaImpact": "medium",
     "backendReadiness": 30,
-    "productionReadiness": 52,
+    "productionReadiness": 72,
     "architectureState": "HTTPS JSON manifest; типы согласованы с клиентом.",
-    "missingUx": ["Явный UX force-update на портале при critical"],
-    "missingBackend": ["Подписанный CDN + проверка целостности"],
+    "missingUx": [
+      "Явный UX force-update на портале при critical"
+    ],
+    "missingBackend": [
+      "Подписанный CDN + проверка целостности"
+    ],
     "missingRealtime": [],
     "biggestWeakness": "Нет централизованного доверенного хостинга артефактов.",
     "highestValueImprovement": "Подключить публичный manifest URL и проверку minRuntime на портале.",
-    "requiredDependencies": ["deploy", "releases-json"],
+    "requiredDependencies": [
+      "deploy",
+      "releases-json"
+    ],
     "recommendedNextPhase": "Signed artifacts + политика кэша.",
-    "nextRecommendedStep": "Device smoke: модалка «1.0.8 доступна» на 1.0.6/1.0.7; затем signed CDN (опционально)."
+    "nextRecommendedStep": "Не полировать manifest; следующий APK только для функционального native change."
   },
   "web-portal": {
-    "whatWorks": ["Next.js страницы", "Roadmap/status/control", "Supabase merge", "Automatic single-parent Vercel production promotion"],
-    "whatDoesNotWork": ["Auth, account, private ops"],
-    "localOnly": ["JSON seed до snapshot"],
-    "cloudReady": ["Snapshots при ключах"],
+    "whatWorks": [
+      "Next.js страницы",
+      "Roadmap/status/control",
+      "Supabase merge",
+      "Automatic single-parent Vercel production promotion"
+    ],
+    "whatDoesNotWork": [
+      "Auth, account, private ops"
+    ],
+    "localOnly": [
+      "JSON seed до snapshot"
+    ],
+    "cloudReady": [
+      "Snapshots при ключах"
+    ],
     "otaImpact": "none",
     "realtimeReadiness": 30,
     "backendReadiness": 42,
     "productionReadiness": 28,
     "architectureState": "Next.js App Router; JSON SoT + aiJsonResponse API slices.",
-    "missingUx": ["Auth flows", "Device registry UI", "Signed-in operations"],
-    "missingBackend": ["Server actions / RLS для приватных срезов"],
-    "missingRealtime": ["Подписки Supabase для live health (после политики доступа)"],
+    "missingUx": [
+      "Auth flows",
+      "Device registry UI",
+      "Signed-in operations"
+    ],
+    "missingBackend": [
+      "Server actions / RLS для приватных срезов"
+    ],
+    "missingRealtime": [
+      "Подписки Supabase для live health (после политики доступа)"
+    ],
     "biggestWeakness": "Только публичные срезы — нет полноценного account center.",
     "highestValueImprovement": "Минимальный auth + read-only device list для ops.",
-    "requiredDependencies": ["cloud-auth", "Supabase RLS шаблоны", "release-db план"],
+    "requiredDependencies": [
+      "cloud-auth",
+      "Supabase RLS шаблоны",
+      "release-db план"
+    ],
     "recommendedNextPhase": "Auth + приватные dashboardы без дублирования driver-логики.",
     "nextRecommendedStep": "Расширить /api/roadmap/execution и страницы execution без ломки публичного контракта; затем спека auth."
   },
   "roadmap-system": {
-    "whatWorks": ["Типы", "Zod", "Страницы /ecosystem /operations", "portal_roadmap_master merge"],
-    "whatDoesNotWork": ["Автогенерация данных из CI без ручного шага"],
-    "cloudReady": ["Чтение snapshot при наличии строки"],
+    "whatWorks": [
+      "Типы",
+      "Zod",
+      "Страницы /ecosystem /operations",
+      "portal_roadmap_master merge"
+    ],
+    "whatDoesNotWork": [
+      "Автогенерация данных из CI без ручного шага"
+    ],
+    "cloudReady": [
+      "Чтение snapshot при наличии строки"
+    ],
     "otaImpact": "none",
     "backendReadiness": 55,
     "productionReadiness": 55,
     "architectureState": "Репозиторный JSON + Zod parse + merge в ecosystem-data.",
-    "missingUx": ["/roadmap/execution как живой вход для агентов — поддерживать"],
-    "missingBackend": ["CI writer в ecosystem_public_snapshots"],
+    "missingUx": [
+      "/roadmap/execution как живой вход для агентов — поддерживать"
+    ],
+    "missingBackend": [
+      "CI writer в ecosystem_public_snapshots"
+    ],
     "missingRealtime": [],
     "biggestWeakness": "Ручное обновление JSON при отсутствии CI writer.",
     "highestValueImprovement": "Скрипт публикации snapshot из CI с валидацией Zod.",
-    "requiredDependencies": ["repositories", "Supabase credentials в CI"],
+    "requiredDependencies": [
+      "repositories",
+      "Supabase credentials в CI"
+    ],
     "recommendedNextPhase": "Автоматическая запись portal_roadmap_master.",
     "nextRecommendedStep": "Добавить npm script `roadmap:validate` в CI и блокировать merge при parse null."
   },
   "realtime": {
-    "whatWorks": ["EcosystemRealtimeBridge задел"],
-    "whatDoesNotWork": ["SLA, персистентные каналы для всех модулей"],
+    "whatWorks": [
+      "EcosystemRealtimeBridge задел"
+    ],
+    "whatDoesNotWork": [
+      "SLA, персистентные каналы для всех модулей"
+    ],
     "otaImpact": "low",
     "realtimeReadiness": 32,
     "productionReadiness": 30,
     "architectureState": "Клиентский bridge; нет единой матрицы каналов по модулям.",
-    "missingUx": ["Диагностика соединения в portal ops (после auth)"],
-    "missingBackend": ["Канонические topics/rooms в Supabase realtime"],
-    "missingRealtime": ["Backpressure, reconnect стратегия, метрики"],
+    "missingUx": [
+      "Диагностика соединения в portal ops (после auth)"
+    ],
+    "missingBackend": [
+      "Канонические topics/rooms в Supabase realtime"
+    ],
+    "missingRealtime": [
+      "Backpressure, reconnect стратегия, метрики"
+    ],
     "biggestWeakness": "Нет контракта realtime на уровне экосистемы.",
     "highestValueImprovement": "Один health-контракт realtime для портала и Driver.",
-    "requiredDependencies": ["Supabase realtime включён", "RLS на каналы"],
+    "requiredDependencies": [
+      "Supabase realtime включён",
+      "RLS на каналы"
+    ],
     "recommendedNextPhase": "Пилотный канал с наблюдаемостью.",
     "nextRecommendedStep": "Описать в JSON список каналов по подсистеме и пробросить в cloud health API."
   },
   "sync-engine": {
-    "whatWorks": ["Offline queue", "flush метаданные"],
-    "whatDoesNotWork": ["Полная админка конфликтов"],
+    "whatWorks": [
+      "Offline queue",
+      "flush метаданные"
+    ],
+    "whatDoesNotWork": [
+      "Полная админка конфликтов"
+    ],
     "otaImpact": "low",
     "backendReadiness": 55,
     "productionReadiness": 64,
     "architectureState": "Очередь в клиенте; серверная согласованность частично.",
-    "missingUx": ["UX разрешения конфликтов", "Прозрачность застрявших jobs"],
-    "missingBackend": ["Серверные версии сущностей и merge policy"],
-    "missingRealtime": ["Уведомления о flush errors"],
+    "missingUx": [
+      "UX разрешения конфликтов",
+      "Прозрачность застрявших jobs"
+    ],
+    "missingBackend": [
+      "Серверные версии сущностей и merge policy"
+    ],
+    "missingRealtime": [
+      "Уведомления о flush errors"
+    ],
     "biggestWeakness": "Конфликты и retry policy не унифицированы.",
     "highestValueImprovement": "Единая таблица событий sync + UI для power users.",
-    "requiredDependencies": ["cloud schema", "auth"],
+    "requiredDependencies": [
+      "cloud schema",
+      "auth"
+    ],
     "recommendedNextPhase": "Серверный merge + метрики.",
     "nextRecommendedStep": "Инвентаризировать очереди по модулям и свести к одному интерфейсу flush/status."
   },
@@ -160,7 +353,13 @@
       "AionEntityPanel не показывает paired_devices last_seen",
       "Push side: pushLinkSnapshot ещё не вызывается из реальных источников (ShiftContext/OcrQueue)"
     ],
-    "cloudReady": ["link_pair_tokens", "link_snapshots", "devices", "paired_devices", "device_activity"],
+    "cloudReady": [
+      "link_pair_tokens",
+      "link_snapshots",
+      "devices",
+      "paired_devices",
+      "device_activity"
+    ],
     "otaImpact": "medium",
     "realtimeReadiness": 65,
     "productionReadiness": 55,
@@ -171,35 +370,65 @@
       "Список paired_devices с last_seen в AionEntityPanel",
       "Realtime toast «новый снапшот с work phone» на personal phone"
     ],
-    "missingBackend": ["Signed upload URL для больших OCR изображений (currently payload jsonb only)"],
+    "missingBackend": [
+      "Signed upload URL для больших OCR изображений (currently payload jsonb only)"
+    ],
     "missingRealtime": [],
     "biggestWeakness": "Backend готов, UI ещё нет — двухтелефонный контур не работает end-to-end без экранов pair/claim.",
     "highestValueImprovement": "Pair UI + интеграция pushLinkSnapshot в OcrQueue → realtime toast на personal phone.",
-    "requiredDependencies": ["Supabase auth (выполнено)", "realtime (выполнено)", "expo-camera для QR scan"],
+    "requiredDependencies": [
+      "Supabase auth (выполнено)",
+      "realtime (выполнено)",
+      "expo-camera для QR scan"
+    ],
     "recommendedNextPhase": "AionLinkPairScreen: issue UI + scan UI; интегрировать pushLinkSnapshot в успешный OCR.",
     "nextRecommendedStep": "Интегрировать pushLinkSnapshot в успешный OCR + toast на personal phone через subscribeToLinkSnapshots; QR scanner (expo-camera) опционально."
   },
   "background-drive": {
-    "whatWorks": ["ShiftContext вызывает адаптер; cold start через AsyncStorage", "Эксп. ветка: tasks/shiftLocationTask + expo-location foregroundService (только при EXPO_PUBLIC_EXPERIMENTAL_BG_LOCATION=1)"],
-    "whatDoesNotWork": ["Реальный GPS/FGS в фоне", "Profit/timeline не живут при lock без native слоя"],
+    "whatWorks": [
+      "ShiftContext вызывает адаптер; cold start через AsyncStorage",
+      "Эксп. ветка: tasks/shiftLocationTask + expo-location foregroundService (только при EXPO_PUBLIC_EXPERIMENTAL_BG_LOCATION=1)"
+    ],
+    "whatDoesNotWork": [
+      "Реальный GPS/FGS в фоне",
+      "Profit/timeline не живут при lock без native слоя"
+    ],
     "mocked": [],
-    "localOnly": ["enableForShift — noop dispose"],
+    "localOnly": [
+      "enableForShift — noop dispose"
+    ],
     "cloudReady": [],
-    "requiresApk": ["Вероятно новый APK / dev client при нативном FGS или config plugin"],
+    "requiresApk": [
+      "Вероятно новый APK / dev client при нативном FGS или config plugin"
+    ],
     "otaImpact": "medium",
     "realtimeReadiness": 10,
     "backendReadiness": 10,
     "productionReadiness": 22,
-    "subsystemDebt": ["Нет field-метрик батареи/OEM", "Дистанция в headless task пока не сливается в смену (heartbeat only)"],
-    "architectureState": "Android: default AndroidForegroundLocationShiftAdapter (FGS notification + TaskManager) при активной смене; ShiftContext effect rebind после cold start; overlay — только openApplicationSettings baseline.",
-    "missingUx": ["Понятный UX когда фон запрещён OEM", "Индикатор «трекинг активен» без обмана", "Системный floating orb / bubble поверх других приложений — отсутствует"],
-    "missingBackend": ["Серверные сессии смены при relay (если multi-device)"],
-    "missingRealtime": ["Heartbeat смены для второго устройства"],
+    "subsystemDebt": [
+      "Нет field-метрик батареи/OEM",
+      "Дистанция в headless task пока не сливается в смену (heartbeat only)"
+    ],
+    "architectureState": "Android FGS + Accuracy.High + continuous updates + late-subscription cleanup; automated hardening продолжается без owner device gate.",
+    "missingUx": [
+      "Понятный UX когда фон запрещён OEM",
+      "Индикатор «трекинг активен» без обмана",
+      "Системный floating orb / bubble поверх других приложений — отсутствует"
+    ],
+    "missingBackend": [
+      "Серверные сессии смены при relay (если multi-device)"
+    ],
+    "missingRealtime": [
+      "Heartbeat смены для второго устройства"
+    ],
     "biggestWeakness": "Полное отсутствие production background трекинга.",
     "highestValueImprovement": "Минимальный проверенный Android FGS + location updates + battery budget.",
-    "requiredDependencies": ["expo-location уже в проекте; решить task-manager / native", "Юридические строки для пользователя про фон"],
+    "requiredDependencies": [
+      "expo-location уже в проекте; решить task-manager / native",
+      "Юридические строки для пользователя про фон"
+    ],
     "recommendedNextPhase": "Pilot на одном OEM + логирование ANR/battery.",
-    "nextRecommendedStep": "Реализовать BackgroundTrackingAdapter с измеримым battery test; не включать по умолчанию до gate."
+    "nextRecommendedStep": "Reconnect/OEM observability и deterministic lifecycle tests."
   },
   "floating-orb-runtime": {
     "whatWorks": [
@@ -217,9 +446,13 @@
       "iOS overlay (Apple запрещает system-wide overlay)"
     ],
     "mocked": [],
-    "localOnly": ["Overlay только Android"],
+    "localOnly": [
+      "Overlay только Android"
+    ],
     "cloudReady": [],
-    "requiresApk": ["Native OrbView + OrbWindowManager (Kotlin) — изменения в native-modules/aion-overlay-orb"],
+    "requiresApk": [
+      "Native OrbView + OrbWindowManager (Kotlin) — изменения в native-modules/aion-overlay-orb"
+    ],
     "otaImpact": "medium",
     "realtimeReadiness": 65,
     "backendReadiness": 50,
@@ -234,10 +467,15 @@
       "Mini-popup около орба на long-press вместо deep link → app (текущая версия открывает приложение с /orb/status)"
     ],
     "missingBackend": [],
-    "missingRealtime": ["Duplex статуса на личный второй девайс (Aion Link)"],
+    "missingRealtime": [
+      "Duplex статуса на личный второй девайс (Aion Link)"
+    ],
     "biggestWeakness": "Long-press показывает панель только через deep link → open app; полностью overlay-only popup потребует второго TYPE_APPLICATION_OVERLAY окна.",
     "highestValueImprovement": "Field validation на 2–3 OEM (battery + lifecycle) → переключить OVERLAY_ORB_NATIVE_PRODUCTION_READY=true.",
-    "requiredDependencies": ["Production background session", "FGS notification channel parity"],
+    "requiredDependencies": [
+      "Production background session",
+      "FGS notification channel parity"
+    ],
     "recommendedNextPhase": "Field validation overlay: battery profile, OEM whitelist, lifecycle test.",
     "nextRecommendedStep": "EAS preview build с новым OrbView → ручной тест snap/long-press/breath на 2 OEM → owner sign-off."
   },
@@ -268,26 +506,53 @@
     "architectureState": "Living AI core: NOT a loader, NOT a button. Реагирует на entityState + runtimePulse. Premium animation profile через layered View + Reanimated.",
     "missingUx": [],
     "missingBackend": [],
-    "missingRealtime": ["Volume-aware flow arcs (упрощённо: всегда фиксированной толщины)"],
+    "missingRealtime": [
+      "Volume-aware flow arcs (упрощённо: всегда фиксированной толщины)"
+    ],
     "biggestWeakness": "Без Skia — нельзя реализовать настоящие particles с GPU; орбитальные точки через transform хорошо, но volumetric внутренние particles требуют canvas/GL.",
     "highestValueImprovement": "Опциональная Skia-ветка для high-end девайсов (lazy-load, fallback на текущую реализацию).",
-    "requiredDependencies": ["react-native-reanimated 3.16+", "expo-linear-gradient"],
+    "requiredDependencies": [
+      "react-native-reanimated 3.16+",
+      "expo-linear-gradient"
+    ],
     "recommendedNextPhase": "60fps benchmark на 2 устройствах (mid + low) → если падает — упростить количество particles.",
     "nextRecommendedStep": "Owner: запустить новый APK, открыть Control Room, оценить sphere idle/syncing/updating; зафиксировать впечатление."
   },
   "operations-center": {
-    "whatWorks": ["/control", "/status", "/operations", "/operations/bugs", "rollout read"],
-    "whatDoesNotWork": ["Signed-in ops", "CI→snapshot writer"],
-    "cloudReady": ["Чтение public таблиц"],
+    "whatWorks": [
+      "/control",
+      "/status",
+      "/operations",
+      "/operations/bugs",
+      "rollout read"
+    ],
+    "whatDoesNotWork": [
+      "Signed-in ops",
+      "CI→snapshot writer"
+    ],
+    "cloudReady": [
+      "Чтение public таблиц"
+    ],
     "otaImpact": "none",
     "productionReadiness": 42,
     "architectureState": "Композиция hub view из manifest + JSON + Supabase read.",
-    "missingUx": ["Приватные срезы устройств", "Инциденты/alerts"],
-    "missingBackend": ["Аутентифицированные queries", "Запись снимков из CI"],
-    "missingRealtime": ["Live rollout tick"],
+    "missingUx": [
+      "Приватные срезы устройств",
+      "Инциденты/alerts"
+    ],
+    "missingBackend": [
+      "Аутентифицированные queries",
+      "Запись снимков из CI"
+    ],
+    "missingRealtime": [
+      "Live rollout tick"
+    ],
     "biggestWeakness": "Только публичные данные — ограниченный ops контур.",
     "highestValueImprovement": "CI job пишет snapshot + ops UI read-only signed.",
-    "requiredDependencies": ["web-portal auth", "GitHub Actions / CI"],
+    "requiredDependencies": [
+      "web-portal auth",
+      "GitHub Actions / CI"
+    ],
     "recommendedNextPhase": "Запись snapshots + уведомления.",
     "nextRecommendedStep": "Добавить документированный формат snapshot writer и переменные CI."
   }

@@ -52,9 +52,9 @@
     ]
   },
   "executionQueue": {
-    "currentActiveEpic": "Driver production polish: Link relay + live profit + ops feedback loop",
-    "currentSubsystemFocus": "mobile-app",
-    "nextImplementationTarget": "Device smoke APK 1.0.9 build 13; Vercel env для deploy/bug webhooks. Field validation 8/8 — ОТЛОЖЕНО.",
+    "currentActiveEpic": "Driver runtime reliability + operational intelligence",
+    "currentSubsystemFocus": "background-drive",
+    "nextImplementationTarget": "Background runtime/cloud sync edge cases; OCR real-data quality; Maps/Fuel producers only with sufficient persisted evidence.",
     "autonomousSwimStack": [
       {
         "priority": 1,
@@ -124,10 +124,12 @@
         "priority": 6,
         "id": "android-background-runtime-production",
         "title": "Включить production background tracking gate",
-        "status": "deferred",
+        "status": "in_progress",
         "tasks": [
-          "computeRouteFieldValidation 8/8 + paste в /operations/live — отложено владельцем",
-          "BACKGROUND_TRACKING_PRODUCTION_READY=true — после отдельного sign-off"
+          "Accuracy.High + continuous FGS — DONE",
+          "Late foreground watcher cleanup — DONE",
+          "Automated reconnect/OEM observability — NEXT",
+          "Owner device smoke / 8/8 — REMOVED AS GATE"
         ],
         "blocked": false
       },
@@ -145,18 +147,13 @@
       {
         "priority": 8,
         "id": "apk-release-loop-109",
-        "title": "APK 1.0.9 release loop (OrbView dim + version bump)",
-        "status": "in_progress",
+        "title": "APK 1.0.9 build 14 functional GPS release",
+        "status": "shipped",
         "tasks": [
-          "EAS FINISHED a97e4bf (OrbView.kt в plugin) — DONE",
-          "manifest sync 3e8d2c54 → Vercel 1.0.8 — DONE",
-          "ApkUpdateBanner + default manifest URL + CI auto-sync workflow — DONE",
-          "Device smoke: установка 1.0.8 + модалка обновления — owner",
-          "1.0.9 versionCode 13 + OrbView dimAlpha — code DONE",
-          "EAS preview build d7baa96a — FINISHED",
-          "Manifest 1.0.9 build 13 + direct APK URL — DONE",
-          "GitHub run 27834179469 + bot commit 3271c84 — SUCCESS",
-          "APK manifest semver/order/URL validation + 7-case CI gate — DONE"
+          "EAS 5bb9ec18-00e4-499f-b322-cf7a81af74d0 — FINISHED",
+          "Manifest 1.0.9 build 14 + direct APK URL — LIVE",
+          "GPS Accuracy.High + continuous FGS — DONE",
+          "APK hardening phase — CLOSED"
         ]
       },
       {

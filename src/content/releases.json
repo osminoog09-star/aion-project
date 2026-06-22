@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-19",
+  "lastUpdated": "2026-06-22",
   "maintainedInRepository": true,
   "channels": [
     {
@@ -7,7 +7,7 @@
       "label": "Preview",
       "description": "Тестовый канал OTA и preview APK из EAS.",
       "appVersion": "1.0.9",
-      "notes": "Preview APK 1.0.9 (runtime 1.0.9, versionCode 13). OrbView dim + Link QR. Манифест после EAS FINISHED."
+      "notes": "EAS preview APK 1.0.9 build 14, runtime 1.0.9, EAS 5bb9ec18-00e4-499f-b322-cf7a81af74d0. GPS Accuracy.High; manifest live."
     },
     {
       "id": "production",
@@ -21,9 +21,21 @@
     "latestKnownVersion": "1.0.9",
     "policy": "Новый APK только при изменении нативного слоя, SDK или versionCode; JS/UI — через OTA.",
     "publicManifestUrl": "https://aion-com.vercel.app/apk-manifest.preview.json",
-    "note": "1.0.9 в очереди/сборке (ec67153+): OrbView dimAlpha, versionCode 13. Активный на устройствах пока 1.0.8 (3e8d2c54). CI push → eas-build-driver-preview на native bump."
+    "note": "EAS preview APK 1.0.9 build 14 готов и опубликован. APK hardening закрыт; новые native builds создаются только для функциональных изменений."
   },
   "history": [
+    {
+      "date": "2026-06-22",
+      "type": "apk",
+      "title": "EAS preview APK 1.0.9 build 14 FINISHED",
+      "detail": "GPS Accuracy.High + continuous FGS. EAS 5bb9ec18-00e4-499f-b322-cf7a81af74d0. APK: https://expo.dev/artifacts/eas/KANXtjY_0p8u37qF6TfZ4txGWJPA-bHAI23n9Cn8gSs.apk"
+    },
+    {
+      "date": "2026-06-22",
+      "type": "apk",
+      "title": "EAS preview APK 1.0.9 build 14 FINISHED",
+      "detail": "GPS Accuracy.High + continuous FGS. EAS f9528e71-4845-4172-8c4b-3c3dc817e4d8. APK: https://expo.dev/artifacts/eas/4kmtXYQrjU-4CrEIPqN5aGmVSXsTUdAf52hIzsP3beo.apk"
+    },
     {
       "date": "2026-05-19",
       "type": "apk",

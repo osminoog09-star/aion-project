@@ -1,19 +1,19 @@
 {
   "version": "1.0",
-  "lastUpdated": "2026-05-16",
+  "lastUpdated": "2026-06-22",
   "portalGitSha": null,
   "minRuntimeVersion": "1.0.6",
   "minAppVersion": "1.0.6",
   "minVersionCode": 10,
   "requiredFeatures": [
-    "field_validation_8_8",
-    "ota_smoke_from_validation",
-    "bg_production_gate_ui",
     "route_timeline"
   ],
-  "requiredRoutes": ["/driver/route-timeline", "/ota-debug"],
+  "requiredRoutes": [
+    "/driver/route-timeline",
+    "/ota-debug"
+  ],
   "requiresNativeBuild": false,
   "safeModeWhenIncompatible": true,
-  "blockFieldValidationUntilCompatible": true,
-  "notesRu": "Portal runtime требует Driver ≥1.0.6 / vc10. Preview APK синхронизирован с EAS eb4250a2; SAFE MODE снимается при совместимом манифесте или heartbeat."
+  "blockFieldValidationUntilCompatible": false,
+  "notesRu": "Portal совместим с Driver >=1.0.6. EAS preview APK 1.0.9 build 14 опубликован; field validation 8/8 не является active gate."
 }

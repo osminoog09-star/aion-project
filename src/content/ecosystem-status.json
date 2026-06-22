@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-19",
+  "lastUpdated": "2026-06-22",
   "maintainedInRepository": true,
   "methodology": "Проценты — ручная оценка по коду и продукту на дату lastUpdated: UI/фичи, бэкенд, realtime, прод-UX, граничные случаи, паритет web/mobile, дизайн, тесты, релизная готовность. Автоматического сбора метрик нет; числа не нормируются к «красивым» значениям. Supabase snapshot при наличии может переопределить поля через ecosystem_public_snapshots.",
   "definitionOfDone": [
@@ -32,8 +32,8 @@
     ]
   },
   "execution": {
-    "currentPriority": "PRIMARY: EAS preview APK 1.0.9 (vc13, OrbView dim) — auto CI на push native paths; manifest sync после FINISHED. Vercel env: bug-report webhooks.",
-    "nextPriority": "Device smoke 1.0.9; OWNER_ALERT webhook на Vercel. Field validation 8/8 — отложено владельцем.",
+    "currentPriority": "Driver runtime: GPS lifecycle, after-costs economics, OCR reliability и Supabase sync.",
+    "nextPriority": "Background runtime/cloud edge cases; Maps/Fuel только по реально накопленным данным.",
     "blockedTasks": [
       "Полная схема release DB без согласования миграций и RLS",
       "Портальный auth для приватных feeds без UX входа"
@@ -52,11 +52,15 @@
   "cloudSoT": {
     "primary": "repository_json",
     "note": "По умолчанию источник — файлы в src/content. При наличии строк в ecosystem_public_snapshots (is_public) виды portal_ecosystem и portal_roadmap_master переопределяют поля; запись ведётся ops/CI вручную до автоматизации.",
-    "snapshotKinds": ["portal_ecosystem", "portal_roadmap_master", "portal_releases"]
+    "snapshotKinds": [
+      "portal_ecosystem",
+      "portal_roadmap_master",
+      "portal_releases"
+    ]
   },
   "sprint": {
-    "label": "Production gate + стратегический roadmap",
-    "focus": "Сейчас: APK 1.0.8 device smoke + Link relay + ops feedback. Долгосрок (roadmap only): Maps Runtime OS + Fuel Intelligence — без engine в этом спринте."
+    "label": "Driver runtime и operational intelligence",
+    "focus": "EAS preview APK 1.0.9 build 14 готов. Сейчас: runtime, OCR, cloud writes. Maps/Fuel: ADR и схемы без фейковых чисел."
   },
   "readiness": {
     "mobile": 68,
@@ -251,7 +255,9 @@
       "title": "Живая страница аудита экосистемы",
       "target": "2026-05",
       "status": "done",
-      "subsystemIds": ["web-portal"],
+      "subsystemIds": [
+        "web-portal"
+      ],
       "note": "Маршрут /status и расширенный JSON."
     },
     {
@@ -259,7 +265,10 @@
       "title": "Полная прозрачность OTA/APK",
       "target": "2026-Q2",
       "status": "in_progress",
-      "subsystemIds": ["updates", "release-ops"],
+      "subsystemIds": [
+        "updates",
+        "release-ops"
+      ],
       "note": "APK 1.0.6 live; device validation 8/8 — следующий gate."
     },
     {
@@ -267,7 +276,10 @@
       "title": "Release DB + typed repos",
       "target": "2026-H2",
       "status": "planned",
-      "subsystemIds": ["release-db", "cloud-schema"],
+      "subsystemIds": [
+        "release-db",
+        "cloud-schema"
+      ],
       "note": "Заблокировано согласованием схемы и RLS."
     }
   ],
@@ -275,15 +287,27 @@
     {
       "id": "mobile-app",
       "name": "AION Driver (мобильный клиент)",
-      "percent": 68,
+      "percent": 76,
       "status": "partially_done",
-      "note": "Основной UX модуля Driver: смена, garage, карта, desktop route; фоновый трекинг смены пока no-op (см. background-drive / backgroundTracking.ts); не все подсистемы на уровне production polish.",
+      "note": "Driver shift runtime, GPS High, history, after-costs UI и cloud projection работают; продолжается edge-case hardening.",
       "percentBasis": "Реализованные экраны и потоки модуля vs заявленный полный кокпит.",
-      "currentPhase": "Hard polish + edge cases",
-      "nextMilestone": "Выравнивание update/entity с облаком",
+      "currentPhase": "Runtime reliability",
+      "nextMilestone": "Background lifecycle и cloud merge edge cases",
       "blockers": [],
       "releaseReadiness": "preview",
-      "platforms": { "mobile": { "percent": 72 }, "web": { "percent": 0, "note": "PWA не целевой паритет" }, "backend": { "percent": 50, "note": "Частично через Supabase" } },
+      "platforms": {
+        "mobile": {
+          "percent": 72
+        },
+        "web": {
+          "percent": 0,
+          "note": "PWA не целевой паритет"
+        },
+        "backend": {
+          "percent": 50,
+          "note": "Частично через Supabase"
+        }
+      },
       "priority": "P0"
     },
     {
@@ -295,31 +319,59 @@
       "percentBasis": "Наличие desktop shell и ключевых hub-экранов.",
       "nextMilestone": "Паритет control/update с mobile",
       "releaseReadiness": "preview",
-      "platforms": { "mobile": { "percent": 0 }, "web": { "percent": 62 }, "backend": { "percent": 45 } },
+      "platforms": {
+        "mobile": {
+          "percent": 0
+        },
+        "web": {
+          "percent": 62
+        },
+        "backend": {
+          "percent": 45
+        }
+      },
       "priority": "P1"
     },
     {
       "id": "web-portal",
       "name": "Web portal (aion.com)",
-      "percent": 28,
+      "percent": 44,
       "status": "partially_done",
-      "note": "Next.js, roadmap/releases/control/status; нет личного кабинета и полного API.",
+      "note": "Operations, owner auth, Supabase-first priority writes и live feed работают на Vercel.",
       "percentBasis": "Количество публичных разделов и интеграций vs целевой портал.",
-      "nextMilestone": "Auth + device registry UI",
+      "nextMilestone": "Private operational data и расширение authenticated writes",
       "releaseReadiness": "not_ready",
-      "platforms": { "web": { "percent": 28 }, "backend": { "percent": 35, "note": "Опциональный Supabase" } },
+      "platforms": {
+        "web": {
+          "percent": 28
+        },
+        "backend": {
+          "percent": 35,
+          "note": "Опциональный Supabase"
+        }
+      },
       "priority": "P1"
     },
     {
       "id": "ocr",
       "name": "OCR pipeline",
-      "percent": 70,
+      "percent": 80,
       "status": "partially_done",
-      "note": "Поток импорта и парсер; слабее ночь/блик/повторная валидация.",
+      "note": "Production queue имеет retry, recovery, meaningful-result dedupe и атомарный claim; фиктивные суммы не создаются.",
       "percentBasis": "Рабочий путь happy-path vs стресс-сценарии.",
-      "nextMilestone": "Усиление качества съёмки и фидбека ошибок",
+      "nextMilestone": "Качество extraction на реальных чеках и payout screenshots",
       "releaseReadiness": "preview",
-      "platforms": { "mobile": { "percent": 75 }, "web": { "percent": 0 }, "backend": { "percent": 40 } },
+      "platforms": {
+        "mobile": {
+          "percent": 75
+        },
+        "web": {
+          "percent": 0
+        },
+        "backend": {
+          "percent": 40
+        }
+      },
       "priority": "P0"
     },
     {
@@ -331,7 +383,17 @@
       "percentBasis": "Реализованные модули driver + зеркало типов на com.",
       "nextMilestone": "Единый engine на всех entrypoints + история",
       "releaseReadiness": "preview",
-      "platforms": { "mobile": { "percent": 52 }, "web": { "percent": 25 }, "backend": { "percent": 30 } },
+      "platforms": {
+        "mobile": {
+          "percent": 52
+        },
+        "web": {
+          "percent": 25
+        },
+        "backend": {
+          "percent": 30
+        }
+      },
       "priority": "P0"
     },
     {
@@ -352,7 +414,9 @@
       "status": "partially_done",
       "note": "Локальный link и очереди; стабильный облачный pairing в проде — нет.",
       "percentBasis": "Реализованные режимы vs целевой realtime SoT.",
-      "blockers": ["Нужен согласованный серверный протокол и RLS"],
+      "blockers": [
+        "Нужен согласованный серверный протокол и RLS"
+      ],
       "releaseReadiness": "not_ready",
       "priority": "P1"
     },
@@ -365,26 +429,36 @@
       "percentBasis": "Отсутствие SYSTEM_ALERT_WINDOW + native bridge; сравнение с ТЗ always-on orb.",
       "currentPhase": "Not started (honest)",
       "nextMilestone": "RFC native overlay vs supported library + permission UX",
-      "blockers": ["Требуется production background session + FGS контракт до overlay"],
+      "blockers": [
+        "Требуется production background session + FGS контракт до overlay"
+      ],
       "releaseReadiness": "not_ready",
       "priority": "P0"
     },
     {
       "id": "background-drive",
       "name": "Background drive & lifecycle",
-      "percent": 22,
+      "percent": 48,
       "status": "partially_done",
-      "note": "Android: FGS-backed location task при активной смене + rebind после cold start (ShiftContext); opt-out EXPO_PUBLIC_DISABLE_SHIFT_FG_LOCATION=1; iOS без фонового трека; production gate не пройден.",
+      "note": "Android FGS location task, Accuracy.High, continuous updates и cleanup поздней subscription реализованы; ручной device gate снят.",
       "percentBasis": "Сравнение с целевым always-on: services/backgroundTracking.ts + ShiftContext wiring.",
-      "currentPhase": "Architecture + honesty gate",
-      "nextMilestone": "Android foreground service + согласованный battery UX; затем интеграция с profit engine",
-      "blockers": [
-        "Нет выбранного native/config-plugin пути для FGS в managed workflow",
-        "Требуются полевые тесты lifecycle (kill, low memory, OEM)"
-      ],
+      "currentPhase": "Automated runtime hardening",
+      "nextMilestone": "Reconnect/OEM observability без owner gate",
+      "blockers": [],
       "releaseReadiness": "not_ready",
       "priority": "P0",
-      "platforms": { "mobile": { "percent": 14 }, "web": { "percent": 0, "note": "N/A" }, "backend": { "percent": 8 } }
+      "platforms": {
+        "mobile": {
+          "percent": 14
+        },
+        "web": {
+          "percent": 0,
+          "note": "N/A"
+        },
+        "backend": {
+          "percent": 8
+        }
+      }
     },
     {
       "id": "cloud-auth",
@@ -395,7 +469,11 @@
       "percentBasis": "Guest/session пути vs полный account center.",
       "nextMilestone": "Портальный auth и сессии",
       "releaseReadiness": "not_ready",
-      "platforms": { "backend": { "percent": 44 } },
+      "platforms": {
+        "backend": {
+          "percent": 44
+        }
+      },
       "priority": "P0"
     },
     {
@@ -490,7 +568,9 @@
       "status": "not_started",
       "note": "Целевая схема releases/OTA/APK как единый SoT не завершена в репозитории.",
       "percentBasis": "Только заделы и опциональные таблицы.",
-      "blockers": ["Схема, миграции, RLS, typed repos"],
+      "blockers": [
+        "Схема, миграции, RLS, typed repos"
+      ],
       "releaseReadiness": "not_ready",
       "priority": "P0"
     },
@@ -545,7 +625,9 @@
       "percent": 38,
       "status": "partially_done",
       "note": "Упоминается для устройств; полный аудит RLS не закреплён здесь.",
-      "blockers": ["Нужен формальный security review"],
+      "blockers": [
+        "Нужен формальный security review"
+      ],
       "releaseReadiness": "not_ready",
       "priority": "P0"
     },
@@ -600,22 +682,22 @@
     {
       "id": "apk-channel",
       "name": "APK / манифест / store-внешний контур",
-      "percent": 52,
+      "percent": 72,
       "status": "partially_done",
-      "note": "Манифест, политика force/min runtime, web mirror; загрузки и подпись — вне портала.",
+      "note": "EAS preview APK 1.0.9 build 14 опубликован; manifest auto-sync и update policy работают. Hardening-фаза закрыта.",
       "percentBasis": "Клиент + com типы + fetch; нет единого release DB.",
-      "nextMilestone": "Downloads на /downloads + запись релиза в Supabase",
+      "nextMilestone": "Только функциональные native builds",
       "releaseReadiness": "preview",
       "priority": "P0"
     },
     {
       "id": "operations-center",
       "name": "Operations center (aion.com)",
-      "percent": 42,
+      "percent": 58,
       "status": "partially_done",
-      "note": "Control, status, roadmap, operations; нет signed-in ops dashboard и автоматического ingestion.",
+      "note": "Operations показывает автономную работу, feed, priorities и release state; устаревший owner 8/8 gate удалён из активного UI.",
       "percentBasis": "Страницы и JSON; нет полного CI→snapshot pipeline.",
-      "nextMilestone": "Запись portal_roadmap_master из деплоя/скрипта",
+      "nextMilestone": "Автоматический snapshot sync без ручного JSON drift",
       "releaseReadiness": "preview",
       "priority": "P1"
     },
