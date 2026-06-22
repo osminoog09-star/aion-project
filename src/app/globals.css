@@ -16,6 +16,43 @@ body {
   background: #07090b;
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: rgba(34, 211, 238, 0.28);
+  color: #fff;
+}
+
+.aion-hero-glow {
+  background: #090c0e;
+}
+
+/* Карточка с лёгким подъёмом при наведении */
+.aion-card {
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.aion-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.aion-gradient-text {
+  color: #67e8f9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .aion-card {
+    transition: none;
+  }
 }
 
 .aion-entity-halo {
