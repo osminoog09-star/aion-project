@@ -11,8 +11,8 @@
     "reasoning": "Production gate для фоновой смены",
     "confidence": 0.88,
     "startedAt": "2026-06-22T03:33:40.061Z",
-    "updatedAt": "2026-06-22T03:33:40.061Z",
-    "heartbeatAt": "2026-06-22T03:33:40.061Z",
+    "updatedAt": "2026-06-22T21:52:22.559Z",
+    "heartbeatAt": "2026-06-22T21:52:22.559Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -36,7 +36,7 @@
     "validationProgress": "Operations получил видимый статус работы Codex по Driver",
     "progressPercent": 40,
     "etaMinutes": 90,
-    "autonomousDepth": 15,
+    "autonomousDepth": 16,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "NEXT",
@@ -268,6 +268,17 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-22T21:52:22.559Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Runtime stabilization (FGS + unified shift)",
+      "feedEventId": null,
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Production gate для фоновой смены",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-06-22T03:33:40.061Z",
       "phase": "coding",
@@ -882,20 +893,12 @@
       "resultRu": "В процессе",
       "icon": "⚡",
       "confidence": 0.9
-    },
-    {
-      "at": "2026-05-15T13:24:09.116Z",
-      "phase": "coding",
-      "summary": "AI пишет и улучшает код: Driver field validation 8/8 + CI",
-      "feedEventId": null,
-      "titleRu": "AI пишет и улучшает код",
-      "explanationRu": "Мандат 1.5ч",
-      "resultRu": "В процессе",
-      "icon": "⚡",
-      "confidence": 0.9
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-22T21:52:22.559Z"
+    },
     {
       "at": "2026-06-22T03:33:40.061Z"
     },
@@ -1036,9 +1039,6 @@
     },
     {
       "at": "2026-05-17T05:11:01.146Z"
-    },
-    {
-      "at": "2026-05-17T05:10:30.551Z"
     }
   ]
 }

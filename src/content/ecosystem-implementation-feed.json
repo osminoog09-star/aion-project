@@ -4,6 +4,53 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-rpu3mi",
+      "occurredAt": "2026-06-22",
+      "title": "Owner session теперь имеет серверный срок жизни",
+      "summary": "Portal owner-cookie переведён на подписанный v2-токен с TTL 7 дней, защитой от подделки и будущего времени.",
+      "subsystemIds": [
+        "operations-center",
+        "web-portal"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+    "rollup": {
+      "fullyDone": [
+        "✅ Owner-cookie содержит подписанное время выдачи и серверный TTL 7 дней",
+        "✅ Подделка, просрочка и токен из будущего отклоняются автоматическим тестом"
+      ],
+      "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+    "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "low",
+        "otaApk": "none",
+      "backend": "low",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+      "web_build": "passed",
+      "repo_verify": "passed",
+      "driver_validate_code": "passed"
+      },
+      "reasoning": "Закрыт бессрочный replay owner-cookie: maxAge браузера больше не является единственной защитой.",
+      "task": "Portal auth / Supabase write path",
+      "confidence": "high",
+      "changedFiles": [
+        "src/lib/operations/owner-session-token.ts",
+        "src/lib/operations/owner-auth.ts",
+        "scripts/ci/test-owner-session-token.mjs",
+        "package.json"
+      ],
+      "runtimeImpact": "Действующие старые owner-сессии потребуют один повторный вход; новые сессии проверяются сервером не дольше 7 дней."
+    },
+    {
       "id": "evt-2026-06-22-fdvn3v",
       "occurredAt": "2026-06-22",
       "title": "Voice Control: final-result и confidence gate",
@@ -2304,12 +2351,16 @@
       "commitHash": null,
       "repository": "aion-project",
       "rollup": {
-        "fullyDone": ["Final-result, confidence и speech error safety gates"],
+        "fullyDone": [
+          "Final-result, confidence и speech error safety gates"
+        ],
         "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-      "stillMissing": ["Preview APK completion"],
+      "stillMissing": [
+        "Preview APK completion"
+      ],
       "blocked": [],
       "impacts": {
         "release": "medium",
