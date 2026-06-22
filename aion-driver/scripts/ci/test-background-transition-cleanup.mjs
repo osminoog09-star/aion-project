@@ -13,8 +13,8 @@ assert.match(
 
 assert.match(
   shiftContext,
-  /return \(\) => \{\s*cancelled = true;\s*bgTrackingRef\.current\?\.dispose\(\);\s*bgTrackingRef\.current = null;/s,
-  "effect cleanup must cancel pending starts and dispose the current FGS handle",
+  /return \(\) => \{\s*cancelled = true;\s*if \(healthTimer\) clearInterval\(healthTimer\);\s*bgTrackingRef\.current\?\.dispose\(\);\s*bgTrackingRef\.current = null;/s,
+  "effect cleanup must cancel pending starts, stop the watchdog, and dispose the FGS handle",
 );
 
 console.log("background transition cleanup: OK (pending and active FGS handles)");

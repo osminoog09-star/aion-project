@@ -4,6 +4,64 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-zpz4fs",
+      "occurredAt": "2026-06-22",
+      "title": "Background GPS получил watchdog и безопасного владельца FGS",
+      "summary": "Android runtime раз в минуту проверяет Expo location task, восстанавливает исчезнувшую task и не позволяет старому handle остановить новую смену.",
+      "subsystemIds": [
+        "driver-app",
+        "background-drive",
+        "gps-runtime"
+      ],
+      "eventType": "implementation_finished",
+      "commitHash": null,
+      "repository": "aion-project",
+    "rollup": {
+      "fullyDone": [
+        "✅ FGS start/stop/recover сериализованы и защищены generation token",
+        "✅ Watchdog восстанавливает исчезнувшую Expo location task раз в минуту",
+        "✅ Recovery и health-check errors сохраняются в diagnostic log",
+        "✅ Lifecycle и recovery контракты закреплены CI"
+      ],
+      "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+    "stillMissing": [
+      "Принудительно завершённый OEM процесс не может быть воскрешён JavaScript watchdog"
+    ],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "medium",
+        "backend": "none",
+        "realtime": "low",
+        "ux": "medium",
+        "cloud": "low"
+      },
+      "validation": {
+      "web_build": "passed",
+      "repo_verify": "passed",
+      "driver_validate_code": "passed",
+      "typescript": "passed"
+      },
+      "reasoning": "Асинхронный dispose мог догнать новый FGS start; отсутствие runtime watchdog оставляло исчезнувшую task без восстановления.",
+      "task": "Automated reconnect / OEM observability",
+      "confidence": "high",
+      "changedFiles": [
+        "aion-driver/services/androidForegroundLocationShiftAdapter.ts",
+        "aion-driver/services/backgroundTracking.ts",
+        "aion-driver/contexts/ShiftContext.tsx",
+        "aion-driver/scripts/ci/test-background-runtime-recovery.mjs",
+        "aion-driver/scripts/ci/test-background-transition-cleanup.mjs",
+        "aion-driver/scripts/ci/test-location-accuracy-policy.mjs",
+        "aion-driver/package.json",
+        "src/content/roadmap-execution.json"
+      ],
+      "runtimeImpact": "Пока JS runtime жив, исчезнувшая background location task автоматически перезапускается; recovery и ошибки попадают в diagnostic log.",
+      "apkImpact": "Изменение JS/TS runtime; новый native dependency не добавлен."
+    },
+    {
       "id": "evt-2026-06-22-9oo8fs",
       "occurredAt": "2026-06-22",
       "title": "Priority audit теперь формируется сервером",
@@ -15,31 +73,31 @@
       "eventType": "implementation_finished",
       "commitHash": null,
       "repository": "aion-project",
-    "rollup": {
-      "fullyDone": [
-        "✅ changedBy и changedAt назначаются только сервером",
-        "✅ Audit diff вычисляется относительно текущего authoritative snapshot",
-        "✅ Добавления, удаления и изменения ключевых полей покрыты CI"
-      ],
-      "partiallyDone": [],
+      "rollup": {
+        "fullyDone": [
+          "✅ changedBy и changedAt назначаются только сервером",
+          "✅ Audit diff вычисляется относительно текущего authoritative snapshot",
+          "✅ Добавления, удаления и изменения ключевых полей покрыты CI"
+        ],
+        "partiallyDone": [],
         "notStarted": [],
         "technicalDebt": []
       },
-    "stillMissing": [],
+      "stillMissing": [],
       "blocked": [],
       "impacts": {
         "release": "low",
         "otaApk": "none",
-      "backend": "low",
+        "backend": "low",
         "realtime": "low",
         "ux": "medium",
         "cloud": "low"
       },
       "validation": {
-      "web_build": "passed",
-      "repo_verify": "passed",
-      "driver_validate_code": "passed",
-      "typescript": "passed"
+        "web_build": "passed",
+        "repo_verify": "passed",
+        "driver_validate_code": "passed",
+        "typescript": "passed"
       },
       "reasoning": "Журнал изменений должен описывать реально сохранённый diff, а не клиентское утверждение о нём.",
       "task": "Portal auth / Supabase write path",

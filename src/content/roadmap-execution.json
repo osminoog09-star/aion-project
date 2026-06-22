@@ -128,7 +128,7 @@
         "tasks": [
           "Accuracy.High + continuous FGS — DONE",
           "Late foreground watcher cleanup — DONE",
-          "Automated reconnect/OEM observability — NEXT",
+          "Automated reconnect/OEM observability — DONE (runtime-alive watchdog)",
           "Owner device smoke / 8/8 — REMOVED AS GATE"
         ],
         "blocked": false

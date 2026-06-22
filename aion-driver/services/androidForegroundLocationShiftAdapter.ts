@@ -13,21 +13,25 @@ import {
  * Включается только когда приложение не в AppState active (см. ShiftContext) — без гонки с foreground watch.
  */
 export class AndroidForegroundLocationShiftAdapter implements BackgroundTrackingAdapter {
-  async enableForShift(_shift: ActiveShift): Promise<BackgroundTrackingHandle> {
-    const fg = await Location.requestForegroundPermissionsAsync();
-    if (fg.status !== PermissionStatus.GRANTED) {
-      return { dispose: () => {} };
-    }
-    const bg = await Location.requestBackgroundPermissionsAsync();
-    if (bg.status !== PermissionStatus.GRANTED) {
-      console.warn(
-        "[AION][shift-runtime] background location not granted — трек при полном фоне может прерываться",
-      );
-      return { dispose: () => {} };
-    }
+  private generation = 0;
+  private operationChain: Promise<unknown> = Promise.resolve();
+
+  private runSerialized<T>(operation: () => Promise<T>): Promise<T> {
+    const next = this.operationChain.then(operation, operation);
+    this.operationChain = next.then(
+      () => undefined,
+      () => undefined,
+    );
+    return next;
+  }
+
+  private async stopTaskIfRunning(): Promise<void> {
     if (await Location.hasStartedLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK)) {
       await Location.stopLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK);
     }
+  }
+
+  private async startTask(): Promise<void> {
     await Location.startLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK, {
       accuracy: Location.Accuracy.High,
       distanceInterval: BACKGROUND_DISTANCE_INTERVAL_M,
@@ -40,18 +44,50 @@ export class AndroidForegroundLocationShiftAdapter implements BackgroundTracking
         killServiceOnDestroy: false,
       },
     });
-    return {
-      dispose: () => {
-        void (async () => {
-          try {
-            if (await Location.hasStartedLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK)) {
-              await Location.stopLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK);
+  }
+
+  async enableForShift(_shift: ActiveShift): Promise<BackgroundTrackingHandle> {
+    const generation = ++this.generation;
+    return this.runSerialized(async () => {
+      const noop = { dispose: () => {} };
+      if (generation !== this.generation) return noop;
+
+      const fg = await Location.requestForegroundPermissionsAsync();
+      if (fg.status !== PermissionStatus.GRANTED || generation !== this.generation) return noop;
+      const bg = await Location.requestBackgroundPermissionsAsync();
+      if (bg.status !== PermissionStatus.GRANTED || generation !== this.generation) {
+        if (bg.status !== PermissionStatus.GRANTED) {
+          console.warn("[AION][shift-runtime] background location not granted");
+        }
+        return noop;
+      }
+
+      await this.stopTaskIfRunning();
+      if (generation !== this.generation) return noop;
+      await this.startTask();
+
+      return {
+        dispose: () => {
+          if (generation !== this.generation) return;
+          this.generation += 1;
+          void this.runSerialized(async () => {
+            try {
+              await this.stopTaskIfRunning();
+            } catch {
+              // OEM restrictions can make cleanup fail; the next owner retries.
             }
-          } catch {
-            /* ignore */
-          }
-        })();
-      },
-    };
+          });
+        },
+        ensureHealthy: () =>
+          this.runSerialized(async () => {
+            if (generation !== this.generation) return "superseded" as const;
+            if (await Location.hasStartedLocationUpdatesAsync(AION_SHIFT_LOCATION_TASK)) {
+              return "healthy" as const;
+            }
+            await this.startTask();
+            return "restarted" as const;
+          }),
+      };
+    });
   }
 }
