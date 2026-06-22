@@ -50,6 +50,7 @@ import {
 import { resolveLocationWatchTiming } from "../services/locationPolicy";
 import type { MotionState } from "../services/locationPolicy";
 import {
+  BACKGROUND_RUNTIME_HEALTH_CHECK_MS,
   getBackgroundTrackingAdapter,
   type BackgroundTrackingHandle,
 } from "../services/backgroundTracking";
@@ -440,6 +441,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       return;
     }
     let cancelled = false;
+    let healthTimer: ReturnType<typeof setInterval> | null = null;
     void (async () => {
       try {
         const shift = activeShiftRef.current;
@@ -451,12 +453,32 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
           return;
         }
         bgTrackingRef.current = handle;
+        healthTimer = setInterval(() => {
+          const current = bgTrackingRef.current;
+          if (!current?.ensureHealthy) return;
+          void current
+            .ensureHealthy()
+            .then((status) => {
+              if (status === "restarted") {
+                diagLog("warn", "shift_runtime", "Background location task restarted", {
+                  shiftId: shift.id,
+                });
+              }
+            })
+            .catch((healthError) => {
+              diagLog("error", "shift_runtime", "Background location health check failed", {
+                shiftId: shift.id,
+                error: healthError instanceof Error ? healthError.message : String(healthError),
+              });
+            });
+        }, BACKGROUND_RUNTIME_HEALTH_CHECK_MS);
       } catch (error) {
         if (!cancelled) console.warn("[AION][shift-runtime] background tracking start failed", error);
       }
     })();
     return () => {
       cancelled = true;
+      if (healthTimer) clearInterval(healthTimer);
       bgTrackingRef.current?.dispose();
       bgTrackingRef.current = null;
     };

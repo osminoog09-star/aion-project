@@ -10,6 +10,8 @@ export const BACKGROUND_TRACKING_PRODUCTION_READY = false as const;
 export const BACKGROUND_TRACKING_EVIDENCE =
   "Android: FGS task only outside active AppState; serialized activeShiftStorage merge with waterline idempotency; foreground watch while active. iOS is a no-op. Manual field gate was retired by owner decision." as const;
 
+export const BACKGROUND_RUNTIME_HEALTH_CHECK_MS = 60_000;
+
 /** Compatibility surface for diagnostics; the owner permanently retired the manual 8/8 gate. */
 export function backgroundTrackingProductionGate(_fieldValidationReady: boolean): {
   allowed: boolean;
@@ -23,6 +25,7 @@ export function backgroundTrackingProductionGate(_fieldValidationReady: boolean)
 
 export type BackgroundTrackingHandle = {
   dispose: () => void;
+  ensureHealthy?: () => Promise<"healthy" | "restarted" | "superseded">;
 };
 
 export interface BackgroundTrackingAdapter {

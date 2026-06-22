@@ -17,7 +17,7 @@ assert.match(background, /pausesUpdatesAutomatically:\s*false/);
 assert.match(background, /killServiceOnDestroy:\s*false/);
 assert.match(
   background,
-  /if \(bg\.status !== PermissionStatus\.GRANTED\) \{[\s\S]*?return \{ dispose: \(\) => \{\} \};\s*\}/,
+  /const noop = \{ dispose: \(\) => \{\} \};[\s\S]*?if \(bg\.status !== PermissionStatus\.GRANTED \|\| generation !== this\.generation\) \{[\s\S]*?return noop;\s*\}/,
 );
 assert.doesNotMatch(background, /accuracy:\s*Location\.Accuracy\.Balanced/);
 assert.match(foreground, /if \(stopped\) \{\s*next\.remove\(\)/s);
