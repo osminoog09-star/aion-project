@@ -24,12 +24,23 @@ type FuelFilter = "all" | FuelCategory | "hybrid";
 
 const FILTERS: { id: FuelFilter; label: string }[] = [
   { id: "all", label: "Все" },
-  { id: "ev", label: "EV" },
+  { id: "ev", label: "Электро" },
   { id: "hybrid", label: "Гибрид" },
   { id: "diesel", label: "Дизель" },
   { id: "petrol", label: "Бензин" },
-  { id: "lpg", label: "LPG" },
+  { id: "lpg", label: "Газ" },
 ];
+
+function fuelLabelRu(code: string): string {
+  const m: Record<string, string> = {
+    petrol: "Бензин",
+    diesel: "Дизель",
+    ev: "Электро",
+    lpg: "Газ",
+    hybrid: "Гибрид",
+  };
+  return m[code] ?? code.toUpperCase();
+}
 
 function matchesFuelFilter(v: VehicleCatalogEntry, f: FuelFilter): boolean {
   if (f === "all") return true;
@@ -131,8 +142,8 @@ export default function FleetScreen() {
               {item.brand} {item.model} {item.year}
             </Text>
             <Text className="text-xs" style={{ color: semantic.textSecondary }}>
-              {item.engine} · {item.fuelPrimary.toUpperCase()}
-              {item.fuelSecondary === "ev" ? "+EV" : ""} · {item.consumptionMixedLPer100Km} л
+              {item.engine} · {fuelLabelRu(item.fuelPrimary)}
+              {item.fuelSecondary === "ev" ? " + электро" : ""} · {item.consumptionMixedLPer100Km} л
               {item.tankLiters ? ` · бак ${item.tankLiters} л` : ""}
             </Text>
           </View>
@@ -179,13 +190,13 @@ export default function FleetScreen() {
             style={{ borderColor: semantic.border, backgroundColor: semantic.surfaceMuted }}
           >
             <Text className="text-[10px] font-bold uppercase tracking-widest" style={{ color: semantic.accent }}>
-              Активное ТС
+              Текущее авто
             </Text>
             <Text className="mt-2 text-lg font-semibold" style={{ color: semantic.textPrimary }}>
               {vehicleCatalogGlyph(primary)} {primary.brand} {primary.model}
             </Text>
             <Text className="mt-1 text-xs leading-5" style={{ color: semantic.textSecondary }}>
-              Справочно по каталогу: mixed {primary.consumptionMixedLPer100Km} л/100 км
+              Справочно по каталогу: смешанный расход {primary.consumptionMixedLPer100Km} л/100 км
               {primary.tankLiters ? ` · бак ${primary.tankLiters} л` : ""}.
               ТО и шины зависят от пробега и условий — планируйте по фактическим км в сменах.
             </Text>
@@ -253,8 +264,8 @@ export default function FleetScreen() {
                       ) : null}
                     </Text>
                     <Text className="text-xs" style={{ color: semantic.textSecondary }}>
-                      {v.engine} · {v.fuelPrimary.toUpperCase()}
-                      {v.fuelSecondary === "ev" ? "+EV" : ""} · mixed {v.consumptionMixedLPer100Km} л
+                      {v.engine} · {fuelLabelRu(v.fuelPrimary)}
+                      {v.fuelSecondary === "ev" ? " + электро" : ""} · смешанный {v.consumptionMixedLPer100Km} л
                     </Text>
                   </View>
                 </View>

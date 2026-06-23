@@ -105,7 +105,7 @@ export function LoginExperienceScreen() {
     clearBanner();
     if (!isConfigured) {
       setMsg(
-        "Сервер авторизации недоступен. Обновите Driver (OTA) или напишите в поддержку.",
+        "Сервер авторизации недоступен. Обновите Driver или напишите в поддержку.",
       );
       return;
     }

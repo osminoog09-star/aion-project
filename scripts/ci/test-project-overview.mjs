@@ -9,13 +9,12 @@ const shell = readFileSync("src/components/SiteShell.tsx", "utf8");
 const values = Object.values(ecosystem.readiness);
 const progress = Math.round(values.reduce((sum, value) => sum + value, 0) / values.length);
 assert.equal(progress, 57);
-assert.match(page, /Помощник водителя/);
+assert.match(page, /Одна платформа/);
+assert.match(page, /много продуктов/);
+assert.match(page, /Модули платформы/);
 assert.match(page, /AION Driver/);
-assert.match(page, /Что умеет приложение/);
-assert.match(page, /Готовность по направлениям/);
+assert.match(page, /Studio/);
 assert.match(page, /общая готовность/);
-assert.match(page, /Четыре понятных этапа/);
-assert.match(page, /Путь до результата/);
 assert.doesNotMatch(priorities.nextImplementationTarget, /device smoke|8\/8/i);
 
 for (const label of ["Обзор", "Driver", "Прогресс", "Операции", "Релизы"]) {

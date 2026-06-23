@@ -332,7 +332,7 @@ export function ImportScreenshotScreen() {
       await appendOcrImport(rec);
       void appendAionTimelineEvent({
         type: "ocr_imported",
-        title: "OCR в историю",
+        title: "Импорт в историю",
         detail: `${parse.platform.toUpperCase()} · ${formatCurrencyDisplay(parse.netProfit, currency)}`,
         moduleId: "driver",
       });
@@ -388,8 +388,8 @@ export function ImportScreenshotScreen() {
       await addConfirmedFuelEntry(entry);
       void appendAionTimelineEvent({
         type: "fuel_ocr_attached",
-        title: "Топливо из OCR",
-        detail: `${fuelType} · ${confirmedTotal.toFixed(2)} · OCR ${Math.round(fr.confidence * 100)}%`,
+        title: "Топливо из чека",
+        detail: `${fuelType} · ${confirmedTotal.toFixed(2)} · распознано ${Math.round(fr.confidence * 100)}%`,
         moduleId: "driver",
       });
       setFuelModal((s) => ({ ...s, open: false }));
@@ -416,7 +416,7 @@ export function ImportScreenshotScreen() {
           <View className="mb-4 flex-row items-center justify-between pt-2">
             <View className="flex-1 pr-3">
               <Text className="text-[10px] uppercase tracking-[0.35em] text-cyan-400/90">
-                AI · OCR
+                Распознавание
               </Text>
               <Text className="mt-1 text-2xl font-semibold text-white">
                 Импорт выплаты
@@ -535,7 +535,7 @@ export function ImportScreenshotScreen() {
               <View className="flex-row items-center justify-between gap-3">
                 <View className="flex-1">
                   <Text className="text-xs uppercase tracking-widest text-slate-500">
-                    Очередь OCR
+                    Очередь распознавания
                   </Text>
                   <Text className="mt-1 text-sm text-slate-200">
                     Ожидают: {queueStats.pending} · в работе: {queueStats.processing} · ошибок:{" "}
@@ -547,7 +547,7 @@ export function ImportScreenshotScreen() {
                     onPress={() => void replayFailed()}
                     disabled={replayingFailed}
                     accessibilityRole="button"
-                    accessibilityLabel="Повторить задачи OCR с ошибкой"
+                    accessibilityLabel="Повторить распознавание с ошибкой"
                     className={`h-10 flex-row items-center gap-1.5 rounded-xl border border-violet-400/30 bg-violet-500/10 px-3 ${
                       replayingFailed ? "opacity-50" : ""
                     }`}

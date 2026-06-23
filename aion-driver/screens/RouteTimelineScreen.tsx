@@ -67,7 +67,7 @@ function RouteRow({
         <Metric label="км" value={formatKm(summary.distanceMeters / 1000, distanceUnits)} />
         <Metric label="время" value={formatDuration(summary.durationMs)} />
         <Metric label="стопы" value={String(summary.stopCount)} />
-        <Metric label="idle" value={pct(analytics?.idle.idleRatio ?? summary.idleRatio)} />
+        <Metric label="простой" value={pct(analytics?.idle.idleRatio ?? summary.idleRatio)} />
         {pph != null && pph > 0 ? (
           <Metric label="€/ч" value={Math.round(pph).toString()} />
         ) : null}
@@ -118,7 +118,7 @@ function AnalyticsDetail({ analytics }: { analytics: ShiftAnalyticsSnapshot }) {
 
   return (
     <View className="mt-3 rounded-lg bg-white/5 p-3">
-      <Text className="text-xs uppercase text-slate-500">idle intelligence</Text>
+      <Text className="text-xs uppercase text-slate-500">простой — детали</Text>
       <Text className="mt-1 text-xs text-slate-300">
         простой {formatDuration(analytics.idle.totalIdleMs)} · макс. стоп{" "}
         {formatDuration(analytics.idle.longestStopMs)} · ср. стоп{" "}
@@ -126,7 +126,7 @@ function AnalyticsDetail({ analytics }: { analytics: ShiftAnalyticsSnapshot }) {
       </Text>
       {peak ? (
         <Text className="mt-2 text-xs text-cyan-300/80">
-          пик €/ч (прокси): {Math.round(peak.profitPerHourProxy)} ·{" "}
+          пик дохода/ч: {Math.round(peak.profitPerHourProxy)} ·{" "}
           {new Date(peak.startMs).toLocaleTimeString([], {
             hour: "2-digit",
             minute: "2-digit",
@@ -140,7 +140,7 @@ function AnalyticsDetail({ analytics }: { analytics: ShiftAnalyticsSnapshot }) {
       ) : null}
       {idlePeak && idlePeak.idleRatio > 0.2 ? (
         <Text className="mt-1 text-xs text-amber-300/70">
-          макс. idle окно: {pct(idlePeak.idleRatio)} ·{" "}
+          макс. простой: {pct(idlePeak.idleRatio)} ·{" "}
           {formatDuration(idlePeak.durationMs)}
         </Text>
       ) : null}
@@ -267,13 +267,13 @@ export function RouteTimelineScreen() {
             <Text className="text-sm text-cyan-400">← назад</Text>
           </Pressable>
           <Text className="mt-2 text-xs uppercase tracking-[0.35em] text-cyan-300/80">
-            route intelligence
+            анализ маршрутов
           </Text>
           <Text className="mt-2 text-3xl font-semibold text-white">Маршруты</Text>
           <Text className="mt-1 text-sm text-slate-500">
             Снимки аналитики · группировка · {rows.length} GPS-смен
             {bgDiag.fgsHeartbeatAgeMs != null
-              ? ` · FGS ${Math.round(bgDiag.fgsHeartbeatAgeMs / 1000)}с${
+              ? ` · фон ${Math.round(bgDiag.fgsHeartbeatAgeMs / 1000)}с${
                   isFgsHeartbeatFresh(bgDiag.fgsHeartbeatAgeMs) ? "" : " (устарел)"
                 }`
               : ""}

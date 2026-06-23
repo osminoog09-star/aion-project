@@ -50,8 +50,8 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="hub"
         options={{
-          title: "Хаб",
-          tabBarLabel: "Хаб",
+          title: "Ещё",
+          tabBarLabel: "Ещё",
           href: companion ? null : undefined,
         }}
       />

@@ -53,10 +53,10 @@ function aiBullets(
 ): string[] {
   const car = v ? `${v.brand} ${v.model} ${v.generation ?? ""}`.trim() : "ваш автомобиль";
   return [
-    `Регион ${country}, валюта ${currency}: цены топлива подставляются из локального справочника (далее — live API).`,
+    `Регион ${country}, валюта ${currency}: цены топлива подставляются из локального справочника (позже — онлайн-цены).`,
     `${car}: город ${v?.consumptionUrbanLPer100Km ?? "—"} л / трасса ${v?.consumptionExtraUrbanLPer100Km ?? "—"} л (смешанный ${v?.consumptionMixedLPer100Km ?? "—"}).`,
     "Лучшее окно для дохода чаще 18:00–22:00 и пятница — суббота; фиксируйте район с высоким спросом.",
-    "Импорт выплат (OCR) сокращает ручной ввод: снимайте экран Bolt/Uber после смены.",
+    "Импорт выплат сокращает ручной ввод: снимайте экран Bolt/Uber после смены.",
   ];
 }
 
@@ -522,7 +522,7 @@ export function OnboardingScreen() {
                           </Text>
                         </Text>
                         <Text className="mt-1 text-xs text-slate-400">
-                          {item.engine} · {item.fuelPrimary.toUpperCase()} · mixed{" "}
+                          {item.engine} · {item.fuelPrimary.toUpperCase()} · смешанный{" "}
                           {item.consumptionMixedLPer100Km} л
                           {item.tankLiters ? ` · бак ${item.tankLiters} л` : ""}
                         </Text>

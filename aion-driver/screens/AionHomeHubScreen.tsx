@@ -52,6 +52,12 @@ function healthColor(h: AionModuleDefinition["health"]): string {
   return colors.slate600;
 }
 
+function healthLabelRu(h: AionModuleDefinition["health"]): string {
+  if (h === "ok") return "норма";
+  if (h === "degraded") return "сбои";
+  return "офлайн";
+}
+
 function entityStateLabelRu(s: AionEntityState): string {
   const m: Record<string, string> = {
     idle: "Спокойствие",
@@ -60,7 +66,7 @@ function entityStateLabelRu(s: AionEntityState): string {
     warning: "Внимание",
     critical: "Срочно",
     offline: "Офлайн",
-    syncing: "Синк",
+    syncing: "Синхронизация",
     updating: "Обновление",
   };
   return m[s] ?? s;
@@ -100,11 +106,9 @@ export function AionHomeHubScreen() {
 
   const statusLine = useMemo(() => {
     if (!snapshot) return "…";
-    const net = snapshot.networkOnline ? "NET" : "NET · OFF";
-    const q = `Q${snapshot.syncQueueLength}`;
-    const ota = snapshot.ota.phase.toUpperCase();
-    const ch = snapshot.channelTier.slice(0, 3).toUpperCase();
-    return `${net} · ${q} · OTA ${ota} · ${ch}`;
+    const net = snapshot.networkOnline ? "Сеть есть" : "Нет сети";
+    const q = snapshot.syncQueueLength > 0 ? ` · в очереди ${snapshot.syncQueueLength}` : "";
+    return `${net}${q}`;
   }, [snapshot]);
 
   const syncStatusLineRu = useMemo(() => {
@@ -113,8 +117,8 @@ export function AionHomeHubScreen() {
         ? "ожидание сети…"
         : "синхронизация…";
     }
-    if (syncPhase === "error") return "ошибка синка — повторим автоматически";
-    return `авто-синк · ${formatLastSync(lastSyncOkAtMs)}`;
+    if (syncPhase === "error") return "ошибка синхронизации — повторим автоматически";
+    return `обновлено · ${formatLastSync(lastSyncOkAtMs)}`;
   }, [syncBusy, syncPhase, lastSyncOkAtMs]);
 
   const onSphereTap = useCallback(() => {
@@ -152,7 +156,7 @@ export function AionHomeHubScreen() {
                   letterSpacing: -0.5,
                 }}
               >
-                Control room
+                Центр управления
               </Text>
               <Text style={{ color: colors.slate500, fontSize: 13, marginTop: 8, lineHeight: 20, maxWidth: 340 }}>
                 {AION_PERSONA.missionShort}
@@ -250,7 +254,7 @@ export function AionHomeHubScreen() {
                   borderColor: "rgba(34,211,238,0.2)",
                 })}
               >
-                <Text style={{ color: colors.slate200, fontWeight: "700" }}>Диагностика Core</Text>
+                <Text style={{ color: colors.slate200, fontWeight: "700" }}>Диагностика системы</Text>
                 <MaterialIcons name="analytics" size={20} color={colors.cyan400} />
               </Pressable>
               <Pressable
@@ -267,7 +271,7 @@ export function AionHomeHubScreen() {
                   borderColor: "rgba(255,255,255,0.08)",
                 })}
               >
-                <Text style={{ color: colors.slate300, fontWeight: "600" }}>OTA · каналы · runtime</Text>
+                <Text style={{ color: colors.slate300, fontWeight: "600" }}>Обновления приложения</Text>
                 <MaterialIcons name="system-update" size={20} color={colors.slate500} />
               </Pressable>
               <Pressable
@@ -394,17 +398,12 @@ export function AionHomeHubScreen() {
                           <Text style={{ color: colors.slate400, fontSize: 10, fontWeight: "800" }}>{badge}</Text>
                         </View>
                         <Text style={{ color: healthColor(m.health), fontSize: 11, fontWeight: "800" }}>
-                          {healthDot(m.health)} {m.health}
+                          {healthDot(m.health)} {healthLabelRu(m.health)}
                         </Text>
                       </View>
                       <Text style={{ color: colors.slate500, fontSize: 13, marginTop: 4, lineHeight: 18 }}>
                         {m.subtitle}
                       </Text>
-                      {m.dependsOn.length > 0 ? (
-                        <Text style={{ color: colors.slate600, fontSize: 11, marginTop: 6 }}>
-                          deps: {m.dependsOn.join(", ")}
-                        </Text>
-                      ) : null}
                     </View>
                     {open ? (
                       <MaterialIcons name="chevron-right" size={22} color={colors.slate500} />

@@ -475,10 +475,10 @@ export function SettingsScreen() {
                 Второй телефон
               </Text>
               <Text className="mt-2 text-sm text-slate-400">
-                Companion: крупный UI, быстрые действия, вкладка «История» скрыта.
+                Режим напарника: крупные кнопки, быстрые действия, вкладка «История» скрыта.
               </Text>
               <View className="mt-4 flex-row items-center justify-between">
-                <Text className="text-base text-white">Companion Mode</Text>
+                <Text className="text-base text-white">Режим напарника</Text>
                 <Switch
                   value={settings.companionMode}
                   onValueChange={(v) => void setCompanionMode(v)}
@@ -629,7 +629,7 @@ export function SettingsScreen() {
                 Визуальный стиль
               </Text>
               <Text className="mt-2 text-sm text-slate-400">
-                Пресеты AION: цвета, свечение, фон кабины и карта. Сохраняется на устройстве; позже — в облачном
+                Темы AION: цвета, свечение, фон кабины и карта. Сохраняется на устройстве; позже — в облачном
                 профиле.
               </Text>
               <View className="mt-4 flex-row flex-wrap gap-2">
@@ -763,7 +763,7 @@ export function SettingsScreen() {
                 Статистика и история
               </Text>
               <Text className="mt-2 text-sm text-slate-400">
-                Управление по блокам: смены за день/неделю/месяц, GPS, OCR, облако, отдельные смены.
+                Управление по блокам: смены за день/неделю/месяц, GPS, чеки, облако, отдельные смены.
                 Чтобы поправить цифры одной смены (доход, топливо, км), откройте «Исправить» в этом
                 экране или тап по смене в «История». Профиль и настройки не меняются.
               </Text>

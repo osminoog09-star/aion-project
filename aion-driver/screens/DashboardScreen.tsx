@@ -208,9 +208,9 @@ export function DashboardScreen() {
     : 0;
 
   const statusLine = useMemo(() => {
-    if (!activeShift) return "Смена не запущена";
-    if (activeShift.paused) return "Пауза · GPS off";
-    return motionState === "idle" ? "Стоим · GPS эконом" : "В движении";
+    if (!activeShift) return "Смена не начата";
+    if (activeShift.paused) return "На паузе";
+    return motionState === "idle" ? "Стоим на месте" : "В движении";
   }, [activeShift, motionState]);
 
   const shiftFuelSpent = useMemo(
@@ -254,7 +254,7 @@ export function DashboardScreen() {
             <View className="mb-5 flex-row items-start justify-between pt-1">
               <View className="flex-1 pr-2">
                 <Text className="text-[10px] uppercase tracking-[0.4em] text-cyan-400/80">
-                  AION · {companion ? "companion" : "cockpit"}
+                  AION · {companion ? "напарник" : "за рулём"}
                 </Text>
                 <Text className="mt-1 text-2xl font-semibold text-white">
                   {profile.name}
@@ -365,7 +365,7 @@ export function DashboardScreen() {
                 ) : null}
                 {activeShiftRuntime.sync.pending > 0 ? (
                   <Text className="mt-2 text-[10px] text-amber-300/90">
-                    В очереди синхронизации: {activeShiftRuntime.sync.pending}
+                    Ждёт отправки: {activeShiftRuntime.sync.pending}
                   </Text>
                 ) : null}
               </View>
@@ -415,7 +415,7 @@ export function DashboardScreen() {
                       {formatCurrencyDisplay(period.monthFuel, currency)} · {period.monthTrips} смен
                     </Text>
                     <Text className="mt-2 text-[11px] leading-4 text-cyan-500/85">
-                      Route {driverAnalytics.routeEfficiencyScore}/100 · rhythm {driverAnalytics.consistencyScore}/100
+                      Маршрут {driverAnalytics.routeEfficiencyScore}/100 · ритм {driverAnalytics.consistencyScore}/100
                     </Text>
                   </>
                 ) : (
@@ -459,7 +459,7 @@ export function DashboardScreen() {
             </View>
             <View className="min-w-[47%] flex-1">
               <MetricCard
-                label="Топливо Σ"
+                label="Топливо всего"
                 value={m ? formatCurrencyDisplay(m.fuelCostTotal, currency) : "—"}
                 hint={m ? formatLiters(m.fuelUsedPetrolLiters + m.fuelUsedGasLiters) : undefined}
                 size="large"
@@ -564,7 +564,7 @@ export function DashboardScreen() {
 
           <GlowCard glow="neutral" className="mb-4">
             <Text className="text-xs uppercase tracking-[0.2em] text-slate-500">
-              Период · облако + устройство
+              За период
             </Text>
             {cloudHistoryLoading ? (
               <View className="mt-4 gap-3">
@@ -651,7 +651,7 @@ export function DashboardScreen() {
 
           <View className="mb-4">
             <Text className="mb-2 text-[10px] uppercase tracking-[0.3em] text-slate-600">
-              AI инсайты
+              Подсказки
             </Text>
             <AiInsightStrip items={aiBlocks} />
           </View>
@@ -730,7 +730,7 @@ export function DashboardScreen() {
             ) : null}
             <View className="min-w-[47%] flex-1">
               <GradientButton
-                title="Скрин OCR"
+                title="Импорт скрина"
                 variant="ghost"
                 size="cockpit"
                 onPress={ocrPlaceholder}
