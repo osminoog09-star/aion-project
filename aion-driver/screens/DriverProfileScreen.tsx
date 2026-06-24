@@ -142,7 +142,7 @@ export function DriverProfileScreen() {
         id: "profit50k",
         title: "50k чистыми",
         done: net >= 50_000,
-        detail: "Суммарный net по истории.",
+        detail: "Суммарная чистая прибыль по истории.",
       },
       {
         id: "streak3",
@@ -214,7 +214,7 @@ export function DriverProfileScreen() {
               Пока пусто
             </Text>
             <Text className="mt-2 text-sm leading-5" style={{ color: semantic.textSecondary }}>
-              Завершите смены на пульте — здесь появятся заработок, километраж, расход и AI driver score.
+              Завершите смены на пульте — здесь появятся заработок, километраж, расход и оценка вождения.
             </Text>
           </View>
         ) : (
@@ -222,7 +222,7 @@ export function DriverProfileScreen() {
             <View className="mb-6 flex-row items-center justify-between gap-4">
               <View className="flex-1">
                 <Text className="mb-2 text-xs font-bold uppercase tracking-widest" style={{ color: semantic.accent }}>
-                  AI driver score
+                  Оценка вождения
                 </Text>
                 <Text className="text-sm leading-5" style={{ color: semantic.textSecondary }}>
                   {analytics.driverScoreEvolution}
@@ -325,7 +325,7 @@ export function DriverProfileScreen() {
             style={{ borderColor: semantic.border, backgroundColor: semantic.surfaceMuted }}
           >
             <Text className="mb-2 text-xs font-bold uppercase tracking-widest" style={{ color: semantic.violet }}>
-              AI coach
+              Советы
             </Text>
             <Text className="text-sm leading-5" style={{ color: semantic.textSecondary }}>
               {analytics.bestHoursLabel}

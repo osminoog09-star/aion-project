@@ -87,9 +87,9 @@ export function HistoryScreen() {
           </Text>
           <Text className="mt-2 text-3xl font-semibold text-white">Лента</Text>
           <Text className="mt-1 text-sm text-slate-500">
-            Смены · OCR · расходы (OCR и облако при входе) · {entries.length}{" "}
+            Смены · чеки · расходы · {entries.length}{" "}
             событий
-            {isLoading ? " · синк…" : ""}
+            {isLoading ? " · обновление…" : ""}
           </Text>
           <Pressable
             className="mt-3 self-start rounded-lg border border-cyan-500/30 px-3 py-2"
@@ -225,7 +225,7 @@ function ShiftRow({
           value={`${formatLiters(shift.fuelUsedGasLiters)} · ${formatCurrencyDisplay(shift.fuelCostGas, currency)}`}
         />
         <Meta
-          label="Топливо Σ"
+          label="Топливо всего"
           value={formatCurrencyDisplay(shift.fuelCostTotal, currency)}
         />
         <Meta
@@ -261,7 +261,7 @@ function OcrRow({
       <View className="flex-row items-center justify-between">
         <View>
           <Text className="text-[10px] uppercase tracking-widest text-violet-300/90">
-            OCR · {p.platform.toUpperCase()}
+            Импорт · {p.platform.toUpperCase()}
           </Text>
           <Text className="text-sm text-slate-300">{dateLabel}</Text>
         </View>
