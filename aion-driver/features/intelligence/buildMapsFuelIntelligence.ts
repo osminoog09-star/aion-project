@@ -18,8 +18,9 @@ import type {
   MapsIntelligenceSnapshot,
   RealDataProvenance,
 } from "./contracts/mapsFuelIntelligence";
+import { classifyKilometers, type OrderActivityWindow } from "./classifyKilometers";
 
-type GpsPointLike = { dM?: number | null };
+type GpsPointLike = { t?: number; dM?: number | null };
 
 function round2(n: number): number {
   return Math.round(n * 100) / 100;
@@ -47,6 +48,12 @@ export function buildMapsIntelligenceSnapshot(input: {
   shiftId: string;
   points?: readonly GpsPointLike[] | null;
   fuelEntryIds?: readonly string[];
+  /** Окна активности заказа из рантайма (driver-события). Без них классы = unclassified. */
+  classification?: {
+    orderWindows: readonly OrderActivityWindow[];
+    shiftStartMs: number;
+    shiftEndMs: number;
+  };
   nowMs?: number;
 }): MapsIntelligenceSnapshot {
   const points = input.points ?? [];
@@ -57,9 +64,14 @@ export function buildMapsIntelligenceSnapshot(input: {
   );
   const routeDistanceMeters = gpsPointCount > 0 && summed > 0 ? round2(summed) : null;
 
-  // Нет потока driver-событий/импорта классов → классификация недоступна, не выдумываем.
-  const kilometerClasses: KilometerClassification[] =
-    routeDistanceMeters != null
+  const kilometerClasses: KilometerClassification[] = input.classification
+    ? classifyKilometers({
+        points: points.map((p) => ({ t: p.t ?? 0, dM: p.dM ?? null })),
+        orderWindows: input.classification.orderWindows,
+        shiftStartMs: input.classification.shiftStartMs,
+        shiftEndMs: input.classification.shiftEndMs,
+      })
+    : routeDistanceMeters != null
       ? [
           {
             status: "unclassified",
@@ -75,8 +87,8 @@ export function buildMapsIntelligenceSnapshot(input: {
     provenance: provenance({ ...input, gpsPointCount }),
     routeDistanceMeters,
     kilometerClasses,
-    // Публиковать классы пока нечего (всё unclassified).
-    publishable: false,
+    // Публикуемо, только если есть реально классифицированные км.
+    publishable: kilometerClasses.some((k) => k.status === "classified"),
   };
 }
 
