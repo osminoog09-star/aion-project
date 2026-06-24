@@ -4,6 +4,46 @@
   "policy": "После значимой реализации добавляйте событие: npm run feed:append (или PR в ecosystem-implementation-feed.json). CI-автозапись — следующий шаг.",
   "items": [
     {
+      "id": "evt-2026-06-22-exec-e9q169",
+      "occurredAt": "2026-06-22",
+      "title": "AI пишет и улучшает код",
+      "summary": "AI пишет и улучшает код: Runtime stabilization (FGS + unified shift)",
+      "subsystemIds": [
+        "operations-center",
+        "web-portal"
+      ],
+      "eventType": "execution_resumed",
+      "reasoning": "Production gate для фоновой смены",
+      "confidence": "high",
+      "repository": "aion-project",
+      "changedFiles": [
+        "src/app/operations/command/page.tsx",
+        "src/lib/operations/owner-command-center.ts",
+        "src/components/operations/OwnerCommandCenter.tsx"
+      ],
+      "rollup": {
+        "fullyDone": [
+          "✅ AI пишет и улучшает код"
+        ],
+        "partiallyDone": [],
+        "notStarted": [],
+        "technicalDebt": []
+      },
+      "stillMissing": [],
+      "blocked": [],
+      "impacts": {
+        "release": "medium",
+        "otaApk": "none",
+        "backend": "low",
+        "realtime": "high",
+        "ux": "high",
+        "cloud": "low"
+      },
+      "validation": {
+        "web_build": "pending"
+      }
+    },
+    {
       "id": "evt-2026-06-22-g5h7wd",
       "occurredAt": "2026-06-22",
       "title": "Driver routes: 8/8 оставлен только как диагностика",

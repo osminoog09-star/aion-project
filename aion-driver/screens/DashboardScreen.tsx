@@ -11,6 +11,7 @@ const DashboardSparkCharts = lazy(() =>
   import("../components/dashboard/DashboardSparkCharts").then((m) => ({ default: m.DashboardSparkCharts })),
 );
 import { AppConfirmModal } from "../components/feedback/AppConfirmModal";
+import { VoiceCommandButton } from "../components/voice/VoiceCommandButton";
 import { AiInsightStrip } from "../components/ai/AiInsightStrip";
 import { FuelTypeToggle } from "../components/FuelTypeToggle";
 import { CockpitBackground } from "../components/ui/CockpitBackground";
@@ -735,6 +736,9 @@ export function DashboardScreen() {
                 size="cockpit"
                 onPress={ocrPlaceholder}
               />
+            </View>
+            <View className="min-w-[47%] flex-1">
+              <VoiceCommandButton />
             </View>
           </View>
         </ScrollView>

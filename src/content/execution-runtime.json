@@ -4,15 +4,15 @@
   "agentId": "cursor-autonomous",
   "lastUpdated": "2026-06-22",
   "runtime": {
-    "status": "analyzing",
-    "phase": "analyzing",
-    "currentTask": "Technical debt scan",
-    "subsystem": "ecosystem-ai",
-    "reasoning": "Сканирую TODO, дубли и orphan-экраны",
+    "status": "coding",
+    "phase": "coding",
+    "currentTask": "Runtime stabilization (FGS + unified shift)",
+    "subsystem": "background-drive",
+    "reasoning": "Production gate для фоновой смены",
     "confidence": 0.88,
-    "startedAt": "2026-06-22T03:31:27.856Z",
-    "updatedAt": "2026-06-22T03:31:27.856Z",
-    "heartbeatAt": "2026-06-22T03:31:27.856Z",
+    "startedAt": "2026-06-22T03:33:40.061Z",
+    "updatedAt": "2026-06-22T03:33:40.061Z",
+    "heartbeatAt": "2026-06-22T03:33:40.061Z",
     "files": [
       "src/app/operations/command/page.tsx",
       "src/lib/operations/owner-command-center.ts",
@@ -20,7 +20,7 @@
     ],
     "commitCandidate": "pending",
     "blocker": null,
-    "nextStep": "Runtime hardening",
+    "nextStep": "Overlay HUD v2",
     "branch": "main",
     "dependencyTarget": "Live execution observability + self-healing",
     "pendingReviewCount": 0,
@@ -31,12 +31,12 @@
       "routes": "passed"
     },
     "lastFailure": null,
-    "lastCompletedAction": "AI пишет и улучшает код: Runtime stabilization (FGS + unified shift)",
+    "lastCompletedAction": "AI анализирует систему: Technical debt scan",
     "retryCount": 0,
     "validationProgress": "Operations получил видимый статус работы Codex по Driver",
-    "progressPercent": 18,
-    "etaMinutes": 25,
-    "autonomousDepth": 14,
+    "progressPercent": 40,
+    "etaMinutes": 90,
+    "autonomousDepth": 15,
     "runtimeGraph": "ACTIVE",
     "orchestrationMode": "continuous",
     "lastAction": "NEXT",
@@ -268,6 +268,17 @@
     ]
   },
   "timeline": [
+    {
+      "at": "2026-06-22T03:33:40.061Z",
+      "phase": "coding",
+      "summary": "AI пишет и улучшает код: Runtime stabilization (FGS + unified shift)",
+      "feedEventId": "evt-2026-06-22-exec-e9q169",
+      "titleRu": "AI пишет и улучшает код",
+      "explanationRu": "Production gate для фоновой смены",
+      "resultRu": "В процессе",
+      "icon": "⚡",
+      "confidence": 0.88
+    },
     {
       "at": "2026-06-22T03:31:27.856Z",
       "phase": "analyzing",
@@ -882,20 +893,12 @@
       "resultRu": "В процессе",
       "icon": "⚡",
       "confidence": 0.9
-    },
-    {
-      "at": "2026-05-15T13:23:00.694Z",
-      "phase": "coding",
-      "summary": "AI пишет и улучшает код: Driver field validation: unit tests + device checklist",
-      "feedEventId": null,
-      "titleRu": "AI пишет и улучшает код",
-      "explanationRu": "Мандат 1.5ч — PRIMARY roadmap",
-      "resultRu": "В процессе",
-      "icon": "⚡",
-      "confidence": 0.9
     }
   ],
   "heartbeats": [
+    {
+      "at": "2026-06-22T03:33:40.061Z"
+    },
     {
       "at": "2026-06-22T03:31:27.856Z"
     },
@@ -1036,9 +1039,6 @@
     },
     {
       "at": "2026-05-17T05:10:30.551Z"
-    },
-    {
-      "at": "2026-05-17T05:06:28.041Z"
     }
   ]
 }
