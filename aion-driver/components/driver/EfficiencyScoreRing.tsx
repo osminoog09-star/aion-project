@@ -47,7 +47,7 @@ export function EfficiencyScoreRing({ score, size = 96 }: Props) {
         className="items-center justify-center rounded-full"
         style={{ width: size, height: size }}
       >
-        <Text className="text-[10px] uppercase tracking-[0.25em] text-slate-500">AI score</Text>
+        <Text className="text-[10px] uppercase tracking-[0.25em] text-slate-500">Оценка</Text>
         <Text className="mt-1 text-3xl font-bold text-white">{clamped}</Text>
         <Text className="text-[9px] text-slate-500">эффективность</Text>
       </View>
