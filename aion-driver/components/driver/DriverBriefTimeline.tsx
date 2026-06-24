@@ -17,7 +17,7 @@ function labelFor(e: TimelineEntry, currency: AppCurrencyCode): string {
     return `Смена · ${formatCurrencyDisplay(getCompletedShiftProfit(e.shift), currency)}`;
   }
   if (e.kind === "ocr") {
-    return `OCR · ${e.record.platform.toUpperCase()}`;
+    return `Импорт · ${e.record.platform.toUpperCase()}`;
   }
   return e.event.title;
 }
@@ -56,8 +56,8 @@ export const DriverBriefTimeline = memo(function DriverBriefTimeline({
         <Text className="text-[10px] uppercase tracking-[0.35em] text-slate-500">Лента активности</Text>
         <Text className="mt-2 text-base font-semibold text-slate-200">Пока тихо</Text>
         <Text className="mt-1 text-sm leading-5 text-slate-500">
-          Запустите смену, импортируйте выплату или дождитесь синка — здесь появятся смены, OCR и системные события
-          Driver OS.
+          Запустите смену, импортируйте выплату или дождитесь обновления — здесь появятся смены, чеки и системные события
+          приложения.
         </Text>
       </View>
     );

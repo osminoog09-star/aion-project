@@ -46,7 +46,7 @@ export function PostShiftHandoffBanner() {
       </Text>
       {analytics && pph != null ? (
         <Text className="mt-1 text-xs text-slate-400">
-          idle {Math.round(analytics.idle.idleRatio * 100)}% · {formatPerHour(pph, currency)} · стопы{" "}
+          простой {Math.round(analytics.idle.idleRatio * 100)}% · {formatPerHour(pph, currency)} · стопы{" "}
           {analytics.idle.stopCount} · маршрут{" "}
           {analytics.route.routeEfficiencyKmPerMovingHour.toFixed(1)} км/ч
         </Text>

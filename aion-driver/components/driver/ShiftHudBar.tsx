@@ -238,9 +238,9 @@ function HudInner({
         <View className="items-end">
           <Text className="text-[9px] uppercase tracking-widest text-slate-500">интенсивность</Text>
           <Text className="text-sm font-semibold text-cyan-200">
-            {paused ? "—" : motionState === "moving" ? "drive" : "idle"}
+            {paused ? "—" : motionState === "moving" ? "в пути" : "стоянка"}
           </Text>
-          <Text className="mt-2 text-[9px] uppercase text-slate-500">серия · моментум</Text>
+          <Text className="mt-2 text-[9px] uppercase text-slate-500">серия · темп</Text>
           <Text className="text-xs font-semibold text-slate-200">
             {tripStreak} · {momPct}%
           </Text>

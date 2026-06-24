@@ -94,7 +94,7 @@ export function DriverIntelligenceStrip({
   return (
     <View className="mt-3 rounded-xl border border-violet-500/25 bg-violet-500/5 px-3 py-2">
       <Text className="text-[10px] font-bold uppercase tracking-widest text-violet-300/90">
-        Driver intelligence · {intel.sampleShifts} смен
+        Аналитика · {intel.sampleShifts} смен
         {historical ? ` · ${historical.sampleSnapshots} снимков` : ""}
       </Text>
       {rows.map((line) => (
