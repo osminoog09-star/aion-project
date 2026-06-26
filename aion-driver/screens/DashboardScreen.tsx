@@ -28,6 +28,7 @@ import { ApkUpdateBanner } from "../components/update/ApkUpdateBanner";
 import { EfficiencyScoreRing } from "../components/driver/EfficiencyScoreRing";
 import { ShiftHudBar } from "../components/driver/ShiftHudBar";
 import { DriverIntelligenceStrip } from "../components/driver/DriverIntelligenceStrip";
+import { OrderActivityControl } from "../components/driver/OrderActivityControl";
 import { buildDashboardAiBlocks } from "../features/ai/services/dashboardAiBlocks";
 import { useDriverAnalytics } from "../features/driver/analytics/useDriverAnalytics";
 import { useTimelineEntries } from "../features/history/useTimelineEntries";
@@ -527,6 +528,10 @@ export function DashboardScreen() {
                 onChange={(k) => void setActiveFuelType(k)}
               />
             </GlowCard>
+          ) : null}
+
+          {activeShift ? (
+            <OrderActivityControl shiftId={activeShift.id} />
           ) : null}
 
           <FuelEntriesCard />
