@@ -181,6 +181,26 @@ export default async function RoadmapPage() {
           </div>
         </div>
       </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+          Планируется
+        </p>
+        <h2 className="mt-3 text-2xl font-semibold text-white md:text-3xl">Идеи на будущее</h2>
+        <article className="aion-card mt-8 max-w-2xl rounded-lg border border-white/10 bg-white/[0.02] p-6">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h3 className="text-lg font-semibold text-white">Taxi Plan — где таксовать</h3>
+            <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[11px] font-semibold text-slate-400">
+              в плане
+            </span>
+          </div>
+          <p className="mt-2 text-sm leading-6 text-slate-400">
+            План на неделю и месяц для водителя: где и когда выгоднее работать в Пярну — горячие
+            зоны, прогноз спроса, городские события, погода и праздники. Подсказки — только на
+            реальных данных смен, без выдуманных цифр.
+          </p>
+        </article>
+      </section>
     </div>
   );
 }
