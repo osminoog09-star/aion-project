@@ -161,9 +161,10 @@ export function LiveExecutionPanel() {
     return () => clearInterval(id);
   }, [refresh]);
 
+  const latestTimelineAt = data?.document.timeline[0]?.at;
   useEffect(() => {
     timelineEndRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [data?.document.timeline[0]?.at]);
+  }, [latestTimelineAt]);
 
   if (error && !data) {
     return <p className="text-sm text-rose-300">Не удалось загрузить статус AI: {error}</p>;

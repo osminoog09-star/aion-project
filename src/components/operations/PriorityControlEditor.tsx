@@ -10,7 +10,7 @@ import type {
   StrategicPriorityLevel,
   StrategicPriorityStatus,
 } from "@/lib/ecosystem-types";
-import { priorityLevelLabel, priorityStatusLabel, t } from "@/i18n";
+import { priorityLevelLabel, t } from "@/i18n";
 import { priorityLevelBadgeClass } from "@/lib/strategic-priorities";
 import {
   validateStrategicPriorities,

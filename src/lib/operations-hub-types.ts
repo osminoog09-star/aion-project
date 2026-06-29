@@ -1,5 +1,5 @@
 import type { ApkUpdateManifest } from "@/lib/apkManifestTypes";
-import type { EcosystemStatus, OperationsHealthRow, ReleaseChannel, ReleasesPayload } from "@/lib/ecosystem-types";
+import type { OperationsHealthRow, ReleaseChannel, ReleasesPayload } from "@/lib/ecosystem-types";
 
 export type RolloutPublicRow = {
   id: string;
