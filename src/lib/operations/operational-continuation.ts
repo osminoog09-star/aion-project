@@ -1,7 +1,5 @@
 import type { ExecutionConfidence } from "@/lib/operations/execution-confidence";
 import {
-  AUTONOMOUS_ACTIONS,
-  HUMAN_REQUIRED_ACTIONS,
   type AutonomousAction,
   type HumanRequiredAction,
 } from "@/lib/operations/human-boundary-policy";
