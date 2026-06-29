@@ -92,12 +92,40 @@ export function buildMapsIntelligenceSnapshot(input: {
   };
 }
 
+/**
+ * Распределение подтверждённого топлива по классам км — пропорционально дистанции класса.
+ * Только реальные классифицированные км; без топлива/классов — "unallocated" (не выдумываем).
+ */
+export function allocateFuelByKmClass(
+  kilometerClasses: readonly KilometerClassification[],
+  confirmedFuelCost: number | null | undefined,
+  fuelEntryIds: readonly string[] = [],
+): FuelCostAllocation[] {
+  const classified = kilometerClasses.filter(
+    (k) => k.status === "classified" && k.class != null && (k.distanceMeters ?? 0) > 0,
+  );
+  const cost = finitePositive(confirmedFuelCost ?? null);
+  const totalKm = classified.reduce((sum, k) => sum + (k.distanceMeters ?? 0), 0);
+  const canAllocate = classified.length > 0 && cost != null && totalKm > 0;
+  return classified.map((k) => ({
+    status: canAllocate ? "allocated" : "unallocated",
+    kilometerClass: k.class,
+    fuelEntryIds: [...fuelEntryIds],
+    distanceMeters: k.distanceMeters,
+    allocatedCost: canAllocate
+      ? round2(cost! * ((k.distanceMeters ?? 0) / totalKm))
+      : null,
+  }));
+}
+
 export function buildFuelIntelligenceSnapshot(input: {
   shiftId: string;
   gpsPointCount: number;
   fuelEntryIds?: readonly string[];
   confirmedFuelCost?: number | null;
   routeDistanceMeters?: number | null;
+  /** Классифицированные км (из buildMapsIntelligenceSnapshot) — для разбивки топлива по классам. */
+  kilometerClasses?: readonly KilometerClassification[];
   nowMs?: number;
 }): FuelIntelligenceSnapshot {
   const confirmedFuelCost = finitePositive(input.confirmedFuelCost ?? null);
@@ -107,9 +135,16 @@ export function buildFuelIntelligenceSnapshot(input: {
       ? round2((confirmedFuelCost / (routeDistanceMeters / 1000)) * 100)
       : null;
 
-  // Реальное ₽/100км публикуем; разбивку по классам — нет (нет evidence по классам).
-  const allocations: FuelCostAllocation[] =
-    confirmedFuelCost != null
+  // ₽/100км — из реальных данных. Разбивка по классам — только если есть классы заказа.
+  const hasClasses =
+    input.kilometerClasses?.some((k) => k.status === "classified") ?? false;
+  const allocations: FuelCostAllocation[] = hasClasses
+    ? allocateFuelByKmClass(
+        input.kilometerClasses ?? [],
+        confirmedFuelCost,
+        input.fuelEntryIds ?? [],
+      )
+    : confirmedFuelCost != null
       ? [
           {
             status: "unallocated",

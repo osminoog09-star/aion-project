@@ -6,10 +6,12 @@ import assert from "node:assert/strict";
 async function main() {
   let buildMaps;
   let buildFuel;
+  let allocateFuel;
   try {
     const mod = await import("../../features/intelligence/buildMapsFuelIntelligence.ts");
     buildMaps = mod.buildMapsIntelligenceSnapshot;
     buildFuel = mod.buildFuelIntelligenceSnapshot;
+    allocateFuel = mod.allocateFuelByKmClass;
   } catch (err) {
     console.log("skip:", err?.message ?? err);
     process.exit(0);
@@ -77,6 +79,45 @@ async function main() {
   const f4 = buildFuel({ shiftId: "s1", gpsPointCount: 0, confirmedFuelCost: -10, routeDistanceMeters: 1000 });
   assert.equal(f4.confirmedFuelCost, null);
   assert.equal(f4.costPer100Km, null);
+  cases += 1;
+
+  // Аллокация топлива по классам — пропорционально км.
+  const classes = [
+    { status: "classified", class: "on_order", distanceMeters: 60000, evidence: "driver_event" },
+    { status: "classified", class: "empty", distanceMeters: 40000, evidence: "driver_event" },
+  ];
+  const alloc = allocateFuel(classes, 1000);
+  const byCls = Object.fromEntries(alloc.map((a) => [a.kilometerClass, a]));
+  assert.equal(byCls.on_order.status, "allocated");
+  assert.equal(byCls.on_order.allocatedCost, 600);
+  assert.equal(byCls.empty.allocatedCost, 400);
+  cases += 1;
+
+  // Без топлива — unallocated, без выдуманных сумм.
+  const allocNoCost = allocateFuel(classes, null);
+  assert.ok(allocNoCost.every((a) => a.status === "unallocated" && a.allocatedCost === null));
+  cases += 1;
+
+  // Unclassified не аллоцируется.
+  assert.equal(
+    allocateFuel([{ status: "unclassified", class: null, distanceMeters: 100, evidence: null }], 500).length,
+    0,
+  );
+  cases += 1;
+
+  // buildFuel с классами → аллокация попадает в снапшот.
+  const fAlloc = buildFuel({
+    shiftId: "s1",
+    gpsPointCount: 4,
+    confirmedFuelCost: 1000,
+    routeDistanceMeters: 100000,
+    kilometerClasses: classes,
+  });
+  assert.ok(
+    fAlloc.allocations.some(
+      (a) => a.status === "allocated" && a.kilometerClass === "on_order" && a.allocatedCost === 600,
+    ),
+  );
   cases += 1;
 
   console.log(`test-maps-fuel-intelligence: ok (${cases} cases)`);
