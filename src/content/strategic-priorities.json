@@ -273,8 +273,8 @@
         "operational-fuel-cost-intelligence",
         "maps-gps-intelligence"
       ],
-      "status": "blocked",
-      "reason": "Топливо на заказ/подачу/порожняк — зависит от Maps GPS Intelligence"
+      "status": "in_progress",
+      "reason": "Реализовано: allocateFuelByKmClass распределяет подтверждённое топливо по классам км (заказ/подача/порожняк/личное) + показ ₽/класс в KmClassCard + CI-тесты. Ждёт полевую валидацию 8/8 до 'done'"
     },
     {
       "id": "fuel-maps-predictive",
