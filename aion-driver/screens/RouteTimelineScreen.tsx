@@ -113,6 +113,8 @@ function RouteRow({
               points={session.points}
               shiftStartMs={Date.parse(shift.startedAt)}
               shiftEndMs={Date.parse(shift.endedAt)}
+              fuelCost={shift.fuelCostTotal}
+              currency={currency}
             />
           ) : null}
         </View>
