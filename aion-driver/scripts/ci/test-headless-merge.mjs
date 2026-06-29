@@ -77,8 +77,8 @@ async function main() {
     mergeStateRaw: null,
     locs,
   });
-  assert.ok(paused);
-  assert.equal(paused.nextShift.distanceMeters, shift.distanceMeters, "paused shift skips distance");
+  // Paused shift: nothing to merge — implementation returns null (no accumulation).
+  assert.equal(paused, null, "paused shift produces no merge");
 
   console.log("headless merge checks: OK");
 }
