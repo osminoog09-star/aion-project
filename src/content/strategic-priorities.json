@@ -159,6 +159,20 @@
       "nextAction": "Architecture review before implementation",
       "setAt": "2026-05-14",
       "setBy": "product-owner"
+    },
+    {
+      "id": "taxi-plan-where-to-drive",
+      "title": "Taxi Plan / Где таксовать",
+      "level": "low",
+      "subsystemIds": [
+        "driver-intelligence",
+        "gps-route"
+      ],
+      "status": "not_started",
+      "rationale": "Планируемая функция (описание в docs/TAXI_PLAN.md): недельный/месячный план для водителя Bolt в Пярну — горячие зоны, прогноз спроса (low/medium/high/very_high), события Visit Pärnu, погода, праздники, история смен. Только план; числа — лишь из реальных данных, без выдумки.",
+      "nextAction": "Описание зафиксировано (docs/TAXI_PLAN.md). Реализация — после накопления реальных смен, интеграции внешних источников и решения владельца",
+      "setAt": "2026-06-25",
+      "setBy": "claude"
     }
   ],
   "dependencyGraph": [
