@@ -6,6 +6,7 @@ import { RouteTimelineFieldValidationCard } from "../components/route/RouteTimel
 import { RouteTimelineIntelligenceHeader } from "../components/route/RouteTimelineIntelligenceHeader";
 import { CockpitBackground } from "../components/ui/CockpitBackground";
 import { GlowCard } from "../components/ui/GlowCard";
+import { KmClassCard } from "../components/driver/KmClassCard";
 import { useHistoricalDriverRollups } from "../features/analytics/hooks/useHistoricalDriverRollups";
 import { useDevice } from "../hooks/useDevice";
 import { useMergedShiftHistory } from "../features/trips/hooks/useMergedShiftHistory";
@@ -106,6 +107,14 @@ function RouteRow({
           ) : (
             <Text className="mt-2 text-xs text-slate-600">Остановки ≥3 мин не найдены</Text>
           )}
+          {shift ? (
+            <KmClassCard
+              shiftId={shift.id}
+              points={session.points}
+              shiftStartMs={Date.parse(shift.startedAt)}
+              shiftEndMs={Date.parse(shift.endedAt)}
+            />
+          ) : null}
         </View>
       ) : null}
     </GlowCard>
