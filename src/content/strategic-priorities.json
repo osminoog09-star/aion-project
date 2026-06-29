@@ -253,7 +253,7 @@
         "maps-gps-intelligence"
       ],
       "status": "blocked",
-      "reason": "Map-matching к road graph — spike + ADR, не production engine"
+      "reason": "Map-matching к road graph — ADR готов (docs/ADR-road-matching.md); ждёт road graph / OSRM и реальные треки, не production engine"
     },
     {
       "id": "operational-fuel-cost-intelligence",
