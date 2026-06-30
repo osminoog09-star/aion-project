@@ -2,16 +2,13 @@
  * classifyKilometers — node assert.
  */
 import assert from "node:assert/strict";
+import { importTsOrFail } from "./lib/importTsOrFail.mjs";
 
 async function main() {
-  let classifyKilometers;
-  try {
-    const mod = await import("../../features/intelligence/classifyKilometers.ts");
-    classifyKilometers = mod.classifyKilometers;
-  } catch (err) {
-    console.log("skip:", err?.message ?? err);
-    process.exit(0);
-  }
+  const { classifyKilometers } = await importTsOrFail(
+    () => import("../../features/intelligence/classifyKilometers.ts"),
+    "classifyKilometers",
+  );
 
   let cases = 0;
 

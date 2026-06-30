@@ -3,6 +3,7 @@
  */
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
+import { importTsOrFail } from "./lib/importTsOrFail.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -36,14 +37,10 @@ function makeLoc(lat, lng, ts) {
 }
 
 async function main() {
-  let computeHeadlessMergeResult;
-  try {
-    const mod = await import("../../services/headlessShiftLocationMerge.ts");
-    computeHeadlessMergeResult = mod.computeHeadlessMergeResult;
-  } catch {
-    console.log("skip TS import — run npm run typecheck for compile safety");
-    process.exit(0);
-  }
+  const { computeHeadlessMergeResult } = await importTsOrFail(
+    () => import("../../services/headlessShiftLocationMerge.ts"),
+    "headlessShiftLocationMerge",
+  );
 
   const t0 = Date.now() - 120_000;
   const locs = [

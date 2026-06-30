@@ -2,16 +2,13 @@
  * formatStopZoneProgressRu — node assert.
  */
 import assert from "node:assert/strict";
+import { importTsOrFail } from "./lib/importTsOrFail.mjs";
 
 async function main() {
-  let formatStopZoneProgressRu;
-  try {
-    const mod = await import("../../features/analytics/stopZoneProgressRu.ts");
-    formatStopZoneProgressRu = mod.formatStopZoneProgressRu;
-  } catch (err) {
-    console.log("skip:", err?.message ?? err);
-    process.exit(0);
-  }
+  const { formatStopZoneProgressRu } = await importTsOrFail(
+    () => import("../../features/analytics/stopZoneProgressRu.ts"),
+    "stopZoneProgressRu",
+  );
 
   assert.ok(formatStopZoneProgressRu(null)?.includes("≥2 смены"));
   const partial = formatStopZoneProgressRu({

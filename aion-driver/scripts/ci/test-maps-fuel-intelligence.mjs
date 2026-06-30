@@ -2,20 +2,16 @@
  * buildMapsIntelligenceSnapshot / buildFuelIntelligenceSnapshot — node assert.
  */
 import assert from "node:assert/strict";
+import { importTsOrFail } from "./lib/importTsOrFail.mjs";
 
 async function main() {
-  let buildMaps;
-  let buildFuel;
-  let allocateFuel;
-  try {
-    const mod = await import("../../features/intelligence/buildMapsFuelIntelligence.ts");
-    buildMaps = mod.buildMapsIntelligenceSnapshot;
-    buildFuel = mod.buildFuelIntelligenceSnapshot;
-    allocateFuel = mod.allocateFuelByKmClass;
-  } catch (err) {
-    console.log("skip:", err?.message ?? err);
-    process.exit(0);
-  }
+  const mod = await importTsOrFail(
+    () => import("../../features/intelligence/buildMapsFuelIntelligence.ts"),
+    "buildMapsFuelIntelligence",
+  );
+  const buildMaps = mod.buildMapsIntelligenceSnapshot;
+  const buildFuel = mod.buildFuelIntelligenceSnapshot;
+  const allocateFuel = mod.allocateFuelByKmClass;
 
   let cases = 0;
 
