@@ -19,47 +19,69 @@ function parseEntries(raw: string | null): FuelEntry[] {
   }
 }
 
+function writeAll(entries: FuelEntry[]): Promise<void> {
+  return AsyncStorage.setItem(STORAGE_KEYS.PENDING_FUEL_ENTRIES, JSON.stringify(entries));
+}
+
+// Сериализация записей: очередь pending-заправок имеет ДВУХ независимых писателей
+// (ручное подтверждение из UI и восстановление из облака при логине/возврате в foreground).
+// Без сериализации два read-modify-write накладываются и теряют запись = реальные деньги
+// за топливо. Паттерн скопирован из features/gps/tripStore/gpsTripStorage.ts.
+let serialized: Promise<unknown> = Promise.resolve();
+
+function runSerialized<T>(fn: () => Promise<T>): Promise<T> {
+  const next = serialized.then(fn, fn);
+  serialized = next.then(
+    () => undefined,
+    () => undefined,
+  );
+  return next;
+}
+
 export async function loadPendingFuelEntries(): Promise<FuelEntry[]> {
   const raw = await AsyncStorage.getItem(STORAGE_KEYS.PENDING_FUEL_ENTRIES);
   return parseEntries(raw);
 }
 
-export async function appendPendingFuelEntry(entry: FuelEntry): Promise<void> {
-  const prev = await loadPendingFuelEntries();
-  await AsyncStorage.setItem(
-    STORAGE_KEYS.PENDING_FUEL_ENTRIES,
-    JSON.stringify([...prev, entry]),
-  );
+export function appendPendingFuelEntry(entry: FuelEntry): Promise<void> {
+  return runSerialized(async () => {
+    const prev = await loadPendingFuelEntries();
+    await writeAll([...prev, entry]);
+  });
 }
 
-export async function clearPendingFuelEntries(): Promise<void> {
-  await AsyncStorage.removeItem(STORAGE_KEYS.PENDING_FUEL_ENTRIES);
+export function clearPendingFuelEntries(): Promise<void> {
+  return runSerialized(() => AsyncStorage.removeItem(STORAGE_KEYS.PENDING_FUEL_ENTRIES));
 }
 
-export async function replacePendingFuelEntries(entries: FuelEntry[]): Promise<void> {
-  await AsyncStorage.setItem(STORAGE_KEYS.PENDING_FUEL_ENTRIES, JSON.stringify(entries));
+export function replacePendingFuelEntries(entries: FuelEntry[]): Promise<void> {
+  return runSerialized(() => writeAll(entries));
 }
 
-export async function updatePendingFuelEntry(
+export function updatePendingFuelEntry(
   id: string,
   patch: Partial<FuelEntry>,
 ): Promise<FuelEntry | null> {
-  const prev = await loadPendingFuelEntries();
-  let updated: FuelEntry | null = null;
-  const next = prev.map((e) => {
-    if (e.id !== id) return e;
-    updated = { ...e, ...patch };
+  return runSerialized(async () => {
+    const prev = await loadPendingFuelEntries();
+    let updated: FuelEntry | null = null;
+    const next = prev.map((e) => {
+      if (e.id !== id) return e;
+      updated = { ...e, ...patch };
+      return updated;
+    });
+    if (!updated) return null;
+    await writeAll(next);
     return updated;
   });
-  if (!updated) return null;
-  await replacePendingFuelEntries(next);
-  return updated;
 }
 
-export async function removePendingFuelEntry(id: string): Promise<boolean> {
-  const prev = await loadPendingFuelEntries();
-  const next = prev.filter((e) => e.id !== id);
-  if (next.length === prev.length) return false;
-  await replacePendingFuelEntries(next);
-  return true;
+export function removePendingFuelEntry(id: string): Promise<boolean> {
+  return runSerialized(async () => {
+    const prev = await loadPendingFuelEntries();
+    const next = prev.filter((e) => e.id !== id);
+    if (next.length === prev.length) return false;
+    await writeAll(next);
+    return true;
+  });
 }
