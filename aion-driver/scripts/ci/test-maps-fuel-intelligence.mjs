@@ -93,6 +93,19 @@ async function main() {
   assert.equal(byCls.empty.allocatedCost, 400);
   cases += 1;
 
+  // Дрейф округления: 3 равных класса, 100 ₽ — сумма по классам строго = 100.00,
+  // лишняя копейка уходит одному классу (наибольший остаток), а не теряется.
+  const thirds = ["on_order", "pickup", "empty"].map((c) => ({
+    status: "classified",
+    class: c,
+    distanceMeters: 10000,
+    evidence: "driver_event",
+  }));
+  const centsThirds = allocateFuel(thirds, 100).map((a) => Math.round(a.allocatedCost * 100));
+  assert.equal(centsThirds.reduce((s, n) => s + n, 0), 10000);
+  assert.deepEqual([...centsThirds].sort((x, y) => y - x), [3334, 3333, 3333]);
+  cases += 1;
+
   // Без топлива — unallocated, без выдуманных сумм.
   const allocNoCost = allocateFuel(classes, null);
   assert.ok(allocNoCost.every((a) => a.status === "unallocated" && a.allocatedCost === null));
