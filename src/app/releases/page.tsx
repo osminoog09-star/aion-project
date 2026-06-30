@@ -51,10 +51,10 @@ export default async function ReleasesPage() {
             <p className="break-all text-xs text-slate-500">{liveManifest.apkUrl}</p>
           </div>
         ) : (
-          <p className="mt-4 text-sm text-slate-500">
+          <p className="mt-4 text-sm text-slate-400">
             {manifestUrl
-              ? "URL задан, но ответ не прошёл валидацию или сеть недоступна на сборке."
-              : "Задайте тот же URL, что и EXPO_PUBLIC_APK_MANIFEST_URL в AION Driver — сайт подтянет актуальный JSON."}
+              ? "Источник обновлений задан, но сейчас недоступен — данные подтянутся позже."
+              : "Источник обновлений пока не настроен — версия появится после первой публикации."}
           </p>
         )}
       </section>
