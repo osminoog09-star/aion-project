@@ -88,7 +88,14 @@ export default async function RoadmapPage() {
               </p>
               <p className="mt-1 text-sm text-slate-500">общая готовность</p>
             </div>
-            <div className="mb-1 h-2.5 w-48 overflow-hidden rounded bg-white/10">
+            <div
+              className="mb-1 h-2.5 w-48 overflow-hidden rounded bg-white/10"
+              role="progressbar"
+              aria-valuenow={progress}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Общая готовность проекта"
+            >
               <div
                 className="h-full rounded bg-emerald-400"
                 style={{ width: `${progress}%` }}
@@ -141,7 +148,14 @@ export default async function RoadmapPage() {
                       <span className="text-slate-200">{row.label}</span>
                       <span className="font-mono text-xs text-slate-500">{value}%</span>
                     </div>
-                    <div className="h-2.5 w-full overflow-hidden rounded bg-white/10">
+                    <div
+                      className="h-2.5 w-full overflow-hidden rounded bg-white/10"
+                      role="progressbar"
+                      aria-valuenow={Math.max(0, Math.min(100, value))}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                      aria-label={`${row.label}: готовность`}
+                    >
                       <div
                         className="h-full rounded bg-cyan-400"
                         style={{ width: `${Math.max(0, Math.min(100, value))}%` }}

@@ -212,7 +212,14 @@ export default async function HomePage() {
                     <span className="text-slate-200">{row.label}</span>
                     <span className="font-mono text-xs text-slate-500">{value}%</span>
                   </div>
-                  <div className="h-2.5 w-full overflow-hidden rounded bg-white/10">
+                  <div
+                    className="h-2.5 w-full overflow-hidden rounded bg-white/10"
+                    role="progressbar"
+                    aria-valuenow={Math.max(0, Math.min(100, value))}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label={`${row.label}: готовность`}
+                  >
                     <div
                       className="h-full rounded bg-cyan-400"
                       style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
@@ -222,7 +229,7 @@ export default async function HomePage() {
               );
             })}
           </div>
-          <p className="mt-7 max-w-3xl text-xs leading-5 text-slate-600">
+          <p className="mt-7 max-w-3xl text-xs leading-5 text-slate-400">
             Проценты — честная оценка готовности к ежедневному использованию: код, удобство,
             облако и проверки. Это не обещание конкретной даты.
           </p>
