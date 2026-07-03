@@ -30,7 +30,7 @@ function MiniSlice({ label, value }: { label: string; value?: number }) {
   if (value == null) return null;
   return (
     <div className="mt-2">
-      <div className="flex justify-between text-[9px] uppercase tracking-wider text-slate-600">
+      <div className="flex justify-between text-[9px] uppercase tracking-wider text-slate-500">
         <span>{label}</span>
         <span className="tabular-nums text-slate-500">{value}%</span>
       </div>
@@ -213,7 +213,7 @@ export function CloudSoTPanel({ eco }: { eco: EcosystemStatus }) {
         Primary: <span className="font-mono text-cyan-300/90">{c.primary}</span>
       </p>
       <p className="mt-2 text-xs text-slate-500">{c.note}</p>
-      <p className="mt-3 text-[10px] text-slate-600">
+      <p className="mt-3 text-[10px] text-slate-500">
         Snapshot kinds: <span className="font-mono">{c.snapshotKinds.join(", ")}</span>
       </p>
     </section>
