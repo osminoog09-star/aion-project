@@ -129,7 +129,7 @@ function AnalyticsDetail({ analytics }: { analytics: ShiftAnalyticsSnapshot }) {
 
   return (
     <View className="mt-3 rounded-lg bg-white/5 p-3">
-      <Text className="text-xs uppercase text-slate-500">idle intelligence</Text>
+      <Text className="text-xs uppercase text-slate-500">Аналитика простоя</Text>
       <Text className="mt-1 text-xs text-slate-300">
         простой {formatDuration(analytics.idle.totalIdleMs)} · макс. стоп{" "}
         {formatDuration(analytics.idle.longestStopMs)} · ср. стоп{" "}
