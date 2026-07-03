@@ -242,11 +242,11 @@ export function UpdateCenterScreen() {
           </View>
 
           <GlowCard glow="violet" className="mt-6 mb-4">
-            <Text className="text-xs uppercase tracking-widest text-slate-500">OTA vs APK / натив</Text>
+            <Text className="text-xs uppercase tracking-widest text-slate-500">OTA или APK / нативный слой</Text>
             <Text className="mt-2 text-lg font-semibold text-white">{runtimeCompat.headline}</Text>
             {runtimeCompat.apkRequiredForRuntimeMismatch ? (
               <Text className="mt-2 text-sm text-amber-200/90">
-                Несовпадение runtime: нужен APK с нужным native-слоем; OTA не заменит overlay, сервисы и manifest.
+                Несовпадение версий среды выполнения: нужен APK с подходящим нативным слоем; OTA не заменит наложения, сервисы и манифест.
               </Text>
             ) : null}
             <View className="mt-3 gap-1.5">
@@ -263,7 +263,7 @@ export function UpdateCenterScreen() {
             <Text className="mt-2 text-lg font-semibold text-white">{engine.headline}</Text>
             <Text className="mt-2 text-sm text-slate-400">{engine.detail}</Text>
             <Text className="mt-3 font-mono text-[10px] text-slate-500">
-              state={engine.state} · net={engine.netOnline ? "online" : "offline"} · ota={engine.otaPhase}
+              состояние={engine.state} · сеть={engine.netOnline ? "онлайн" : "офлайн"} · ota={engine.otaPhase}
               {engine.badges.length ? ` · ${engine.badges.join(",")}` : ""}
             </Text>
             {apk.fromCache && apk.manifest ? (
@@ -280,10 +280,10 @@ export function UpdateCenterScreen() {
               <Text className="font-mono text-cyan-300">{Constants.expoConfig?.version ?? "—"}</Text>
             </Text>
             <Text className="mt-2 text-base text-slate-200">
-              Build number: <Text className="font-mono text-cyan-300">{buildNumber()}</Text>
+              Номер сборки: <Text className="font-mono text-cyan-300">{buildNumber()}</Text>
             </Text>
             <Text className="mt-2 text-base text-slate-200">
-              Runtime:{" "}
+              Версия среды выполнения (runtime):{" "}
               <Text className="font-mono text-cyan-300">
                 {Updates.runtimeVersion != null ? String(Updates.runtimeVersion) : "—"}
               </Text>
@@ -293,7 +293,7 @@ export function UpdateCenterScreen() {
               <Text className="font-mono text-cyan-300">{(Updates.channel ?? "—").toString()}</Text>
             </Text>
             <Text className="mt-2 text-base text-slate-200">
-              Текущий OTA updateId: <Text className="font-mono text-xs text-slate-300">{updateId}</Text>
+              Текущий идентификатор OTA-пакета: <Text className="font-mono text-xs text-slate-300">{updateId}</Text>
             </Text>
             {__DEV__ ? (
               <>
@@ -310,7 +310,7 @@ export function UpdateCenterScreen() {
             <Text className="mt-3 text-lg font-semibold text-white">{otaVerdict.headline}</Text>
             <Text className="mt-2 text-sm text-slate-400">{otaVerdict.detail}</Text>
             <Text className="mt-3 text-sm text-slate-500">
-              Фаза UI: <Text className="text-slate-300">{u.phase}</Text> · pendingUpdateId:{" "}
+              Текущий этап: <Text className="text-slate-300">{u.phase}</Text> · пакет в очереди:{" "}
               <Text className="font-mono text-xs text-slate-400">{u.pendingUpdateId ?? "—"}</Text>
             </Text>
             <Text className="mt-2 text-sm text-slate-500">
@@ -331,16 +331,16 @@ export function UpdateCenterScreen() {
             {apk.manifest ? (
               <View className="mt-3 border-t border-white/10 pt-3">
                 <Text className="text-sm text-slate-400">
-                  Сервер latest:{" "}
+                  Последняя версия на сервере:{" "}
                   <Text className="font-mono text-slate-200">{apk.manifest.latestVersion}</Text>
                 </Text>
                 <Text className="mt-1 text-sm text-slate-400">
-                  minimum:{" "}
+                  Минимально поддерживаемая:{" "}
                   <Text className="font-mono text-slate-200">{apk.manifest.minimumSupported}</Text>
                 </Text>
                 {apk.manifest.runtimeVersion ? (
                   <Text className="mt-1 text-sm text-slate-400">
-                    runtime в манифесте:{" "}
+                    Версия среды выполнения в манифесте:{" "}
                     <Text className="font-mono text-slate-200">{apk.manifest.runtimeVersion}</Text>
                   </Text>
                 ) : null}
@@ -348,7 +348,7 @@ export function UpdateCenterScreen() {
                   <Text className="mt-2 text-sm text-slate-400">{apk.manifest.releaseNotes}</Text>
                 ) : null}
                 {apk.manifest.rolloutState ? (
-                  <Text className="mt-1 text-xs text-slate-500">Rollout: {apk.manifest.rolloutState}</Text>
+                  <Text className="mt-1 text-xs text-slate-500">Этап выката: {apk.manifest.rolloutState}</Text>
                 ) : null}
                 {apkVerdict.apkBlock && apk.manifest?.apkUrl ? (
                   <>
@@ -389,11 +389,11 @@ export function UpdateCenterScreen() {
           <GlowCard glow="cyan" className="mb-4">
             <Text className="text-xs uppercase tracking-widest text-slate-500">Синхронизация</Text>
             <Text className="mt-3 text-sm text-slate-300">Очередь: {queueLen}</Text>
-            <Text className="mt-1 text-sm text-slate-500">Последний flush: {formatTs(lastFlush)}</Text>
+            <Text className="mt-1 text-sm text-slate-500">Последняя выгрузка: {formatTs(lastFlush)}</Text>
           </GlowCard>
 
           <GlowCard glow="violet" className="mb-4">
-            <Text className="text-xs uppercase tracking-widest text-slate-500">What&apos;s New (OTA)</Text>
+            <Text className="text-xs uppercase tracking-widest text-slate-500">Что нового</Text>
             {u.manifestSummary ? (
               <>
                 <Text className="mt-2 text-sm text-slate-400">{u.manifestSummary.releaseMessage ?? u.releaseNotes}</Text>
@@ -420,9 +420,9 @@ export function UpdateCenterScreen() {
               </Text>
             )}
             {whatsNewUnread ? (
-              <Text className="mt-3 text-xs text-amber-300/90">Есть непросмотренное применённое обновление (OTA id изменился).</Text>
+              <Text className="mt-3 text-xs text-amber-300/90">Есть непросмотренное применённое обновление (идентификатор OTA-пакета изменился).</Text>
             ) : (
-              <Text className="mt-3 text-xs text-slate-600">Просмотрено для текущего updateId.</Text>
+              <Text className="mt-3 text-xs text-slate-600">Просмотрено для текущего пакета обновления.</Text>
             )}
             <GradientButton
               title="Понятно, отметить просмотренным"
@@ -456,7 +456,7 @@ export function UpdateCenterScreen() {
             <View className="flex-row items-center justify-between">
               <Text className="text-xs uppercase tracking-widest text-slate-500">Диагностика последней проверки</Text>
               <View className="flex-row items-center gap-2">
-                <Text className="text-xs text-slate-500">Показать JSON</Text>
+                <Text className="text-xs text-slate-500">Показать технические данные</Text>
                 <Switch value={showDiag} onValueChange={setShowDiag} />
               </View>
             </View>
