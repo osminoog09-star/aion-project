@@ -64,7 +64,7 @@ export default async function EcosystemPage() {
 
       <section className="mt-14">
         <h2 className="text-sm font-bold uppercase tracking-widest text-cyan-400/90">Подсистемы (карточки)</h2>
-        <p className="mt-2 text-xs text-slate-600">
+        <p className="mt-2 text-xs text-slate-400">
           Профили расширения из roadmap-subsystem-extensions.json; cloud overlay: kind{" "}
           <span className="font-mono">portal_roadmap_master</span>.
         </p>

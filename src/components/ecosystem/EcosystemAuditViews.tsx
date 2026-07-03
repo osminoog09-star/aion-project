@@ -118,7 +118,7 @@ export function SubsystemAuditTable({ subsystems }: { subsystems: EcosystemSubsy
             <tr key={s.id} className="border-b border-white/5 align-top hover:bg-white/[0.02]">
               <td className="px-4 py-3">
                 <div className="font-medium text-slate-200">{s.name}</div>
-                {s.percentBasis ? <p className="mt-1 text-[10px] text-slate-600">{s.percentBasis}</p> : null}
+                {s.percentBasis ? <p className="mt-1 text-[10px] text-slate-400">{s.percentBasis}</p> : null}
               </td>
               <td className="px-4 py-3 tabular-nums text-cyan-300">{s.percent}</td>
               <td className="px-4 py-3">
@@ -141,7 +141,7 @@ export function SubsystemAuditTable({ subsystems }: { subsystems: EcosystemSubsy
               <td className="px-4 py-3 text-xs text-slate-400">
                 {s.currentPhase ? <p>{s.currentPhase}</p> : null}
                 {s.nextMilestone ? <p className="mt-1 text-slate-500">→ {s.nextMilestone}</p> : null}
-                {s.priority ? <p className="mt-1 text-[10px] text-slate-600">{s.priority}</p> : null}
+                {s.priority ? <p className="mt-1 text-[10px] text-slate-500">{s.priority}</p> : null}
               </td>
               <td className="px-4 py-3 text-xs text-rose-200/90">
                 {s.blockers?.length ? (
@@ -180,7 +180,7 @@ export function OperationsDashboard({ rows }: { rows: OperationsHealthRow[] }) {
             <ReadinessBar value={r.percent} />
           </div>
           <p className="mt-3 text-xs leading-relaxed text-slate-400">{r.summary}</p>
-          {r.lastSignal ? <p className="mt-2 text-[10px] text-slate-600">Сигнал: {r.lastSignal}</p> : null}
+          {r.lastSignal ? <p className="mt-2 text-[10px] text-slate-500">Сигнал: {r.lastSignal}</p> : null}
         </div>
       ))}
     </div>
@@ -273,7 +273,7 @@ export function MilestoneTimeline({ milestones }: { milestones: RoadmapMilestone
           <p className="text-sm font-semibold text-white">{m.title}</p>
           {m.target ? <p className="text-xs text-slate-500">{m.target}</p> : null}
           {m.note ? <p className="mt-2 text-xs text-slate-400">{m.note}</p> : null}
-          <p className="mt-1 text-[10px] text-slate-600">{m.subsystemIds.join(" · ")}</p>
+          <p className="mt-1 text-[10px] text-slate-500">{m.subsystemIds.join(" · ")}</p>
         </li>
       ))}
     </ol>
@@ -298,7 +298,7 @@ export function EcosystemSummaryHeader({ eco }: { eco: EcosystemStatus }) {
   return (
     <header className="space-y-2">
       <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-cyan-400/90">Платформа · roadmap · аудит</p>
-      <p className="text-xs text-slate-600">
+      <p className="text-xs text-slate-400">
         Обновлено: <time dateTime={eco.lastUpdated}>{eco.lastUpdated}</time>
         {eco.maintainedInRepository ? " · источник: репозиторий (+ опционально Supabase snapshot)" : null}
       </p>
