@@ -55,7 +55,13 @@ async function main() {
     locs,
   });
   assert.ok(out1, "first merge should produce output");
-  assert.ok(out1.nextShift.distanceMeters > shift.distanceMeters, "distance increases");
+  // Точное значение: якорь = lastAccepted(55.75,37.62), 3 хаверсин-сегмента по ~127.59 м
+  // → 1000 + 382.784. Ловит любой сдвиг в формуле/накоплении, а не только «стало больше».
+  const expected = 1000 + 382.784;
+  assert.ok(
+    Math.abs(out1.nextShift.distanceMeters - expected) < 0.01,
+    `distance ${out1.nextShift.distanceMeters} != ${expected} (±0.01)`,
+  );
 
   const out2 = computeHeadlessMergeResult({
     shift: out1.nextShift,
