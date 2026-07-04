@@ -47,7 +47,7 @@
     "build:manifest": "node scripts/generate-build-manifest.mjs",
     "native:check": "node scripts/detect-native-change.mjs",
     "test:field-validation": "node scripts/ci/test-route-field-validation.mjs",
-    "test:shift-economics": "node scripts/ci/test-shift-display-economics.mjs && node scripts/ci/test-driver-analytics-profit.mjs && node scripts/ci/test-cloud-trip-economics.mjs && node scripts/ci/test-income-ledger-commands.mjs && node scripts/ci/test-geo-haversine.mjs && node scripts/ci/test-shift-economics-fuel-merge.mjs && node scripts/ci/test-driver-cost-rates.mjs && node scripts/ci/test-format-currency.mjs",
+    "test:shift-economics": "node scripts/ci/test-shift-display-economics.mjs && node scripts/ci/test-driver-analytics-profit.mjs && node scripts/ci/test-cloud-trip-economics.mjs && node scripts/ci/test-income-ledger-commands.mjs && node scripts/ci/test-geo-haversine.mjs && node scripts/ci/test-shift-economics-fuel-merge.mjs && node scripts/ci/test-driver-cost-rates.mjs && node scripts/ci/test-format-currency.mjs && node scripts/ci/test-shift-active-duration.mjs && node scripts/ci/test-fuel-entry-from-manual.mjs && node scripts/ci/test-active-shift-metrics.mjs",
     "test:history-correction": "node scripts/ci/test-historical-shift-correction.mjs",
     "test:fgs-heartbeat": "node --import ./scripts/ci/ts-register.mjs scripts/ci/test-fgs-heartbeat.mjs",
     "test:stop-zone": "node --import ./scripts/ci/ts-register.mjs scripts/ci/test-stop-zone-progress.mjs",
