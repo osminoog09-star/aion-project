@@ -52,7 +52,7 @@ export function OrderActivityControl({ shiftId }: { shiftId: string | null }) {
     <View className="mb-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/[0.04] px-4 py-3">
       <View className="flex-row items-center justify-between">
         <Text className="text-[10px] uppercase tracking-[0.2em] text-slate-500">
-          Заказ
+          Заказ · необязательно
         </Text>
         <Text className="text-[10px] text-slate-500">
           {activeKind ? status[activeKind] : status.idle}
@@ -63,11 +63,11 @@ export function OrderActivityControl({ shiftId }: { shiftId: string | null }) {
         <Pill label="Везу" active={activeKind === "on_order"} onPress={beginOnOrder} />
         <Pill label="Высадил" active={false} onPress={endActivity} />
       </View>
-      {windowCount > 0 ? (
-        <Text className="mt-2 text-[10px] text-slate-500">
-          Отмечено отрезков за смену: {windowCount}
-        </Text>
-      ) : null}
+      <Text className="mt-2 text-[10px] text-slate-500">
+        {windowCount > 0
+          ? `Отмечено отрезков за смену: ${windowCount}`
+          : "Итог смены (км, топливо, прибыль) считается и без этого. Отметки лишь делят км на заказ/подачу/порожняк — кнопками или голосом («подача», «везу», «высадил»)."}
+      </Text>
     </View>
   );
 }

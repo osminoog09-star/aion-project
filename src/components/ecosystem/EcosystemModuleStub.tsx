@@ -26,7 +26,7 @@ export function EcosystemModuleStub({ title, path, body }: StubProps) {
       <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-slate-500">Ecosystem module</p>
       <h1 className="mt-3 text-2xl font-bold text-white md:text-3xl">{title}</h1>
       <p className="mt-4 text-sm leading-relaxed text-slate-400">{body}</p>
-      <p className="mt-8 text-xs text-slate-600">
+      <p className="mt-8 text-xs text-slate-400">
         Канонический URL: <span className="font-mono text-slate-500">{path}</span> ·{" "}
         <Link href={ecosystemRoutes.home} className="text-cyan-500/90 hover:underline">
           На главную

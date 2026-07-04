@@ -475,10 +475,10 @@ export function SettingsScreen() {
                 Второй телефон
               </Text>
               <Text className="mt-2 text-sm text-slate-400">
-                Companion: крупный UI, быстрые действия, вкладка «История» скрыта.
+                Режим компаньона: крупный интерфейс, быстрые действия, вкладка «История» скрыта.
               </Text>
               <View className="mt-4 flex-row items-center justify-between">
-                <Text className="text-base text-white">Companion Mode</Text>
+                <Text className="text-base text-white">Режим компаньона</Text>
                 <Switch
                   value={settings.companionMode}
                   onValueChange={(v) => void setCompanionMode(v)}

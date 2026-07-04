@@ -107,14 +107,31 @@ export function allocateFuelByKmClass(
   const cost = finitePositive(confirmedFuelCost ?? null);
   const totalKm = classified.reduce((sum, k) => sum + (k.distanceMeters ?? 0), 0);
   const canAllocate = classified.length > 0 && cost != null && totalKm > 0;
-  return classified.map((k) => ({
+
+  // Распределяем в копейках по методу наибольшего остатка (Hamilton), чтобы
+  // сумма ₽ по классам ТОЧНО равнялась подтверждённому топливу — без копеечного
+  // дрейфа от независимого округления каждой доли.
+  const allocatedCents: number[] = classified.map(() => 0);
+  if (canAllocate) {
+    const totalCents = Math.round(cost! * 100);
+    const raw = classified.map((k) => (totalCents * (k.distanceMeters ?? 0)) / totalKm);
+    const floors = raw.map((r) => Math.floor(r));
+    let leftover = totalCents - floors.reduce((sum, n) => sum + n, 0);
+    const byRemainderDesc = raw
+      .map((r, i) => ({ i, frac: r - Math.floor(r) }))
+      .sort((a, b) => b.frac - a.frac);
+    for (const { i } of byRemainderDesc) {
+      allocatedCents[i] = floors[i] + (leftover > 0 ? 1 : 0);
+      if (leftover > 0) leftover -= 1;
+    }
+  }
+
+  return classified.map((k, i) => ({
     status: canAllocate ? "allocated" : "unallocated",
     kilometerClass: k.class,
     fuelEntryIds: [...fuelEntryIds],
     distanceMeters: k.distanceMeters,
-    allocatedCost: canAllocate
-      ? round2(cost! * ((k.distanceMeters ?? 0) / totalKm))
-      : null,
+    allocatedCost: canAllocate ? allocatedCents[i] / 100 : null,
   }));
 }
 

@@ -243,8 +243,17 @@
         "aion-maps-driver-runtime-os",
         "route-gps-store"
       ],
-      "status": "actionable",
-      "reason": "Define real-data kilometer classes and storage contracts; do not synthesize metrics"
+      "status": "in_progress",
+      "reason": "Реализовано: классификатор км (заказ/подача/порожняк/личное) + ручные отметки заказа + распределение топлива + показ на таймлайне, CI-тесты зелёные. До 'done' — полевая проверка на реальных сменах"
+    },
+    {
+      "id": "auto-order-capture",
+      "title": "Авто-фиксация заказов и сумм (без ввода)",
+      "dependsOn": [
+        "maps-gps-intelligence"
+      ],
+      "status": "blocked",
+      "reason": "Заказ пришёл на 4 € и выполнен — AION фиксирует фазы И сумму сам, из уведомлений Bolt (план в docs/AUTO-ORDER-CAPTURE.md): нужен нативный модуль + реальные тексты уведомлений с устройства. Уже сейчас полуавтомат: скриншот заработка Bolt → OCR-импорт заказов. Ручные отметки/голос — необязательный запасной способ"
     },
     {
       "id": "maps-road-matching",
@@ -253,7 +262,7 @@
         "maps-gps-intelligence"
       ],
       "status": "blocked",
-      "reason": "Map-matching к road graph — spike + ADR, не production engine"
+      "reason": "Map-matching к road graph — ADR готов (docs/ADR-road-matching.md); ждёт road graph / OSRM и реальные треки, не production engine"
     },
     {
       "id": "operational-fuel-cost-intelligence",
@@ -273,8 +282,8 @@
         "operational-fuel-cost-intelligence",
         "maps-gps-intelligence"
       ],
-      "status": "blocked",
-      "reason": "Топливо на заказ/подачу/порожняк — зависит от Maps GPS Intelligence"
+      "status": "in_progress",
+      "reason": "Реализовано: allocateFuelByKmClass распределяет подтверждённое топливо по классам км (заказ/подача/порожняк/личное) + показ ₽/класс в KmClassCard + CI-тесты. Ждёт полевую валидацию 8/8 до 'done'"
     },
     {
       "id": "fuel-maps-predictive",

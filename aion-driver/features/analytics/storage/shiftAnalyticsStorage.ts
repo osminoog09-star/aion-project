@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { STORAGE_KEYS } from "../../../storage/core/keys";
-import type { ShiftAnalyticsSnapshot } from "../types/shiftAnalyticsTypes";
+import { SHIFT_ANALYTICS_VERSION, type ShiftAnalyticsSnapshot } from "../types/shiftAnalyticsTypes";
 
 const MAX_INDEXED = 64;
 
@@ -42,7 +42,7 @@ export async function loadShiftAnalytics(
   if (!raw) return null;
   try {
     const v = JSON.parse(raw) as ShiftAnalyticsSnapshot;
-    if (!v?.shiftId || v.version !== 1) return null;
+    if (!v?.shiftId || v.version !== SHIFT_ANALYTICS_VERSION) return null;
     return v;
   } catch {
     return null;

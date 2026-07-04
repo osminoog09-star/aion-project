@@ -33,13 +33,28 @@ export async function loadCloudSyncMeta(userId: string): Promise<CloudSyncMeta> 
   }
 }
 
-export async function saveCloudSyncMeta(
+// Сериализация: saveCloudSyncMeta делает read-modify-write по ключу пользователя;
+// два одновременных частичных патча без неё затирают друг друга.
+let serialized: Promise<unknown> = Promise.resolve();
+
+function runSerialized<T>(fn: () => Promise<T>): Promise<T> {
+  const next = serialized.then(fn, fn);
+  serialized = next.then(
+    () => undefined,
+    () => undefined,
+  );
+  return next;
+}
+
+export function saveCloudSyncMeta(
   userId: string,
   patch: Partial<CloudSyncMeta>,
 ): Promise<void> {
-  const prev = await loadCloudSyncMeta(userId);
-  await AsyncStorage.setItem(
-    key(userId),
-    JSON.stringify({ ...prev, ...patch }),
-  );
+  return runSerialized(async () => {
+    const prev = await loadCloudSyncMeta(userId);
+    await AsyncStorage.setItem(
+      key(userId),
+      JSON.stringify({ ...prev, ...patch }),
+    );
+  });
 }

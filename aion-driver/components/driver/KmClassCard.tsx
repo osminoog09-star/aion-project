@@ -87,8 +87,8 @@ export function KmClassCard({
 
   if (!classified.length) {
     return (
-      <Text className="mt-2 text-[10px] text-slate-600">
-        Классы км появятся, если в смене отмечать «Подача / Везу / Высадил».
+      <Text className="mt-2 text-[10px] text-slate-500">
+        Классы км появятся, если в смене отмечать «Подача / Везу / Высадил» — кнопками или голосом.
       </Text>
     );
   }

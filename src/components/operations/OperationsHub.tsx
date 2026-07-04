@@ -85,17 +85,17 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
         <>
           <div className="grid gap-6 lg:grid-cols-2">
             <Card title={t("operations.hub.apkOps")} subtitle={t("operations.hub.apkOpsSub")}>
-              <Row k="Latest (manifest)" v={<span className="font-mono text-cyan-200">{m?.latestVersion ?? "—"}</span>} />
-              <Row k="Minimum supported" v={<span className="font-mono">{m?.minimumSupported ?? "—"}</span>} />
-              <Row k="Runtime" v={<span className="font-mono">{m?.runtimeVersion ?? "—"}</span>} />
-              <Row k="Build" v={<span className="font-mono">{m?.buildNumber ?? "—"}</span>} />
-              <Row k="Release date" v={m?.releaseDate ?? "—"} />
+              <Row k="Последняя (манифест)" v={<span className="font-mono text-cyan-200">{m?.latestVersion ?? "—"}</span>} />
+              <Row k="Минимальная" v={<span className="font-mono">{m?.minimumSupported ?? "—"}</span>} />
+              <Row k="Среда (runtime)" v={<span className="font-mono">{m?.runtimeVersion ?? "—"}</span>} />
+              <Row k="Сборка" v={<span className="font-mono">{m?.buildNumber ?? "—"}</span>} />
+              <Row k="Дата релиза" v={m?.releaseDate ?? "—"} />
               <Row
-                k="APK age"
-                v={view.apk.ageDays != null ? `${view.apk.ageDays} d` : "—"}
+                k="Возраст APK"
+                v={view.apk.ageDays != null ? `${view.apk.ageDays} дн` : "—"}
               />
               <Row
-                k="Download"
+                k="Скачать"
                 v={
                   m?.apkUrl ? (
                     <a href={m.apkUrl} className="break-all text-cyan-400 hover:underline" target="_blank" rel="noreferrer">
@@ -106,12 +106,12 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
                   )
                 }
               />
-              <Row k="Force update" v={m?.forceUpdate === true ? "да" : m?.forceUpdate === false ? "нет" : "—"} />
-              <Row k="Deprecated runtime" v={m?.minimumRuntimeVersion ? `min runtime ${m.minimumRuntimeVersion}` : "—"} />
-              <Row k="Rollout (manifest)" v={m?.rolloutState ?? "—"} />
-              <Row k="Emergency" v={m?.emergency === true ? "да" : "нет"} />
-              <Row k="Releases.json latest" v={<span className="font-mono">{view.apk.latestKnownFromReleases}</span>} />
-              <Row k="Manifest URL" v={<span className="break-all font-mono text-[11px]">{view.apk.manifestUrl || "(не задан)"}</span>} />
+              <Row k="Принудительное обновление" v={m?.forceUpdate === true ? "да" : m?.forceUpdate === false ? "нет" : "—"} />
+              <Row k="Устаревшая среда" v={m?.minimumRuntimeVersion ? `минимум ${m.minimumRuntimeVersion}` : "—"} />
+              <Row k="Раскатка (манифест)" v={m?.rolloutState ?? "—"} />
+              <Row k="Аварийный режим" v={m?.emergency === true ? "да" : "нет"} />
+              <Row k="Последняя (файл релизов)" v={<span className="font-mono">{view.apk.latestKnownFromReleases}</span>} />
+              <Row k="Адрес манифеста" v={<span className="break-all font-mono text-[11px]">{view.apk.manifestUrl || "(не задан)"}</span>} />
               <p className="mt-3 text-xs text-slate-500">{view.apk.policyNote}</p>
               {m?.releaseNotes ? <p className="mt-2 text-sm text-slate-400">{m.releaseNotes}</p> : null}
               {m?.changelog?.length ? (
@@ -125,7 +125,7 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
 
             <Card title={t("operations.hub.otaOpsCard")} subtitle={t("operations.hub.otaOpsSub")}>
               <Row
-                k="Ops health %"
+                k="Здоровье операций %"
                 v={
                   view.ota.otaOps ? (
                     <span>
@@ -148,7 +148,7 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
               </div>
               <p className="mt-4 text-[10px] font-bold uppercase text-slate-500">Публичный rollout</p>
               {view.ota.rollouts.length === 0 ? (
-                <p className="mt-2 text-xs text-slate-600">Нет строк visible_public в ecosystem_rollout_state.</p>
+                <p className="mt-2 text-xs text-slate-500">Нет публичных строк раскатки.</p>
               ) : (
                 <ul className="mt-2 space-y-2 text-xs text-slate-300">
                   {view.ota.rollouts.map((r) => (
@@ -163,8 +163,8 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
 
           <div className="grid gap-6 lg:grid-cols-2">
             <Card title={t("operations.hub.releaseOps")} subtitle={t("operations.hub.releaseOpsSub")}>
-              <Row k="Releases.json updated" v={view.releases.lastUpdated} />
-              <p className="mt-3 text-[10px] font-bold uppercase text-slate-500">Timeline</p>
+              <Row k="Файл релизов обновлён" v={view.releases.lastUpdated} />
+              <p className="mt-3 text-[10px] font-bold uppercase text-slate-500">Хронология</p>
               <ul className="mt-2 space-y-2 text-xs text-slate-400">
                 {view.releases.history.map((h) => (
                   <li key={h.title + h.date} className="border-l-2 border-cyan-500/30 pl-3">
@@ -231,8 +231,8 @@ export function OperationsHub({ view, variant = "full" }: { view: OperationsHubV
           </Card>
 
           <Card title={t("operations.hub.cloudHealth")} subtitle={t("operations.hub.cloudHealthSub")}>
-            <Row k="NEXT_PUBLIC_SUPABASE" v={view.cloud.portalConfigured ? "настроено" : "не задано"} />
-            <Row k="Snapshots SELECT" v={view.cloud.snapshotsReachable ? "ok" : view.cloud.portalConfigured ? "ошибка" : "—"} />
+            <Row k="Облако (Supabase)" v={view.cloud.portalConfigured ? "настроено" : "не задано"} />
+            <Row k="Чтение снимков" v={view.cloud.snapshotsReachable ? "ок" : view.cloud.portalConfigured ? "ошибка" : "—"} />
             {view.cloud.probeError ? <Row k="Ошибка пробы" v={<span className="text-rose-300">{view.cloud.probeError}</span>} /> : null}
             <Row k="Виды snapshots" v={view.cloud.snapshotKinds.length ? view.cloud.snapshotKinds.join(", ") : "—"} />
             <p className="mt-4 text-[10px] font-bold uppercase text-slate-500">Очереди / sync / realtime / OCR (из roadmap operations)</p>

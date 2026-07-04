@@ -2,20 +2,16 @@
  * buildMapsIntelligenceSnapshot / buildFuelIntelligenceSnapshot — node assert.
  */
 import assert from "node:assert/strict";
+import { importTsOrFail } from "./lib/importTsOrFail.mjs";
 
 async function main() {
-  let buildMaps;
-  let buildFuel;
-  let allocateFuel;
-  try {
-    const mod = await import("../../features/intelligence/buildMapsFuelIntelligence.ts");
-    buildMaps = mod.buildMapsIntelligenceSnapshot;
-    buildFuel = mod.buildFuelIntelligenceSnapshot;
-    allocateFuel = mod.allocateFuelByKmClass;
-  } catch (err) {
-    console.log("skip:", err?.message ?? err);
-    process.exit(0);
-  }
+  const mod = await importTsOrFail(
+    () => import("../../features/intelligence/buildMapsFuelIntelligence.ts"),
+    "buildMapsFuelIntelligence",
+  );
+  const buildMaps = mod.buildMapsIntelligenceSnapshot;
+  const buildFuel = mod.buildFuelIntelligenceSnapshot;
+  const allocateFuel = mod.allocateFuelByKmClass;
 
   let cases = 0;
 
@@ -91,6 +87,19 @@ async function main() {
   assert.equal(byCls.on_order.status, "allocated");
   assert.equal(byCls.on_order.allocatedCost, 600);
   assert.equal(byCls.empty.allocatedCost, 400);
+  cases += 1;
+
+  // Дрейф округления: 3 равных класса, 100 ₽ — сумма по классам строго = 100.00,
+  // лишняя копейка уходит одному классу (наибольший остаток), а не теряется.
+  const thirds = ["on_order", "pickup", "empty"].map((c) => ({
+    status: "classified",
+    class: c,
+    distanceMeters: 10000,
+    evidence: "driver_event",
+  }));
+  const centsThirds = allocateFuel(thirds, 100).map((a) => Math.round(a.allocatedCost * 100));
+  assert.equal(centsThirds.reduce((s, n) => s + n, 0), 10000);
+  assert.deepEqual([...centsThirds].sort((x, y) => y - x), [3334, 3333, 3333]);
   cases += 1;
 
   // Без топлива — unallocated, без выдуманных сумм.

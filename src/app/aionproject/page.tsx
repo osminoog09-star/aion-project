@@ -75,7 +75,7 @@ export default function AionProjectPage() {
               Все версии
             </Link>
           </div>
-          <p className="mt-6 text-xs text-slate-500">
+          <p className="mt-6 text-xs text-slate-400">
             Версия {apkManifest.runtimeVersion} · сборка {apkManifest.buildNumber} · Android
           </p>
         </div>
@@ -128,7 +128,7 @@ export default function AionProjectPage() {
               </article>
             ))}
           </div>
-          <p className="mt-8 text-sm text-slate-500">
+          <p className="mt-8 text-sm text-slate-400">
             Новые версии приходят сами через интернет — переустанавливать ничего не нужно. Список
             обновлений —{" "}
             <Link href={ecosystemRoutes.releases} className="text-cyan-300 underline-offset-2 hover:underline">
