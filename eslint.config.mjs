@@ -17,6 +17,8 @@ const eslintConfig = defineConfig([
     "aion-driver/**",
     // Node-скрипты сборки/деплоя/CI — не браузерный код приложения.
     "scripts/**",
+    // Локальный служебный каталог агентов (git worktree, launch.json) — не код портала.
+    ".claude/**",
   ]),
   {
     // React Compiler ESLint-правила релевантны только при использовании React
