@@ -1,6 +1,7 @@
 export type DriverVoiceCommand =
   | { kind: "income"; amount: number; count: number; total: number; currencyCode: "EUR" | "USD" | "RUB" | null; transcript: string }
-  | { kind: "fuel"; amount: number; currencyCode: "EUR" | "USD" | "RUB" | null; transcript: string };
+  | { kind: "fuel"; amount: number; currencyCode: "EUR" | "USD" | "RUB" | null; transcript: string }
+  | { kind: "order_activity"; action: "pickup" | "on_order" | "end"; transcript: string };
 
 function detectCurrency(raw: string): "EUR" | "USD" | "RUB" | null {
   if (/евро|\beur\b/.test(raw)) return "EUR";
@@ -38,6 +39,18 @@ export function parseDriverVoiceCommand(transcript: string): DriverVoiceCommand 
   const normalized = transcript.toLowerCase().replace(/ё/g, "е").replace(/\s+/g, " ").trim();
   if (!normalized) return null;
   const currencyCode = detectCurrency(normalized);
+  // Отметки заказа для классификации км — руки на руле, без кнопок.
+  // Проверяем ДО income: «посадил пассажира по заказу» не должно уйти в доход.
+  // ВАЖНО: \b не работает с кириллицей — только подстроки.
+  if (/высадил|высадк|свободен|освободил/.test(normalized)) {
+    return { kind: "order_activity", action: "end", transcript: transcript.trim() };
+  }
+  if (/подач|подаю|еду за пассажир|еду за клиент/.test(normalized)) {
+    return { kind: "order_activity", action: "pickup", transcript: transcript.trim() };
+  }
+  if (/везу|посадил|пассажир в машине|забрал пассажир/.test(normalized)) {
+    return { kind: "order_activity", action: "on_order", transcript: transcript.trim() };
+  }
   if (/заправ|топлив|бензин|дизел/.test(normalized)) {
     const amount = firstAmount(normalized);
     return amount == null ? null : { kind: "fuel", amount, currencyCode, transcript: transcript.trim() };
