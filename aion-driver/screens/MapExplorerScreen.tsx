@@ -116,7 +116,15 @@ export function MapExplorerScreen() {
       { latitude: destination.lat, longitude: destination.lng },
       ac.signal,
     ).then((r) => {
-      if (!ac.signal.aborted) setRoadRoute(r);
+      if (ac.signal.aborted) return;
+      setRoadRoute(r);
+      // Показать маршрут целиком.
+      if (r && r.coords.length >= 2) {
+        mapRef.current?.fitToCoordinates(r.coords, {
+          edgePadding: { top: 180, right: 60, bottom: 120, left: 60 },
+          animated: true,
+        });
+      }
     });
     return () => ac.abort();
   }, [destination, userPos]);
