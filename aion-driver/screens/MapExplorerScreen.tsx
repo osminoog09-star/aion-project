@@ -7,10 +7,17 @@ import {
   Text,
   View,
 } from "react-native";
-import MapView, { Circle, Marker, UrlTile } from "react-native-maps";
+import MapView, { Marker, Polyline, UrlTile } from "react-native-maps";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Location from "expo-location";
+import * as ExpoLinking from "expo-linking";
 import * as Haptics from "expo-haptics";
+import {
+  listGpsTripShiftIds,
+  loadGpsTripSession,
+} from "../features/gps/tripStore/gpsTripStorage";
+import { parseGeoUri } from "../features/maps/parseGeoUri";
+import { haversineMeters } from "../utils/geo";
 import {
   fetchNearbyFuelStations,
   type FuelStationMarker,
@@ -45,12 +52,16 @@ function accentToRgba(accent: string, alpha: number): string {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
+// Пярну — рабочий город владельца; карта тут только до первого GPS-фикса.
 const DEFAULT_REGION = {
-  latitude: 55.751244,
-  longitude: 37.618423,
+  latitude: 58.3859,
+  longitude: 24.4971,
   latitudeDelta: 0.09,
   longitudeDelta: 0.09,
 };
+
+/** Не душить Polyline: прореживаем очень длинные маршруты. */
+const MAX_ROUTE_POINTS = 1500;
 
 const OSM_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
@@ -59,7 +70,7 @@ export function MapExplorerScreen() {
   const { semantic, canvas } = useTheme();
   const { settings } = useDevice();
   const currency = useResolvedCurrency();
-  const { profile } = useShift();
+  const { profile, activeShift } = useShift();
   const mapRef = useRef<MapView>(null);
   const [center, setCenter] = useState(DEFAULT_REGION);
   const [rawStations, setRawStations] = useState<FuelStationMarker[]>([]);
@@ -67,10 +78,31 @@ export function MapExplorerScreen() {
   const [loadingFuel, setLoadingFuel] = useState(false);
   const [fuelError, setFuelError] = useState<string | null>(null);
   const abortRef = useRef<AbortController | null>(null);
-  const [heatAnchor, setHeatAnchor] = useState({
-    lat: DEFAULT_REGION.latitude,
-    lng: DEFAULT_REGION.longitude,
-  });
+  const [routeCoords, setRouteCoords] = useState<
+    { latitude: number; longitude: number }[]
+  >([]);
+  const [routeIsLive, setRouteIsLive] = useState(false);
+  const [userPos, setUserPos] = useState<{ latitude: number; longitude: number } | null>(null);
+
+  // Точка назначения из навигационной ссылки (Bolt → «Навигация» → AION).
+  const incomingUrl = ExpoLinking.useURL();
+  const destination = useMemo(
+    () => (incomingUrl ? parseGeoUri(incomingUrl) : null),
+    [incomingUrl],
+  );
+
+  useEffect(() => {
+    if (!destination) return;
+    mapRef.current?.animateToRegion(
+      {
+        latitude: destination.lat,
+        longitude: destination.lng,
+        latitudeDelta: 0.03,
+        longitudeDelta: 0.03,
+      },
+      480,
+    );
+  }, [destination]);
 
   const country =
     profile?.countryCode && profile.countryCode.length === 2
@@ -85,18 +117,34 @@ export function MapExplorerScreen() {
 
   const cheapestId = useMemo(() => pickCheapestStationId(enriched), [enriched]);
 
-  const heatZones = useMemo(
-    () => [
-      { lat: heatAnchor.lat + 0.008, lng: heatAnchor.lng + 0.006, r: 900, o: 0.14 },
-      { lat: heatAnchor.lat - 0.005, lng: heatAnchor.lng + 0.012, r: 1200, o: 0.12 },
-      { lat: heatAnchor.lat + 0.003, lng: heatAnchor.lng - 0.011, r: 700, o: 0.1 },
-    ],
-    [heatAnchor.lat, heatAnchor.lng],
-  );
-
   useEffect(() => {
     void loadFuelFavoriteIds().then(setFavoriteIds);
   }, []);
+
+  // Реальный маршрут: активная смена, а без неё — последняя записанная.
+  // Никаких выдуманных зон/точек — только настоящие GPS-точки.
+  useEffect(() => {
+    let alive = true;
+    void (async () => {
+      let shiftId = activeShift?.id ?? null;
+      if (!shiftId) {
+        const ids = await listGpsTripShiftIds();
+        shiftId = ids[0] ?? null;
+      }
+      if (!shiftId) return;
+      const session = await loadGpsTripSession(shiftId);
+      if (!alive || !session || session.points.length < 2) return;
+      const step = Math.max(1, Math.ceil(session.points.length / MAX_ROUTE_POINTS));
+      const coords = session.points
+        .filter((_, i) => i % step === 0)
+        .map((p) => ({ latitude: p.lat, longitude: p.lng }));
+      setRouteCoords(coords);
+      setRouteIsLive(Boolean(activeShift?.id));
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [activeShift?.id]);
 
   const loadFuel = useCallback(async (lat: number, lng: number) => {
     abortRef.current?.abort();
@@ -128,7 +176,7 @@ export function MapExplorerScreen() {
         longitudeDelta: 0.06,
       };
       setCenter(next);
-      setHeatAnchor({ lat: next.latitude, lng: next.longitude });
+      setUserPos({ latitude: next.latitude, longitude: next.longitude });
       mapRef.current?.animateToRegion(next, 480);
       void loadFuel(next.latitude, next.longitude);
     })();
@@ -155,6 +203,7 @@ export function MapExplorerScreen() {
       latitudeDelta: center.latitudeDelta,
       longitudeDelta: center.longitudeDelta,
     };
+    setUserPos({ latitude: next.latitude, longitude: next.longitude });
     mapRef.current?.animateToRegion(next, 420);
     void loadFuel(next.latitude, next.longitude);
   };
@@ -180,16 +229,45 @@ export function MapExplorerScreen() {
         }}
       >
         <UrlTile urlTemplate={OSM_TEMPLATE} maximumZ={19} flipY={false} />
-        {heatZones.map((z, i) => (
-          <Circle
-            key={`heat_${i}`}
-            center={{ latitude: z.lat, longitude: z.lng }}
-            radius={z.r}
-            fillColor={accentToRgba(semantic.accent, z.o)}
-            strokeColor={accentToRgba(semantic.accent, 0.22)}
-            strokeWidth={1}
-          />
-        ))}
+        {routeCoords.length >= 2 ? (
+          <>
+            <Polyline
+              coordinates={routeCoords}
+              strokeColor={accentToRgba(semantic.accent, 0.9)}
+              strokeWidth={4}
+            />
+            <Marker
+              coordinate={routeCoords[0]}
+              title="Старт смены"
+              tracksViewChanges={false}
+            />
+            {!routeIsLive ? (
+              <Marker
+                coordinate={routeCoords[routeCoords.length - 1]}
+                title="Финиш"
+                tracksViewChanges={false}
+              />
+            ) : null}
+          </>
+        ) : null}
+        {destination ? (
+          <>
+            <Marker
+              coordinate={{ latitude: destination.lat, longitude: destination.lng }}
+              title={destination.label ?? "Точка назначения"}
+              pinColor="#22d3ee"
+              tracksViewChanges={false}
+            />
+            {userPos ? (
+              <Polyline
+                coordinates={[userPos, { latitude: destination.lat, longitude: destination.lng }]}
+                strokeColor={accentToRgba(semantic.accent, 0.55)}
+                strokeWidth={2}
+                lineDashPattern={[10, 8]}
+              />
+            ) : null}
+          </>
+        ) : null}
         {enriched.map((s) => (
           <Marker
             key={s.id}
@@ -240,12 +318,29 @@ export function MapExplorerScreen() {
           }}
         >
           <Text style={{ color: semantic.textPrimary, fontSize: 15, fontWeight: "800" }}>
-            Карта Driver · OSM
+            Карта Driver
           </Text>
           <Text style={{ color: semantic.textTertiary, fontSize: 11, marginTop: 6, lineHeight: 16 }}>
-            АЗС — Overpass. Цены — локальная оценка по региону для подсказки «дешевле рядом»; избранное хранится на
-            устройстве.
+            {routeCoords.length >= 2
+              ? routeIsLive
+                ? "Маршрут текущей смены рисуется по GPS."
+                : "Показан маршрут последней смены."
+              : "Начните смену — маршрут появится на карте по GPS."}{" "}
+            Заправки рядом — с ценовой подсказкой «дешевле рядом».
           </Text>
+          {destination ? (
+            <Text style={{ color: semantic.accent, fontSize: 12, marginTop: 8, fontWeight: "700" }}>
+              Точка назначения{destination.label ? `: ${destination.label}` : ""}
+              {userPos
+                ? ` · ${(
+                    haversineMeters(
+                      { lat: userPos.latitude, lng: userPos.longitude },
+                      { lat: destination.lat, lng: destination.lng },
+                    ) / 1000
+                  ).toFixed(1)} км по прямой`
+                : ""}
+            </Text>
+          ) : null}
           {cheapest ? (
             <Text style={{ color: semantic.success, fontSize: 12, marginTop: 8, fontWeight: "700" }}>
               Выгоднее сейчас: {cheapest.name.slice(0, 28)} · ~
