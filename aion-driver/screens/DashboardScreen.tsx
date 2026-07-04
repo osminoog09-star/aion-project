@@ -710,6 +710,17 @@ export function DashboardScreen() {
               />
             </View>
             ) : null}
+            {(canStart || canPause || canResume || canEnd) ? (
+            <View className="min-w-[47%] flex-1">
+              <GradientButton
+                title="Карта"
+                variant="glass"
+                size="cockpit"
+                onPress={() => router.push("/map" as Href)}
+                disabled={busy !== null}
+              />
+            </View>
+            ) : null}
             {(canPause || canResume || canEnd) ? (
             <View className="min-w-[47%] flex-1">
               <GradientButton
