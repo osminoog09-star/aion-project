@@ -10,11 +10,14 @@ import {
 import MapView, { Marker, Polyline, UrlTile } from "react-native-maps";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Location from "expo-location";
+import * as ExpoLinking from "expo-linking";
 import * as Haptics from "expo-haptics";
 import {
   listGpsTripShiftIds,
   loadGpsTripSession,
 } from "../features/gps/tripStore/gpsTripStorage";
+import { parseGeoUri } from "../features/maps/parseGeoUri";
+import { haversineMeters } from "../utils/geo";
 import {
   fetchNearbyFuelStations,
   type FuelStationMarker,
@@ -79,6 +82,27 @@ export function MapExplorerScreen() {
     { latitude: number; longitude: number }[]
   >([]);
   const [routeIsLive, setRouteIsLive] = useState(false);
+  const [userPos, setUserPos] = useState<{ latitude: number; longitude: number } | null>(null);
+
+  // Точка назначения из навигационной ссылки (Bolt → «Навигация» → AION).
+  const incomingUrl = ExpoLinking.useURL();
+  const destination = useMemo(
+    () => (incomingUrl ? parseGeoUri(incomingUrl) : null),
+    [incomingUrl],
+  );
+
+  useEffect(() => {
+    if (!destination) return;
+    mapRef.current?.animateToRegion(
+      {
+        latitude: destination.lat,
+        longitude: destination.lng,
+        latitudeDelta: 0.03,
+        longitudeDelta: 0.03,
+      },
+      480,
+    );
+  }, [destination]);
 
   const country =
     profile?.countryCode && profile.countryCode.length === 2
@@ -152,6 +176,7 @@ export function MapExplorerScreen() {
         longitudeDelta: 0.06,
       };
       setCenter(next);
+      setUserPos({ latitude: next.latitude, longitude: next.longitude });
       mapRef.current?.animateToRegion(next, 480);
       void loadFuel(next.latitude, next.longitude);
     })();
@@ -178,6 +203,7 @@ export function MapExplorerScreen() {
       latitudeDelta: center.latitudeDelta,
       longitudeDelta: center.longitudeDelta,
     };
+    setUserPos({ latitude: next.latitude, longitude: next.longitude });
     mapRef.current?.animateToRegion(next, 420);
     void loadFuel(next.latitude, next.longitude);
   };
@@ -220,6 +246,24 @@ export function MapExplorerScreen() {
                 coordinate={routeCoords[routeCoords.length - 1]}
                 title="Финиш"
                 tracksViewChanges={false}
+              />
+            ) : null}
+          </>
+        ) : null}
+        {destination ? (
+          <>
+            <Marker
+              coordinate={{ latitude: destination.lat, longitude: destination.lng }}
+              title={destination.label ?? "Точка назначения"}
+              pinColor="#22d3ee"
+              tracksViewChanges={false}
+            />
+            {userPos ? (
+              <Polyline
+                coordinates={[userPos, { latitude: destination.lat, longitude: destination.lng }]}
+                strokeColor={accentToRgba(semantic.accent, 0.55)}
+                strokeWidth={2}
+                lineDashPattern={[10, 8]}
               />
             ) : null}
           </>
@@ -284,6 +328,19 @@ export function MapExplorerScreen() {
               : "Начните смену — маршрут появится на карте по GPS."}{" "}
             Заправки рядом — с ценовой подсказкой «дешевле рядом».
           </Text>
+          {destination ? (
+            <Text style={{ color: semantic.accent, fontSize: 12, marginTop: 8, fontWeight: "700" }}>
+              Точка назначения{destination.label ? `: ${destination.label}` : ""}
+              {userPos
+                ? ` · ${(
+                    haversineMeters(
+                      { lat: userPos.latitude, lng: userPos.longitude },
+                      { lat: destination.lat, lng: destination.lng },
+                    ) / 1000
+                  ).toFixed(1)} км по прямой`
+                : ""}
+            </Text>
+          ) : null}
           {cheapest ? (
             <Text style={{ color: semantic.success, fontSize: 12, marginTop: 8, fontWeight: "700" }}>
               Выгоднее сейчас: {cheapest.name.slice(0, 28)} · ~

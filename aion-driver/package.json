@@ -56,7 +56,7 @@
     "test:ota-manifest": "node scripts/ci/test-ota-manifest-summary.mjs",
     "test:apk-manifest": "node scripts/ci/test-apk-manifest-validation.mjs",
     "test:ocr-confirmation": "node scripts/ci/test-ocr-confirmation.mjs && node scripts/ci/test-voice-command-parser.mjs && node scripts/ci/test-voice-control-safety.mjs",
-    "test:maps-fuel": "node --import ./scripts/ci/ts-register.mjs scripts/ci/test-maps-fuel-intelligence.mjs && node --import ./scripts/ci/ts-register.mjs scripts/ci/test-classify-kilometers.mjs && node --import ./scripts/ci/ts-register.mjs scripts/ci/test-order-window-reducer.mjs && node scripts/ci/test-bolt-notification-capture.mjs && node scripts/ci/test-order-capture-runner.mjs",
+    "test:maps-fuel": "node --import ./scripts/ci/ts-register.mjs scripts/ci/test-maps-fuel-intelligence.mjs && node --import ./scripts/ci/ts-register.mjs scripts/ci/test-classify-kilometers.mjs && node --import ./scripts/ci/ts-register.mjs scripts/ci/test-order-window-reducer.mjs && node scripts/ci/test-bolt-notification-capture.mjs && node scripts/ci/test-order-capture-runner.mjs && node scripts/ci/test-parse-geo-uri.mjs",
     "ship:preview": "node scripts/dev/ship.mjs preview",
     "ship:main": "node scripts/dev/ship.mjs main",
     "release:preview": "node scripts/dev/ship.mjs preview --local-ota",

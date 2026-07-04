@@ -17,7 +17,7 @@ export default {
     /** Должен совпадать со slug проекта на expo.dev для этого EAS projectId. Сейчас: @osminoog/aion */
     slug: "aion",
     /** Bump при нативных изменениях: новый runtimeVersion (policy appVersion) + новый preview APK. */
-    version: "1.0.9",
+    version: "1.1.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
     scheme: "aion-driver",
@@ -38,7 +38,7 @@ export default {
     },
     android: {
       package: "com.aion.driver",
-      versionCode: 14,
+      versionCode: 15,
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#030712",
@@ -49,6 +49,20 @@ export default {
           autoVerify: false,
           category: ["BROWSABLE", "DEFAULT"],
           data: [{ scheme: "aion-driver" }],
+        },
+        /** AION в списке навигаторов: Bolt (и любые приложения) отдают точку
+            назначения через geo:/google.navigation: — принимаем её на карту. */
+        {
+          action: "VIEW",
+          autoVerify: false,
+          category: ["DEFAULT"],
+          data: [{ scheme: "geo" }],
+        },
+        {
+          action: "VIEW",
+          autoVerify: false,
+          category: ["DEFAULT"],
+          data: [{ scheme: "google.navigation" }],
         },
       ],
       permissions: [
