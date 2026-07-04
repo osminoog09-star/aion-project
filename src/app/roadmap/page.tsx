@@ -3,6 +3,8 @@ import Link from "next/link";
 import { getEcosystemStatus } from "@/lib/ecosystem-data";
 import { averageReadiness } from "@/lib/readiness";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
+import { getStrategicPriorities } from "@/lib/strategic-priorities";
+import type { ExecutionDependencyNode } from "@/lib/ecosystem-types";
 
 export const dynamic = "force-dynamic";
 
@@ -56,6 +58,61 @@ const stages = [
   },
 ] as const;
 
+const depGroups = [
+  { key: "in_progress", label: "В работе", tone: "text-cyan-300", dot: "bg-cyan-400" },
+  { key: "actionable", label: "Можно брать", tone: "text-amber-300", dot: "bg-amber-400" },
+  { key: "waiting", label: "Ждёт условий", tone: "text-slate-400", dot: "bg-slate-500" },
+  { key: "done", label: "Готово", tone: "text-emerald-300", dot: "bg-emerald-400" },
+] as const;
+
+type DepGroupKey = (typeof depGroups)[number]["key"];
+
+function depGroupKey(status: string): DepGroupKey {
+  if (status === "done" || status === "in_progress" || status === "actionable") return status;
+  return "waiting";
+}
+
+/**
+ * Человеческие пояснения к узлам графа зависимостей (reason в JSON частично
+ * технический/английский — переводим при выводе, сами данные не меняем).
+ * Для незнакомых узлов показываем reason как есть.
+ */
+const depReasonRu: Record<string, string> = {
+  "overlay-hud-full":
+    "Подсказки поверх экрана появятся только после стабильной работы приложения в фоне.",
+  "heatmap-analytics":
+    "Тепловые карты строим только на реальной истории поездок — она ещё накапливается.",
+  "route-gps-store":
+    "История GPS-поездок сохраняется: маршрут, остановки и снимок смены записываются надёжно.",
+  "post-shift-analytics":
+    "После смены считается итог: маршрут, простой, время и прибыль.",
+  "time-intelligence":
+    "Лучшие часы и зоны для работы считаются по накопленным реальным сменам.",
+  "aion-maps-driver-runtime-os":
+    "Архитектура и схемы данных готовы к работе; сам движок ждёт, пока созреют зависимости.",
+  "maps-gps-intelligence":
+    "Определяем типы километров и правила хранения — только реальные данные, без выдуманных цифр.",
+  "maps-road-matching":
+    "Привязка трека к реальным дорогам: проект готов, ждём дорожный граф и реальные треки.",
+  "operational-fuel-cost-intelligence":
+    "Учёт затрат смены и данные с чеков топлива — этим можно заниматься уже сейчас.",
+  "fuel-gps-cost-allocation":
+    "Топливо распределяется по типам километров (заказ, подача, порожняк, личное); осталась проверка в реальных поездках.",
+  "fuel-maps-predictive":
+    "Прогноз расхода топлива по маршруту — после привязки маршрутов к дорогам.",
+};
+
+function groupDependencyNodes(graph: ExecutionDependencyNode[]) {
+  const grouped = new Map<DepGroupKey, ExecutionDependencyNode[]>();
+  for (const node of graph) {
+    const key = depGroupKey(node.status);
+    const list = grouped.get(key) ?? [];
+    list.push(node);
+    grouped.set(key, list);
+  }
+  return grouped;
+}
+
 const nowDoing = [
   "Подсчёт километров продолжается, даже когда телефон в кармане",
   "Данные смены не теряются при потере связи",
@@ -65,6 +122,8 @@ const nowDoing = [
 export default async function RoadmapPage() {
   const eco = await getEcosystemStatus();
   const progress = averageReadiness(eco.readiness);
+  const priorities = await getStrategicPriorities();
+  const depByGroup = groupDependencyNodes(priorities.dependencyGraph);
 
   return (
     <div>
@@ -127,6 +186,48 @@ export default async function RoadmapPage() {
               <p className="mt-2 text-sm leading-6 text-slate-400">{s.text}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-16 md:px-6 md:pb-20">
+        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300/90">
+          Живой статус
+        </p>
+        <h2 className="mt-3 text-2xl font-semibold text-white md:text-3xl">
+          Что в работе прямо сейчас
+        </h2>
+        <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-400">
+          Реальные задачи из внутреннего плана — с их текущим состоянием. Список обновляется по
+          мере работы, без приукрашивания.
+        </p>
+        <div className="mt-10 space-y-10">
+          {depGroups.map((group) => {
+            const nodes = depByGroup.get(group.key);
+            if (!nodes || nodes.length === 0) return null;
+            return (
+              <div key={group.key}>
+                <span
+                  className={`inline-flex items-center gap-1.5 text-xs font-semibold ${group.tone}`}
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${group.dot}`} aria-hidden="true" />
+                  {group.label}
+                </span>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  {nodes.map((node) => (
+                    <article
+                      key={node.id}
+                      className="aion-card rounded-lg border border-white/10 bg-white/[0.02] p-6"
+                    >
+                      <h3 className="text-base font-semibold text-white">{node.title}</h3>
+                      <p className="mt-2 text-sm leading-6 text-slate-400">
+                        {depReasonRu[node.id] ?? node.reason}
+                      </p>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
