@@ -53,19 +53,34 @@ async function writeAll(items: AionTimelineEvent[]): Promise<void> {
   await AsyncStorage.setItem(KEY, JSON.stringify(trimmed));
 }
 
-export async function appendAionTimelineEvent(
+// Сериализация: журнал событий пишут многие подсистемы; без неё два
+// одновременных append (read-modify-write поверх друг друга) теряют событие.
+let serialized: Promise<unknown> = Promise.resolve();
+
+function runSerialized<T>(fn: () => Promise<T>): Promise<T> {
+  const next = serialized.then(fn, fn);
+  serialized = next.then(
+    () => undefined,
+    () => undefined,
+  );
+  return next;
+}
+
+export function appendAionTimelineEvent(
   e: Omit<AionTimelineEvent, "id" | "at"> & { id?: string; at?: number },
 ): Promise<void> {
-  const all = await readAll();
-  const ev: AionTimelineEvent = {
-    id: e.id ?? `${Date.now()}_${Math.random().toString(16).slice(2)}`,
-    type: e.type,
-    title: e.title,
-    detail: e.detail,
-    at: e.at ?? Date.now(),
-    moduleId: e.moduleId,
-  };
-  await writeAll([ev, ...all]);
+  return runSerialized(async () => {
+    const all = await readAll();
+    const ev: AionTimelineEvent = {
+      id: e.id ?? `${Date.now()}_${Math.random().toString(16).slice(2)}`,
+      type: e.type,
+      title: e.title,
+      detail: e.detail,
+      at: e.at ?? Date.now(),
+      moduleId: e.moduleId,
+    };
+    await writeAll([ev, ...all]);
+  });
 }
 
 export async function listAionTimeline(limit = 24): Promise<AionTimelineEvent[]> {

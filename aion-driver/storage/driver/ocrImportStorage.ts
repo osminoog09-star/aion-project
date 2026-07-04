@@ -46,12 +46,27 @@ export async function loadOcrImports(): Promise<OcrImportRecord[]> {
   return safeParse(raw);
 }
 
-export async function appendOcrImport(record: OcrImportRecord): Promise<void> {
-  const cur = await loadOcrImports();
-  let base = cur.filter((x) => x.id !== record.id);
-  if (record.sourceUri) {
-    base = base.filter((x) => x.sourceUri !== record.sourceUri);
-  }
-  const next = [record, ...base].slice(0, 200);
-  await AsyncStorage.setItem(STORAGE_KEYS.OCR_IMPORTS, JSON.stringify(next));
+// Сериализация записей OCR-импортов: append делает read-modify-write,
+// два одновременных append без неё теряют запись.
+let serialized: Promise<unknown> = Promise.resolve();
+
+function runSerialized<T>(fn: () => Promise<T>): Promise<T> {
+  const next = serialized.then(fn, fn);
+  serialized = next.then(
+    () => undefined,
+    () => undefined,
+  );
+  return next;
+}
+
+export function appendOcrImport(record: OcrImportRecord): Promise<void> {
+  return runSerialized(async () => {
+    const cur = await loadOcrImports();
+    let base = cur.filter((x) => x.id !== record.id);
+    if (record.sourceUri) {
+      base = base.filter((x) => x.sourceUri !== record.sourceUri);
+    }
+    const next = [record, ...base].slice(0, 200);
+    await AsyncStorage.setItem(STORAGE_KEYS.OCR_IMPORTS, JSON.stringify(next));
+  });
 }

@@ -3,6 +3,7 @@
  */
 import assert from "node:assert/strict";
 import { createRequire } from "node:module";
+import { importTsOrFail } from "./lib/importTsOrFail.mjs";
 
 const require = createRequire(import.meta.url);
 
@@ -36,14 +37,10 @@ function makeLoc(lat, lng, ts) {
 }
 
 async function main() {
-  let computeHeadlessMergeResult;
-  try {
-    const mod = await import("../../services/headlessShiftLocationMerge.ts");
-    computeHeadlessMergeResult = mod.computeHeadlessMergeResult;
-  } catch {
-    console.log("skip TS import — run npm run typecheck for compile safety");
-    process.exit(0);
-  }
+  const { computeHeadlessMergeResult } = await importTsOrFail(
+    () => import("../../services/headlessShiftLocationMerge.ts"),
+    "headlessShiftLocationMerge",
+  );
 
   const t0 = Date.now() - 120_000;
   const locs = [
@@ -58,7 +55,13 @@ async function main() {
     locs,
   });
   assert.ok(out1, "first merge should produce output");
-  assert.ok(out1.nextShift.distanceMeters > shift.distanceMeters, "distance increases");
+  // Точное значение: якорь = lastAccepted(55.75,37.62), 3 хаверсин-сегмента по ~127.59 м
+  // → 1000 + 382.784. Ловит любой сдвиг в формуле/накоплении, а не только «стало больше».
+  const expected = 1000 + 382.784;
+  assert.ok(
+    Math.abs(out1.nextShift.distanceMeters - expected) < 0.01,
+    `distance ${out1.nextShift.distanceMeters} != ${expected} (±0.01)`,
+  );
 
   const out2 = computeHeadlessMergeResult({
     shift: out1.nextShift,
@@ -77,8 +80,8 @@ async function main() {
     mergeStateRaw: null,
     locs,
   });
-  assert.ok(paused);
-  assert.equal(paused.nextShift.distanceMeters, shift.distanceMeters, "paused shift skips distance");
+  // Paused shift: nothing to merge — implementation returns null (no accumulation).
+  assert.equal(paused, null, "paused shift produces no merge");
 
   console.log("headless merge checks: OK");
 }

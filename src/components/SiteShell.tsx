@@ -54,8 +54,8 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
             </Link>
           ))}
         </nav>
-        <p className="mx-auto mt-4 max-w-2xl text-xs text-slate-600">
-          AION Project · Driver, операции, прогресс и релизы. Данные синхронизируются из репозитория и Supabase.
+        <p className="mx-auto mt-4 max-w-2xl text-xs text-slate-400">
+          AION Project · Driver, операции, прогресс и релизы. Данные обновляются автоматически.
         </p>
       </footer>
     </div>

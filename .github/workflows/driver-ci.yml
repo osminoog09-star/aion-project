@@ -27,7 +27,9 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          # >=22.18: type-stripping включён по умолчанию, чтобы CI-тесты на .ts
+          # реально исполнялись (иначе importTsOrFail легитимно их скипнет).
+          node-version: "22.18"
           cache: npm
           cache-dependency-path: aion-driver/package-lock.json
 

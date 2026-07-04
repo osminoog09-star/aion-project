@@ -28,6 +28,18 @@ html {
   color: #fff;
 }
 
+/* Видимый фокус с клавиатуры (a11y). Белая обводка со смещением читается
+   и на тёмном фоне секций, и на ярких CTA (cyan/emerald). */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible,
+summary:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 .aion-hero-glow {
   background: #090c0e;
 }

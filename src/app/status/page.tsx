@@ -42,11 +42,11 @@ export default async function EcosystemStatusPage() {
         <div className="rounded-xl border border-white/10 bg-white/[0.03] px-5 py-4">
           <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Подсистемы (среднее)</p>
           <p className="mt-1 text-3xl font-bold tabular-nums text-violet-300">{subsystemAvg}%</p>
-          <p className="mt-1 max-w-xs text-[10px] text-slate-600">Отдельно от столбцов readiness — см. таблицу ниже.</p>
+          <p className="mt-1 max-w-xs text-[10px] text-slate-400">Отдельно от столбцов readiness — см. таблицу ниже.</p>
         </div>
       </div>
 
-      <p className="mt-4 text-xs text-slate-600">
+      <p className="mt-4 text-xs text-slate-400">
         Дорожная карта:{" "}
         <Link href={ecosystemRoutes.roadmap} className="text-cyan-400 hover:underline">
           /roadmap
@@ -99,7 +99,7 @@ export default async function EcosystemStatusPage() {
 
       <section className="mt-14">
         <h2 className="text-sm font-bold uppercase tracking-widest text-slate-500">Полный аудит подсистем</h2>
-        <p className="mt-2 text-xs text-slate-600">M / W / B — оценка по mobile / web / backend внутри строки (0 — не применимо).</p>
+        <p className="mt-2 text-xs text-slate-400">M / W / B — оценка по mobile / web / backend внутри строки (0 — не применимо).</p>
         <div className="mt-4">
           <SubsystemAuditTable subsystems={eco.subsystems} />
         </div>
@@ -119,8 +119,8 @@ export default async function EcosystemStatusPage() {
               <li key={e}>{e}</li>
             ))}
           </ul>
-          <h3 className="mt-8 text-xs font-bold uppercase tracking-widest text-slate-600">Завершённые</h3>
-          <ul className="mt-3 list-inside list-disc text-sm text-slate-600">
+          <h3 className="mt-8 text-xs font-bold uppercase tracking-widest text-slate-400">Завершённые</h3>
+          <ul className="mt-3 list-inside list-disc text-sm text-slate-400">
             {eco.epics.completed.map((e) => (
               <li key={e}>{e}</li>
             ))}

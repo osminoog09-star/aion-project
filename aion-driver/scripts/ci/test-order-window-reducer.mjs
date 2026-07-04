@@ -2,21 +2,18 @@
  * orderWindowReducer — node assert.
  */
 import assert from "node:assert/strict";
+import { importTsOrFail } from "./lib/importTsOrFail.mjs";
 
 async function main() {
-  let mod;
-  try {
-    mod = await import("../../features/intelligence/orderWindowReducer.ts");
-  } catch (err) {
-    console.log("skip:", err?.message ?? err);
-    process.exit(0);
-  }
   const {
     EMPTY_ORDER_WINDOW_STATE,
     beginOrderActivity,
     endOrderActivity,
     finalizeOrderWindows,
-  } = mod;
+  } = await importTsOrFail(
+    () => import("../../features/intelligence/orderWindowReducer.ts"),
+    "orderWindowReducer",
+  );
 
   let cases = 0;
 
