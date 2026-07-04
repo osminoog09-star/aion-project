@@ -17,6 +17,7 @@ import {
   loadGpsTripSession,
 } from "../features/gps/tripStore/gpsTripStorage";
 import { parseGeoUri } from "../features/maps/parseGeoUri";
+import { fetchRoadRoute, type RoadRoute } from "../features/maps/osrmRoute";
 import { haversineMeters } from "../utils/geo";
 import {
   fetchNearbyFuelStations,
@@ -103,6 +104,22 @@ export function MapExplorerScreen() {
       480,
     );
   }, [destination]);
+
+  // Маршрут по дорогам до точки (OSRM). Недоступен → honest-фолбэк: пунктир по прямой.
+  const [roadRoute, setRoadRoute] = useState<RoadRoute | null>(null);
+  useEffect(() => {
+    setRoadRoute(null);
+    if (!destination || !userPos) return;
+    const ac = new AbortController();
+    void fetchRoadRoute(
+      userPos,
+      { latitude: destination.lat, longitude: destination.lng },
+      ac.signal,
+    ).then((r) => {
+      if (!ac.signal.aborted) setRoadRoute(r);
+    });
+    return () => ac.abort();
+  }, [destination, userPos]);
 
   const country =
     profile?.countryCode && profile.countryCode.length === 2
@@ -258,7 +275,13 @@ export function MapExplorerScreen() {
               pinColor="#22d3ee"
               tracksViewChanges={false}
             />
-            {userPos ? (
+            {roadRoute ? (
+              <Polyline
+                coordinates={roadRoute.coords}
+                strokeColor={accentToRgba(semantic.accent, 0.95)}
+                strokeWidth={5}
+              />
+            ) : userPos ? (
               <Polyline
                 coordinates={[userPos, { latitude: destination.lat, longitude: destination.lng }]}
                 strokeColor={accentToRgba(semantic.accent, 0.55)}
@@ -331,14 +354,19 @@ export function MapExplorerScreen() {
           {destination ? (
             <Text style={{ color: semantic.accent, fontSize: 12, marginTop: 8, fontWeight: "700" }}>
               Точка назначения{destination.label ? `: ${destination.label}` : ""}
-              {userPos
-                ? ` · ${(
-                    haversineMeters(
-                      { lat: userPos.latitude, lng: userPos.longitude },
-                      { lat: destination.lat, lng: destination.lng },
-                    ) / 1000
-                  ).toFixed(1)} км по прямой`
-                : ""}
+              {roadRoute
+                ? ` · ${(roadRoute.distanceMeters / 1000).toFixed(1)} км · ~${Math.max(
+                    1,
+                    Math.round(roadRoute.durationSec / 60),
+                  )} мин по дорогам`
+                : userPos
+                  ? ` · ${(
+                      haversineMeters(
+                        { lat: userPos.latitude, lng: userPos.longitude },
+                        { lat: destination.lat, lng: destination.lng },
+                      ) / 1000
+                    ).toFixed(1)} км по прямой`
+                  : ""}
             </Text>
           ) : null}
           {cheapest ? (
