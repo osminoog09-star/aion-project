@@ -82,6 +82,15 @@ async function main() {
   assert.equal(r2.incomeDraft, null);
   cases += 1;
 
+  // Анти-дубль: «завершена» с суммой БЕЗ открытого заказа → дохода нет.
+  const dup = applyCapturedOrderEvent(
+    reducer.EMPTY_ORDER_WINDOW_STATE,
+    parseBoltNotification(n("Поездка завершена", "Заработано 4 €", 30)),
+  );
+  assert.equal(dup.incomeDraft, null);
+  assert.equal(dup.windows.windows.length, 0);
+  cases += 1;
+
   console.log(`test-bolt-notification-capture: ok (${cases} cases)`);
 }
 

@@ -105,6 +105,10 @@ export type OrderCaptureResult = {
 /**
  * Применить событие к окнам активности (evidence: platform_import по контракту).
  * assigned → подача; started → везу; finished → закрыть окно (+доход, если сумма есть).
+ *
+ * Анти-дубль: доход из «завершена» записывается ТОЛЬКО если был открытый заказ.
+ * Bolt может перепостить/обновить уведомление о завершении — повторное событие
+ * находит уже закрытое окно и НЕ создаёт второй доход.
  */
 export function applyCapturedOrderEvent(
   state: OrderWindowState,
@@ -116,10 +120,11 @@ export function applyCapturedOrderEvent(
   if (event.type === "ride_started") {
     return { windows: beginOrderActivity(state, "on_order", event.atMs), incomeDraft: null };
   }
+  const hadOpenOrder = state.active != null;
   return {
     windows: endOrderActivity(state, event.atMs),
     incomeDraft:
-      event.amount != null && event.currencyCode != null
+      hadOpenOrder && event.amount != null && event.currencyCode != null
         ? { amount: event.amount, currencyCode: event.currencyCode }
         : null,
   };
