@@ -243,8 +243,8 @@
         "aion-maps-driver-runtime-os",
         "route-gps-store"
       ],
-      "status": "actionable",
-      "reason": "Define real-data kilometer classes and storage contracts; do not synthesize metrics"
+      "status": "in_progress",
+      "reason": "Реализовано: классификатор км (заказ/подача/порожняк/личное) + ручные отметки заказа + распределение топлива + показ на таймлайне, CI-тесты зелёные. До 'done' — полевая проверка на реальных сменах"
     },
     {
       "id": "maps-road-matching",
