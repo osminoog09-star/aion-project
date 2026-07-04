@@ -63,11 +63,11 @@ export function OrderActivityControl({ shiftId }: { shiftId: string | null }) {
         <Pill label="Везу" active={activeKind === "on_order"} onPress={beginOnOrder} />
         <Pill label="Высадил" active={false} onPress={endActivity} />
       </View>
-      {windowCount > 0 ? (
-        <Text className="mt-2 text-[10px] text-slate-500">
-          Отмечено отрезков за смену: {windowCount}
-        </Text>
-      ) : null}
+      <Text className="mt-2 text-[10px] text-slate-500">
+        {windowCount > 0
+          ? `Отмечено отрезков за смену: ${windowCount}`
+          : "Можно голосом: кнопка «Голос» → скажите «подача», «везу» или «высадил»."}
+      </Text>
     </View>
   );
 }
