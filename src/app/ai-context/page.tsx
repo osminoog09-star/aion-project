@@ -45,7 +45,7 @@ export default function AiContextPage() {
           </li>
         ))}
       </ul>
-      <p className="mt-10 text-xs text-slate-600">
+      <p className="mt-10 text-xs text-slate-400">
         Человеческий хаб:{" "}
         <Link href={ecosystemRoutes.control} className="text-cyan-500 hover:underline">
           /control
