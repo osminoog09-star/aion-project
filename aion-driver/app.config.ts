@@ -43,6 +43,16 @@ export default {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#030712",
       },
+      /** БЕЗ meta-data ключа Google Maps рендер MapView мгновенно роняет
+          Android-приложение (краш APK≤14 на экране карты). Плейсхолдер
+          устраняет краш: Google-подложка не грузится, но наши тайлы — OSM.
+          Реальный ключ (для навигации Google-слоёв) подставляется секретом
+          GOOGLE_MAPS_ANDROID_API_KEY при сборке, если задан. */
+      config: {
+        googleMaps: {
+          apiKey: process.env.GOOGLE_MAPS_ANDROID_API_KEY ?? "AION-no-google-key-osm-tiles-only",
+        },
+      },
       intentFilters: [
         {
           action: "VIEW",
