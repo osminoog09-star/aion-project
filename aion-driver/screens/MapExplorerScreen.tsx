@@ -64,7 +64,12 @@ const DEFAULT_REGION = {
 /** Не душить Polyline: прореживаем очень длинные маршруты. */
 const MAX_ROUTE_POINTS = 1500;
 
-const OSM_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+/**
+ * Фирменная тёмная подложка AION: данные OpenStreetMap, тёмный стиль CARTO
+ * (бесплатно с указанием источника — атрибуция в шапке карты). Светлые
+ * дефолтные OSM-тайлы в тёмном приложении выглядели чужеродно.
+ */
+const DARK_TILE_TEMPLATE = "https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png";
 
 export function MapExplorerScreen() {
   const insets = useSafeAreaInsets();
@@ -253,7 +258,7 @@ export function MapExplorerScreen() {
           });
         }}
       >
-        <UrlTile urlTemplate={OSM_TEMPLATE} maximumZ={19} flipY={false} />
+        <UrlTile urlTemplate={DARK_TILE_TEMPLATE} maximumZ={19} flipY={false} />
         {routeCoords.length >= 2 ? (
           <>
             <Polyline
@@ -358,6 +363,9 @@ export function MapExplorerScreen() {
                 : "Показан маршрут последней смены."
               : "Начните смену — маршрут появится на карте по GPS."}{" "}
             Заправки рядом — с ценовой подсказкой «дешевле рядом».
+          </Text>
+          <Text style={{ color: semantic.textTertiary, fontSize: 9, marginTop: 4 }}>
+            Карта: © OpenStreetMap · © CARTO
           </Text>
           {destination ? (
             <Text style={{ color: semantic.accent, fontSize: 12, marginTop: 8, fontWeight: "700" }}>
