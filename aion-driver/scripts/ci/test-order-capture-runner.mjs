@@ -47,7 +47,7 @@ async function main() {
     { packageName: "com.whatsapp", title: "Новый заказ", text: "спам", postedAtMs: 1500 },
   ]);
   assert.equal(r1.appliedEvents, 3);
-  assert.deepEqual(plain(r1.incomeDrafts), [{ amount: 4, currencyCode: "EUR" }]);
+  assert.deepEqual(plain(r1.incomeDrafts), [{ amount: 4, currencyCode: "EUR", paymentMethod: null }]);
   assert.equal(r1.windowCount, 2); // подача + заказ
   cases += 1;
 
