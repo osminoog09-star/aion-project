@@ -352,6 +352,20 @@ export function MapExplorerScreen() {
                   : ""}
             </Text>
           ) : null}
+          {roadRoute && roadRoute.steps.length > 0 ? (
+            <View style={{ marginTop: 8 }}>
+              {roadRoute.steps.slice(0, 4).map((s, i) => (
+                <Text
+                  key={`step_${i}`}
+                  style={{ color: semantic.textSecondary, fontSize: 11, marginTop: 2 }}
+                  numberOfLines={1}
+                >
+                  {i + 1}. {s.instruction}
+                  {s.distanceMeters >= 50 ? ` · ${Math.round(s.distanceMeters)} м` : ""}
+                </Text>
+              ))}
+            </View>
+          ) : null}
           {loadingFuel ? (
             <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginTop: 8 }}>
               <ActivityIndicator color={semantic.accent} size="small" />
