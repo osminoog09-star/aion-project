@@ -10,6 +10,6 @@ export const DESKTOP_NAV_ITEMS: readonly DesktopNavItem[] = [
   { href: "/desktop/cloud", label: "Облако и синхронизация", shortcut: "3" },
   { href: "/desktop/finance", label: "Финансы", shortcut: "4" },
   { href: "/desktop/garage", label: "Гараж", shortcut: "5" },
-  { href: "/desktop/maps", label: "Карты и зоны", shortcut: "6" },
-  { href: "/desktop/ai-room", label: "ИИ-центр", shortcut: "7" },
+  // «Карты и зоны» скрыт из навигации — экран-заглушка без данных (тупик).
+  { href: "/desktop/ai-room", label: "ИИ-центр", shortcut: "6" },
 ] as const;
