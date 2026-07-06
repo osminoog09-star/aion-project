@@ -48,9 +48,9 @@ export default function AddFuelModal() {
       fuelType,
     });
     if (!entry) return null;
-    const km = liveMetrics?.distanceKm ?? activeShift?.distanceMeters
-      ? (activeShift!.distanceMeters / 1000)
-      : 0;
+    const km =
+      liveMetrics?.distanceKm ??
+      (activeShift ? activeShift.distanceMeters / 1000 : 0);
     const per100 = fuelCostPer100Km(entry.totalCost, km);
     return { entry, per100, km };
   }, [totalStr, litersStr, fuelType, liveMetrics, activeShift]);
