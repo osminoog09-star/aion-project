@@ -125,41 +125,55 @@ export function DashboardScreen() {
     });
   }, [driverAnalytics.fatigueHint, driverAnalytics.weakZonesLabel, mergedHistory.length]);
 
+  // try/finally: setBusy(null) ОБЯЗАН выполниться даже при сбое операции —
+  // иначе кнопки смены залипают (disabled навсегда до перезахода).
   const onStart = async () => {
     setBusy("start");
-    const res = await startShift();
-    setBusy(null);
-    if (res.ok) {
-      try {
-        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      } catch {
-        /* ignore */
+    try {
+      const res = await startShift();
+      if (res.ok) {
+        try {
+          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        } catch {
+          /* ignore */
+        }
+      } else if (res.error) {
+        setErrorText(res.error);
+        setErrorOpen(true);
       }
-    } else if (res.error) {
-      setErrorText(res.error);
+    } catch (e) {
+      setErrorText(e instanceof Error ? e.message : "Не удалось начать смену.");
       setErrorOpen(true);
+    } finally {
+      setBusy(null);
     }
   };
 
   const onPause = async () => {
     setBusy("pause");
-    await pauseShift();
-    setBusy(null);
     try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    } catch {
-      /* ignore */
+      await pauseShift();
+      try {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch {
+        /* ignore */
+      }
+    } finally {
+      setBusy(null);
     }
   };
 
   const onResume = async () => {
     setBusy("resume");
-    await resumeShift();
-    setBusy(null);
     try {
-      await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-    } catch {
-      /* ignore */
+      await resumeShift();
+      try {
+        await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      } catch {
+        /* ignore */
+      }
+    } finally {
+      setBusy(null);
     }
   };
 
@@ -170,12 +184,15 @@ export function DashboardScreen() {
   const confirmEndShift = async () => {
     setEndShiftOpen(false);
     setBusy("end");
-    await endShift();
-    setBusy(null);
     try {
-      await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    } catch {
-      /* ignore */
+      await endShift();
+      try {
+        await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      } catch {
+        /* ignore */
+      }
+    } finally {
+      setBusy(null);
     }
   };
 
