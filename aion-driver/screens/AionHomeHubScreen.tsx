@@ -359,7 +359,9 @@ export function AionHomeHubScreen() {
             МОДУЛИ
           </Text>
           <View style={{ marginTop: spacing.md, gap: spacing.md }}>
-            {AION_MODULES.map((m) => {
+            {/* Только рабочие модули. Залоченные заглушки (coming_soon/alpha) не
+                захламляют экран — вернутся, когда станут реальными. */}
+            {AION_MODULES.filter(moduleInteractive).map((m) => {
               const open = moduleInteractive(m);
               const iconColor = accentIcon[m.accent];
               const badge = readinessLabel(m.readiness);
