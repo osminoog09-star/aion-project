@@ -17,7 +17,7 @@ export default {
     /** Должен совпадать со slug проекта на expo.dev для этого EAS projectId. Сейчас: @osminoog/aion */
     slug: "aion",
     /** Bump при нативных изменениях: новый runtimeVersion (policy appVersion) + новый preview APK. */
-    version: "1.1.0",
+    version: "1.1.1",
     orientation: "portrait",
     icon: "./assets/icon.png",
     scheme: "aion-driver",
@@ -38,10 +38,20 @@ export default {
     },
     android: {
       package: "com.aion.driver",
-      versionCode: 15,
+      versionCode: 16,
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#030712",
+      },
+      /** БЕЗ meta-data ключа Google Maps рендер MapView мгновенно роняет
+          Android-приложение (краш APK≤14 на экране карты). Плейсхолдер
+          устраняет краш: Google-подложка не грузится, но наши тайлы — OSM.
+          Реальный ключ (для навигации Google-слоёв) подставляется секретом
+          GOOGLE_MAPS_ANDROID_API_KEY при сборке, если задан. */
+      config: {
+        googleMaps: {
+          apiKey: process.env.GOOGLE_MAPS_ANDROID_API_KEY ?? "AION-no-google-key-osm-tiles-only",
+        },
       },
       intentFilters: [
         {

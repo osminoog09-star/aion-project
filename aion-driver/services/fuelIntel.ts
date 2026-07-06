@@ -89,36 +89,3 @@ export function getFuelPriceBandForCountry(
   };
 }
 
-/** Заготовка под гео-АЗС: избранное, дешёвые рядом, алерты. */
-export type FuelStationStub = {
-  id: string;
-  name: string;
-  brand: string;
-  lat: number;
-  lng: number;
-  pricePetrol?: number;
-  isFavorite?: boolean;
-};
-
-export function listNearbyStationsStub(
-  _country: string,
-): FuelStationStub[] {
-  return [
-    {
-      id: "stub-1",
-      name: "Circle K · центр",
-      brand: "Circle K",
-      lat: 55.75,
-      lng: 37.62,
-      pricePetrol: 62.4,
-    },
-    {
-      id: "stub-2",
-      name: "Neste · въезд",
-      brand: "Neste",
-      lat: 55.752,
-      lng: 37.615,
-      pricePetrol: 61.9,
-    },
-  ];
-}

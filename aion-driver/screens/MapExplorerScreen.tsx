@@ -17,25 +17,19 @@ import {
   loadGpsTripSession,
 } from "../features/gps/tripStore/gpsTripStorage";
 import { parseGeoUri } from "../features/maps/parseGeoUri";
+import { fetchRoadRoute, type RoadRoute } from "../features/maps/osrmRoute";
 import { haversineMeters } from "../utils/geo";
 import {
   fetchNearbyFuelStations,
   type FuelStationMarker,
 } from "../features/maps/overpassFuel";
-import {
-  enrichFuelStationsWithRegionalPrices,
-  pickCheapestStationId,
-} from "../features/maps/fuelStationRanking";
 import { GradientButton } from "../components/ui/GradientButton";
-import { useDevice } from "../hooks/useDevice";
-import { useResolvedCurrency } from "../hooks/useResolvedCurrency";
 import { useShift } from "../hooks/useShift";
 import {
   loadFuelFavoriteIds,
   toggleFuelFavoriteId,
 } from "../storage/driver/fuelFavoritesStorage";
 import { spacing } from "../tokens";
-import { formatCurrencyDisplay } from "../utils/formatting";
 import { useTheme } from "../contexts/ThemeContext";
 
 function accentToRgba(accent: string, alpha: number): string {
@@ -63,14 +57,17 @@ const DEFAULT_REGION = {
 /** Не душить Polyline: прореживаем очень длинные маршруты. */
 const MAX_ROUTE_POINTS = 1500;
 
-const OSM_TEMPLATE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+/**
+ * Фирменная тёмная подложка AION: данные OpenStreetMap, тёмный стиль CARTO
+ * (бесплатно с указанием источника — атрибуция в шапке карты). Светлые
+ * дефолтные OSM-тайлы в тёмном приложении выглядели чужеродно.
+ */
+const DARK_TILE_TEMPLATE = "https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png";
 
 export function MapExplorerScreen() {
   const insets = useSafeAreaInsets();
   const { semantic, canvas } = useTheme();
-  const { settings } = useDevice();
-  const currency = useResolvedCurrency();
-  const { profile, activeShift } = useShift();
+  const { activeShift } = useShift();
   const mapRef = useRef<MapView>(null);
   const [center, setCenter] = useState(DEFAULT_REGION);
   const [rawStations, setRawStations] = useState<FuelStationMarker[]>([]);
@@ -104,18 +101,29 @@ export function MapExplorerScreen() {
     );
   }, [destination]);
 
-  const country =
-    profile?.countryCode && profile.countryCode.length === 2
-      ? profile.countryCode
-      : settings.regionCountryCode;
-
-  const enriched = useMemo(
-    () =>
-      enrichFuelStationsWithRegionalPrices(rawStations, country, currency),
-    [rawStations, country, currency],
-  );
-
-  const cheapestId = useMemo(() => pickCheapestStationId(enriched), [enriched]);
+  // Маршрут по дорогам до точки (OSRM). Недоступен → honest-фолбэк: пунктир по прямой.
+  const [roadRoute, setRoadRoute] = useState<RoadRoute | null>(null);
+  useEffect(() => {
+    setRoadRoute(null);
+    if (!destination || !userPos) return;
+    const ac = new AbortController();
+    void fetchRoadRoute(
+      userPos,
+      { latitude: destination.lat, longitude: destination.lng },
+      ac.signal,
+    ).then((r) => {
+      if (ac.signal.aborted) return;
+      setRoadRoute(r);
+      // Показать маршрут целиком.
+      if (r && r.coords.length >= 2) {
+        mapRef.current?.fitToCoordinates(r.coords, {
+          edgePadding: { top: 180, right: 60, bottom: 120, left: 60 },
+          animated: true,
+        });
+      }
+    });
+    return () => ac.abort();
+  }, [destination, userPos]);
 
   useEffect(() => {
     void loadFuelFavoriteIds().then(setFavoriteIds);
@@ -208,8 +216,6 @@ export function MapExplorerScreen() {
     void loadFuel(next.latitude, next.longitude);
   };
 
-  const cheapest = enriched.find((s) => s.id === cheapestId);
-
   return (
     <View style={{ flex: 1, backgroundColor: canvas }}>
       <MapView
@@ -228,7 +234,7 @@ export function MapExplorerScreen() {
           });
         }}
       >
-        <UrlTile urlTemplate={OSM_TEMPLATE} maximumZ={19} flipY={false} />
+        <UrlTile urlTemplate={DARK_TILE_TEMPLATE} maximumZ={19} flipY={false} />
         {routeCoords.length >= 2 ? (
           <>
             <Polyline
@@ -258,7 +264,13 @@ export function MapExplorerScreen() {
               pinColor="#22d3ee"
               tracksViewChanges={false}
             />
-            {userPos ? (
+            {roadRoute ? (
+              <Polyline
+                coordinates={roadRoute.coords}
+                strokeColor={accentToRgba(semantic.accent, 0.95)}
+                strokeWidth={5}
+              />
+            ) : userPos ? (
               <Polyline
                 coordinates={[userPos, { latitude: destination.lat, longitude: destination.lng }]}
                 strokeColor={accentToRgba(semantic.accent, 0.55)}
@@ -268,24 +280,15 @@ export function MapExplorerScreen() {
             ) : null}
           </>
         ) : null}
-        {enriched.map((s) => (
+        {rawStations.map((s) => (
           <Marker
             key={s.id}
             coordinate={{ latitude: s.lat, longitude: s.lng }}
             title={s.name}
-            description={
-              favoriteIds.includes(s.id)
-                ? "★ избранное · оценка цены"
-                : s.id === cheapestId
-                  ? "Дешевле рядом (оценка)"
-                  : "OSM · оценка цены региона"
-            }
+            description={favoriteIds.includes(s.id) ? "★ избранное" : "АЗС (OpenStreetMap)"}
             tracksViewChanges={false}
           >
-            <FuelMarkerDot
-              isCheapest={s.id === cheapestId}
-              isFavorite={favoriteIds.includes(s.id)}
-            />
+            <FuelMarkerDot isFavorite={favoriteIds.includes(s.id)} />
           </Marker>
         ))}
       </MapView>
@@ -326,25 +329,27 @@ export function MapExplorerScreen() {
                 ? "Маршрут текущей смены рисуется по GPS."
                 : "Показан маршрут последней смены."
               : "Начните смену — маршрут появится на карте по GPS."}{" "}
-            Заправки рядом — с ценовой подсказкой «дешевле рядом».
+            Заправки рядом — из OpenStreetMap.
+          </Text>
+          <Text style={{ color: semantic.textTertiary, fontSize: 9, marginTop: 4 }}>
+            Карта: © OpenStreetMap · © CARTO
           </Text>
           {destination ? (
             <Text style={{ color: semantic.accent, fontSize: 12, marginTop: 8, fontWeight: "700" }}>
               Точка назначения{destination.label ? `: ${destination.label}` : ""}
-              {userPos
-                ? ` · ${(
-                    haversineMeters(
-                      { lat: userPos.latitude, lng: userPos.longitude },
-                      { lat: destination.lat, lng: destination.lng },
-                    ) / 1000
-                  ).toFixed(1)} км по прямой`
-                : ""}
-            </Text>
-          ) : null}
-          {cheapest ? (
-            <Text style={{ color: semantic.success, fontSize: 12, marginTop: 8, fontWeight: "700" }}>
-              Выгоднее сейчас: {cheapest.name.slice(0, 28)} · ~
-              {formatCurrencyDisplay(cheapest.priceEstimate, currency)}
+              {roadRoute
+                ? ` · ${(roadRoute.distanceMeters / 1000).toFixed(1)} км · ~${Math.max(
+                    1,
+                    Math.round(roadRoute.durationSec / 60),
+                  )} мин по дорогам`
+                : userPos
+                  ? ` · ${(
+                      haversineMeters(
+                        { lat: userPos.latitude, lng: userPos.longitude },
+                        { lat: destination.lat, lng: destination.lng },
+                      ) / 1000
+                    ).toFixed(1)} км по прямой`
+                  : ""}
             </Text>
           ) : null}
           {loadingFuel ? (
@@ -356,7 +361,7 @@ export function MapExplorerScreen() {
             <Text style={{ color: semantic.danger, fontSize: 11, marginTop: 8 }}>{fuelError}</Text>
           ) : (
             <Text style={{ color: semantic.accent, fontSize: 11, marginTop: 8 }}>
-              АЗС: {enriched.length} · избранное {favoriteIds.length}
+              АЗС: {rawStations.length} · избранное {favoriteIds.length}
             </Text>
           )}
           <Pressable
@@ -373,12 +378,12 @@ export function MapExplorerScreen() {
           >
             <Text style={{ color: semantic.accent, fontSize: 11, fontWeight: "700" }}>Обновить АЗС</Text>
           </Pressable>
-          {enriched.length > 0 ? (
+          {rawStations.length > 0 ? (
             <View style={{ marginTop: 12, maxHeight: 120 }}>
               <Text style={{ color: semantic.textTertiary, fontSize: 10, fontWeight: "800", marginBottom: 6 }}>
                 РЯДОМ
               </Text>
-              {enriched.slice(0, 5).map((s) => (
+              {rawStations.slice(0, 5).map((s) => (
                 <View
                   key={`row_${s.id}`}
                   style={{
@@ -391,11 +396,7 @@ export function MapExplorerScreen() {
                   }}
                 >
                   <Text style={{ color: semantic.textPrimary, fontSize: 12, flex: 1, marginRight: 8 }} numberOfLines={1}>
-                    {s.id === cheapestId ? "⚡ " : ""}
                     {s.name}
-                  </Text>
-                  <Text style={{ color: semantic.textSecondary, fontSize: 11, marginRight: 10 }}>
-                    ~{formatCurrencyDisplay(s.priceEstimate, currency)}
                   </Text>
                   <Pressable onPress={() => void onToggleFavorite(s.id)} hitSlop={10}>
                     <Text style={{ fontSize: 16 }}>{favoriteIds.includes(s.id) ? "★" : "☆"}</Text>
@@ -434,17 +435,10 @@ export function MapExplorerScreen() {
   );
 }
 
-function FuelMarkerDot({
-  isCheapest,
-  isFavorite,
-}: {
-  isCheapest: boolean;
-  isFavorite: boolean;
-}) {
+function FuelMarkerDot({ isFavorite }: { isFavorite: boolean }) {
   const { semantic } = useTheme();
-  const size = isCheapest ? 20 : 16;
-  const bg = isCheapest ? semantic.success : isFavorite ? "#fbbf24" : semantic.violet;
-  const glow = isCheapest ? semantic.success : semantic.accent;
+  const size = 16;
+  const bg = isFavorite ? "#fbbf24" : semantic.violet;
   return (
     <View
       style={{
@@ -454,9 +448,9 @@ function FuelMarkerDot({
         backgroundColor: bg,
         borderWidth: 2,
         borderColor: "rgba(255,255,255,0.9)",
-        shadowColor: glow,
-        shadowOpacity: isCheapest ? 0.85 : 0.45,
-        shadowRadius: isCheapest ? 10 : 6,
+        shadowColor: semantic.accent,
+        shadowOpacity: 0.45,
+        shadowRadius: 6,
         elevation: 4,
       }}
     />

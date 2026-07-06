@@ -40,18 +40,6 @@ function moduleInteractive(m: AionModuleDefinition): boolean {
   return !!m.href && (m.readiness === "live" || m.readiness === "beta");
 }
 
-function healthDot(h: AionModuleDefinition["health"]): string {
-  if (h === "ok") return "●";
-  if (h === "degraded") return "◐";
-  return "○";
-}
-
-function healthColor(h: AionModuleDefinition["health"]): string {
-  if (h === "ok") return colors.emerald400;
-  if (h === "degraded") return "#fbbf24";
-  return colors.slate600;
-}
-
 function entityStateLabelRu(s: AionEntityState): string {
   const m: Record<string, string> = {
     idle: "Спокойствие",
@@ -359,7 +347,9 @@ export function AionHomeHubScreen() {
             МОДУЛИ
           </Text>
           <View style={{ marginTop: spacing.md, gap: spacing.md }}>
-            {AION_MODULES.map((m) => {
+            {/* Только рабочие модули. Залоченные заглушки (coming_soon/alpha) не
+                захламляют экран — вернутся, когда станут реальными. */}
+            {AION_MODULES.filter(moduleInteractive).map((m) => {
               const open = moduleInteractive(m);
               const iconColor = accentIcon[m.accent];
               const badge = readinessLabel(m.readiness);
@@ -393,18 +383,10 @@ export function AionHomeHubScreen() {
                         >
                           <Text style={{ color: colors.slate400, fontSize: 10, fontWeight: "800" }}>{badge}</Text>
                         </View>
-                        <Text style={{ color: healthColor(m.health), fontSize: 11, fontWeight: "800" }}>
-                          {healthDot(m.health)} {m.health}
-                        </Text>
                       </View>
                       <Text style={{ color: colors.slate500, fontSize: 13, marginTop: 4, lineHeight: 18 }}>
                         {m.subtitle}
                       </Text>
-                      {m.dependsOn.length > 0 ? (
-                        <Text style={{ color: colors.slate600, fontSize: 11, marginTop: 6 }}>
-                          deps: {m.dependsOn.join(", ")}
-                        </Text>
-                      ) : null}
                     </View>
                     {open ? (
                       <MaterialIcons name="chevron-right" size={22} color={colors.slate500} />

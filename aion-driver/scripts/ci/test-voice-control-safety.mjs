@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-const source = readFileSync("app/voice-control.tsx", "utf8");
+// Активная логика голоса вынесена в отдельный экран (в app/voice-control.tsx —
+// гейт по наличию нативного модуля); проверки безопасности живут здесь.
+const source = readFileSync("screens/VoiceControlActiveScreen.tsx", "utf8");
 assert.match(source, /if \(!command \|\| !resultFinal \|\| lowConfidence \|\| currencyMismatch\) return/);
 assert.match(source, /resultConfidence < 0\.55/);
 assert.match(source, /useSpeechRecognitionEvent\("nomatch"/);

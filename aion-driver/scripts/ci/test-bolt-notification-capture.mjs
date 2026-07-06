@@ -37,8 +37,16 @@ async function main() {
     type: "order_assigned",
     amount: 4.5,
     currencyCode: "EUR",
+    paymentMethod: null,
     atMs: 111,
   });
+  cases += 1;
+
+  // Способ оплаты из карточки заказа: наличные / карта.
+  assert.equal(parseBoltNotification(n("Новый заказ", "5 € наличными", 1)).paymentMethod, "cash");
+  assert.equal(parseBoltNotification(n("Новый заказ", "5 € картой", 1)).paymentMethod, "card");
+  assert.equal(parseBoltNotification(n("Поездка завершена", "6 € наличные", 1)).paymentMethod, "cash");
+  assert.equal(parseBoltNotification(n("Новый заказ", "5 €", 1)).paymentMethod, null);
   cases += 1;
 
   // Начало поездки.
@@ -70,7 +78,19 @@ async function main() {
   assert.equal(r.windows.active, null);
   assert.equal(r.windows.windows.length, 2);
   assert.deepEqual(plain(r.windows.windows[1]), { kind: "on_order", startMs: 2000, endMs: 3000 });
-  assert.deepEqual(plain(r.incomeDraft), { amount: 4, currencyCode: "EUR" });
+  assert.deepEqual(plain(r.incomeDraft), { amount: 4, currencyCode: "EUR", paymentMethod: null });
+  cases += 1;
+
+  // Полный цикл с наличными: paymentMethod доезжает до черновика дохода.
+  let sc = applyCapturedOrderEvent(
+    reducer.EMPTY_ORDER_WINDOW_STATE,
+    parseBoltNotification(n("Новый заказ", "за 7 € наличными", 100)),
+  ).windows;
+  const scFin = applyCapturedOrderEvent(
+    sc,
+    parseBoltNotification(n("Поездка завершена", "7 € наличными", 200)),
+  );
+  assert.deepEqual(plain(scFin.incomeDraft), { amount: 7, currencyCode: "EUR", paymentMethod: "cash" });
   cases += 1;
 
   // Завершение без суммы — окна закрываются, дохода нет (не выдумываем).

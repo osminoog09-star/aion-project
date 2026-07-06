@@ -29,10 +29,25 @@ export type RawNotification = {
   postedAtMs: number;
 };
 
+/** Способ оплаты из карточки заказа Bolt: наличные (сразу в кармане) vs карта. */
+export type PaymentMethod = "cash" | "card";
+
 export type CapturedOrderEvent =
-  | { type: "order_assigned"; amount: number | null; currencyCode: "EUR" | null; atMs: number }
+  | {
+      type: "order_assigned";
+      amount: number | null;
+      currencyCode: "EUR" | null;
+      paymentMethod: PaymentMethod | null;
+      atMs: number;
+    }
   | { type: "ride_started"; atMs: number }
-  | { type: "ride_finished"; amount: number | null; currencyCode: "EUR" | null; atMs: number };
+  | {
+      type: "ride_finished";
+      amount: number | null;
+      currencyCode: "EUR" | null;
+      paymentMethod: PaymentMethod | null;
+      atMs: number;
+    };
 
 /**
  * Начальные паттерны (подстроки, нижний регистр; \b с кириллицей не работает).
@@ -75,6 +90,13 @@ function extractEuroAmount(raw: string): number | null {
   return Number.isFinite(v) && v > 0 ? Math.round(v * 100) / 100 : null;
 }
 
+/** Способ оплаты из текста (наличные/карта). Нет явного указания → null. */
+function extractPaymentMethod(raw: string): PaymentMethod | null {
+  if (/наличн|нал\.|cash|sularaha/.test(raw)) return "cash";
+  if (/карт|безнал|card|kaart/.test(raw)) return "card";
+  return null;
+}
+
 /** Уведомление → событие заказа (null, если не от Bolt или не про заказ). */
 export function parseBoltNotification(n: RawNotification): CapturedOrderEvent | null {
   if (!BOLT_DRIVER_PACKAGES.includes(n.packageName as (typeof BOLT_DRIVER_PACKAGES)[number])) {
@@ -84,22 +106,24 @@ export function parseBoltNotification(n: RawNotification): CapturedOrderEvent | 
   if (!raw) return null;
   const amount = extractEuroAmount(raw);
   const currencyCode = amount != null ? "EUR" : null;
+  const paymentMethod = extractPaymentMethod(raw);
   if (INITIAL_PATTERNS.finished.some((p) => raw.includes(p))) {
-    return { type: "ride_finished", amount, currencyCode, atMs: n.postedAtMs };
+    return { type: "ride_finished", amount, currencyCode, paymentMethod, atMs: n.postedAtMs };
   }
   if (INITIAL_PATTERNS.started.some((p) => raw.includes(p))) {
     return { type: "ride_started", atMs: n.postedAtMs };
   }
   if (INITIAL_PATTERNS.assigned.some((p) => raw.includes(p))) {
-    return { type: "order_assigned", amount, currencyCode, atMs: n.postedAtMs };
+    return { type: "order_assigned", amount, currencyCode, paymentMethod, atMs: n.postedAtMs };
   }
   return null;
 }
 
 export type OrderCaptureResult = {
   windows: OrderWindowState;
-  /** Черновик дохода — только если сумма реально была в уведомлении. */
-  incomeDraft: { amount: number; currencyCode: "EUR" } | null;
+  /** Черновик дохода — только если сумма реально была в тексте. Способ оплаты
+      (наличные/карта) — если Bolt его показал; иначе null (не выдумываем). */
+  incomeDraft: { amount: number; currencyCode: "EUR"; paymentMethod: PaymentMethod | null } | null;
 };
 
 /**
@@ -125,7 +149,11 @@ export function applyCapturedOrderEvent(
     windows: endOrderActivity(state, event.atMs),
     incomeDraft:
       hadOpenOrder && event.amount != null && event.currencyCode != null
-        ? { amount: event.amount, currencyCode: event.currencyCode }
+        ? {
+            amount: event.amount,
+            currencyCode: event.currencyCode,
+            paymentMethod: event.paymentMethod,
+          }
         : null,
   };
 }
