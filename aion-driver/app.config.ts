@@ -17,7 +17,7 @@ export default {
     /** Должен совпадать со slug проекта на expo.dev для этого EAS projectId. Сейчас: @osminoog/aion */
     slug: "aion",
     /** Bump при нативных изменениях: новый runtimeVersion (policy appVersion) + новый preview APK. */
-    version: "1.1.1",
+    version: "1.1.2",
     orientation: "portrait",
     icon: "./assets/icon.png",
     scheme: "aion-driver",
@@ -38,7 +38,7 @@ export default {
     },
     android: {
       package: "com.aion.driver",
-      versionCode: 16,
+      versionCode: 17,
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#030712",
