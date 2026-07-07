@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useRuntimePulse } from "../../src/core/aion/runtime/runtimePulseBus";
 import {
+  OVERLAY_ORB_NATIVE_PRODUCTION_READY,
   isAionOverlayOrbNativeAvailable,
   orbNativePulse,
 } from "../../services/aionOverlayOrbNative";
@@ -24,7 +25,7 @@ export function AionOverlayOrbPulseBridge() {
   } | null>(null);
 
   useEffect(() => {
-    if (!isAionOverlayOrbNativeAvailable()) return;
+    if (!OVERLAY_ORB_NATIVE_PRODUCTION_READY || !isAionOverlayOrbNativeAvailable()) return;
     const unsub = useRuntimePulse.subscribe((s) => {
       const next = {
         upload: s.uploadTick,

@@ -32,7 +32,14 @@ export function evaluateApkUpdatePolicy(
   ) {
     return { reason: "runtime_mismatch", critical: requiresImmediateUpdate };
   }
-  if (manifest.runtimeVersion && currentRuntime && manifest.runtimeVersion.trim() !== currentRuntime.trim()) {
+  // Только если УСТАНОВЛЕННЫЙ рантайм СТАРШЕ манифеста (мы позади). Иначе, когда
+  // манифест устарел (напр. sync-manifest в CI не обновился), а пользователь
+  // поставил БОЛЕЕ новый APK, «просто отличается» ложно предлагало обновиться.
+  if (
+    manifest.runtimeVersion &&
+    currentRuntime &&
+    semverLess(currentRuntime.trim(), manifest.runtimeVersion.trim())
+  ) {
     return { reason: "runtime_mismatch", critical: requiresImmediateUpdate };
   }
   return { reason: "none", critical: false };

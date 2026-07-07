@@ -76,4 +76,12 @@ assert.deepEqual(
   "minimum runtime mismatch must honor forceUpdate",
 );
 
-console.log("test-apk-update-policy: ok (12 cases)");
+// Регрессия: устаревший манифест (напр. sync-manifest в CI не обновился), а
+// пользователь поставил БОЛЕЕ новый APK → НЕ предлагать обновление (мы впереди).
+assert.deepEqual(
+  JSON.parse(JSON.stringify(evaluateApkUpdatePolicy({ ...base, latestVersion: "1.0.9", runtimeVersion: "1.0.9" }, "1.1.2", "1.1.2"))),
+  { reason: "none", critical: false },
+  "newer installed than a stale manifest must NOT prompt an update",
+);
+
+console.log("test-apk-update-policy: ok (13 cases)");
