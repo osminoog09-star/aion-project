@@ -55,6 +55,7 @@ import {
   type BackgroundTrackingHandle,
 } from "../services/backgroundTracking";
 import {
+  OVERLAY_ORB_NATIVE_PRODUCTION_READY,
   isAionOverlayOrbNativeAvailable,
   orbNativeHide,
   orbNativeIsPermissionGranted,
@@ -489,7 +490,13 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     void (async () => {
       if (!hydrated || cancelled) return;
-      if (!deviceSettings.androidOverlayOrbEnabled || !isAionOverlayOrbNativeAvailable()) {
+      // Орбита помечена не-production-ready (крашит/сворачивает приложение на части
+      // устройств). Не показываем, пока не пройдёт полевую приёмку — стабильность важнее.
+      if (
+        !OVERLAY_ORB_NATIVE_PRODUCTION_READY ||
+        !deviceSettings.androidOverlayOrbEnabled ||
+        !isAionOverlayOrbNativeAvailable()
+      ) {
         orbVisualRef.current = null;
         await orbNativeHide();
         return;
