@@ -488,32 +488,37 @@ export function SettingsScreen() {
               </View>
             </GlowCard>
 
-            <GlowCard glow="violet" className="mb-4">
-              <Text className="text-xs uppercase tracking-[0.25em] text-slate-500">
-                AION Link
-              </Text>
-              <Text className="mt-2 text-sm text-slate-400">
-                Режим рабочего телефона: короткий экран, синхронизация, импорт скриншотов без лишнего
-                интерфейса.
-              </Text>
-              <View className="mt-4 flex-row items-center justify-between">
-                <Text className="text-base text-white">Режим Link</Text>
-                <Switch
-                  value={settings.aionLinkMode}
-                  onValueChange={(v) => void setAionLinkMode(v)}
-                  trackColor={{ false: "#334155", true: "#7c3aed" }}
-                  thumbColor="#f8fafc"
-                />
-              </View>
-              {settings.aionLinkMode ? (
-                <GradientButton
-                  title="Открыть экран Link"
-                  variant="glass"
-                  className="mt-4"
-                  onPress={() => router.push("/link" as Href)}
-                />
-              ) : null}
-            </GlowCard>
+            {/* AION Link — заморожен (балласт). Тумблер прячем, чтобы водитель
+                случайно не переключил приложение в служебный режим. Доступен
+                только в debug-сборке. */}
+            {featureFlags.debugMenu ? (
+              <GlowCard glow="violet" className="mb-4">
+                <Text className="text-xs uppercase tracking-[0.25em] text-slate-500">
+                  AION Link
+                </Text>
+                <Text className="mt-2 text-sm text-slate-400">
+                  Режим рабочего телефона: короткий экран, синхронизация, импорт скриншотов без лишнего
+                  интерфейса.
+                </Text>
+                <View className="mt-4 flex-row items-center justify-between">
+                  <Text className="text-base text-white">Режим Link</Text>
+                  <Switch
+                    value={settings.aionLinkMode}
+                    onValueChange={(v) => void setAionLinkMode(v)}
+                    trackColor={{ false: "#334155", true: "#7c3aed" }}
+                    thumbColor="#f8fafc"
+                  />
+                </View>
+                {settings.aionLinkMode ? (
+                  <GradientButton
+                    title="Открыть экран Link"
+                    variant="glass"
+                    className="mt-4"
+                    onPress={() => router.push("/link" as Href)}
+                  />
+                ) : null}
+              </GlowCard>
+            ) : null}
 
             <GlowCard glow="violet" className="mb-4">
               <Text className="text-xs uppercase tracking-[0.25em] text-slate-500">

@@ -19,6 +19,7 @@ import { useRuntimePulse } from "../src/core/aion/runtime/runtimePulseBus";
 import { useAionCore } from "../src/core/aion/system/AionCoreContext";
 import { useAionEntityStore } from "../src/core/aion/entity/aionEntityStore";
 import { AION_PERSONA } from "../src/core/aion/personality/persona";
+import { featureFlags } from "../lib/featureFlags";
 import { colors, spacing } from "../tokens";
 
 const accentIcon: Record<AionModuleDefinition["accent"], string> = {
@@ -224,40 +225,46 @@ export function AionHomeHubScreen() {
               СИСТЕМА
             </Text>
             <View style={{ marginTop: 12, gap: 10 }}>
-              <Pressable
-                onPress={() => router.push("/aion-diagnostics")}
-                style={({ pressed }) => ({
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  paddingVertical: 10,
-                  paddingHorizontal: 12,
-                  borderRadius: 12,
-                  backgroundColor: pressed ? "rgba(255,255,255,0.05)" : "rgba(3,7,18,0.35)",
-                  borderWidth: 1,
-                  borderColor: "rgba(34,211,238,0.2)",
-                })}
-              >
-                <Text style={{ color: colors.slate200, fontWeight: "700" }}>Диагностика Core</Text>
-                <MaterialIcons name="analytics" size={20} color={colors.cyan400} />
-              </Pressable>
-              <Pressable
-                onPress={() => router.push("/ota-debug")}
-                style={({ pressed }) => ({
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  paddingVertical: 10,
-                  paddingHorizontal: 12,
-                  borderRadius: 12,
-                  backgroundColor: pressed ? "rgba(255,255,255,0.05)" : "rgba(3,7,18,0.35)",
-                  borderWidth: 1,
-                  borderColor: "rgba(255,255,255,0.08)",
-                })}
-              >
-                <Text style={{ color: colors.slate300, fontWeight: "600" }}>OTA · каналы · runtime</Text>
-                <MaterialIcons name="system-update" size={20} color={colors.slate500} />
-              </Pressable>
+              {/* Служебные экраны Core/OTA — балласт для водителя, показываем
+                  только в debug-сборке. */}
+              {featureFlags.debugMenu ? (
+                <>
+                  <Pressable
+                    onPress={() => router.push("/aion-diagnostics")}
+                    style={({ pressed }) => ({
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      paddingVertical: 10,
+                      paddingHorizontal: 12,
+                      borderRadius: 12,
+                      backgroundColor: pressed ? "rgba(255,255,255,0.05)" : "rgba(3,7,18,0.35)",
+                      borderWidth: 1,
+                      borderColor: "rgba(34,211,238,0.2)",
+                    })}
+                  >
+                    <Text style={{ color: colors.slate200, fontWeight: "700" }}>Диагностика Core</Text>
+                    <MaterialIcons name="analytics" size={20} color={colors.cyan400} />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => router.push("/ota-debug")}
+                    style={({ pressed }) => ({
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      paddingVertical: 10,
+                      paddingHorizontal: 12,
+                      borderRadius: 12,
+                      backgroundColor: pressed ? "rgba(255,255,255,0.05)" : "rgba(3,7,18,0.35)",
+                      borderWidth: 1,
+                      borderColor: "rgba(255,255,255,0.08)",
+                    })}
+                  >
+                    <Text style={{ color: colors.slate300, fontWeight: "600" }}>OTA · каналы · runtime</Text>
+                    <MaterialIcons name="system-update" size={20} color={colors.slate500} />
+                  </Pressable>
+                </>
+              ) : null}
               <Pressable
                 onPress={() => router.push("/settings")}
                 style={({ pressed }) => ({

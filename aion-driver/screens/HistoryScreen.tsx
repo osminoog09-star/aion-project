@@ -261,7 +261,7 @@ function OcrRow({
       <View className="flex-row items-center justify-between">
         <View>
           <Text className="text-[10px] uppercase tracking-widest text-violet-300/90">
-            Импорт · {p.platform.toUpperCase()}
+            Импорт · {(p.platform ?? "—").toUpperCase()}
           </Text>
           <Text className="text-sm text-slate-300">{dateLabel}</Text>
         </View>

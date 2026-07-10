@@ -98,6 +98,10 @@ function ThemedAppTree() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: theme.canvas }}>
+      {/* ErrorBoundary ОБЁРНУТ ВОКРУГ провайдеров: падение при гидратации
+          ShiftContext/DeviceContext ловится и показывает fallback, а не белый
+          экран («выкидывает из приложения»). */}
+      <ErrorBoundary>
       <UpdatesProvider>
         <ApkUpdatesProvider>
           <AionCoreProvider>
@@ -116,7 +120,6 @@ function ThemedAppTree() {
               {featureFlags.qaHud ? <QaDebugHud /> : null}
               <SplashUnlock />
               <StatusBar style={theme.statusBarStyle} />
-              <ErrorBoundary>
                 <SentryRouteListener />
                 <Stack
                   screenOptions={{
@@ -162,12 +165,12 @@ function ThemedAppTree() {
                 {featureFlags.aionBoot && !aionBootDone ? (
                   <AionBootSequence onDone={onAionBootDone} />
                 ) : null}
-              </ErrorBoundary>
             </ShiftProvider>
           </DeviceProvider>
         </AionCoreProvider>
         </ApkUpdatesProvider>
       </UpdatesProvider>
+      </ErrorBoundary>
     </GestureHandlerRootView>
   );
 }
