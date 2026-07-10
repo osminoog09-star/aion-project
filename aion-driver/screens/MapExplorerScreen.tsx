@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { ActivityIndicator, NativeModules, Pressable, Text, View } from "react-native";
 import { WebView } from "react-native-webview";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Location from "expo-location";
@@ -28,6 +28,12 @@ import { useTheme } from "../contexts/ThemeContext";
 // Пярну — рабочий город владельца; карта тут только до первого GPS-фикса.
 const DEFAULT_CENTER = { lat: 58.3859, lng: 24.4971 };
 const MAX_ROUTE_POINTS = 1500;
+
+/** Нативный модуль WebView есть в APK? Если JS приедет OTA на старый бинарник
+    без webview — рендерить WebView нельзя (мгновенный краш). Проверяем прямо
+    по RN NativeModules (react-native-webview регистрирует RNCWebViewModule). */
+const WEBVIEW_AVAILABLE =
+  NativeModules?.RNCWebViewModule != null || NativeModules?.RNCWebView != null;
 
 type LatLng = { lat: number; lng: number };
 type MapData = {
@@ -57,12 +63,11 @@ const LEAFLET_HTML = `<!DOCTYPE html>
 .dot{border-radius:50%;border:2px solid rgba(255,255,255,.9)}</style>
 </head><body><div id="map"></div>
 <script>
-var map=L.map('map',{zoomControl:false,attributionControl:false}).setView([58.3859,24.4971],13);
-L.tileLayer('https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
-var layers=L.layerGroup().addTo(map);
+var map=null,layers=null;
 function post(m){if(window.ReactNativeWebView)window.ReactNativeWebView.postMessage(JSON.stringify(m));}
 function icon(color,size){return L.divIcon({className:'',html:'<div class="dot" style="width:'+size+'px;height:'+size+'px;background:'+color+'"></div>',iconSize:[size,size]});}
 function applyData(d){
+  if(!map||!layers)return;
   try{
     layers.clearLayers();
     var bounds=[];
@@ -80,7 +85,13 @@ function applyData(d){
     else if(d.center){map.setView([d.center.lat,d.center.lng],13);}
   }catch(e){post({type:'err',msg:String(e)});}
 }
-post({type:'ready'});
+try{
+  if(typeof L==='undefined')throw new Error('leaflet-not-loaded');
+  map=L.map('map',{zoomControl:false,attributionControl:false}).setView([58.3859,24.4971],13);
+  L.tileLayer('https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+  layers=L.layerGroup().addTo(map);
+  post({type:'ready'});
+}catch(e){post({type:'initerr',msg:String(e)});}
 </script></body></html>`;
 
 export function MapExplorerScreen() {
@@ -89,6 +100,7 @@ export function MapExplorerScreen() {
   const { activeShift } = useShift();
   const webRef = useRef<WebView>(null);
   const [ready, setReady] = useState(false);
+  const [mapFailed, setMapFailed] = useState(false);
   const [rawStations, setRawStations] = useState<FuelStationMarker[]>([]);
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [loadingFuel, setLoadingFuel] = useState(false);
@@ -213,7 +225,11 @@ export function MapExplorerScreen() {
     (raw: string) => {
       try {
         const m = JSON.parse(raw) as { type: string; id?: string };
-        if (m.type === "ready") setReady(true);
+        if (m.type === "ready") {
+          setReady(true);
+          setMapFailed(false);
+        }
+        if (m.type === "initerr") setMapFailed(true);
         if (m.type === "station" && m.id) void toggleFuelFavoriteId(m.id).then(setFavoriteIds);
       } catch {
         /* ignore */
@@ -221,6 +237,20 @@ export function MapExplorerScreen() {
     },
     [],
   );
+
+  // Если карта не сообщила «ready» за 8 с (нет интернета для Leaflet/тайлов) —
+  // показываем честную заглушку вместо чёрного пустого экрана.
+  useEffect(() => {
+    if (ready || mapFailed) return;
+    const t = setTimeout(() => setMapFailed(true), 8000);
+    return () => clearTimeout(t);
+  }, [ready, mapFailed]);
+
+  const retryMap = useCallback(() => {
+    setMapFailed(false);
+    setReady(false);
+    webRef.current?.reload();
+  }, []);
 
   const recenter = async () => {
     const { status } = await Location.getForegroundPermissionsAsync();
@@ -231,6 +261,22 @@ export function MapExplorerScreen() {
     void loadFuel(p.lat, p.lng);
   };
 
+  // Нет нативного WebView в этой сборке (JS приехал OTA на старый APK) —
+  // рендерим заглушку, а не роняем приложение попыткой смонтировать WebView.
+  if (!WEBVIEW_AVAILABLE) {
+    return (
+      <View style={{ flex: 1, backgroundColor: canvas, alignItems: "center", justifyContent: "center", padding: spacing.xl }}>
+        <Text style={{ color: semantic.textPrimary, fontSize: 17, fontWeight: "800", textAlign: "center" }}>
+          Карта появится после обновления
+        </Text>
+        <Text style={{ color: semantic.textTertiary, fontSize: 13, marginTop: 10, textAlign: "center", lineHeight: 19 }}>
+          Установите свежую версию приложения — карта включится автоматически.
+        </Text>
+        <GradientButton title="Назад" variant="glass" onPress={() => router.back()} style={{ marginTop: spacing.xl }} />
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: canvas }}>
       <WebView
@@ -238,10 +284,40 @@ export function MapExplorerScreen() {
         originWhitelist={["*"]}
         source={{ html: LEAFLET_HTML }}
         onMessage={(e) => onMessage(e.nativeEvent.data)}
+        onError={() => setMapFailed(true)}
         style={{ flex: 1, backgroundColor: "#0a0d0f" }}
         javaScriptEnabled
         domStorageEnabled
       />
+      {mapFailed ? (
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            alignItems: "center",
+            justifyContent: "center",
+            padding: spacing.xl,
+            backgroundColor: "rgba(10,13,15,0.92)",
+          }}
+        >
+          <Text style={{ color: semantic.textPrimary, fontSize: 16, fontWeight: "800", textAlign: "center" }}>
+            Карта не загрузилась
+          </Text>
+          <Text style={{ color: semantic.textTertiary, fontSize: 13, marginTop: 8, textAlign: "center", lineHeight: 19 }}>
+            Нужен интернет, чтобы загрузить карту. Проверьте связь и повторите.
+          </Text>
+          <Pressable
+            onPress={retryMap}
+            style={{ marginTop: spacing.lg, paddingVertical: 10, paddingHorizontal: 18, borderRadius: 14, borderWidth: 1, borderColor: semantic.borderStrong, backgroundColor: semantic.surface }}
+          >
+            <Text style={{ color: semantic.accent, fontSize: 13, fontWeight: "800" }}>Повторить</Text>
+          </Pressable>
+          <GradientButton title="Назад" variant="glass" onPress={() => router.back()} style={{ marginTop: spacing.md }} />
+        </View>
+      ) : null}
       <View style={{ position: "absolute", top: insets.top + spacing.sm, left: spacing.md, right: spacing.md }}>
         <View
           style={{

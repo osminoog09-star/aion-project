@@ -9,6 +9,7 @@ import {
 import { useShift } from "../hooks/useShift";
 import { useTheme } from "../contexts/ThemeContext";
 import { useDevice } from "../hooks/useDevice";
+import { featureFlags } from "../lib/featureFlags";
 
 export default function Index() {
   const { ready: authReady, session, isGuest } = useAuth();
@@ -54,9 +55,13 @@ export default function Index() {
     return <Redirect href="/onboarding" />;
   }
 
-  if (profile && settings.aionLinkMode) {
+  // Link — заморожен (балласт). Пускаем в него только при debug-флаге, чтобы
+  // залипший aionLinkMode не запирал водителя в служебном экране.
+  if (profile && settings.aionLinkMode && featureFlags.debugMenu) {
     return <Redirect href={"/link" as Href} />;
   }
 
-  return <Redirect href="/home" />;
+  // Водитель открывает приложение сразу в кокпите (Пульт), а не в хабе
+  // экосистемы. Хаб остаётся доступен кнопкой «приложения» в таб-баре.
+  return <Redirect href={"/driver" as Href} />;
 }
