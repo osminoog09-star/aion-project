@@ -1115,6 +1115,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!hydrated || Platform.OS !== "android") return;
+    if (!OVERLAY_ORB_NATIVE_PRODUCTION_READY) return;
     if (!deviceSettings.androidOverlayOrbEnabled || !isAionOverlayOrbNativeAvailable()) return;
     if (!activeShiftRuntime) {
       lastOrbHudRef.current = null;
