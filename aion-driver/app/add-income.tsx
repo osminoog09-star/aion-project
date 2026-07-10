@@ -27,9 +27,12 @@ export default function AddIncomeModal() {
     const amount = parseFloat(value.replace(",", "."));
     if (!activeShift || !Number.isFinite(amount) || amount <= 0) return;
     setBusy(true);
-    await addIncome(amount);
-    setBusy(false);
-    close();
+    try {
+      await addIncome(amount);
+      close();
+    } finally {
+      setBusy(false);
+    }
   };
 
   const parsed = parseFloat(value.replace(",", "."));
