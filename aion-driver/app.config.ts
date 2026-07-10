@@ -17,7 +17,7 @@ export default {
     /** Должен совпадать со slug проекта на expo.dev для этого EAS projectId. Сейчас: @osminoog/aion */
     slug: "aion",
     /** Bump при нативных изменениях: новый runtimeVersion (policy appVersion) + новый preview APK. */
-    version: "1.1.3",
+    version: "1.1.4",
     orientation: "portrait",
     icon: "./assets/icon.png",
     scheme: "aion-driver",
@@ -38,7 +38,7 @@ export default {
     },
     android: {
       package: "com.aion.driver",
-      versionCode: 18,
+      versionCode: 19,
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#030712",
@@ -75,15 +75,14 @@ export default {
           data: [{ scheme: "google.navigation" }],
         },
       ],
+      /** Орбита заморожена (Фаза 0): нативный код вырезан из сборки, поэтому
+          SYSTEM_ALERT_WINDOW / RECEIVE_BOOT_COMPLETED / FGS_SPECIAL_USE больше
+          не нужны. Останутся только разрешения смены/GPS. */
       permissions: [
         "ACCESS_COARSE_LOCATION",
         "ACCESS_BACKGROUND_LOCATION",
         "FOREGROUND_SERVICE",
         "FOREGROUND_SERVICE_LOCATION",
-        "FOREGROUND_SERVICE_SPECIAL_USE",
-        "RECEIVE_BOOT_COMPLETED",
-        /** Системная орбита поверх приложений — следующие нативные шаги; без разрешения overlay не рисуем. */
-        "SYSTEM_ALERT_WINDOW",
       ],
     },
     plugins: [
@@ -124,7 +123,8 @@ export default {
           speechRecognitionPermission: "AION распознаёт голосовые команды для заказов и заправок.",
         },
       ],
-      require("./plugins/withAionOverlayOrb"),
+      // Плагин орбиты убран: пока орбита заморожена (Фаза 0), её нативная
+      // служба/boot-receiver/overlay не собираются в APK — воскрешать нечему.
     ],
     experiments: {
       typedRoutes: true,
