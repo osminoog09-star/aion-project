@@ -58,9 +58,12 @@ export default function AddFuelModal() {
   const submit = async () => {
     if (!preview?.entry) return;
     setBusy(true);
-    await addConfirmedFuelEntry(preview.entry);
-    setBusy(false);
-    close();
+    try {
+      await addConfirmedFuelEntry(preview.entry);
+      close();
+    } finally {
+      setBusy(false);
+    }
   };
 
   const canSave = Boolean(preview?.entry && !busy);
