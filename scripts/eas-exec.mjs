@@ -10,6 +10,21 @@ import { resolveAionDriverPath } from "./resolve-aion-driver-path.mjs";
 const portalRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 export async function easBuildViewJson(buildId) {
+  // В CI (есть EXPO_TOKEN) стабильный Expo GraphQL идёт ПЕРВЫМ. Причина: свежие
+  // eas-cli@latest печатают апдейт-нотисы/предупреждения в stdout, из-за чего
+  // `build:view --json` не парсится (JSON.parse падает), а старый порядок
+  // фолбэчил в GraphQL только при НЕнулевом выходе CLI — то есть при «грязном»
+  // stdout фолбэк не срабатывал и sync-manifest падал хронически. GraphQL от
+  // версии CLI не зависит.
+  if (process.env.EXPO_TOKEN?.trim()) {
+    try {
+      return await fetchExpoBuildById(buildId);
+    } catch (e) {
+      console.warn("[EAS] Expo GraphQL build fetch failed; falling back to eas-cli build:view.");
+      console.warn(e.message ?? e);
+    }
+  }
+
   const driverRoot = resolveAionDriverPath() ?? path.join(portalRoot, "aion-driver");
   const bin = process.platform === "win32" ? "npx.cmd" : "npx";
   let raw;
@@ -34,14 +49,12 @@ export async function easBuildViewJson(buildId) {
     const detail = [e.message, stderr ? `stderr:\n${stderr}` : "", stdout ? `stdout:\n${stdout}` : ""]
       .filter(Boolean)
       .join("\n");
-    if (process.env.EXPO_TOKEN?.trim()) {
-      console.warn("[EAS] eas-cli build:view failed; falling back to Expo GraphQL API.");
-      console.warn(detail);
-      return fetchExpoBuildById(buildId);
-    }
     throw new Error(detail);
   }
+  // eas-cli может добавить не-JSON шум (нотисы) перед объектом — режем до первого { или [.
   const trimmed = raw.trim();
-  const parsed = JSON.parse(trimmed);
+  const start = trimmed.search(/[[{]/);
+  const jsonText = start >= 0 ? trimmed.slice(start) : trimmed;
+  const parsed = JSON.parse(jsonText);
   return Array.isArray(parsed) ? parsed[0] : parsed;
 }
