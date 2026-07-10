@@ -1,338 +1,181 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getEcosystemStatus } from "@/lib/ecosystem-data";
-import { averageReadiness } from "@/lib/readiness";
 import { ecosystemRoutes } from "@/lib/ecosystem-routes";
-import { getStrategicPriorities } from "@/lib/strategic-priorities";
-import type { ExecutionDependencyNode } from "@/lib/ecosystem-types";
-
-export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "План развития AION — что готово и что впереди",
+  title: "План развития AION Driver — по этапам",
   description:
-    "Понятный план развития AION: четыре этапа, готовность по направлениям и что в работе прямо сейчас.",
+    "Честный поэтапный план: одна вещь доводится до конца, потом следующая. Что готово, что в работе, что дальше.",
 };
 
-const readinessRows = [
-  { key: "mobile", label: "Приложение Driver" },
-  { key: "backgroundDrive", label: "Подсчёт в фоне" },
-  { key: "ocr", label: "Распознавание чеков" },
-  { key: "sync", label: "Синхронизация" },
-  { key: "cloud", label: "Облако" },
-  { key: "webPortal", label: "Этот сайт" },
-] as const;
+type PhaseStatus = "done" | "in_progress" | "next";
 
-const stages = [
+const STATUS_UI: Record<PhaseStatus, { label: string; tone: string; dot: string }> = {
+  done: { label: "готово", tone: "text-emerald-300", dot: "bg-emerald-400" },
+  in_progress: { label: "в работе", tone: "text-cyan-300", dot: "bg-cyan-400" },
+  next: { label: "дальше", tone: "text-slate-300", dot: "bg-slate-500" },
+};
+
+const CORE = ["Смена", "Доход", "Топливо", "Прибыль", "История", "Карта"];
+
+const PHASES: {
+  n: string;
+  title: string;
+  status: PhaseStatus;
+  points: string[];
+  done: string;
+}[] = [
   {
-    n: "01",
-    title: "Базовое приложение",
-    state: "готово",
-    tone: "text-emerald-300",
-    dot: "bg-emerald-400",
-    text: "Смена, GPS-километраж, чеки топлива и подсчёт прибыли работают. Версию можно скачать и пользоваться.",
+    n: "0",
+    title: "Стабильность и чистота",
+    status: "in_progress",
+    points: [
+      "Карта на OpenStreetMap — не пустая, без Google-ключа",
+      "Убраны краши (орбита, голос, карта) и все фейковые данные",
+      "Убран балласт: лишние модули и разделы скрыты",
+    ],
+    done: "Все 6 экранов ядра открываются без вылетов, лишнего на виду нет.",
   },
   {
-    n: "02",
-    title: "Надёжность",
-    state: "сейчас",
-    tone: "text-cyan-300",
-    dot: "bg-cyan-400",
-    text: "Приложение не теряет данные, если пропала связь, телефон ушёл в сон или закрылось приложение. Точный подсчёт в фоне.",
+    n: "1",
+    title: "Смена и деньги",
+    status: "next",
+    points: [
+      "Смена: старт/пауза/конец — надёжно, с восстановлением после сна и потери связи",
+      "Доход: руками, голосом и скриншотом заработка Bolt",
+      "Топливо по чеку, прибыль = доход − расходы, ₽/час и ₽/км",
+    ],
+    done: "За реальную смену итог сходится, ничего не теряется.",
   },
   {
-    n: "03",
+    n: "2",
+    title: "Карта и маршрут смены",
+    status: "next",
+    points: ["Реальный маршрут смены по GPS на карте", "Заправки рядом из OpenStreetMap"],
+    done: "Карта показывает настоящий след смены.",
+  },
+  {
+    n: "3",
+    title: "Навигатор для Bolt",
+    status: "next",
+    points: [
+      "AION в списке навигаторов — из Bolt «Навигация» открывает AION",
+      "Точка назначения, маршрут по дорогам и повороты",
+    ],
+    done: "Принял заказ → открыл AION → видишь маршрут до точки.",
+  },
+  {
+    n: "4",
+    title: "Авто-фиксация заказов",
+    status: "next",
+    points: [
+      "AION сам считывает карточку заказа Bolt: куда, сумма, наличные/карта",
+      "Заказ и доход записываются без ручного ввода — суммы только реальные",
+    ],
+    done: "Принял и выполнил заказ — всё записалось само.",
+  },
+  {
+    n: "5",
     title: "Умная аналитика",
-    state: "дальше",
-    tone: "text-amber-300",
-    dot: "bg-amber-400",
-    text: "История смен, реальные расходы и понятные подсказки: где и когда выгоднее работать. Только на ваших настоящих данных.",
+    status: "next",
+    points: ["Где и когда выгоднее работать — только по твоим настоящим сменам"],
+    done: "Подсказки из реальных смен, без выдумок.",
   },
-  {
-    n: "04",
-    title: "Карты и топливо",
-    state: "позже",
-    tone: "text-violet-300",
-    dot: "bg-violet-400",
-    text: "Глубокий разбор поездок и расхода топлива по маршруту. Начнём, когда накопится достаточно реальных данных.",
-  },
-] as const;
+];
 
-const depGroups = [
-  { key: "in_progress", label: "В работе", tone: "text-cyan-300", dot: "bg-cyan-400" },
-  { key: "actionable", label: "Можно брать", tone: "text-amber-300", dot: "bg-amber-400" },
-  { key: "waiting", label: "Ждёт условий", tone: "text-slate-400", dot: "bg-slate-500" },
-  { key: "done", label: "Готово", tone: "text-emerald-300", dot: "bg-emerald-400" },
-] as const;
-
-type DepGroupKey = (typeof depGroups)[number]["key"];
-
-function depGroupKey(status: string): DepGroupKey {
-  if (status === "done" || status === "in_progress" || status === "actionable") return status;
-  return "waiting";
-}
-
-/**
- * Человеческие пояснения к узлам графа зависимостей (reason в JSON частично
- * технический/английский — переводим при выводе, сами данные не меняем).
- * Для незнакомых узлов показываем reason как есть.
- */
-const depReasonRu: Record<string, string> = {
-  "overlay-hud-full":
-    "Подсказки поверх экрана появятся только после стабильной работы приложения в фоне.",
-  "heatmap-analytics":
-    "Тепловые карты строим только на реальной истории поездок — она ещё накапливается.",
-  "route-gps-store":
-    "История GPS-поездок сохраняется: маршрут, остановки и снимок смены записываются надёжно.",
-  "post-shift-analytics":
-    "После смены считается итог: маршрут, простой, время и прибыль.",
-  "time-intelligence":
-    "Лучшие часы и зоны для работы считаются по накопленным реальным сменам.",
-  "aion-maps-driver-runtime-os":
-    "Архитектура и схемы данных готовы к работе; сам движок ждёт, пока созреют зависимости.",
-  "maps-gps-intelligence":
-    "Типы километров (заказ, подача, порожняк, личное) и распределение топлива уже работают; осталась проверка в реальных поездках.",
-  "aion-maps-navigation":
-    "Своя карта уже показывает реальный маршрут смены. Дальше — кнопка «Навигация» в Bolt сможет открывать AION с точкой и маршрутом до неё.",
-  "auto-order-capture":
-    "Заказ пришёл и выполнен — приложение само запишет и поездку, и сумму (из уведомлений Bolt). Уже сейчас: скриншот заработка Bolt → все заказы распознаются сами.",
-  "maps-road-matching":
-    "Привязка трека к реальным дорогам: проект готов, ждём дорожный граф и реальные треки.",
-  "operational-fuel-cost-intelligence":
-    "Учёт затрат смены и данные с чеков топлива — этим можно заниматься уже сейчас.",
-  "fuel-gps-cost-allocation":
-    "Топливо распределяется по типам километров (заказ, подача, порожняк, личное); осталась проверка в реальных поездках.",
-  "fuel-maps-predictive":
-    "Прогноз расхода топлива по маршруту — после привязки маршрутов к дорогам.",
-};
-
-function groupDependencyNodes(graph: ExecutionDependencyNode[]) {
-  const grouped = new Map<DepGroupKey, ExecutionDependencyNode[]>();
-  for (const node of graph) {
-    const key = depGroupKey(node.status);
-    const list = grouped.get(key) ?? [];
-    list.push(node);
-    grouped.set(key, list);
-  }
-  return grouped;
-}
-
-const nowDoing = [
-  "Подсчёт километров продолжается, даже когда телефон в кармане",
-  "Данные смены не теряются при потере связи",
-  "Чеки топлива распознаются точнее",
-] as const;
-
-export default async function RoadmapPage() {
-  const eco = await getEcosystemStatus();
-  const progress = averageReadiness(eco.readiness);
-  const priorities = await getStrategicPriorities();
-  const depByGroup = groupDependencyNodes(priorities.dependencyGraph);
-
+export default function RoadmapPage() {
   return (
     <div>
       <section className="aion-hero-glow border-b border-white/10">
-        <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+        <div className="mx-auto max-w-4xl px-4 py-16 md:px-6 md:py-20">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300/90">
-            AION · план развития
+            AION Driver · план
           </p>
-          <h1 className="mt-5 max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl">
-            Куда движется проект
+          <h1 className="mt-5 text-4xl font-semibold leading-tight tracking-tight text-white md:text-5xl">
+            Одна вещь до конца —<br />
+            потом следующая
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-7 text-slate-400 md:text-lg">
-            Простой и честный план: что уже готово, над чем работаем сейчас и что будет дальше.
-            Без обещаний конкретных дат — только реальный порядок шагов.
+            Честный план по этапам. Каждый этап доводится до железной надёжности, и только
+            потом начинается следующий. Никакого бега по сотне недоделок.
           </p>
-          <div className="mt-9 flex items-end gap-4">
-            <div>
-              <p className="text-6xl font-semibold text-white">
-                {progress}
-                <span className="text-2xl text-emerald-300">%</span>
-              </p>
-              <p className="mt-1 text-sm text-slate-500">общая готовность</p>
-            </div>
-            <div
-              className="mb-1 h-2.5 w-48 overflow-hidden rounded bg-white/10"
-              role="progressbar"
-              aria-valuenow={progress}
-              aria-valuemin={0}
-              aria-valuemax={100}
-              aria-label="Общая готовность проекта"
-            >
-              <div
-                className="h-full rounded bg-emerald-400"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
+          <div className="mt-8 flex flex-wrap gap-2">
+            {CORE.map((c) => (
+              <span
+                key={c}
+                className="rounded-full border border-white/15 px-3 py-1 text-xs font-medium text-slate-200"
+              >
+                {c}
+              </span>
+            ))}
           </div>
+          <p className="mt-3 text-xs text-slate-400">
+            Ядро приложения. Пока оно не железное — новое не начинаем.
+          </p>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-violet-300/90">
-          Путь до результата
-        </p>
-        <h2 className="mt-3 text-2xl font-semibold text-white md:text-3xl">Четыре понятных этапа</h2>
-        <div className="mt-10 grid gap-4 lg:grid-cols-2">
-          {stages.map((s) => (
-            <article
-              key={s.n}
-              className="aion-card rounded-lg border border-white/10 bg-white/[0.02] p-6"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs text-slate-600">{s.n}</span>
-                <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${s.tone}`}>
-                  <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
-                  {s.state}
-                </span>
-              </div>
-              <h3 className="mt-5 text-lg font-semibold text-white">{s.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-400">{s.text}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-6xl px-4 pb-16 md:px-6 md:pb-20">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300/90">
-          Живой статус
-        </p>
-        <h2 className="mt-3 text-2xl font-semibold text-white md:text-3xl">
-          Что в работе прямо сейчас
-        </h2>
-        <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-400">
-          Реальные задачи из внутреннего плана — с их текущим состоянием. Список обновляется по
-          мере работы, без приукрашивания.
-        </p>
-        <div className="mt-10 space-y-10">
-          {depGroups.map((group) => {
-            const nodes = depByGroup.get(group.key);
-            if (!nodes || nodes.length === 0) return null;
+      <section className="mx-auto max-w-4xl px-4 py-14 md:px-6 md:py-16">
+        <div className="space-y-4">
+          {PHASES.map((p) => {
+            const s = STATUS_UI[p.status];
             return (
-              <div key={group.key}>
-                <span
-                  className={`inline-flex items-center gap-1.5 text-xs font-semibold ${group.tone}`}
-                >
-                  <span className={`h-1.5 w-1.5 rounded-full ${group.dot}`} aria-hidden="true" />
-                  {group.label}
-                </span>
-                <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                  {nodes.map((node) => (
-                    <article
-                      key={node.id}
-                      className="aion-card rounded-lg border border-white/10 bg-white/[0.02] p-6"
-                    >
-                      <h3 className="text-base font-semibold text-white">{node.title}</h3>
-                      <p className="mt-2 text-sm leading-6 text-slate-400">
-                        {depReasonRu[node.id] ?? node.reason}
-                      </p>
-                    </article>
-                  ))}
+              <article
+                key={p.n}
+                className={`aion-card rounded-xl border p-6 ${
+                  p.status === "in_progress"
+                    ? "border-cyan-400/30 bg-cyan-400/[0.04]"
+                    : "border-white/10 bg-white/[0.02]"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-baseline gap-3">
+                    <span className="font-mono text-sm text-slate-500">Этап {p.n}</span>
+                    <h2 className="text-xl font-semibold text-white">{p.title}</h2>
+                  </div>
+                  <span className={`inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold ${s.tone}`}>
+                    <span className={`h-1.5 w-1.5 rounded-full ${s.dot}`} />
+                    {s.label}
+                  </span>
                 </div>
-              </div>
+                <ul className="mt-4 space-y-2">
+                  {p.points.map((pt) => (
+                    <li key={pt} className="flex gap-2 text-sm leading-6 text-slate-300">
+                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-slate-500" />
+                      {pt}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-4 text-xs leading-5 text-slate-400">
+                  <span className="font-semibold text-slate-300">Готово, когда:</span> {p.done}
+                </p>
+              </article>
             );
           })}
         </div>
-      </section>
 
-      <section className="border-y border-white/10 bg-[#0a0d0f]">
-        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 md:px-6 md:py-20 lg:grid-cols-2">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-amber-300/90">
-              Где проект сейчас
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold text-white md:text-3xl">
-              Готовность по направлениям
-            </h2>
-            <div className="mt-8 grid gap-y-6">
-              {readinessRows.map((row) => {
-                const value = eco.readiness[row.key] ?? 0;
-                return (
-                  <div key={row.key}>
-                    <div className="mb-2 flex items-center justify-between text-sm">
-                      <span className="text-slate-200">{row.label}</span>
-                      <span className="font-mono text-xs text-slate-500">{value}%</span>
-                    </div>
-                    <div
-                      className="h-2.5 w-full overflow-hidden rounded bg-white/10"
-                      role="progressbar"
-                      aria-valuenow={Math.max(0, Math.min(100, value))}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                      aria-label={`${row.label}: готовность`}
-                    >
-                      <div
-                        className="h-full rounded bg-cyan-400"
-                        style={{ width: `${Math.max(0, Math.min(100, value))}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-300/90">
-              Сейчас в работе
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold text-white md:text-3xl">Над чем работаем</h2>
-            <ul className="mt-8 space-y-4">
-              {nowDoing.map((item) => (
-                <li key={item} className="flex gap-3 text-sm leading-6 text-slate-300">
-                  <span className="mt-0.5 text-cyan-400" aria-hidden="true">
-                    →
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-            <p className="mt-8 text-sm text-slate-500">
-              Нужны технические подробности и журнал работ?{" "}
-              <Link
-                href={ecosystemRoutes.operations}
-                className="text-cyan-300 underline-offset-2 hover:underline"
-              >
-                Раздел «Операции»
-              </Link>
-              .
-            </p>
-          </div>
+        <div className="mt-10 rounded-xl border border-white/10 bg-white/[0.02] p-6">
+          <h2 className="text-sm font-semibold uppercase tracking-widest text-slate-400">Заморожено</h2>
+          <p className="mt-2 text-sm leading-6 text-slate-400">
+            Всё, что не про водителя за рулём, убрано с глаз и не трогается, пока ядро не железное:
+            орбита поверх экрана, лишние «модули», десктоп-экраны, служебные панели. Меньше
+            приложение — меньше ломается.
+          </p>
         </div>
-      </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-          Планируется
-        </p>
-        <h2 className="mt-3 text-2xl font-semibold text-white md:text-3xl">Идеи на будущее</h2>
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          <article className="aion-card rounded-lg border border-white/10 bg-white/[0.02] p-6">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-lg font-semibold text-white">Taxi Plan — где таксовать</h3>
-              <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[11px] font-semibold text-slate-400">
-                в плане
-              </span>
-            </div>
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              План на неделю и месяц для водителя: где и когда выгоднее работать в Пярну — горячие
-              зоны, прогноз спроса, городские события, погода и праздники. Подсказки — только на
-              реальных данных смен, без выдуманных цифр.
-            </p>
-          </article>
-          <article className="aion-card rounded-lg border border-white/10 bg-white/[0.02] p-6">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <h3 className="text-lg font-semibold text-white">Умные маршруты</h3>
-              <span className="rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-[11px] font-semibold text-slate-400">
-                спайк
-              </span>
-            </div>
-            <p className="mt-2 text-sm leading-6 text-slate-400">
-              Привязка трека смены к реальным дорогам — точная дистанция по маршруту и основа для
-              предиктивного расхода топлива. Сейчас на этапе проектирования, без движка, только на
-              реальных треках.
-            </p>
-          </article>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link
+            href={ecosystemRoutes.aionProject}
+            className="rounded-lg bg-cyan-400 px-6 py-3 text-sm font-semibold text-black transition hover:bg-cyan-300"
+          >
+            О приложении Driver
+          </Link>
+          <Link
+            href={ecosystemRoutes.releases}
+            className="rounded-lg border border-white/15 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/5"
+          >
+            Скачать
+          </Link>
         </div>
       </section>
     </div>
