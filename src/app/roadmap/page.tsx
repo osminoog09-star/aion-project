@@ -10,80 +10,119 @@ export const metadata: Metadata = {
 
 type PhaseStatus = "done" | "in_progress" | "next";
 
-const STATUS_UI: Record<PhaseStatus, { label: string; tone: string; dot: string }> = {
-  done: { label: "готово", tone: "text-emerald-300", dot: "bg-emerald-400" },
-  in_progress: { label: "в работе", tone: "text-cyan-300", dot: "bg-cyan-400" },
-  next: { label: "дальше", tone: "text-slate-300", dot: "bg-slate-500" },
+const STATUS_UI: Record<PhaseStatus, { label: string; tone: string; dot: string; ring: string }> = {
+  done: {
+    label: "готово",
+    tone: "text-emerald-300",
+    dot: "bg-emerald-400",
+    ring: "border-emerald-400/30 bg-emerald-400/[0.04]",
+  },
+  in_progress: {
+    label: "в работе",
+    tone: "text-cyan-300",
+    dot: "bg-cyan-400",
+    ring: "border-cyan-400/30 bg-cyan-400/[0.05]",
+  },
+  next: {
+    label: "дальше",
+    tone: "text-slate-400",
+    dot: "bg-slate-500",
+    ring: "border-white/10 bg-white/[0.02]",
+  },
 };
 
 const CORE = ["Смена", "Доход", "Топливо", "Прибыль", "История", "Карта"];
 
+type Item = { t: string; done?: boolean };
+
 const PHASES: {
   n: string;
   title: string;
+  goal: string;
   status: PhaseStatus;
-  points: string[];
+  items: Item[];
   done: string;
 }[] = [
   {
     n: "0",
     title: "Стабильность и чистота",
+    goal: "Приложение не крашит и не путает. Ничего лишнего на виду.",
     status: "in_progress",
-    points: [
-      "Карта на OpenStreetMap — не пустая, без Google-ключа",
-      "Убраны краши (орбита, голос, карта) и все фейковые данные",
-      "Убран балласт: лишние модули и разделы скрыты",
+    items: [
+      { t: "Карта на OpenStreetMap — не пустая, без Google-ключа", done: true },
+      { t: "Убраны краши карты, голоса и орбиты", done: true },
+      { t: "Убраны фейковые данные (цены заправок, статусы, «горячие зоны»)", done: true },
+      { t: "Кнопки смены не залипают; ложная карточка обновления убрана", done: true },
+      { t: "Скрыт балласт: лишние модули, desktop, Link, ИИ-центр", done: true },
+      { t: "Проверка на реальном телефоне: 6 экранов ядра без вылетов" },
     ],
-    done: "Все 6 экранов ядра открываются без вылетов, лишнего на виду нет.",
+    done: "На реальном телефоне все 6 экранов ядра открываются без вылетов, лишнего на виду нет.",
   },
   {
     n: "1",
     title: "Смена и деньги",
+    goal: "За смену всё считается верно, ничего не теряется.",
     status: "next",
-    points: [
-      "Смена: старт/пауза/конец — надёжно, с восстановлением после сна и потери связи",
-      "Доход: руками, голосом и скриншотом заработка Bolt",
-      "Топливо по чеку, прибыль = доход − расходы, ₽/час и ₽/км",
+    items: [
+      { t: "Смена: старт / пауза / конец — надёжно, с восстановлением после сна и потери связи" },
+      { t: "Доход: руками, голосом и скриншотом заработка Bolt" },
+      { t: "Топливо по чеку; прибыль = доход − расходы; €/час и €/км" },
     ],
-    done: "За реальную смену итог сходится, ничего не теряется.",
+    done: "За реальную смену итог сходится, перезапуск и сон не теряют данные.",
   },
   {
     n: "2",
     title: "Карта и маршрут смены",
+    goal: "Карта показывает настоящий след смены.",
     status: "next",
-    points: ["Реальный маршрут смены по GPS на карте", "Заправки рядом из OpenStreetMap"],
-    done: "Карта показывает настоящий след смены.",
+    items: [
+      { t: "Реальный маршрут смены по GPS на карте" },
+      { t: "Заправки рядом из OpenStreetMap (реальные, без выдуманных цен)" },
+    ],
+    done: "Карта показывает настоящий след смены, не пустая и не крашит.",
   },
   {
     n: "3",
     title: "Навигатор для Bolt",
+    goal: "Принял заказ — открыл AION — видишь, куда ехать.",
     status: "next",
-    points: [
-      "AION в списке навигаторов — из Bolt «Навигация» открывает AION",
-      "Точка назначения, маршрут по дорогам и повороты",
+    items: [
+      { t: "AION в списке навигаторов Android: из Bolt «Навигация» открывает AION" },
+      { t: "Точка назначения, маршрут по дорогам и повороты голосом" },
     ],
     done: "Принял заказ → открыл AION → видишь маршрут до точки.",
   },
   {
     n: "4",
     title: "Авто-фиксация заказов",
+    goal: "Заказ и доход записываются сами, без ручного ввода.",
     status: "next",
-    points: [
-      "AION сам считывает карточку заказа Bolt: куда, сумма, наличные/карта",
-      "Заказ и доход записываются без ручного ввода — суммы только реальные",
+    items: [
+      { t: "AION сам считывает карточку заказа Bolt: куда, сумма, наличные/карта" },
+      { t: "Заказ и доход записываются автоматически — суммы только реальные" },
     ],
     done: "Принял и выполнил заказ — всё записалось само.",
   },
   {
     n: "5",
     title: "Умная аналитика",
+    goal: "Подсказки из твоих реальных смен.",
     status: "next",
-    points: ["Где и когда выгоднее работать — только по твоим настоящим сменам"],
-    done: "Подсказки из реальных смен, без выдумок.",
+    items: [{ t: "Где и когда выгоднее работать — только по твоим настоящим сменам" }],
+    done: "Подсказки строятся из реальных смен, без выдумок.",
   },
 ];
 
+function phaseProgress(items: Item[]) {
+  const total = items.length;
+  const done = items.filter((i) => i.done).length;
+  return { done, total };
+}
+
 export default function RoadmapPage() {
+  const current = PHASES.find((p) => p.status === "in_progress");
+  const nextUp = PHASES.find((p) => p.status === "next");
+
   return (
     <div>
       <section className="aion-hero-glow border-b border-white/10">
@@ -99,6 +138,27 @@ export default function RoadmapPage() {
             Честный план по этапам. Каждый этап доводится до железной надёжности, и только
             потом начинается следующий. Никакого бега по сотне недоделок.
           </p>
+
+          {/* Где мы сейчас */}
+          {current && nextUp && (
+            <div className="mt-8 flex flex-col gap-3 rounded-xl border border-cyan-400/20 bg-cyan-400/[0.04] p-5 sm:flex-row sm:items-center sm:gap-6">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="h-2 w-2 animate-pulse rounded-full bg-cyan-400" />
+                <span className="text-slate-400">Сейчас:</span>
+                <span className="font-semibold text-white">
+                  Этап {current.n} · {current.title}
+                </span>
+              </div>
+              <div className="hidden h-4 w-px bg-white/10 sm:block" />
+              <div className="flex items-center gap-2 text-sm text-slate-400">
+                <span>Дальше:</span>
+                <span className="text-slate-300">
+                  Этап {nextUp.n} · {nextUp.title}
+                </span>
+              </div>
+            </div>
+          )}
+
           <div className="mt-8 flex flex-wrap gap-2">
             {CORE.map((c) => (
               <span
@@ -119,15 +179,10 @@ export default function RoadmapPage() {
         <div className="space-y-4">
           {PHASES.map((p) => {
             const s = STATUS_UI[p.status];
+            const { done, total } = phaseProgress(p.items);
+            const showProgress = done > 0 || p.status === "in_progress";
             return (
-              <article
-                key={p.n}
-                className={`aion-card rounded-xl border p-6 ${
-                  p.status === "in_progress"
-                    ? "border-cyan-400/30 bg-cyan-400/[0.04]"
-                    : "border-white/10 bg-white/[0.02]"
-                }`}
-              >
+              <article key={p.n} className={`aion-card rounded-xl border p-6 ${s.ring}`}>
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex items-baseline gap-3">
                     <span className="font-mono text-sm text-slate-500">Этап {p.n}</span>
@@ -138,14 +193,39 @@ export default function RoadmapPage() {
                     {s.label}
                   </span>
                 </div>
+
+                <p className="mt-2 text-sm leading-6 text-slate-400">{p.goal}</p>
+
+                {showProgress && (
+                  <div className="mt-4 flex items-center gap-3">
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
+                      <div
+                        className="h-full rounded-full bg-cyan-400 transition-all"
+                        style={{ width: `${total ? (done / total) * 100 : 0}%` }}
+                      />
+                    </div>
+                    <span className="shrink-0 font-mono text-xs text-slate-400">
+                      {done}/{total}
+                    </span>
+                  </div>
+                )}
+
                 <ul className="mt-4 space-y-2">
-                  {p.points.map((pt) => (
-                    <li key={pt} className="flex gap-2 text-sm leading-6 text-slate-300">
-                      <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-slate-500" />
-                      {pt}
+                  {p.items.map((it) => (
+                    <li key={it.t} className="flex gap-2.5 text-sm leading-6">
+                      <span
+                        className={`mt-0.5 shrink-0 font-mono ${
+                          it.done ? "text-emerald-400" : "text-slate-600"
+                        }`}
+                        aria-hidden="true"
+                      >
+                        {it.done ? "✓" : "○"}
+                      </span>
+                      <span className={it.done ? "text-slate-400" : "text-slate-300"}>{it.t}</span>
                     </li>
                   ))}
                 </ul>
+
                 <p className="mt-4 text-xs leading-5 text-slate-400">
                   <span className="font-semibold text-slate-300">Готово, когда:</span> {p.done}
                 </p>
@@ -165,16 +245,16 @@ export default function RoadmapPage() {
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link
-            href={ecosystemRoutes.aionProject}
+            href={ecosystemRoutes.releases}
             className="rounded-lg bg-cyan-400 px-6 py-3 text-sm font-semibold text-black transition hover:bg-cyan-300"
           >
-            О приложении Driver
+            Скачать Driver
           </Link>
           <Link
-            href={ecosystemRoutes.releases}
+            href={ecosystemRoutes.aionProject}
             className="rounded-lg border border-white/15 px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/5"
           >
-            Скачать
+            О приложении
           </Link>
         </div>
       </section>
