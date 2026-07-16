@@ -82,6 +82,16 @@ async function main() {
   assert.equal(other.windows.length, 0);
   cases += 1;
 
+  // Наличные/карта доезжают до черновика дохода (контракт incomeDrafts несёт paymentMethod).
+  const rc = await processBoltNotifications("shift-cash", [
+    n("Новый заказ", "Поездка за 7 € наличными", 100),
+    n("Поездка завершена", "7 € наличными", 200),
+  ]);
+  assert.deepEqual(plain(rc.incomeDrafts), [
+    { amount: 7, currencyCode: "EUR", paymentMethod: "cash" },
+  ]);
+  cases += 1;
+
   console.log(`test-order-capture-runner: ok (${cases} cases)`);
 }
 
