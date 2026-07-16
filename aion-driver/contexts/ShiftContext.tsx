@@ -154,6 +154,10 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   const motionStateRef = useRef<MotionState>("moving");
   const sessionRef = useRef<LocationSession | null>(null);
   const persistTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  /** Смена завершается: мотор-интервал и отложенный persist НЕ должны записать
+      её обратно на диск после saveActiveShift(null) (иначе «зомби-смена» при
+      следующем запуске). Ref переживает ре-рендер (в отличие от null у ref). */
+  const endingShiftRef = useRef(false);
   const trackingEnabledRef = useRef(false);
   const activeShiftRef = useRef<ActiveShift | null>(null);
   const lastDistanceSnapshotRef = useRef(0);
@@ -178,6 +182,8 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   const schedulePersist = useCallback((next: ActiveShift) => {
     if (persistTimerRef.current) clearTimeout(persistTimerRef.current);
     persistTimerRef.current = setTimeout(() => {
+      // Смена завершается — не воскрешаем её на диске.
+      if (endingShiftRef.current) return;
       // Пишем САМЫЙ свежий снимок из ref, а не захваченный `next`: между
       // планированием этого (GPS/motion) persist и его срабатыванием мог
       // добавиться доход/топливо (пишутся сразу). Иначе отложенный тик затирал
@@ -289,6 +295,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated || !activeShift || activeShift.paused) return;
     const id = setInterval(() => {
+      if (endingShiftRef.current) return;
       const cur = activeShiftRef.current;
       if (!cur || cur.paused) return;
       const idle = motionStateRef.current === "idle";
@@ -614,6 +621,7 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
     }
     await clearBackgroundShiftLocationRuntimeState();
     await saveActiveShift(next);
+    endingShiftRef.current = false;
     setActiveShift(next);
     const startedMs = Date.parse(next.startedAt);
     await gpsIngestionGateway.startShift(
@@ -667,12 +675,21 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
 
   const endShift = useCallback(async () => {
     if (!activeShift || !profile) return;
+    // Стоп-флаг ДО любых await: мотор-интервал и отложенный persist не должны
+    // записать смену обратно после saveActiveShift(null) ниже (зомби-смена).
+    endingShiftRef.current = true;
+    if (persistTimerRef.current) {
+      clearTimeout(persistTimerRef.current);
+      persistTimerRef.current = null;
+    }
     bgTrackingRef.current?.dispose();
     bgTrackingRef.current = null;
     const sessionMeters = sessionRef.current?.getTotalMeters();
     stopTracking();
-    const finalMeters =
-      sessionMeters != null ? sessionMeters : activeShift.distanceMeters;
+    // Берём БОЛЬШЕЕ из диска (фоновый GPS-merge) и сессии (foreground): сессия
+    // засеяна снимком до сна и может отставать → иначе фоновые км теряются в
+    // записи смены (занижение км → неверные топливо/прибыль).
+    const finalMeters = Math.max(activeShift.distanceMeters, sessionMeters ?? 0);
     const endedAt = new Date().toISOString();
     const endMs = new Date(endedAt).getTime();
     const endedShift: ActiveShift = {
