@@ -178,7 +178,16 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   const schedulePersist = useCallback((next: ActiveShift) => {
     if (persistTimerRef.current) clearTimeout(persistTimerRef.current);
     persistTimerRef.current = setTimeout(() => {
-      void saveActiveShift(next);
+      // Пишем САМЫЙ свежий снимок из ref, а не захваченный `next`: между
+      // планированием этого (GPS/motion) persist и его срабатыванием мог
+      // добавиться доход/топливо (пишутся сразу). Иначе отложенный тик затирал
+      // бы свежие деньги устаревшим снимком → потеря дохода при kill в окне.
+      // Только если это та же смена: не воскрешаем завершённую и не затираем
+      // только что начатую новую.
+      const cur = activeShiftRef.current;
+      if (cur && cur.id === next.id) {
+        void saveActiveShift(cur);
+      }
     }, 300);
   }, []);
 
