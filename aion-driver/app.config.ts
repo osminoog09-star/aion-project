@@ -17,7 +17,7 @@ export default {
     /** Должен совпадать со slug проекта на expo.dev для этого EAS projectId. Сейчас: @osminoog/aion */
     slug: "aion",
     /** Bump при нативных изменениях: новый runtimeVersion (policy appVersion) + новый preview APK. */
-    version: "1.1.4",
+    version: "1.1.5",
     orientation: "portrait",
     icon: "./assets/icon.png",
     scheme: "aion-driver",
@@ -38,7 +38,7 @@ export default {
     },
     android: {
       package: "com.aion.driver",
-      versionCode: 19,
+      versionCode: 20,
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#030712",
@@ -125,6 +125,9 @@ export default {
       ],
       // Плагин орбиты убран: пока орбита заморожена (Фаза 0), её нативная
       // служба/boot-receiver/overlay не собираются в APK — воскрешать нечему.
+      // Захват уведомлений Bolt (Фаза 4): NotificationListenerService. Инертен,
+      // пока пользователь не дал «Доступ к уведомлениям»; ничего не рисует.
+      require("./plugins/withAionNotifCapture"),
     ],
     experiments: {
       typedRoutes: true,

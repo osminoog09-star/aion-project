@@ -17,6 +17,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import { CockpitBackground } from "../components/ui/CockpitBackground";
 import { GlowCard } from "../components/ui/GlowCard";
 import { GradientButton } from "../components/ui/GradientButton";
+import { OrderCaptureBetaCard } from "../components/settings/OrderCaptureBetaCard";
 import { useAuth } from "../features/auth/hooks/useAuth";
 import { BugReportModal } from "../features/feedback/BugReportModal";
 import { syncLocalUserProfileToCloud } from "../features/cloud/repositories/profileRepository";
@@ -297,6 +298,8 @@ export function SettingsScreen() {
                 Модули Driver, Finance, AI и др. Откройте лаунчер платформы.
               </Text>
             </GlowCard>
+
+            <OrderCaptureBetaCard />
 
             <GlowCard glow="cyan" className="mb-4">
               <Text className="text-xs uppercase tracking-[0.25em] text-slate-500">
