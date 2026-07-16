@@ -84,9 +84,14 @@ export const INITIAL_PATTERNS = {
 } as const;
 
 function extractEuroAmount(raw: string): number | null {
-  const m = raw.match(/(\d+(?:[.,]\d{1,2})?)\s*(?:€|eur|евро)/i);
-  if (!m) return null;
-  const v = Number(m[1].replace(",", "."));
+  // Символ может стоять ДО или ПОСЛЕ числа — Bolt пишет и «4,50 €», и «€4.50»,
+  // и «EUR 5.20». Требуем валютный маркер рядом с числом, чтобы не принять
+  // расстояние/время («4.5 km») за деньги.
+  const after = raw.match(/(\d+(?:[.,]\d{1,2})?)\s*(?:€|eur|евро)/i);
+  const before = raw.match(/(?:€|eur|евро)\s*(\d+(?:[.,]\d{1,2})?)/i);
+  const digits = after?.[1] ?? before?.[1] ?? null;
+  if (digits == null) return null;
+  const v = Number(digits.replace(",", "."));
   return Number.isFinite(v) && v > 0 ? Math.round(v * 100) / 100 : null;
 }
 
