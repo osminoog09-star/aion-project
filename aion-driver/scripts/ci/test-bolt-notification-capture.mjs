@@ -65,6 +65,17 @@ async function main() {
   assert.equal(noCur.currencyCode, null);
   cases += 1;
 
+  // Символ ДО числа: "€4.50", "EUR 5.20", "€ 6,00" — тоже распознаём сумму.
+  assert.equal(parseBoltNotification(n("Новый заказ", "€4.50", 1)).amount, 4.5);
+  assert.equal(parseBoltNotification(n("Ride finished", "EUR 5.20 earned", 1)).amount, 5.2);
+  assert.equal(parseBoltNotification(n("Новый заказ", "Поездка за € 6,00", 1)).amount, 6);
+  // Расстояние без валюты не должно приниматься за деньги.
+  assert.equal(parseBoltNotification(n("Новый заказ", "4.5 km до клиента", 1)).amount, null);
+  // Эстонский способ оплаты.
+  assert.equal(parseBoltNotification(n("Uus tellimus", "€5 sularaha", 1)).paymentMethod, "cash");
+  assert.equal(parseBoltNotification(n("Uus tellimus", "€5 kaart", 1)).paymentMethod, "card");
+  cases += 1;
+
   // Полный цикл: assigned → started → finished = окна pickup + on_order + доход.
   let state = reducer.EMPTY_ORDER_WINDOW_STATE;
   let r = applyCapturedOrderEvent(state, parseBoltNotification(n("Новый заказ", "за 4 €", 1000)));
