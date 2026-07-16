@@ -11,6 +11,7 @@
 import {
   applyCapturedOrderEvent,
   parseBoltNotification,
+  type PaymentMethod,
   type RawNotification,
 } from "./boltNotificationCapture";
 import {
@@ -21,8 +22,9 @@ import {
 export type OrderCaptureRunResult = {
   /** Сколько уведомлений оказались событиями заказа. */
   appliedEvents: number;
-  /** Доходы, найденные в завершённых заказах (суммы только из текста уведомлений). */
-  incomeDrafts: { amount: number; currencyCode: "EUR" }[];
+  /** Доходы, найденные в завершённых заказах (суммы только из текста уведомлений).
+      paymentMethod — наличные/карта, если Bolt их показал; иначе null (не выдумываем). */
+  incomeDrafts: { amount: number; currencyCode: "EUR"; paymentMethod: PaymentMethod | null }[];
   /** Закрытых окон в хранилище после применения. */
   windowCount: number;
 };
