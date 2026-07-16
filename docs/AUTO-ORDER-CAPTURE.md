@@ -96,15 +96,69 @@
   выдумывание данных, запрещено принципом проекта. Суммы — только из реальных
   источников (уведомление/экран/скриншот), никогда «средним чеком».
 
-## Что уже подготовлено (без устройства)
+## Что уже подготовлено (без устройства) — JS-конвейер ГОТОВ и покрыт тестами
 
-Чистый слой ГОТОВ и покрыт тестами: `features/orders/boltNotificationCapture.ts`
-(`parseBoltNotification` — уведомление → событие заказа с суммой из текста;
-`applyCapturedOrderEvent` — событие → окна активности + черновик дохода;
-тест `scripts/ci/test-bolt-notification-capture.mjs`, цикл
-назначен→началась→завершена проверен). Таблица паттернов `INITIAL_PATTERNS` —
-начальная, ЖДЁТ сверки с реальными текстами уведомлений. Нативному модулю
-останется только слушать уведомления и вызывать эти две функции.
+- `features/orders/boltNotificationCapture.ts`: `parseBoltNotification` (уведомление →
+  событие заказа), `applyCapturedOrderEvent` (событие → окна км + черновик дохода).
+  Извлечение суммы устойчиво к формату: символ до/после числа (`€4.50`, `EUR 5.20`,
+  `4,50 €`), не путает расстояние («4.5 km») с деньгами; оплата RU/EN/ET
+  (наличные/картой, cash/card, sularaha/kaart). Тест `test-bolt-notification-capture.mjs`
+  — 10 кейсов.
+- `features/orders/orderCaptureRunner.ts`: `processBoltNotifications(shiftId, notifications)`
+  — единственная точка входа для нативного слушателя: сортировка по времени,
+  сериализация конкурентных пачек, персист окон, анти-дубль дохода. Контракт
+  `incomeDrafts` несёт `paymentMethod` (наличные/карта). Тест
+  `test-order-capture-runner.mjs` — 6 кейсов.
+
+ЖДЁТ сверки с реальными текстами уведомлений: только таблица паттернов ТИПА
+события `INITIAL_PATTERNS` (assigned/started/finished) — точные фразы Bolt. Всё
+извлечение суммы/оплаты уже формат-независимо. Нативному модулю останется только
+поймать уведомление и вызвать `processBoltNotifications`.
+
+## Нативный слушатель — implementation-ready спека (строить, когда можно проверить)
+
+**НЕ реализовано намеренно:** нативную фоновую службу нельзя писать вслепую —
+урок орбиты (крашила при сворачивании). Строим только когда есть возможность
+собрать APK и проверить на телефоне. Ниже — точный план, чтобы сделать с первого
+раза чисто.
+
+Паттерн — как рабочий `plugins/withAionOverlayOrb.js` (copy .kt → withDangerousMod,
+service/permission → withAndroidManifest, регистрация пакета → withMainApplication):
+
+1. `native-modules/aion-notif-capture/AionNotifListenerService.kt` — extends
+   `NotificationListenerService`. `onNotificationPosted(sbn)`: **весь код в try/catch**;
+   если `sbn.packageName ∈ BOLT_DRIVER_PACKAGES` → достать `extras` (title/text),
+   отдать в кольцевой буфер (последние ~50) + эмитнуть событие в JS. Больше НИЧЕГО
+   (без overlay, без foreground-сервиса, без потоков, без persistence) — минимальная
+   поверхность краша.
+2. `AionNotifCaptureModule.kt` (ReactContextBaseJavaModule): `isAccessGranted()`
+   (`Settings.Secure.getString(..., "enabled_notification_listeners")` contains pkg),
+   `openAccessSettings()` (`ACTION_NOTIFICATION_LISTENER_SETTINGS`), `drainBuffer()`
+   (отдать накопленные уведомления), + `DeviceEventEmitter` "aionBoltNotification".
+3. `plugins/withAionNotifCapture.js`: манифест — `<service>` с
+   `android.permission.BIND_NOTIFICATION_LISTENER_SERVICE` и intent-filter
+   `android.service.notification.NotificationListenerService`.
+4. JS-мост `features/orders/boltNotificationBridge.ts`: подписка на событие →
+   `processBoltNotifications(activeShift.id, [...])` → `incomeDraft` → `addIncome`.
+   Полностью тестируем моками (пишем ВМЕСТЕ с нативным, но проверяем в JS).
+
+**Двойной гейтинг безопасности (обязателен — «не проебись»):**
+- OS-уровень: слушатель не работает, пока пользователь не включит «Доступ к
+  уведомлениям» для AION в настройках Android (по умолчанию ВЫКЛ).
+- App-уровень: флаг `deviceSettings.autoOrderCaptureEnabled` (по умолчанию ВЫКЛ) —
+  JS игнорирует события, пока владелец явно не включит «Авто-заказы (бета)».
+- → у обычного пользователя модуль полностью инертен; активируется только двумя
+  осознанными действиями.
+
+**Как проверим на телефоне (даёт реальные тексты уведомлений):** после сборки APK
+с модулем — экран «Авто-заказы (бета)» показывает СЫРЫЕ пойманные уведомления
+Bolt (buffer). Владелец включает доступ, делает одну поездку → видим точные
+тексты assigned/started/finished → финализируем `INITIAL_PATTERNS`. Модуль
+сам себя разблокирует.
+
+**Гейт активации:** нативное изменение → bump version/versionCode → новый APK.
+Не слать через OTA (нативный код). Пока модуль не вкомпилен — `app.config.ts`
+plugins его НЕ содержит.
 
 ## Зависимости
 
