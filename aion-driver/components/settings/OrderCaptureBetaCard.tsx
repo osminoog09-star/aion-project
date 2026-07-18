@@ -6,6 +6,8 @@ import {
   notifCaptureAccessGranted,
   notifCaptureDrain,
   notifCaptureOpenSettings,
+  screenReaderAccessGranted,
+  screenReaderOpenSettings,
   type CapturedRawNotif,
 } from "../../services/aionNotifCaptureNative";
 
@@ -21,11 +23,14 @@ const POLL_MS = 3000;
 export function OrderCaptureBetaCard() {
   const available = isNotifCaptureAvailable();
   const [granted, setGranted] = useState(false);
+  const [screenGranted, setScreenGranted] = useState(false);
   const [items, setItems] = useState<CapturedRawNotif[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const active = granted || screenGranted;
 
   const refreshAccess = useCallback(async () => {
     setGranted(await notifCaptureAccessGranted());
+    setScreenGranted(await screenReaderAccessGranted());
   }, []);
 
   const poll = useCallback(async () => {
@@ -45,7 +50,7 @@ export function OrderCaptureBetaCard() {
   }, [available, refreshAccess]);
 
   useEffect(() => {
-    if (!available || !granted) {
+    if (!available || !active) {
       if (timerRef.current) clearInterval(timerRef.current);
       timerRef.current = null;
       return;
@@ -56,7 +61,7 @@ export function OrderCaptureBetaCard() {
       if (timerRef.current) clearInterval(timerRef.current);
       timerRef.current = null;
     };
-  }, [available, granted, poll]);
+  }, [available, active, poll]);
 
   if (!available) {
     return (
@@ -82,10 +87,10 @@ export function OrderCaptureBetaCard() {
       </Text>
 
       <View className="mt-3 flex-row items-center justify-between">
-        <Text className="text-sm text-white">
-          Доступ к уведомлениям:{" "}
+        <Text className="flex-1 pr-2 text-sm text-white">
+          Уведомления:{" "}
           <Text className={granted ? "text-emerald-300" : "text-amber-300"}>
-            {granted ? "включён" : "выключен"}
+            {granted ? "включены" : "выключены"}
           </Text>
         </Text>
         <Pressable
@@ -93,26 +98,50 @@ export function OrderCaptureBetaCard() {
           className="rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-3 py-1.5"
         >
           <Text className="text-xs font-semibold text-cyan-200">
-            {granted ? "Настройки" : "Включить доступ"}
+            {granted ? "Настройки" : "Включить"}
           </Text>
         </Pressable>
       </View>
 
-      {granted ? (
+      <View className="mt-2 flex-row items-center justify-between">
+        <Text className="flex-1 pr-2 text-sm text-white">
+          Читалка экрана (полнее):{" "}
+          <Text className={screenGranted ? "text-emerald-300" : "text-amber-300"}>
+            {screenGranted ? "включена" : "выключена"}
+          </Text>
+        </Text>
+        <Pressable
+          onPress={() => void screenReaderOpenSettings()}
+          className="rounded-xl border border-violet-500/30 bg-violet-500/10 px-3 py-1.5"
+        >
+          <Text className="text-xs font-semibold text-violet-200">
+            {screenGranted ? "Настройки" : "Включить"}
+          </Text>
+        </Pressable>
+      </View>
+      <Text className="mt-1 text-[10px] leading-4 text-slate-500">
+        Читалка (Спец. возможности) видит сумму, адрес и оплату прямо с экрана Bolt —
+        включай, если уведомлений мало.
+      </Text>
+
+      {active ? (
         items.length === 0 ? (
           <Text className="mt-4 text-xs text-slate-500">
-            Ждём уведомления Bolt… Открой Bolt и прими/заверши заказ — тексты появятся здесь.
+            Ждём Bolt… Открой Bolt и прими/заверши заказ — тексты появятся здесь.
           </Text>
         ) : (
           <View className="mt-4">
             <Text className="mb-2 text-[10px] uppercase tracking-widest text-slate-500">
-              Пойманные уведомления Bolt ({items.length})
+              Пойманное от Bolt ({items.length})
             </Text>
             {items.map((it, i) => (
               <View
                 key={`${it.postedAtMs}-${i}`}
                 className="mb-2 rounded-xl border border-white/5 bg-white/5 px-3 py-2"
               >
+                <Text className="mb-1 text-[9px] font-semibold uppercase tracking-wider text-violet-300/80">
+                  {it.source === "screen" ? "экран" : "уведомление"}
+                </Text>
                 {it.title ? (
                   <Text className="text-xs font-semibold text-slate-200">{it.title}</Text>
                 ) : null}
