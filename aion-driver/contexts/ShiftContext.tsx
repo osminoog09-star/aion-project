@@ -299,13 +299,15 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       const cur = activeShiftRef.current;
       if (!cur || cur.paused) return;
       const idle = motionStateRef.current === "idle";
-      const next: ActiveShift = {
-        ...cur,
-        motionMovingMs: (cur.motionMovingMs ?? 0) + (idle ? 0 : 1000),
-        motionIdleMs: (cur.motionIdleMs ?? 0) + (idle ? 1000 : 0),
-      };
-      schedulePersist(next);
-      setActiveShift(next);
+      setActiveShift((prev) => {
+        if (!prev || prev.paused) return prev;
+        return {
+          ...prev,
+          motionMovingMs: (prev.motionMovingMs ?? 0) + (idle ? 0 : 1000),
+          motionIdleMs: (prev.motionIdleMs ?? 0) + (idle ? 1000 : 0),
+        };
+      });
+      schedulePersist(cur);
     }, 1000);
     return () => clearInterval(id);
   }, [hydrated, activeShift?.id, activeShift?.paused, schedulePersist]);
@@ -326,7 +328,20 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
           disk.lastAcceptedLat !== cur.lastAcceptedLat ||
           disk.lastAcceptedLng !== cur.lastAcceptedLng
         ) {
-          setActiveShift(disk);
+          // Функциональный merge: из диска берём ТОЛЬКО поля, что растит фоновый
+          // GPS-merge (дистанция + GPS-якорь). Доход/топливо/мотор — из prev,
+          // иначе доход, добавленный в окне loadActiveShift, был бы затёрт диском.
+          setActiveShift((prev) => {
+            if (!prev || prev.id !== disk.id) return prev;
+            return {
+              ...prev,
+              distanceMeters: disk.distanceMeters,
+              distanceMetersPetrol: disk.distanceMetersPetrol,
+              distanceMetersGas: disk.distanceMetersGas,
+              lastAcceptedLat: disk.lastAcceptedLat,
+              lastAcceptedLng: disk.lastAcceptedLng,
+            };
+          });
         }
       })();
     };
@@ -784,13 +799,24 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   }, [activeShift, profile, stopTracking]);
 
   const addIncomeBatch = useCallback(async (amount: number, count: number): Promise<string[]> => {
-    const prev = activeShiftRef.current;
-    if (!prev) return [];
-    const result = appendIncomeBatch(prev, amount, count, () => ({ id: createShiftId(), atMs: Date.now(), amount }));
-    if (!result) return [];
-    await saveActiveShift(result.next);
-    setActiveShift(result.next);
-    return result.entryIds;
+    // Функциональный апдейтер: React даёт СВЕЖИЙ prev и применяет апдейтеры
+    // последовательно → двойной тап дохода / перекрытие с топливом/GPS-тиком
+    // не теряют деньги (в отличие от value-form setState, который затирал).
+    // next/ids захватываем для персиста и возврата ВНЕ апдейтера.
+    let capturedNext: ActiveShift | null = null;
+    let capturedIds: string[] = [];
+    setActiveShift((prev) => {
+      if (!prev) return prev;
+      const result = appendIncomeBatch(prev, amount, count, () => ({ id: createShiftId(), atMs: Date.now(), amount }));
+      if (!result) return prev;
+      capturedNext = result.next;
+      capturedIds = result.entryIds;
+      return result.next;
+    });
+    if (!capturedNext) return [];
+    activeShiftRef.current = capturedNext;
+    await saveActiveShift(capturedNext);
+    return capturedIds;
   }, []);
 
   const addIncome = useCallback(async (amount: number) => {
@@ -798,12 +824,17 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   }, [addIncomeBatch]);
 
   const undoIncomeEntries = useCallback(async (entryIds: readonly string[]): Promise<boolean> => {
-    const prev = activeShiftRef.current;
-    if (!prev) return false;
-    const next = removeIncomeEntries(prev, entryIds);
-    if (!next) return false;
-    await saveActiveShift(next);
-    setActiveShift(next);
+    let capturedNext: ActiveShift | null = null;
+    setActiveShift((prev) => {
+      if (!prev) return prev;
+      const next = removeIncomeEntries(prev, entryIds);
+      if (!next) return prev;
+      capturedNext = next;
+      return next;
+    });
+    if (!capturedNext) return false;
+    activeShiftRef.current = capturedNext;
+    await saveActiveShift(capturedNext);
     return true;
   }, []);
 
@@ -824,12 +855,19 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
       });
       return;
     }
-    const next: ActiveShift = {
-      ...prev,
-      fuelEntries: [...(prev.fuelEntries ?? []), entry],
-    };
-    await saveActiveShift(next);
-    setActiveShift(next);
+    let capturedNext: ActiveShift | null = null;
+    setActiveShift((cur) => {
+      if (!cur) return cur;
+      const next: ActiveShift = {
+        ...cur,
+        fuelEntries: [...(cur.fuelEntries ?? []), entry],
+      };
+      capturedNext = next;
+      return next;
+    });
+    if (!capturedNext) return;
+    activeShiftRef.current = capturedNext;
+    await saveActiveShift(capturedNext);
     scheduleCloudBackupPush();
     diagLog("info", "fuel", "Заправка добавлена в смену", {
       totalCost: entry.totalCost,
@@ -847,24 +885,33 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
         return { ok: false, error: "Проверьте сумму и литры" };
       }
       const prev = activeShiftRef.current;
-      if (prev) {
-        const list = prev.fuelEntries ?? [];
-        const idx = list.findIndex((e) => e.id === id);
-        if (idx >= 0) {
-          const kept = list[idx];
+      if (prev && (prev.fuelEntries ?? []).some((e) => e.id === id)) {
+        let capturedNext: ActiveShift | null = null;
+        let updatedTotal = 0;
+        setActiveShift((cur) => {
+          if (!cur) return cur;
+          const clist = cur.fuelEntries ?? [];
+          const cidx = clist.findIndex((e) => e.id === id);
+          if (cidx < 0) return cur;
+          const kept = clist[cidx];
           const updated: FuelEntry = {
             ...rebuilt,
             id,
             addedAtMs: kept.addedAtMs,
             source: kept.source,
           };
-          const nextEntries = [...list];
-          nextEntries[idx] = updated;
-          const next: ActiveShift = { ...prev, fuelEntries: nextEntries };
-          await saveActiveShift(next);
-          setActiveShift(next);
+          updatedTotal = updated.totalCost;
+          const nextEntries = [...clist];
+          nextEntries[cidx] = updated;
+          const next: ActiveShift = { ...cur, fuelEntries: nextEntries };
+          capturedNext = next;
+          return next;
+        });
+        if (capturedNext) {
+          activeShiftRef.current = capturedNext;
+          await saveActiveShift(capturedNext);
           scheduleCloudBackupPush();
-          diagLog("info", "fuel", "Заправка исправлена", { id, totalCost: updated.totalCost });
+          diagLog("info", "fuel", "Заправка исправлена", { id, totalCost: updatedTotal });
           return { ok: true };
         }
       }
@@ -887,15 +934,22 @@ export function ShiftProvider({ children }: { children: ReactNode }) {
   const removeFuelEntry = useCallback(
     async (id: string): Promise<{ ok: boolean; error?: string }> => {
       const prev = activeShiftRef.current;
-      if (prev) {
-        const list = prev.fuelEntries ?? [];
-        if (list.some((e) => e.id === id)) {
+      if (prev && (prev.fuelEntries ?? []).some((e) => e.id === id)) {
+        let capturedNext: ActiveShift | null = null;
+        setActiveShift((cur) => {
+          if (!cur) return cur;
+          const clist = cur.fuelEntries ?? [];
+          if (!clist.some((e) => e.id === id)) return cur;
           const next: ActiveShift = {
-            ...prev,
-            fuelEntries: list.filter((e) => e.id !== id),
+            ...cur,
+            fuelEntries: clist.filter((e) => e.id !== id),
           };
-          await saveActiveShift(next);
-          setActiveShift(next);
+          capturedNext = next;
+          return next;
+        });
+        if (capturedNext) {
+          activeShiftRef.current = capturedNext;
+          await saveActiveShift(capturedNext);
           scheduleCloudBackupPush();
           diagLog("warn", "fuel", "Заправка удалена из смены", { id });
           return { ok: true };
