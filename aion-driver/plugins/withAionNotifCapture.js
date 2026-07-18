@@ -19,6 +19,7 @@ const {
 const NATIVE_FILES = [
   "NotifBuffer.kt",
   "AionNotifListenerService.kt",
+  "AionBoltReaderService.kt",
   "AionNotifCaptureModule.kt",
   "AionNotifCapturePackage.kt",
 ];
@@ -45,6 +46,13 @@ function withAionNotifCapture(config) {
       for (const f of NATIVE_FILES) {
         fs.copyFileSync(path.join(srcDir, f), path.join(destDir, f));
       }
+      // Конфиг accessibility-читалки → res/xml/
+      const resXmlDir = path.join(platformRoot, "app", "src", "main", "res", "xml");
+      fs.mkdirSync(resXmlDir, { recursive: true });
+      fs.copyFileSync(
+        path.join(srcDir, "aion_bolt_reader_config.xml"),
+        path.join(resXmlDir, "aion_bolt_reader_config.xml"),
+      );
       return cfg;
     },
   ]);
@@ -76,6 +84,36 @@ function withAionNotifCapture(config) {
                 },
               },
             ],
+          },
+        ],
+      });
+    }
+
+    if (!services.some((s) => s.$["android:name"] === ".notif.AionBoltReaderService")) {
+      services.push({
+        $: {
+          "android:name": ".notif.AionBoltReaderService",
+          "android:exported": "false",
+          "android:label": "AION — читалка заказов Bolt",
+          "android:permission": "android.permission.BIND_ACCESSIBILITY_SERVICE",
+        },
+        "intent-filter": [
+          {
+            action: [
+              {
+                $: {
+                  "android:name": "android.accessibilityservice.AccessibilityService",
+                },
+              },
+            ],
+          },
+        ],
+        "meta-data": [
+          {
+            $: {
+              "android:name": "android.accessibilityservice",
+              "android:resource": "@xml/aion_bolt_reader_config",
+            },
           },
         ],
       });

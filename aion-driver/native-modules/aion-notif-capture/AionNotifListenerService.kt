@@ -21,7 +21,7 @@ class AionNotifListenerService : NotificationListenerService() {
       val extras = sbn.notification?.extras
       val title = extras?.getCharSequence("android.title")?.toString()
       val text = extras?.getCharSequence("android.text")?.toString()
-      NotifBuffer.add(pkg, title, text, sbn.postTime)
+      NotifBuffer.add("notif", pkg, title, text, sbn.postTime)
     } catch (_: Throwable) {
       // Никогда не роняем процесс из колбэка слушателя.
     }

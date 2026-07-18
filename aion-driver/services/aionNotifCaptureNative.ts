@@ -9,6 +9,8 @@ import { NativeModules, Platform } from "react-native";
  * Bolt). Авто-запись дохода подключается отдельным шагом после сверки паттернов.
  */
 export type CapturedRawNotif = {
+  /** "notif" — из уведомления; "screen" — с экрана Bolt (Accessibility). */
+  source?: "notif" | "screen";
   packageName: string;
   title: string | null;
   text: string | null;
@@ -18,6 +20,8 @@ export type CapturedRawNotif = {
 type NotifCaptureNative = {
   isAccessGranted(): Promise<boolean>;
   openAccessSettings(): Promise<boolean>;
+  isAccessibilityGranted(): Promise<boolean>;
+  openAccessibilitySettings(): Promise<boolean>;
   drainBuffer(): Promise<CapturedRawNotif[]>;
 };
 
@@ -47,6 +51,26 @@ export async function notifCaptureOpenSettings(): Promise<void> {
   if (!m) return;
   try {
     await m.openAccessSettings();
+  } catch {
+    /* ignore */
+  }
+}
+
+export async function screenReaderAccessGranted(): Promise<boolean> {
+  const m = getNative();
+  if (!m?.isAccessibilityGranted) return false;
+  try {
+    return await m.isAccessibilityGranted();
+  } catch {
+    return false;
+  }
+}
+
+export async function screenReaderOpenSettings(): Promise<void> {
+  const m = getNative();
+  if (!m?.openAccessibilitySettings) return;
+  try {
+    await m.openAccessibilitySettings();
   } catch {
     /* ignore */
   }

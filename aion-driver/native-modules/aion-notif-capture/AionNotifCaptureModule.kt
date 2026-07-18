@@ -45,11 +45,38 @@ class AionNotifCaptureModule(private val reactContext: ReactApplicationContext) 
   }
 
   @ReactMethod
+  fun isAccessibilityGranted(promise: Promise) {
+    try {
+      val svc = reactContext.packageName + "/com.aion.driver.notif.AionBoltReaderService"
+      val flat = Settings.Secure.getString(
+        reactContext.contentResolver,
+        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+      )
+      promise.resolve(flat != null && flat.contains(svc))
+    } catch (e: Exception) {
+      promise.reject("A11Y_PERM", e.message, e)
+    }
+  }
+
+  @ReactMethod
+  fun openAccessibilitySettings(promise: Promise) {
+    try {
+      val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+      reactContext.startActivity(intent)
+      promise.resolve(true)
+    } catch (e: Exception) {
+      promise.reject("A11Y_SETTINGS", e.message, e)
+    }
+  }
+
+  @ReactMethod
   fun drainBuffer(promise: Promise) {
     try {
       val arr: WritableArray = Arguments.createArray()
       for (it in NotifBuffer.drain()) {
         val m = Arguments.createMap()
+        m.putString("source", it.source)
         m.putString("packageName", it.pkg)
         m.putString("title", it.title)
         m.putString("text", it.text)

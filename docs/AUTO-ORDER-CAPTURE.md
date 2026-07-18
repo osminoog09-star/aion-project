@@ -160,9 +160,41 @@ Bolt (buffer). Владелец включает доступ, делает од
 Не слать через OTA (нативный код). Пока модуль не вкомпилен — `app.config.ts`
 plugins его НЕ содержит.
 
+## «Читать всё, что делает Bolt» — Accessibility-читалка экрана (способ Б)
+
+Идея владельца: пусть AION сам «снимает» всё, что делает Bolt, и анализирует.
+Правильная реализация — НЕ запись экрана (MediaProjection: тяжело по батарее/
+памяти, кадры → OCR медленно и с ошибками, хрупко), а **AccessibilityService**,
+который читает САМ ТЕКСТ карточки заказа Bolt (сумма, адрес, наличные/карта) —
+готовые текстовые узлы, без OCR, в реальном времени. Тот же парсер
+(`boltNotificationCapture`) — источник текста просто богаче уведомления.
+
+Строить ТОЛЬКО если уведомлений (способ 1) не хватает — узнаём по бета-карточке
+«Захват заказов» в 1.1.5 на реальном устройстве. Не собираем вслепую вторую
+нативную службу до этого (риск как с орбитой; лишняя пересборка).
+
+Implementation-ready (по паттерну withAionNotifCapture, двойной гейт):
+1. `AionBoltReaderService.kt` extends `AccessibilityService`;
+   `onAccessibilityEvent`: если `event.packageName == "ee.mtakso.driver"` и тип
+   WINDOW_STATE/CONTENT_CHANGED → собрать текст из `rootInActiveWindow` (обход
+   дерева `AccessibilityNodeInfo`, собрать все `text`/`contentDescription`) →
+   в кольцевой буфер (как NotifBuffer). Весь колбэк в try/catch.
+2. `res/xml/aion_bolt_reader_config.xml`: `accessibilityEventTypes`,
+   `packageNames="ee.mtakso.driver"` (ТОЛЬКО Bolt — не читаем чужие экраны),
+   `canRetrieveWindowContent="true"`.
+3. Манифест: `<service>` с `BIND_ACCESSIBILITY_SERVICE` + intent-filter
+   `android.accessibilityservice.AccessibilityService` + meta-data на конфиг.
+4. Мост/флаг/буфер — как у notif-capture; бета-экран показывает сырой текст.
+5. Двойной гейт: OS «Спец. возможности» ВЫКЛ + app-флаг ВЫКЛ. Инвазивнее
+   уведомлений (Google Play ограничивает; для sideload-APK ок) → только со
+   явного включения владельцем.
+- − Хрупко к обновлениям верстки Bolt; тестировать на реальном Bolt.
+- + Читает ВСЁ, что на экране: сумму, адрес назначения, оплату — полный автомат.
+
 ## Зависимости
 
-- Вход: реальные тексты уведомлений Bolt с устройства (владелец).
-- Нативный слой: notification listener (Android), разрешение пользователя.
+- Вход: реальные тексты (уведомления ИЛИ экран Bolt) с устройства (владелец).
+- Нативный слой: notification listener (готов, 1.1.5) ИЛИ accessibility-читалка
+  (спека выше) — по факту с устройства.
 - Потребитель: `orderWindowReducer` / `classifyKilometers` — уже готовы,
   evidence `platform_import` уже в контракте; чистый мостик готов (см. выше).
