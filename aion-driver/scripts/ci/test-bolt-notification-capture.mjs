@@ -76,6 +76,25 @@ async function main() {
   assert.equal(parseBoltNotification(n("Uus tellimus", "€5 kaart", 1)).paymentMethod, "card");
   cases += 1;
 
+  // ЧИТАЛКА ЭКРАНА: узлы склеены через " | " в один блоб — тот же парсер.
+  const screenAssigned = parseBoltNotification(
+    n("Экран Bolt", "Bolt | Новый заказ | 4,50 € | Наличные | ул. Пушкина 10 | 3.2 км | Принять", 1),
+  );
+  assert.equal(screenAssigned.type, "order_assigned");
+  assert.equal(screenAssigned.amount, 4.5);
+  assert.equal(screenAssigned.paymentMethod, "cash");
+  // Расстояние в блобе НЕ должно приниматься за сумму (берём число рядом с €).
+  const screenDist = parseBoltNotification(n("Экран Bolt", "Новый заказ | 3.2 км | 5 € наличными", 1));
+  assert.equal(screenDist.amount, 5);
+  // Завершение с экрана.
+  const screenFin = parseBoltNotification(
+    n("Экран Bolt", "Поездка завершена | Заработано 6,20 € | картой", 1),
+  );
+  assert.equal(screenFin.type, "ride_finished");
+  assert.equal(screenFin.amount, 6.2);
+  assert.equal(screenFin.paymentMethod, "card");
+  cases += 1;
+
   // Полный цикл: assigned → started → finished = окна pickup + on_order + доход.
   let state = reducer.EMPTY_ORDER_WINDOW_STATE;
   let r = applyCapturedOrderEvent(state, parseBoltNotification(n("Новый заказ", "за 4 €", 1000)));
