@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AppState, Pressable, Text, View } from "react-native";
+import { AppState, Pressable, Share, Text, View } from "react-native";
 import { GlowCard } from "../ui/GlowCard";
 import {
   isNotifCaptureAvailable,
@@ -38,6 +38,22 @@ export function OrderCaptureBetaCard() {
     if (rows.length === 0) return;
     setItems((prev) => [...rows.reverse(), ...prev].slice(0, MAX_SHOWN));
   }, []);
+
+  const shareAll = useCallback(async () => {
+    if (items.length === 0) return;
+    const body = items
+      .map((it) => {
+        const src = it.source === "screen" ? "экран" : "увед.";
+        const parts = [it.title, it.text].filter(Boolean).join(" — ");
+        return `[${src}] ${parts}`;
+      })
+      .join("\n");
+    try {
+      await Share.share({ message: `AION — пойманное от Bolt:\n${body}` });
+    } catch {
+      /* пользователь закрыл окно — не ошибка */
+    }
+  }, [items]);
 
   useEffect(() => {
     if (!available) return;
@@ -131,9 +147,17 @@ export function OrderCaptureBetaCard() {
           </Text>
         ) : (
           <View className="mt-4">
-            <Text className="mb-2 text-[10px] uppercase tracking-widest text-slate-500">
-              Пойманное от Bolt ({items.length})
-            </Text>
+            <View className="mb-2 flex-row items-center justify-between">
+              <Text className="text-[10px] uppercase tracking-widest text-slate-500">
+                Пойманное от Bolt ({items.length})
+              </Text>
+              <Pressable
+                onPress={() => void shareAll()}
+                className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1"
+              >
+                <Text className="text-xs font-semibold text-emerald-200">Поделиться</Text>
+              </Pressable>
+            </View>
             {items.map((it, i) => (
               <View
                 key={`${it.postedAtMs}-${i}`}
