@@ -4,12 +4,16 @@ import { GlowCard } from "../ui/GlowCard";
 import {
   isNotifCaptureAvailable,
   notifCaptureAccessGranted,
-  notifCaptureDrain,
   notifCaptureOpenSettings,
   screenReaderAccessGranted,
   screenReaderOpenSettings,
   type CapturedRawNotif,
 } from "../../services/aionNotifCaptureNative";
+import {
+  drainAndUploadBoltCapture,
+  getRecentBoltCaptures,
+  subscribeBoltCaptures,
+} from "../../services/boltCaptureUpload";
 
 const MAX_SHOWN = 25;
 const POLL_MS = 3000;
@@ -33,10 +37,11 @@ export function OrderCaptureBetaCard() {
     setScreenGranted(await screenReaderAccessGranted());
   }, []);
 
+  // Дренит буфер и заливает в облако ОДИН владелец — BoltCaptureUploaderBridge.
+  // Карточка только подписана на его список (иначе оба дренили бы наперегонки).
   const poll = useCallback(async () => {
-    const rows = await notifCaptureDrain();
-    if (rows.length === 0) return;
-    setItems((prev) => [...rows.reverse(), ...prev].slice(0, MAX_SHOWN));
+    await drainAndUploadBoltCapture();
+    setItems(getRecentBoltCaptures().slice(0, MAX_SHOWN));
   }, []);
 
   const shareAll = useCallback(async () => {
@@ -54,6 +59,14 @@ export function OrderCaptureBetaCard() {
       /* пользователь закрыл окно — не ошибка */
     }
   }, [items]);
+
+  // Список пойманного ведёт заливщик — подписываемся на его обновления.
+  useEffect(() => {
+    setItems(getRecentBoltCaptures().slice(0, MAX_SHOWN));
+    return subscribeBoltCaptures(() => {
+      setItems(getRecentBoltCaptures().slice(0, MAX_SHOWN));
+    });
+  }, []);
 
   useEffect(() => {
     if (!available) return;

@@ -37,6 +37,7 @@ import { AionBootSequence } from "../components/aion/AionBootSequence";
 import { AionHud } from "../components/aion/AionHud";
 import { AionEntityPanel } from "../components/aion/AionEntityPanel";
 import { AionOverlayOrbPulseBridge } from "../components/aion/AionOverlayOrbPulseBridge";
+import { BoltCaptureUploaderBridge } from "../components/aion/BoltCaptureUploaderBridge";
 import { LinkSnapshotRelayBridge } from "../components/aion-link/LinkSnapshotRelayBridge";
 
 import "../tasks/shiftLocationTask";
@@ -112,6 +113,7 @@ function ThemedAppTree() {
               <PostShiftHandoffBanner />
               <CloudSyncBootstrap />
               <AionOverlayOrbPulseBridge />
+              <BoltCaptureUploaderBridge />
               <AuthDeepLinkListener />
               <GlobalSyncBanner />
               <UpdateGate />
